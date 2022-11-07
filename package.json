@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "start": "nx serve",
+    "start:backend": "nx serve api",
     "start-web": "nx serve web",
     "schema:format": "npx prisma format --schema=./apps/api/prisma/schema.prisma",
     "schema:push": "npx prisma db push --schema=./apps/api/prisma/schema.prisma",
