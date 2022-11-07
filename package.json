@@ -7,6 +7,7 @@
     "start-web": "nx serve web",
     "schema:format": "npx prisma format --schema=./apps/api/prisma/schema.prisma",
     "schema:push": "npx prisma db push --schema=./apps/api/prisma/schema.prisma",
+    "schema:generate-client": "npx prisma generate --schema=./apps/api/prisma/schema.prisma",
     "build": "nx build",
     "test": "nx test"
   },
