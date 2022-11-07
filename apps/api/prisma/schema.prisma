@@ -7,13 +7,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model trial {
+model schema_ctml {
   id        Int      @id @default(autoincrement())
-  name      String
+  version   String   @unique
+  schema    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  user      user?    @relation(fields: [userId], references: [id])
-  userId    Int?
+  trials    trial[]
+}
+
+model ctml_json {
+  id        Int      @id @default(autoincrement())
+  version   String   @unique
+  data      Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  trial     trial[]
+}
+
+model trial {
+  id                     Int           @id @default(autoincrement())
+  nct_id                 String
+  nickname               String?
+  principal_investigator String?
+  status                 status?       @default(DRAFT)
+  ctml_schemas           schema_ctml[]
+  ctml_json              ctml_json?    @relation(fields: [ctml_jsonId], references: [id])
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+  user                   user?         @relation(fields: [userId], references: [id])
+  userId                 Int?
+  ctml_jsonId            Int?
 }
 
 model user {
@@ -23,4 +47,10 @@ model user {
   trials    trial[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum status {
+  DRAFT
+  IN_REVIEW
+  COMPLETED
 }
