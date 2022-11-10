@@ -22,7 +22,7 @@ model ctml_json {
   data      Json?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  trial     trial[]
+  trials    trial[]
 }
 
 model trial {
@@ -35,18 +35,22 @@ model trial {
   ctml_json              ctml_json?    @relation(fields: [ctml_jsonId], references: [id])
   createdAt              DateTime      @default(now())
   updatedAt              DateTime      @updatedAt
-  user                   user?         @relation(fields: [userId], references: [id])
+  createdBy              user?         @relation("createdBy", fields: [userId], references: [id])
+  modifiedBy             user?         @relation("modifiedBy", fields: [modifiedById], references: [id])
   userId                 Int?
+  modifiedById           Int?
   ctml_jsonId            Int?
 }
 
 model user {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String?
-  trials    trial[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              Int      @id @default(autoincrement())
+  email           String   @unique
+  firstName       String?
+  lastName        String?
+  created_trials  trial[]  @relation("createdBy")
+  modified_trials trial[]  @relation("modifiedBy")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 enum status {
