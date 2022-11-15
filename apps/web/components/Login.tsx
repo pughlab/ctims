@@ -1,5 +1,6 @@
 import styles from './Login.module.scss';
 import {InputText} from "primereact/inputtext";
+import { Button } from 'primereact/button';
 import {useState} from "react";
 
 export const Login = () => {
@@ -8,29 +9,32 @@ export const Login = () => {
   const [password, setPassword] = useState<any>('Password');
 
   return (
+    <div className={styles.loginBg}>
       <div className={styles.frame}>
-        <div className="logo-container">
-          <img src="assets/layout/images/RDS-logo.svg" alt="RDS Logo"/>
-        </div>
-        <div className="card">
-          <div className="heading">
-            <div className="sign-in">Sign in</div>
-            <span className="description">Use your UHN T-ID or email and password to sign in.</span>
+        <div className={styles.card}>
+          <div className={styles.logoContainer}>
+            CTIMS LOGO here
+          </div>
+
+          <div className={styles.heading}>
+            <div className={styles.signIn}>Sign in</div>
+            <span className={styles.description}>Use your T-ID, RMP ID, Research ID, or UHN email address to sign in.</span>
           </div>
           <form>
-          <div className="username-container">
-            <label htmlFor="username" className="username">Username</label>
-            <InputText value={username} onChange={(e) => setUsername(e.target.value)} />
-            <small className="p-error block">Fill out this field.</small>
+            <div className={styles.usernameContainer}>
+              <div className={styles.username}>Username</div>
+              <InputText className={styles.usernameInput} value={username} onChange={(e) => setUsername(e.target.value)}/>
+              {/*<small className="p-error block">Fill out this field.</small>*/}
+            </div>
+            <div className={styles.passwordContainer}>
+              <div className={styles.password}>Password</div>
+              <InputText className={styles.passwordInput} value={password} onChange={(e) => setPassword(e.target.value)}/>
+              {/*<small className="p-error block">Fill out this field.</small>*/}
+            </div>
+          </form>
+          <Button label="Sign In" />
         </div>
-        <div className="password-container">
-          <label htmlFor="password" className="password">Password</label>
-          <InputText value={password} onChange={(e) => setPassword(e.target.value)} />
-          <small className="p-error block">Fill out this field.</small>
       </div>
-    </form>
-  <button type="submit" className="sign-in-button" ></button>
-    </div>
     </div>
   );
 }

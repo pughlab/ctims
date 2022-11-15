@@ -1,229 +1,91 @@
-.frame {
-  /* Auto layout */
-
-  /* Frame 81 */
-
-
-  /* Auto layout */
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0px;
-
-  position: absolute;
-  width: 360px;
-  height: 459px;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-
-
-  .logo-container {
-    /* RDS-logo */
-    /* Frame 7 */
-    position: static;
-    width: 139.56px;
-    height: 32px;
-    left: 110.22px;
-    top: 0px;
-
-
-    /* Inside auto layout */
-
-    flex: none;
-    order: 0;
-    flex-grow: 0;
-    margin: 32px 0px;
-  }
-
-  .card {
-    /* card */
-
-
-    /* Auto layout */
+.loginBg {
+  width: 100vw;
+  height: 100vh;
+  background-image: -webkit-linear-gradient(top left, #FF9838, #2E72D2);
+  .frame {
 
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    padding: 40px;
+    align-items: center;
+    padding: 0px;
 
-    position: static;
-    width: 360px;
-    height: 395px;
-    left: 0px;
-    top: 60px;
+    position: absolute;
+    width: 480px;
+    height: 560px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 
-    /* surface/default */
-
-    background: #FFFFFF;
-    /* card */
-
-    box-shadow: 0px 2px 1px rgba(0, 0, 0, 0.05), 0px 0px 1px rgba(0, 0, 0, 0.25);
-    border-radius: 8px;
-
-    /* Inside auto layout */
-
-    flex: none;
-    order: 1;
-    flex-grow: 0;
-    margin-top: 0px;
-
-    .heading {
-      /* heading */
-
-
-      /* Auto layout */
+    .card {
+      /* card */
 
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      padding: 0px;
+      padding-left: 40px;
+      padding-right: 40px;
 
       position: static;
-      width: 280px;
-      height: 74px;
-      left: 40px;
-      top: 40px;
+      width: 360px;
+      height: 500px;
+      left: 0px;
+      top: 60px;
 
+      /* surface/default */
 
-      /* Inside auto layout */
+      background-color: #FFFFFF;
+      /* card */
 
-      flex: none;
-      order: 0;
-      flex-grow: 0;
-      //margin-top: 20px;
-
-
-      .sign-in {
-        position: static;
-        width: 85px;
-        height: 32px;
-        left: 0px;
-        top: 0px;
-
-        /* Heading */
-
-        //font-family: Roboto;
-        font-style: normal;
-        font-weight: 600;
-        font-size: 21px;
-        line-height: 32px;
-        /* identical to box height, or 152% */
-
-
-        /* text/default */
-
-        color: #202223;
-
-
-        /* Inside auto layout */
-
-        flex: none;
-        order: 0;
-        flex-grow: 0;
-      }
-      .description {
-        /* Use your UHN credentials (T-ID and password) to sign in. */
-
-
-        position: static;
-        width: 280px;
-        height: 34px;
-        left: 0px;
-        top: 40px;
-
-        /* Button */
-
-        //font-family: Roboto;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 14px;
-        line-height: 17px;
-        /* or 121% */
-
-
-        /* text/default */
-
-        color: #202223;
-
-
-        /* Inside auto layout */
-
-        flex: none;
-        order: 1;
-        flex-grow: 0;
-        margin-top: 8px;
-
-      }
-    }
-    form {
-      /* form */
-
-
-      /* Auto layout */
-
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 0px;
-
-      position: static;
-      width: 280px;
-      height: 172px;
-      left: 40px;
-      top: 134px;
-
+      box-shadow: 0px 2px 1px rgba(0, 0, 0, 0.05), 0px 0px 1px rgba(0, 0, 0, 0.25);
+      border-radius: 8px;
 
       /* Inside auto layout */
 
       flex: none;
       order: 1;
       flex-grow: 0;
+      margin-top: 0px;
 
-      .username-container {
-        /* text-field */
+      .logoContainer {
+        margin-top: 46.25px;
+        color: red;
+      }
 
+      .heading {
+        /* heading */
 
-        /* Auto layout */
-
-        // display: flex;
+        display: flex;
         flex-direction: column;
         align-items: flex-start;
         padding: 0px;
 
         position: static;
         width: 280px;
-        height: 58px;
-        left: 0px;
-        top: 0px;
-
+        height: 100px;
+        left: 40px;
+        margin-top: 40px;
 
         /* Inside auto layout */
 
         flex: none;
         order: 0;
         flex-grow: 0;
-        margin-top: 16px;
 
-        .username {
-          /* Label */
-
-
+        .signIn {
           position: static;
-          width: 280px;
-          height: 21px;
+          width: 85px;
+          height: 32px;
           left: 0px;
           top: 0px;
 
-          /* Paragraph */
+          /* Heading */
 
-          //font-family: Roboto;
+          font-family: 'Inter', sans-serif;
           font-style: normal;
-          font-weight: normal;
-          font-size: 14px;
-          line-height: 21px;
-          /* identical to box height, or 150% */
+          font-weight: 600;
+          font-size: 21px;
+          line-height: 40px;
+          /* identical to box height, or 152% */
 
 
           /* text/default */
@@ -237,88 +99,72 @@
           order: 0;
           flex-grow: 0;
         }
-        .username-input {
-          /* text-field */
+        .description {
+          /* Use your UHN credentials (T-ID and password) to sign in. */
 
-
-          /* Auto layout */
-
-          display: flex;
-          flex-direction: row;
-          align-items: flex-start;
-          padding: 6px 8px;
 
           position: static;
           width: 280px;
-          height: 33px;
+          height: 34px;
           left: 0px;
-          top: 25px;
+          top: 40px;
 
-          /* surface/default */
+          /* Button */
 
-          background: #FFFFFF;
-          /* border/default */
+          font-family: 'Inter', sans-serif;
+          font-style: normal;
+          font-weight: 400;
+          font-size: 14px;
+          line-height: 20px;
 
-          // border: 1px solid #C9CCCF;
-          box-sizing: border-box;
-          border-radius: 6px;
+
+          /* text/default */
+
+          color: #202223;
+
 
           /* Inside auto layout */
 
           flex: none;
           order: 1;
           flex-grow: 0;
-          margin-top: 4px;
+          margin-top: 8px;
+
         }
       }
-      .password-container {
-        /* text-field */
+      form {
+        /* form */
 
 
         /* Auto layout */
 
-        // display: flex;
+        display: flex;
         flex-direction: column;
         align-items: flex-start;
         padding: 0px;
-
-        position: static;
-        width: 280px;
-        height: 58px;
-        left: 0px;
-        top: 74px;
-
 
         /* Inside auto layout */
 
         flex: none;
         order: 1;
         flex-grow: 0;
-        margin-top: 16px;
 
-        .password {
-          /* Label */
+        .usernameContainer {
+          /* text-field */
 
+
+          /* Auto layout */
+
+          // display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          padding: 0px;
 
           position: static;
           width: 280px;
-          height: 21px;
+          height: 58px;
           left: 0px;
           top: 0px;
-
-          /* Paragraph */
-
-          //font-family: Roboto;
-          font-style: normal;
-          font-weight: normal;
-          font-size: 14px;
-          line-height: 21px;
-          /* identical to box height, or 150% */
-
-
-          /* text/default */
-
-          color: #202223;
 
 
           /* Inside auto layout */
@@ -326,155 +172,248 @@
           flex: none;
           order: 0;
           flex-grow: 0;
-          margin: 4px 0px;
+          margin-top: 16px;
+
+          .username {
+
+            font-family: 'Inter', sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 16px;
+            /* text/default */
+
+            color: black;
+
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+          }
+          .usernameInput {
+            /* text-field */
+            width: 100%;
+
+            /* Auto layout */
+
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            padding: 6px 8px;
+
+            /* surface/default */
+
+            background: #FFFFFF;
+            /* border/default */
+
+            // border: 1px solid #C9CCCF;
+            box-sizing: border-box;
+            border-radius: 6px;
+
+            /* Inside auto layout */
+
+            flex: none;
+            order: 1;
+            flex-grow: 0;
+            margin-top: 4px;
+          }
         }
-        .password-input {
+        .passwordContainer {
           /* text-field */
 
 
           /* Auto layout */
 
-          display: flex;
-          flex-direction: row;
+          // display: flex;
+          flex-direction: column;
           align-items: flex-start;
-          padding: 6px 8px;
+          padding: 0px;
 
           position: static;
           width: 280px;
-          height: 33px;
+          height: 58px;
           left: 0px;
-          top: 25px;
+          top: 74px;
 
-          /* surface/default */
-
-          background: #FFFFFF;
-          /* border/default */
-
-          // border: 1px solid #C9CCCF;
-          box-sizing: border-box;
-          border-radius: 6px;
 
           /* Inside auto layout */
 
           flex: none;
           order: 1;
           flex-grow: 0;
-          margin-top: 4px;
+          margin-top: 16px;
+
+          .password {
+            /* Label */
+
+
+            position: static;
+            width: 280px;
+            height: 21px;
+            left: 0px;
+            top: 0px;
+
+            /* Paragraph */
+
+            //font-family: Roboto;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 21px;
+            /* identical to box height, or 150% */
+
+
+            /* text/default */
+
+            color: #202223;
+
+
+            /* Inside auto layout */
+
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+            margin: 4px 0px;
+          }
+          .passwordInput {
+            /* text-field */
+           width: 100%;
+
+            /* Auto layout */
+
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            padding: 6px 8px;
+
+            /* surface/default */
+
+            background: #FFFFFF;
+            /* border/default */
+
+            // border: 1px solid #C9CCCF;
+            box-sizing: border-box;
+            border-radius: 6px;
+
+            /* Inside auto layout */
+
+            flex: none;
+            order: 1;
+            flex-grow: 0;
+            margin-top: 4px;
+          }
         }
+
+
+
       }
 
+      button {
+        /* button */
 
 
-    }
+        /* Auto layout */
 
-    button {
-      /* button */
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 8px;
 
-
-      /* Auto layout */
-
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      padding: 8px;
-
-      position: static;
-      width: 280px;
-      height: 33px;
-      left: 40px;
-      top: 286px;
-
-      /* primary/default */
-
-      background: #554971;
-      border-radius: 6px;
-
-      /* Inside auto layout */
-
-      flex: none;
-      order: 2;
-      flex-grow: 0;
-      margin-top: 20px;
-    }
-    .help-container {
-      /* Frame 80 */
-
-
-      /* Auto layout */
-
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: flex-start;
-      padding: 0px 20px;
-
-      position: static;
-      width: 280px;
-      height: 16px;
-      left: 40px;
-      top: 339px;
-
-
-      /* Inside auto layout */
-
-      flex: none;
-      order: 3;
-      flex-grow: 0;
-      margin: 20px 0;
-
-      .help-button{
-        /* Help Center */
-        position: static;
-        height: 16px;
-        top: 0px;
-
-        /* Caption */
-
-        //font-family: Roboto;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 12px;
-        line-height: 16px;
-        /* identical to box height, or 133% */
-
-        text-align: center;
+        width: 100%;
 
         /* primary/default */
 
-        color: #554971;
+        background: #2E72D2;
+        border-radius: 4px;
+
+        /* Inside auto layout */
+
+        flex: none;
+        order: 2;
+        flex-grow: 0;
+        margin-top: 20px;
+      }
+      .help-container {
+        /* Frame 80 */
+
+
+        /* Auto layout */
+
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 0px 20px;
+
+        position: static;
+        width: 280px;
+        height: 16px;
+        left: 40px;
+        top: 339px;
 
 
         /* Inside auto layout */
 
         flex: none;
+        order: 3;
         flex-grow: 0;
-        margin: 0px 8px;
+        margin: 20px 0;
 
-        cursor: pointer;
-      }
+        .help-button{
+          /* Help Center */
+          position: static;
+          height: 16px;
+          top: 0px;
 
-      .contact-us {
-        /* Contact us */
-        order: 0;
-        cursor: pointer;
-      }
-      .faq {
-        /* FAQ */
+          /* Caption */
 
-        /* Inside auto layout */
-        order: 1;
-        cursor: pointer;
-      }
-      .help-center {
-        /* Help Center */
+          //font-family: Roboto;
+          font-style: normal;
+          font-weight: normal;
+          font-size: 12px;
+          line-height: 16px;
+          /* identical to box height, or 133% */
 
-        /* Inside auto layout */
-        order: 2;
-        flex-grow: 0;
-        cursor: pointer;
+          text-align: center;
+
+          /* primary/default */
+
+          color: #554971;
+
+
+          /* Inside auto layout */
+
+          flex: none;
+          flex-grow: 0;
+          margin: 0px 8px;
+
+          cursor: pointer;
+        }
+
+        .contact-us {
+          /* Contact us */
+          order: 0;
+          cursor: pointer;
+        }
+        .faq {
+          /* FAQ */
+
+          /* Inside auto layout */
+          order: 1;
+          cursor: pointer;
+        }
+        .help-center {
+          /* Help Center */
+
+          /* Inside auto layout */
+          order: 2;
+          flex-grow: 0;
+          cursor: pointer;
+        }
       }
     }
-  }
 
+  }
 }
+
+
