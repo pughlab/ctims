@@ -13,7 +13,7 @@ export const Login = () => {
       <div className={styles.frame}>
         <div className={styles.card}>
           <div className={styles.logoContainer}>
-            CTIMS LOGO here
+            <img src={'/assets/ctims-logo.svg'} alt={'logo'} className={styles.logo}/>
           </div>
 
           <div className={styles.heading}>
@@ -31,8 +31,10 @@ export const Login = () => {
               <InputText className={styles.passwordInput} value={password} onChange={(e) => setPassword(e.target.value)}/>
               {/*<small className="p-error block">Fill out this field.</small>*/}
             </div>
+            <Button label="Sign In" />
+            <div className={styles.forgotPassword}>Forgot Password</div>
           </form>
-          <Button label="Sign In" />
+
         </div>
       </div>
     </div>
