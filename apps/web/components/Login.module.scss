@@ -1,12 +1,13 @@
 .loginBg {
   width: 100vw;
   height: 100vh;
-
-  background:
-    radial-gradient(50% 50% at 50% 50%, #FF9838 0%, rgba(255, 152, 56, 0) 100%) top -200px left -90px,
-    radial-gradient(50% 50% at 50% 50%, #2E72D2 0%, rgba(46, 114, 210, 0) 100%) bottom -500px right -400px;
-  background-size: 80vw 80vw;
-  background-repeat: no-repeat no-repeat;
+  background: url('/assets/blurred_background.png') no-repeat;
+  background-size: cover;
+  //background:
+  //  radial-gradient(50% 50% at 50% 50%, #FF9838 0%, rgba(255, 152, 56, 0) 100%) top -200px left -90px,
+  //  radial-gradient(50% 50% at 50% 50%, #2E72D2 0%, rgba(46, 114, 210, 0) 100%) bottom -500px right -400px;
+  //background-size: 80vw 80vw;
+  //background-repeat: no-repeat no-repeat;
   background-color: #112054;
   .frame {
 
