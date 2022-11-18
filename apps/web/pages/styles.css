@@ -2,6 +2,11 @@
 @import "primereact/resources/primereact.min.css";
 @import "primeicons/primeicons.css";
 
+.p-button.p-button-text.p-button-plain {
+  color: #2E72D2;
+  width: 118px;
+  height: 36px;
+}
 
 html {
   -webkit-text-size-adjust: 100%;
