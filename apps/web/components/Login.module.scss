@@ -57,7 +57,6 @@
 
       .logoContainer {
         margin-top: 46.25px;
-        color: red;
       }
 
       .heading {
@@ -329,7 +328,7 @@
         justify-content: center;
         align-items: center;
         padding: 8px;
-
+        order: 2;
         width: 100%;
 
         /* primary/default */
@@ -340,9 +339,11 @@
         /* Inside auto layout */
 
         flex: none;
-        order: 2;
+
         flex-grow: 0;
       }
+
+
 
       .forgotPassword {
         /* Use your UHN credentials (T-ID and password) to sign in. */
@@ -354,6 +355,7 @@
         /* Button */
         margin-top: 20px;
         cursor: pointer;
+        color: #2E72D2;
 
         font-family: 'Inter', sans-serif;
         font-style: normal;
