@@ -5,10 +5,18 @@ import { Column } from 'primereact/column';
 
 import TopBar from "../../components/trials/TopBar";
 import {useEffect, useState} from "react";
+import {useRouter} from "next/router";
 
 const Trials = () => {
 
   const [trials, setTrials] = useState<any>([]);
+
+  const router = useRouter();
+
+  const createCtmlClick = (e) => {
+    e.preventDefault();
+    router.push('/trials/create');
+  }
 
   useEffect(() => {
     const trials = [
@@ -40,7 +48,7 @@ const Trials = () => {
           <span className={styles.trialsText}>Trials</span>
           <div className={styles.buttonsContainer}>
             <Button label="Import" className="p-button-text p-button-plain" />
-            <Button label="Create CTML" className={styles.createCtmlButton} />
+            <Button label="Create CTML" className={styles.createCtmlButton} onClick={(e) => createCtmlClick(e)} />
           </div>
 
         </div>
