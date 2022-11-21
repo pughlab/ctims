@@ -1,5 +1,7 @@
 import styles from './EditorTopBar.module.scss';
 import {useRouter} from "next/router";
+import { Button } from 'primereact/button';
+
 
 const EditorTopBar = () => {
 
@@ -22,6 +24,12 @@ const EditorTopBar = () => {
           </div>
           <div className={styles.title}>New CTML</div>
         </div>
+        <div className={styles.menuBtnGroup}>
+          <Button label="Discard" className="p-button-text p-button-plain" />
+          <Button label="Export" className="p-button-text p-button-plain" />
+          <Button label="Save" className={styles.saveBtn} />
+        </div>
+
       </div>
     </div>
   )
