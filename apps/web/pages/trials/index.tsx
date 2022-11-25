@@ -6,34 +6,45 @@ import { Column } from 'primereact/column';
 import TopBar from "../../components/trials/TopBar";
 import {useEffect, useRef, useState} from "react";
 import {useRouter} from "next/router";
+import React from 'react';
+import {Menu} from "primereact/menu";
 
 const Trials = () => {
 
   const [trials, setTrials] = useState<any>([]);
-  const dt = useRef<DataTable>(null);
 
   const router = useRouter();
 
-  const addRowHoverListeners = (rows: HTMLCollectionOf<HTMLTableRowElement>) => {
-    for (let i = 1; i < rows.length; i++) {
-      const row: HTMLTableRowElement = rows[i];
-      row.addEventListener('mouseover', (e) => {
-        e.preventDefault();
-        console.log('row mouseover', row);
-      })
-      row.addEventListener('mouseleave', (e) => {
-        e.preventDefault();
-        console.log('row mouseleave');
-      })
-    }
-  }
-
-
+  const menu = useRef(null);
 
   const createCtmlClick = (e) => {
     e.preventDefault();
     router.push('/trials/create');
   }
+
+  const trialMenuItems = [
+    {
+      label: 'Edit',
+      icon: 'pi pi-pencil',
+      command: () => {
+        console.log('Edit');
+      }
+    },
+    {
+      label: 'Delete',
+      icon: 'pi pi-trash',
+      command: () => {
+        console.log('Edit');
+      }
+    },
+    {
+      label: 'Export',
+      icon: 'pi pi-upload',
+      command: () => {
+        console.log('Edit');
+      }
+    }
+  ]
 
   useEffect(() => {
     const trials = [
@@ -54,11 +65,20 @@ const Trials = () => {
         updatedOn: '2021-01-01 by Dr. John Doe',
       }
     ]
-    // @ts-ignore
-    const rows = dt.current.getTable().rows;
-    addRowHoverListeners(rows);
     setTrials(trials);
   }, []);
+
+  const menuButtonStyle = {
+    color: 'black',
+  }
+  const subMenuTemplate = (rowData) => {
+    return (
+    <div className={styles.myHiddenText}>
+      <Button icon="pi pi-ellipsis-h" iconPos="right" className="p-button-text p-button-plain" style={ menuButtonStyle }
+          onClick={(event) => menu.current.toggle(event)} ></Button>
+    </div>
+    );
+  }
 
   return (
     <>
@@ -70,18 +90,22 @@ const Trials = () => {
             <Button label="Import" className="p-button-text p-button-plain" />
             <Button label="Create CTML" className={styles.createCtmlButton} onClick={(e) => createCtmlClick(e)} />
           </div>
-
         </div>
+
         <div className={styles.tableContainer}>
-          <DataTable rowHover={true} value={trials} ref={dt}>
+          <DataTable value={trials} rowHover={true}>
             <Column field="id" header="ID"></Column>
+            <Column field="id" header="" body={subMenuTemplate}></Column>
             <Column field="nickname" header="Nickname"></Column>
-            <Column field="principalInvestigator" header="Principal Investigator"></Column>
+            <Column field="principalInvestigator" header="Principal Investigator" ></Column>
             <Column field="status" header="Status"></Column>
             <Column field="createdOn" header="Created on"></Column>
             <Column field="updatedOn" header="Modified on"></Column>
           </DataTable>
         </div>
+
+        <Menu model={trialMenuItems} ref={menu} popup id="popup_menu" className={styles.menu} appendTo={'self'}
+              onMouseLeave={(event) => menu.current.hide}/>
       </div>
     </>
 
