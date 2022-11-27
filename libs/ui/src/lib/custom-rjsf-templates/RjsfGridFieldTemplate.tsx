@@ -58,12 +58,6 @@ export const RjsfGridFieldTemplate = (props: ObjectFieldTemplateProps) => {
     flexDirection: 'column',
   }
 
-  const fieldsetStyle = {
-    // border: '1px solid black',
-    'borderRadius': '5px',
-    margin: '10px'
-  }
-
   const rowStyle = {
     marginBottom: '15px'
   }
@@ -74,8 +68,7 @@ export const RjsfGridFieldTemplate = (props: ObjectFieldTemplateProps) => {
     boxShadow: '0px 1px 4px rgba(0, 0, 0, 0.25)',
     borderRadius: '6px',
     background: 'white',
-    paddingLeft: '20px',
-    paddingRight: '20px',
+    padding: '20px'
   }
 
 

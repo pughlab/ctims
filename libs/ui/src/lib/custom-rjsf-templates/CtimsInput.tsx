@@ -38,6 +38,8 @@ const CtimsInput = (props: WidgetProps) => {
     const containerStyle: React.CSSProperties = {
         display: 'flex',
         flexDirection: "column",
+        // marginTop: '20px',
+        // marginBottom: '30px'
     }
 
     const labelStyle: React.CSSProperties = {
