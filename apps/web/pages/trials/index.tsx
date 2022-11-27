@@ -4,14 +4,31 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 
 import TopBar from "../../components/trials/TopBar";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {useRouter} from "next/router";
 
 const Trials = () => {
 
   const [trials, setTrials] = useState<any>([]);
+  const dt = useRef<DataTable>(null);
 
   const router = useRouter();
+
+  const addRowHoverListeners = (rows: HTMLCollectionOf<HTMLTableRowElement>) => {
+    for (let i = 1; i < rows.length; i++) {
+      const row: HTMLTableRowElement = rows[i];
+      row.addEventListener('mouseover', (e) => {
+        e.preventDefault();
+        console.log('row mouseover', row);
+      })
+      row.addEventListener('mouseleave', (e) => {
+        e.preventDefault();
+        console.log('row mouseleave');
+      })
+    }
+  }
+
+
 
   const createCtmlClick = (e) => {
     e.preventDefault();
@@ -37,6 +54,9 @@ const Trials = () => {
         updatedOn: '2021-01-01 by Dr. John Doe',
       }
     ]
+    // @ts-ignore
+    const rows = dt.current.getTable().rows;
+    addRowHoverListeners(rows);
     setTrials(trials);
   }, []);
 
@@ -53,7 +73,7 @@ const Trials = () => {
 
         </div>
         <div className={styles.tableContainer}>
-          <DataTable value={trials}>
+          <DataTable rowHover={true} value={trials} ref={dt}>
             <Column field="id" header="ID"></Column>
             <Column field="nickname" header="Nickname"></Column>
             <Column field="principalInvestigator" header="Principal Investigator"></Column>
