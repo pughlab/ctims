@@ -8,6 +8,7 @@ import CtimsArrayFieldItemTemplate from "./custom-rjsf-templates/CtimsArrayField
 import CtimsArrayFieldTemplate from "./custom-rjsf-templates/CtimsArrayFieldTemplate";
 import {JSONSchema7} from "json-schema";
 import CtimsInput from "./custom-rjsf-templates/CtimsInput";
+import CtimsDropdown from "./custom-rjsf-templates/CtimsDropdown";
 
 const Form = withTheme(PrimeTheme)
 
@@ -17,7 +18,8 @@ export interface UiProps {}
 export function Ui(props: UiProps) {
 
   const widgets: RegistryWidgetsType = {
-    TextWidget: CtimsInput
+    TextWidget: CtimsInput,
+    SelectWidget: CtimsDropdown
   }
 
   return (

@@ -63,10 +63,15 @@ const CtimsArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
 
     const getArrayItemName = (item: ArrayFieldTemplateItemType, index: number) => {
         const {children} = item
+        console.log('children', children);
         const newProps = {...children.props}
         const originalName: string = children.props.name
+        const schema = children.props.schema
         // remove numbers and dashes from original name
-        const newName = originalName.replace(/[\d-]/g, '')
+        let newName = originalName.replace(/[\d-]/g, '')
+        if(schema.title) {
+          newName = schema.title
+        }
         const indexPlusOne = index + 1
         newProps.name = `${newName} ${indexPlusOne}`
         const newChildren = React.cloneElement(children, newProps)

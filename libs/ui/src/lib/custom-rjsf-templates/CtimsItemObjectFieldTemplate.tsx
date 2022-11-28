@@ -60,17 +60,17 @@ const CtimsItemObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
         <>
             <div style={containerStyle}>
                 <div style={titleDescriptionStyle}>
-                    {(schema.title) && (
-                        <TitleFieldTemplate
-                            id={`${idSchema.$id}-title`}
-                            title={schema.title}
-                            required={required}
-                            schema={schema}
-                            uiSchema={uiSchema}
-                            registry={registry}
-                        />
-                    )}
-                    {(uiOptions.description || description) && (
+                    {/*{(schema.title) && (*/}
+                    {/*    <TitleFieldTemplate*/}
+                    {/*        id={`${idSchema.$id}-title`}*/}
+                    {/*        title={schema.title}*/}
+                    {/*        required={required}*/}
+                    {/*        schema={schema}*/}
+                    {/*        uiSchema={uiSchema}*/}
+                    {/*        registry={registry}*/}
+                    {/*    />*/}
+                    {/*)}*/}
+                    {(schema.description) && (
                         <DescriptionFieldTemplate
                             id={`${idSchema.$id}-description`}
                             description={uiOptions.description || description!}

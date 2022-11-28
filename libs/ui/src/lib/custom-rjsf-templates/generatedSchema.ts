@@ -1,5 +1,6 @@
+import { RjsfGridFieldTemplate } from "./RjsfGridFieldTemplate"
 import CtimsItemObjectFieldTemplate from "./CtimsItemObjectFieldTemplate";
-import {RjsfGridFieldTemplate} from "./RjsfGridFieldTemplate";
+import CtimsArrayFieldSingleTemplate from "./CtimsArrayFieldSingleTemplate";
 import CtimsObjectFieldTemplate from "./CtimsObjectFieldTemplate";
 
 export const schema = {
@@ -131,7 +132,7 @@ export const schema = {
     "sponsor_list": {
       "type": "object",
       "properties": {
-        "site": {
+        "sponsor": {
           "type": "array",
           "items": {
             "type": "object",
@@ -183,7 +184,8 @@ export const schema = {
                 "type": "string",
                 "title": "Staff Role"
               }
-            }
+            },
+            'title': 'Protocol Staff'
           },
           "title": "Protocol Staff"
         }
@@ -194,7 +196,8 @@ export const schema = {
       "type": "array",
       "title": "Prior treatment requirements",
       "items": {
-        "type": "string"
+        "type": "string",
+        'title': 'Prior treatment requirements'
       }
     }
   }
@@ -391,12 +394,12 @@ export const uiSchema = {
     "ui:spacing": 16,
     "ui:layout": [
       {
-        "site": {
+        "sponsor": {
           "span": 24
         }
       }
     ],
-    "site": {
+    "sponsor": {
       "items": {
         "ui:ObjectFieldTemplate": CtimsItemObjectFieldTemplate,
         "ui:spacing": 16,
@@ -454,5 +457,8 @@ export const uiSchema = {
         ]
       }
     }
+  },
+  "prior_treatment_requirements": {
+    "ui:ArrayFieldTemplate": CtimsArrayFieldSingleTemplate,
   }
 }

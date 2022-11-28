@@ -47,11 +47,12 @@ const CtimsInput = (props: WidgetProps) => {
         fontWeight: 400,
         fontSize: "14px",
         marginBottom: '7px',
+        marginTop: '7px',
 
     }
 
     return (
-        <div style={containerStyle} id="marginhere">
+        <div style={containerStyle}>
             {labelValue && (
                 <span style={labelStyle}>{labelValue}</span>
             )}

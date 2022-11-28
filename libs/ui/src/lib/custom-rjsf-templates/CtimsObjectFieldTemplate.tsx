@@ -95,7 +95,7 @@ const CtimsObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
                         ))}
                 </div>
             </div>
-            <hr style={hrStyle}/>
+            {/*<hr style={hrStyle}/>*/}
         </>
     );
 }
