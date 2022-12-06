@@ -2,7 +2,6 @@ import { RjsfGridFieldTemplate } from "./RjsfGridFieldTemplate"
 import CtimsItemObjectFieldTemplate from "./CtimsItemObjectFieldTemplate";
 import CtimsArrayFieldSingleTemplate from "./CtimsArrayFieldSingleTemplate";
 import CtimsObjectFieldTemplate from "./CtimsObjectFieldTemplate";
-import CtimsButtonWidget from "./CtimsButtonWidget";
 
 export const schema = {
   "type": "object",
@@ -201,52 +200,8 @@ export const schema = {
         'title': 'Prior treatment requirements'
       }
     },
-    "treatment_list": {
-      "type": "object",
-      "properties": {
-        "step": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "arm": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "arm_code": { "type": "string" },
-                    "arm_description": { "type": "string" },
-                    "arm_internal_id": { "type": "integer" },
-                    "arm_suspended": { "type": "string" },
-                    "dose_level": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "level_code": { "type": "string" },
-                          "level_description": { "type": "string" },
-                          "level_internal_id": { "type": "integer" },
-                          "level_suspended": { "type": "string" }
-                        }
-                      }
-                    },
-                    "match": {
-                      type: 'object',
-                      properties: {
-                        // fields in the form
-                        "ctimsButton": { type: 'string', title: 'Ctims Button' }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "title": "Treatment List"
-    }
-  }
+}
+
 }
 export const uiSchema = {
   "ui:spacing": 16,
@@ -506,24 +461,5 @@ export const uiSchema = {
   },
   "prior_treatment_requirements": {
     "ui:ArrayFieldTemplate": CtimsArrayFieldSingleTemplate,
-  },
-  "treatment_list": {
-    "ui:ObjectFieldTemplate": CtimsObjectFieldTemplate,
-    "step": {
-      "items": {
-        "ui:ObjectFieldTemplate": CtimsItemObjectFieldTemplate,
-        "arm": {
-          "items": {
-            "ui:ObjectFieldTemplate": CtimsItemObjectFieldTemplate,
-            "match": {
-              "ctimsButton": {
-                "ui:widget": CtimsButtonWidget,
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-
+  }
 }
