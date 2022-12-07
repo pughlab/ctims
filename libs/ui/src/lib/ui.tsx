@@ -32,33 +32,115 @@ interface CtimsFormComponentProps {
   onSpecialButtonClick: (data: any) => void;
 }
 
+const schema = {
+  type: "object",
+  properties: {
+    // define the fields and their schema here
+    firstName: { type: "string" },
+    lastName: { type: "string" },
+    email: { type: "string", format: "email" },
+    phone: { type: "string" },
+    address: {
+      type: "object",
+      properties: {
+        street: { type: "string" },
+        city: { type: "string" },
+        state: { type: "string" },
+      }
+    }
+  }
+};
+
+class MyFormGpt extends Component {
+  // @ts-ignore
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      showDialog: false,
+      formData: {}
+    };
+  }
+
+  // @ts-ignore
+  onFormChange = ({ formData }) => {
+    console.log(formData);
+    // @ts-ignore
+    const previousFromData = this.state.formData;
+    // append to previous state
+    this.setState({ formData: { ...previousFromData, ...formData } });
+  };
+
+  // @ts-ignore
+  onSubmit = ({ formData }) => {
+    // do something with the form data here
+    console.log(formData);
+  };
+
+  override render() {
+    // @ts-ignore
+    const { showDialog, formData } = this.state;
+
+    return (
+      <>
+        {/* First part of the form */}
+        <Form schema={schema as JSONSchema7}
+              formData={formData}
+              onChange={this.onFormChange} onSubmit={this.onSubmit} validator={localValidator}>
+          <button type="button" onClick={() => this.setState({ showDialog: true })}>
+            Show Dialog
+          </button>
+        </Form>
+
+        {/* Second part of the form in a PrimeReact dialog */}
+        <Dialog
+          visible={showDialog}
+          onHide={() => this.setState({ showDialog: false })}
+          header="Second part of the form"
+        >
+          <Form schema={schema.properties.address as JSONSchema7}
+                validator={localValidator}
+                formData={formData} onChange={this.onFormChange} onSubmit={this.onSubmit}>
+            <button type="submit">Submit</button>
+          </Form>
+        </Dialog>
+      </>
+    );
+  }
+}
+
+
 class CtimMatchDialog extends Component<CtimsMatchDialogProps, CtimsMatchDialogState> {
   constructor(props: CtimsMatchDialogProps) {
     super(props);
     this.state = {
       isDialogVisible: this.props.isDialogVisible,
     };
+    console.log('CtimMatchDialog constructor', this.state)
   }
 
-  override componentDidMount() {
-
+  override componentDidUpdate(prevProps: Readonly<CtimsMatchDialogProps>, prevState: Readonly<CtimsMatchDialogState>, snapshot?: any) {
+    if (prevProps.isDialogVisible !== this.props.isDialogVisible) {
+      this.setState({isDialogVisible: this.props.isDialogVisible})
+    }
   }
 
-  // override shouldComponentUpdate(nextProps: Readonly<CtimsMatchDialogProps>, nextState: Readonly<CtimsMatchDialogState>, nextContext: any): boolean {
-  //   return true;
-  // }
+  override shouldComponentUpdate(nextProps: Readonly<CtimsMatchDialogProps>, nextState: Readonly<CtimsMatchDialogState>, nextContext: any): boolean {
+    return true;
+  }
 
   handleSubmit = (data: any) => {
     console.log(data);
   }
 
   setIsDialogVisible = (isDialogVisible: boolean) => {
+    console.log('setIsDialogVisible', isDialogVisible)
     this.setState({isDialogVisible});
   }
 
   override render() {
     return (
-      <Dialog header="Dialog" visible={this.props.isDialogVisible} style={{width: '50vw'}} onHide={() => this.setIsDialogVisible(false)}>
+      <Dialog header="Dialog" visible={this.state.isDialogVisible} style={{width: '50vw'}} onHide={() => this.setIsDialogVisible(false)}>
         <Form schema={this.props.dialogSchema as JSONSchema7}
               templates={{
                 ArrayFieldItemTemplate: CtimsArrayFieldItemTemplate,
@@ -624,7 +706,7 @@ class CtimsFormComponent extends Component<CtimsFormComponentProps> {
   }
 
   handleSubmit = (e: any) => {
-
+    console.log(e);
   }
 
   setIsDialogVisible = (visible: boolean) => {
@@ -1839,6 +1921,7 @@ export const Ui = memo((props: UiProps) => {
   // @ts-ignore
   return (
     <div style={containerStyle}>
+      <MyFormGpt />
       <CtimsFormComponent onSpecialButtonClick={handleSpecialClick}/>
       {/*<Form schema={schema as JSONSchema7}*/}
       {/*      templates={{*/}
