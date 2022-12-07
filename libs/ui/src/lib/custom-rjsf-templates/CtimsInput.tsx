@@ -1,7 +1,27 @@
 import {WidgetProps} from "@rjsf/utils";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import cn from "clsx";
 import {InputText} from "primereact/inputtext";
+
+const containerStyle: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: "column",
+  // marginTop: '20px',
+  // marginBottom: '30px'
+}
+
+const containerHiddenStyle: React.CSSProperties = {
+  display: 'none',
+}
+
+const labelStyle: React.CSSProperties = {
+  fontFamily: "Inter, sans-serif",
+  fontWeight: 400,
+  fontSize: "14px",
+  marginBottom: '7px',
+  marginTop: '7px',
+
+}
 
 const CtimsInput = (props: WidgetProps) => {
     const {
@@ -23,6 +43,20 @@ const CtimsInput = (props: WidgetProps) => {
         rawErrors = [],
     } = props;
 
+    const [isHidden, setIsHidden] = useState(false);
+
+  const uiOptions = uiSchema?.['ui:options']
+
+
+  useEffect(() => {
+    if (uiOptions) {
+      if (uiOptions['dialog']) {
+        console.log('uiOptions dialog', uiOptions['dialog'])
+        setIsHidden(true)
+      }
+    }
+  }, [])
+
     const _onChange = ({
                            target: { value },
                        }: React.ChangeEvent<HTMLInputElement>) =>
@@ -35,24 +69,10 @@ const CtimsInput = (props: WidgetProps) => {
     const inputType = (type || schema.type) === "string" ? "text" : `${type || schema.type}`
     const labelValue = uiSchema?.["ui:title"] || schema.title || label;
 
-    const containerStyle: React.CSSProperties = {
-        display: 'flex',
-        flexDirection: "column",
-        // marginTop: '20px',
-        // marginBottom: '30px'
-    }
 
-    const labelStyle: React.CSSProperties = {
-        fontFamily: "Inter, sans-serif",
-        fontWeight: 400,
-        fontSize: "14px",
-        marginBottom: '7px',
-        marginTop: '7px',
-
-    }
 
     return (
-        <div style={containerStyle}>
+        <div style={isHidden ? containerHiddenStyle : containerStyle}>
             {labelValue && (
                 <span style={labelStyle}>{labelValue}</span>
             )}

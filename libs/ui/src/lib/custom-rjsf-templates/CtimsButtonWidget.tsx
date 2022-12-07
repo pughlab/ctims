@@ -7,11 +7,14 @@ const CtimsButtonWidget = (props: WidgetProps) => {
     disabled,
     readonly,
     onChange,
+    uiSchema,
   } = props;
+
+  const btnClick = uiSchema!['onClick'];
 
   const buttonClick = (e: any) => {
     e.preventDefault();
-    console.log('buttonClick', e);
+    console.log('buttonClick', props);
   }
 
   return (
@@ -19,7 +22,7 @@ const CtimsButtonWidget = (props: WidgetProps) => {
       id={id}
       disabled={disabled || readonly}
       // onClick={() => onChange('clicked')}
-      onClick={(e) => buttonClick(e)}
+      onClick={(e) => btnClick(e)}
     >
       {label || 'Submit'}
     </button>

@@ -234,7 +234,9 @@ export const schema = {
                       type: 'object',
                       properties: {
                         // fields in the form
-                        "ctimsButton": { type: 'string', title: 'Ctims Button' }
+                        "ctimsButton": { type: 'string', title: 'Ctims Button' },
+                        "fieldShouldBeInDialog": { type: 'string', title: 'Field Should Be In Dialog' },
+
                       }
                     }
                   }
@@ -518,6 +520,12 @@ export const uiSchema = {
             "match": {
               "ctimsButton": {
                 "ui:widget": CtimsButtonWidget,
+                onClick: (e: any) => {console.log('clicked', e)}
+              },
+              "fieldShouldBeInDialog": {
+                "ui:options": {
+                  "dialog": true
+                },
               }
             }
           }
