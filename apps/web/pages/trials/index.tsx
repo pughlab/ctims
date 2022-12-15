@@ -79,12 +79,12 @@ const Trials = () => {
 
   const subMenuTemplate = (rowData) => {
     return (
-    <div className={styles.myHiddenText}>
-      { rowEntered === rowData ?
-      <Button icon="pi pi-ellipsis-h" iconPos="right" className="p-button-text p-button-plain" style={ menuButtonStyle }
-          onClick={(event) => menu.current.toggle(event)} ></Button>
-        : <div></div> }
-    </div>
+    <div className={styles.trailsEllipseBtn}>
+        { rowEntered === rowData ?
+          <Button icon="pi pi-ellipsis-h" iconPos="right" className="p-button-text p-button-plain" style={ menuButtonStyle }
+            onClick={(event) => menu.current.toggle(event)} ></Button>
+          : <div></div> }
+      </div>
     );
   }
 
