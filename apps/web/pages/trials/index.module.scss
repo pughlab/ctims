@@ -57,13 +57,13 @@
 
   .myHiddenText {
     //visibility: var(--should-show-hidden-text, hidden);
-    visibility: hidden;
+    //visibility: hidden;
     width: 3rem;
     color: black;
   }
 
   tbody tr:hover .myHiddenText{
-    visibility: visible;
+    //visibility: visible;
     //--should-show-hidden-text: visible;
   }
 
