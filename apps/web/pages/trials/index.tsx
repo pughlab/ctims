@@ -12,6 +12,7 @@ import {Menu} from "primereact/menu";
 const Trials = () => {
 
   const [trials, setTrials] = useState<any>([]);
+  const [rowEntered, setRowEntered] = useState<any>(null);
 
   const router = useRouter();
 
@@ -74,8 +75,10 @@ const Trials = () => {
   const subMenuTemplate = (rowData) => {
     return (
     <div className={styles.myHiddenText}>
+      { rowEntered === rowData ?
       <Button icon="pi pi-ellipsis-h" iconPos="right" className="p-button-text p-button-plain" style={ menuButtonStyle }
           onClick={(event) => menu.current.toggle(event)} ></Button>
+        : null }
     </div>
     );
   }
@@ -92,8 +95,12 @@ const Trials = () => {
           </div>
         </div>
 
+        <Menu model={trialMenuItems} ref={menu} popup id="popup_menu" className={styles.menu} appendTo={'self'}/>
+
         <div className={styles.tableContainer}>
-          <DataTable value={trials} rowHover={true}>
+          <DataTable value={trials} rowHover={true}
+                     onRowMouseEnter={(event) => setRowEntered(event.data) }
+                     onRowMouseLeave={(event) => setRowEntered(null) }>
             <Column field="id" header="ID"></Column>
             <Column field="id" header="" body={subMenuTemplate}></Column>
             <Column field="nickname" header="Nickname"></Column>
@@ -104,8 +111,6 @@ const Trials = () => {
           </DataTable>
         </div>
 
-        <Menu model={trialMenuItems} ref={menu} popup id="popup_menu" className={styles.menu} appendTo={'self'}
-              onMouseLeave={(event) => menu.current.hide}/>
       </div>
     </>
 
