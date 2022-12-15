@@ -56,30 +56,17 @@
   }
 
   .myHiddenText {
-    //visibility: var(--should-show-hidden-text, hidden);
-    //visibility: hidden;
     width: 3rem;
     color: black;
-  }
-
-  tbody tr:hover .myHiddenText{
-    //visibility: visible;
-    //--should-show-hidden-text: visible;
   }
 
   .menu {
     margin-top: 5px;
   }
 
-  .p-button:focus p-button-plain:enabled:active {
+  .p-button:focus {
     outline: none;
     boxshadow: none;
   }
-  //.p-button.p-button-text.p-button-plain:enabled:active {
-  //  color: #ff0000;
-  //}
-  //
-  //.p-button.p-button-text.p-button-plain:enabled:active, .p-button.p-button-text.p-button-plain:not(button):not(a):not(.p-disabled):active {
-  //  color:#00ff00 important;
-  //}
+
 }
