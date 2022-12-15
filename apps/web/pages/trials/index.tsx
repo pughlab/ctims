@@ -71,14 +71,19 @@ const Trials = () => {
 
   const menuButtonStyle = {
     color: 'black',
+    height: '20px',
+    paddingTop: '0px',
+    paddingBottom: '0px',
+    boxShadow: 'none',
   }
+
   const subMenuTemplate = (rowData) => {
     return (
     <div className={styles.myHiddenText}>
       { rowEntered === rowData ?
       <Button icon="pi pi-ellipsis-h" iconPos="right" className="p-button-text p-button-plain" style={ menuButtonStyle }
           onClick={(event) => menu.current.toggle(event)} ></Button>
-        : null }
+        : <div></div> }
     </div>
     );
   }
@@ -101,7 +106,7 @@ const Trials = () => {
           <DataTable value={trials} rowHover={true}
                      onRowMouseEnter={(event) => setRowEntered(event.data) }
                      onRowMouseLeave={(event) => setRowEntered(null) }>
-            <Column field="id" header="ID"></Column>
+            <Column field="id" header="ID" ></Column>
             <Column field="id" header="" body={subMenuTemplate}></Column>
             <Column field="nickname" header="Nickname"></Column>
             <Column field="principalInvestigator" header="Principal Investigator" ></Column>
