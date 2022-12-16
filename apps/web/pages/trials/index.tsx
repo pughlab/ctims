@@ -1,6 +1,6 @@
 import styles from './index.module.scss';
 import { Button } from 'primereact/button';
-import { DataTable } from 'primereact/datatable';
+import {DataTable, DataTableRowMouseEventParams} from 'primereact/datatable';
 import { Column } from 'primereact/column';
 
 import TopBar from "../../components/trials/TopBar";
@@ -12,7 +12,8 @@ import {Menu} from "primereact/menu";
 const Trials = () => {
 
   const [trials, setTrials] = useState<any>([]);
-  const [rowEntered, setRowEntered] = useState<any>(null);
+  const [rowEntered, setRowEntered] = useState<DataTableRowMouseEventParams>(null);
+  const [rowClicked, setRowClicked] = useState<any>(null);
 
   const router = useRouter();
 
@@ -78,14 +79,30 @@ const Trials = () => {
   }
 
   const subMenuTemplate = (rowData) => {
+    // is row where mouse event entered the same as the current row to display?
+    let isShown = (rowEntered === rowData);
+    // if the menu is shown, check the current row is the row where menu was clicked
+    if (rowClicked) {
+      isShown = rowData.id === rowClicked.id;
+    }
     return (
     <div className={styles.trailsEllipseBtn}>
-        { rowEntered === rowData ?
+        { isShown ?
           <Button icon="pi pi-ellipsis-h" iconPos="right" className="p-button-text p-button-plain" style={ menuButtonStyle }
-            onClick={(event) => menu.current.toggle(event)} ></Button>
+            onClick={(event) => myClick(event, rowData)} ></Button>
           : <div></div> }
-      </div>
+    </div>
     );
+  }
+
+  const myClick = (event, rowData) => {
+    menu.current.toggle(event);
+    setRowClicked(rowData);
+  }
+
+  const clearRowClicked = () => {
+    setRowClicked(null);
+    setRowEntered(null);
   }
 
   return (
@@ -100,12 +117,14 @@ const Trials = () => {
           </div>
         </div>
 
-        <Menu model={trialMenuItems} ref={menu} popup id="popup_menu" className={styles.menu} appendTo={'self'}/>
+        <Menu model={trialMenuItems} ref={menu} popup id="popup_menu" className={styles.menu} appendTo={'self'}
+          onHide={() => clearRowClicked()}/>
 
         <div className={styles.tableContainer}>
           <DataTable value={trials} rowHover={true}
                      onRowMouseEnter={(event) => setRowEntered(event.data) }
-                     onRowMouseLeave={(event) => setRowEntered(null) }>
+                     onRowMouseLeave={() => setRowEntered(null) }
+          >
             <Column field="id" header="ID" ></Column>
             <Column field="id" header="" body={subMenuTemplate}></Column>
             <Column field="nickname" header="Nickname"></Column>
