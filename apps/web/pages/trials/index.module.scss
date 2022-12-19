@@ -54,4 +54,19 @@
     box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
     border-radius: 8px;
   }
+
+  .trailsEllipseBtn {
+    width: 3rem;
+    color: black;
+  }
+
+  .menu {
+    margin-top: 5px;
+  }
+
+  .p-button:focus {
+    outline: none;
+    boxshadow: none;
+  }
+
 }
