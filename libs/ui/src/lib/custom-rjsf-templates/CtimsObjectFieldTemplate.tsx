@@ -52,9 +52,9 @@ const CtimsObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
         backgroundColor: '#e0e0e0',
     }
 
-    console.log('schema', schema)
-    console.log('uiSchema', uiSchema)
-    console.log('title', title)
+    // console.log('schema', schema)
+    // console.log('uiSchema', uiSchema)
+    // console.log('title', title)
 
     return (
         <>

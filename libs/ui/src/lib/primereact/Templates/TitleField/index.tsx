@@ -9,7 +9,7 @@ const TitleField = ({
                         schema,
                         uiSchema
                     }: TitleFieldProps) => {
-    console.log(title)
+    // console.log(title)
 
     const style: React.CSSProperties = {
         fontFamily: 'Inter, sans-serif',

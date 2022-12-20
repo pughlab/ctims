@@ -21,8 +21,8 @@ const CtimsButtonWidget = (props: WidgetProps) => {
     <button
       id={id}
       disabled={disabled || readonly}
-      // onClick={() => onChange('clicked')}
-      onClick={(e) => btnClick(e)}
+      onClick={(e) => btnClick(e, id)}
+      // onClick={(e) => buttonClick(e)}
     >
       {label || 'Submit'}
     </button>
