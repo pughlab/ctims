@@ -1352,7 +1352,7 @@ class CtimsFormComponent extends Component<CtimsFormComponentProps> {
 }
 
 const Form = withTheme(PrimeTheme)
-
+// Some comment
 const widgets: RegistryWidgetsType = {
   TextWidget: CtimsInput,
   SelectWidget: CtimsDropdown
