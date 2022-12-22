@@ -5,11 +5,17 @@ import {NextRouter, useRouter} from "next/router";
 import useHasMounted from "../hooks/useHasMounted";
 import Layout from "./Layout";
 import {Button} from "primereact/button";
+import {useDispatch, useSelector} from "react-redux";
+import {increment} from "../pages/store/slices/counterSlice";
 
 const Login = () => {
   const hasMounted = useHasMounted();
   const [username, setUsername] = useState<any>();
   const [password, setPassword] = useState<any>();
+
+  const counterValue = useSelector((state: any) => state.counter.value);
+
+  const dispatch = useDispatch();
 
   const router: NextRouter = useRouter();
 
@@ -23,6 +29,12 @@ const Login = () => {
 
   if(!hasMounted) {
     return null;
+  }
+
+  const handleForgotPassword = (e) => {
+    e.preventDefault();
+    dispatch(increment());
+    console.log('Forgot password');
   }
 
   return (
@@ -50,7 +62,7 @@ const Login = () => {
               {/*<small className="p-error block">Fill out this field.</small>*/}
             </div>
               <Button label="Sign In" onClick={(e) => handleLogin(e)} />
-            <div className={styles.forgotPassword}>Forgot Password</div>
+            <div className={styles.forgotPassword} onClick={handleForgotPassword}>Forgot Password</div>
           </form>
 
         </div>
