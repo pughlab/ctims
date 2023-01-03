@@ -23,7 +23,6 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   }
 
   const onDialogHide = () => {
-    setIsDialogVisible(false);
     props.onDialogHide();
   }
 
