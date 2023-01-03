@@ -1,28 +1,32 @@
-import './ui.module.scss';
-// import {schema, uiSchema} from "./custom-rjsf-templates/generatedSchema";
+import {CtimsFormComponentProps} from "../interface/CtimsFormComponentProps";
+import {RjsfGridFieldTemplate} from "../custom-rjsf-templates/RjsfGridFieldTemplate";
+import CtimsObjectFieldTemplate from "../custom-rjsf-templates/CtimsObjectFieldTemplate";
+import CtimsItemObjectFieldTemplate from "../custom-rjsf-templates/CtimsItemObjectFieldTemplate";
+import CtimsArrayFieldSingleTemplate from "../custom-rjsf-templates/CtimsArrayFieldSingleTemplate";
+import CtimsButtonWidget from "../custom-rjsf-templates/CtimsButtonWidget";
 import {JSONSchema7} from "json-schema";
-import {CSSProperties, useEffect, useState} from "react";
-import {RjsfGridFieldTemplate} from "./custom-rjsf-templates/RjsfGridFieldTemplate";
-import CtimsObjectFieldTemplate from "./custom-rjsf-templates/CtimsObjectFieldTemplate";
-import CtimsItemObjectFieldTemplate from "./custom-rjsf-templates/CtimsItemObjectFieldTemplate";
-import CtimsArrayFieldSingleTemplate from "./custom-rjsf-templates/CtimsArrayFieldSingleTemplate";
-import CtimsButtonWidget from "./custom-rjsf-templates/CtimsButtonWidget";
-import * as jsonpath from "jsonpath";
-import CtimsFormComponentMemo from './components/CtimsFormComponent';
-import CtimsMatchDialog from './components/CtimsMatchDialog';
+import CtimsArrayFieldItemTemplate from "../custom-rjsf-templates/CtimsArrayFieldItemTemplate";
+import CtimsArrayFieldTemplate from "../custom-rjsf-templates/CtimsArrayFieldTemplate";
+import localValidator from "@rjsf/validator-ajv8";
+import {CSSProperties, memo} from "react";
+import {withTheme} from "@rjsf/core";
+import {Theme as PrimeTheme} from "../primereact";
+import {RegistryWidgetsType} from "@rjsf/utils";
+import CtimsInput from "../custom-rjsf-templates/CtimsInput";
+import CtimsDropdown from "../custom-rjsf-templates/CtimsDropdown";
 
+const Form = withTheme(PrimeTheme)
+
+const widgets: RegistryWidgetsType = {
+  TextWidget: CtimsInput,
+  SelectWidget: CtimsDropdown
+}
 
 const containerStyle: CSSProperties = {
   width: '100%',
 }
 
-
-/* eslint-disable-next-line */
-export interface UiProps {}
-
-export const Ui = (props: UiProps) => {
-
-  const [isOpen, setIsOpen] = useState(false);
+const CtimsFormComponent = (props: CtimsFormComponentProps) => {
 
   const schema = {
     "type": "object",
@@ -234,19 +238,19 @@ export const Ui = (props: UiProps) => {
                   "items": {
                     "type": "object",
                     "properties": {
-                      "arm_code": { "type": "string" },
-                      "arm_description": { "type": "string" },
-                      "arm_internal_id": { "type": "integer" },
-                      "arm_suspended": { "type": "string" },
+                      "arm_code": {"type": "string"},
+                      "arm_description": {"type": "string"},
+                      "arm_internal_id": {"type": "integer"},
+                      "arm_suspended": {"type": "string"},
                       "dose_level": {
                         "type": "array",
                         "items": {
                           "type": "object",
                           "properties": {
-                            "level_code": { "type": "string" },
-                            "level_description": { "type": "string" },
-                            "level_internal_id": { "type": "integer" },
-                            "level_suspended": { "type": "string" }
+                            "level_code": {"type": "string"},
+                            "level_description": {"type": "string"},
+                            "level_internal_id": {"type": "integer"},
+                            "level_suspended": {"type": "string"}
                           }
                         }
                       },
@@ -254,8 +258,8 @@ export const Ui = (props: UiProps) => {
                         type: 'object',
                         properties: {
                           // fields in the form
-                          "ctimsButton": { type: 'string', title: 'Ctims Button' },
-                          "fieldShouldBeInDialog": { type: 'string', title: 'Field Should Be In Dialog' },
+                          "ctimsButton": {type: 'string', title: 'Ctims Button'},
+                          "fieldShouldBeInDialog": {type: 'string', title: 'Field Should Be In Dialog'},
 
                         }
                       }
@@ -540,10 +544,10 @@ export const Ui = (props: UiProps) => {
               "match": {
                 "ctimsButton": {
                   "ui:widget": CtimsButtonWidget,
-                  onClick: (e: any) => {
+                  onClick: (e: any, id?: string) => {
                     e.preventDefault();
-                    console.log("clicked");
-                    setIsOpen(true)
+                    console.log("clicked", id);
+                    props.onSpecialButtonClick(id);
                   },
                 },
                 "fieldShouldBeInDialog": {
@@ -560,49 +564,29 @@ export const Ui = (props: UiProps) => {
 
   }
 
-  const results = jsonpath.query(schema, '$..fieldShouldBeInDialog');
-  console.log('jsonpath', results);
-
-  const dialogSchema = {
-    "title": "Dialog",
-    "type": "object",
-    "properties": {
-      fieldShouldBeInDialog: results[0]
-    }
-  };
-
-  useEffect(() => {
-    console.log('My component was re-rendered');
-  });
-
-  const handleSpecialClick = (data: any) => {
-    console.log('handleSpecialClick', data);
-    setIsOpen(true);
-  }
-
   const handleSubmit = (e: any) => {
     console.log(e);
-  }
+  };
 
-  const onFormChange = (data: any) => {
-    console.log('onChange event', data)
-  }
-
-  // @ts-ignore
   return (
     <div style={containerStyle}>
-      <CtimsFormComponentMemo
-        onSpecialButtonClick={handleSpecialClick}
-        onRjsfFormChange={onFormChange}
-      />
-      <CtimsMatchDialog onRjsfFormChange={onFormChange}
-                                  onDialogHide={() => setIsOpen(false)}
-                       isDialogVisible={isOpen}
-                       dialogSchema={dialogSchema as JSONSchema7}
-                       uiSchema={uiSchema}
-      />
+      <Form schema={schema as JSONSchema7}
+            templates={{
+              ArrayFieldItemTemplate: CtimsArrayFieldItemTemplate,
+              ArrayFieldTemplate: CtimsArrayFieldTemplate,
+            }}
+            onChange={(data) => {
+              props.onRjsfFormChange(data)
+            }} // @ts-ignore
+            uiSchema={uiSchema}
+            widgets={widgets}
+            onSubmit={(data) => {
+              handleSubmit(data.formData)
+            }} validator={localValidator}/>
     </div>
-  );
+  )
 };
 
-export default Ui;
+// prevent component from re-rendering
+const CtimsFormComponentMemo = memo(CtimsFormComponent, (prevProps: any, nextProps: any) => true);
+export default CtimsFormComponentMemo;
