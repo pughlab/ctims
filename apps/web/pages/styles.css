@@ -13,6 +13,10 @@
   padding: 0;
 }
 
+.p-dialog .p-dialog-footer button {
+  margin: 0;
+}
+
 .p-panel .p-panel-content {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;

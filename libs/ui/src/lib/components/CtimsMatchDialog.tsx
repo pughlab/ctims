@@ -2,6 +2,7 @@ import styles from './CtimsMatchDialog.module.scss';
 import {CSSProperties, useEffect, useState} from "react";
 import {Dialog} from "primereact/dialog";
 import {JSONSchema7} from "json-schema";
+import {Button} from "primereact/button";
 
 interface CtimsMatchDialogProps {
   isDialogVisible: boolean;
@@ -57,16 +58,46 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     )
   }
 
-  const handleSubmit = (data: any) => {
-    console.log(data);
+  const handleSubmit = () => {
+    console.log('clicked submit');
   }
+
+  const dismissBtnStyle: CSSProperties = {
+    height: '36px',
+    fontFamily: "'Inter', sans-serif",
+    fontStyle: 'normal',
+    fontWeight: '600',
+    fontSize: '14px',
+    lineHeight: '16px',
+    color: '#2E72D2'
+  }
+
+  const saveBtnStyle: CSSProperties = {
+    marginLeft: '8px',
+    backgroundColor: '#2E72D2',
+    fontFamily: "'Inter', sans-serif",
+    fontStyle: 'normal',
+    fontWeight: '600',
+    fontSize: '14px',
+    lineHeight: '16px',
+    height: '36px'
+  }
+
+  const footer = (
+    <div style={{marginTop: '10px'}}>
+      <Button style={dismissBtnStyle} label="Discard" className="p-button-text" onClick={handleSubmit} />
+      <Button style={saveBtnStyle} label="Save matching criteria" onClick={handleSubmit} />
+    </div>
+  );
+
+
 
   const onDialogHide = () => {
     props.onDialogHide();
   }
 
   return (
-    <Dialog header="<arm_code> matching criteria" visible={isDialogVisible} style={{width: '960px', height: '800px'}} onHide={onDialogHide}>
+    <Dialog header="<arm_code> matching criteria" footer={footer} visible={isDialogVisible} style={{width: '960px', height: '800px'}} onHide={onDialogHide}>
       <div className={styles.mainContainer}>
         <MatchingMenuAndForm/>
         <MatchingCriteriaPreview/>
