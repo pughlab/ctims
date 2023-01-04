@@ -35,6 +35,8 @@
 
 .addCriteriaBtn {
   display: flex;
+  justify-content: center;
+  align-items: center;
   margin-top: 16px;
   width: 132px;
   height: 36px;
@@ -49,6 +51,10 @@
   span {
     margin-left: 8px;
   }
+}
+
+.addCriteriaBtn:hover {
+  background: rgba(46, 114, 210, 0.1);
 }
 
 .matchingCriteriaMenuContainer {
