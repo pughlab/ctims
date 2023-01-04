@@ -9,6 +9,10 @@
   height: 36px;
 }
 
+.p-dialog .p-dialog-content {
+  padding: 0;
+}
+
 .p-panel .p-panel-content {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;

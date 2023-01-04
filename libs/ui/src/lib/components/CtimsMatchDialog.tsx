@@ -1,4 +1,5 @@
-import {useEffect, useState} from "react";
+import styles from './CtimsMatchDialog.module.scss';
+import {CSSProperties, useEffect, useState} from "react";
 import {Dialog} from "primereact/dialog";
 import {JSONSchema7} from "json-schema";
 
@@ -9,7 +10,6 @@ interface CtimsMatchDialogProps {
   onRjsfFormChange: (data: any) => void;
   onDialogHide: () => void;
 }
-
 
 const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   const [isDialogVisible, setIsDialogVisible] = useState(props.isDialogVisible);
@@ -27,7 +27,16 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   }
 
   return (
-    <Dialog header="Dialog" visible={isDialogVisible} style={{width: '50vw'}} onHide={onDialogHide}>
+    <Dialog header="Dialog" visible={isDialogVisible} style={{width: '960px', height: '800px'}} onHide={onDialogHide}>
+      <div>
+        <div className={styles.matchingCriteriaContainer}>
+          <div className={styles.matchingCriteriaTextContainer}>
+            <div className={styles.matchingCriteriaText}>Matching Criteria</div>
+            <i className="pi pi-plus-circle"></i>
+          </div>
+
+        </div>
+      </div>
       {/*<Form schema={props.dialogSchema as JSONSchema7}*/}
       {/*      templates={{*/}
       {/*        ArrayFieldItemTemplate: CtimsArrayFieldItemTemplate,*/}
