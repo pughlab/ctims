@@ -13,10 +13,49 @@ interface CtimsMatchDialogProps {
 
 const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   const [isDialogVisible, setIsDialogVisible] = useState(props.isDialogVisible);
+  const [isEmpty, setIsEmpty] = useState(true);
 
   useEffect(() => {
     setIsDialogVisible(props.isDialogVisible);
   }, [props.isDialogVisible])
+
+  const EmptyForm = () => {
+    return (
+      <div className={styles.matchingCriteriaFormContainerEmpty}>
+        <div className={styles.matchingCriteriaFormContainerEmptyText}>
+          Matching criteria inputs will be shown here.
+        </div>
+        <div className={styles.addCriteriaBtn}>
+          <i className="pi pi-plus-circle"></i>
+          <span>Add criteria</span>
+        </div>
+      </div>
+    )
+  }
+
+  const MatchingMenuAndForm = () => {
+    return (
+      <div className={styles.matchingMenuAndFormContainer}>
+        <div className={styles.matchingCriteriaMenuContainer}>
+          <div className={styles.matchingCriteriaTextContainer}>
+            <div className={styles.matchingCriteriaText}>Matching Criteria</div>
+            <i className="pi pi-plus-circle"></i>
+          </div>
+        </div>
+        <div className={styles.matchingCriteriaFormContainer}>
+          {isEmpty ? <EmptyForm/> : null}
+        </div>
+      </div>
+    )
+  }
+
+  const MatchingCriteriaPreview = () => {
+    return (
+      <div className={styles.matchingCriteriaPreview}>
+        Matching criteria preview will be shown here.
+      </div>
+    )
+  }
 
   const handleSubmit = (data: any) => {
     console.log(data);
@@ -27,15 +66,10 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   }
 
   return (
-    <Dialog header="Dialog" visible={isDialogVisible} style={{width: '960px', height: '800px'}} onHide={onDialogHide}>
-      <div>
-        <div className={styles.matchingCriteriaContainer}>
-          <div className={styles.matchingCriteriaTextContainer}>
-            <div className={styles.matchingCriteriaText}>Matching Criteria</div>
-            <i className="pi pi-plus-circle"></i>
-          </div>
-
-        </div>
+    <Dialog header="<arm_code> matching criteria" visible={isDialogVisible} style={{width: '960px', height: '800px'}} onHide={onDialogHide}>
+      <div className={styles.mainContainer}>
+        <MatchingMenuAndForm/>
+        <MatchingCriteriaPreview/>
       </div>
       {/*<Form schema={props.dialogSchema as JSONSchema7}*/}
       {/*      templates={{*/}
