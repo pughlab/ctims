@@ -1,8 +1,10 @@
 import styles from './CtimsMatchDialog.module.scss';
-import {CSSProperties, useEffect, useState} from "react";
+import React, {createRef, CSSProperties, useEffect, useRef, useState} from "react";
 import {Dialog} from "primereact/dialog";
 import {JSONSchema7} from "json-schema";
 import {Button} from "primereact/button";
+import {Menu} from "primereact/menu";
+import {Dropdown} from "primereact/dropdown";
 
 interface CtimsMatchDialogProps {
   isDialogVisible: boolean;
@@ -12,13 +14,40 @@ interface CtimsMatchDialogProps {
   onDialogHide: () => void;
 }
 
+const menuItems = [
+  {
+    label: 'Clinical',
+  },
+  {
+    label: 'Genomic',
+  }
+]
+
 const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   const [isDialogVisible, setIsDialogVisible] = useState(props.isDialogVisible);
   const [isEmpty, setIsEmpty] = useState(true);
 
+  const menu = useRef(null);
+  const iRef = useRef(null);
+
   useEffect(() => {
     setIsDialogVisible(props.isDialogVisible);
   }, [props.isDialogVisible])
+
+  const menuClick = (e: any) => {
+    console.log('menuClick', iRef.current);
+    // @ts-ignore
+    menu.current.toggle(e);
+  }
+
+  const AddCriteriaButton = () => {
+    return (
+      <div className={styles.addCriteriaBtn} onClick={() => {setIsEmpty(false)}}>
+        <i className="pi pi-plus-circle"></i>
+        <span>Add criteria</span>
+      </div>
+    )
+  }
 
   const EmptyForm = () => {
     return (
@@ -26,27 +55,74 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
         <div className={styles.matchingCriteriaFormContainerEmptyText}>
           Matching criteria inputs will be shown here.
         </div>
-        <div className={styles.addCriteriaBtn}>
-          <i className="pi pi-plus-circle"></i>
-          <span>Add criteria</span>
-        </div>
+        <AddCriteriaButton />
       </div>
+    )
+  }
+
+  const OperatorDropdown = () => {
+    const [operator, setOperator] = useState({ name: 'AND (if all criteria are met)', code: 'AND' });
+
+    const dropDownItems = [
+      { name: 'AND (if all criteria are met)', code: 'AND' },
+      { name: 'OR (if any criteria are met)', code: 'OR' },
+    ];
+
+    const onOperatorChange = (e: any) => {
+      console.log('onOperatorChange', e.value);
+      setOperator(e.value);
+    }
+
+    const dropDownStyle: CSSProperties = {
+      width: '600px',
+      marginLeft: '20px',
+      marginRight: '20px',
+    }
+
+    const labelStyle: CSSProperties = {
+      marginBottom: '7px',
+      marginLeft: '20px',
+      marginRight: '20px',
+      marginTop: '20px',
+    }
+
+    return (
+      <>
+        <div style={labelStyle}>Operator</div>
+        <Dropdown value={operator}
+                  style={dropDownStyle}
+                  options={dropDownItems}
+                  onChange={onOperatorChange}
+                  optionLabel="name" />
+      </>
+    )
+  }
+
+  const ClinicalForm = () => {
+    return (
+        <OperatorDropdown />
     )
   }
 
   const MatchingMenuAndForm = () => {
     return (
-      <div className={styles.matchingMenuAndFormContainer}>
-        <div className={styles.matchingCriteriaMenuContainer}>
-          <div className={styles.matchingCriteriaTextContainer}>
-            <div className={styles.matchingCriteriaText}>Matching Criteria</div>
-            <i className="pi pi-plus-circle"></i>
+      <>
+        <Menu model={menuItems} ref={menu} popup id="criteria_popup_menu" appendTo={iRef.current}/>
+        <div className={styles.matchingMenuAndFormContainer}>
+          <div className={styles.matchingCriteriaMenuContainer}>
+            <div className={styles.matchingCriteriaTextContainer}>
+              <div className={styles.matchingCriteriaText}>Matching Criteria</div>
+              <i ref={iRef} className="pi pi-plus-circle" onClick={(e) => {
+                menuClick(e);
+              }}></i>
+
+            </div>
+          </div>
+          <div className={styles.matchingCriteriaFormContainer}>
+            {isEmpty ? <EmptyForm /> : <ClinicalForm />}
           </div>
         </div>
-        <div className={styles.matchingCriteriaFormContainer}>
-          {isEmpty ? <EmptyForm/> : null}
-        </div>
-      </div>
+      </>
     )
   }
 
