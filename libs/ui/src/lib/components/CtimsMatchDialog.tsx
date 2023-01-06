@@ -99,7 +99,8 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     )
   }
 
-  const TitleContainer = () => {
+  const TitleContainer = (props: {title: string}) => {
+    const {title} = props;
 
     const deleteButtonClasses = `p-button-text p-button-plain p-button-danger ${styles.deleteButton}`;
     const addCriteriaButtonClasses = `p-button-text p-button-plain ${styles.addCriteriaToSameListButton}`;
@@ -107,7 +108,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     return (
       <div className={styles.titleContainer}>
         <div className={styles.titleContainerText}>
-          Clinical
+          {title}
         </div>
         <Button icon="pi pi-trash" label="Delete" iconPos="left" className={deleteButtonClasses} />
         <Button icon="pi pi-plus-circle" label="Add criteria to the same list" iconPos="left" className={addCriteriaButtonClasses} />
@@ -120,9 +121,20 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
         <div style={{display: 'flex', flexDirection: 'column'}}>
           <OperatorDropdown />
           <div>
-            <TitleContainer />
+            <TitleContainer title="Clinical" />
           </div>
         </div>
+    )
+  }
+
+  const GenomicForm = () => {
+    return (
+      <div style={{display: 'flex', flexDirection: 'column'}}>
+        <OperatorDropdown />
+        <div>
+          <TitleContainer title="Genomic" />
+        </div>
+      </div>
     )
   }
 
