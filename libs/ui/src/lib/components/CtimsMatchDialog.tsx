@@ -63,6 +63,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   const OperatorDropdown = () => {
     const [operator, setOperator] = useState({ name: 'AND (if all criteria are met)', code: 'AND' });
 
+    // TODO: make it a template to reflect different font for AND and description
     const dropDownItems = [
       { name: 'AND (if all criteria are met)', code: 'AND' },
       { name: 'OR (if any criteria are met)', code: 'OR' },
@@ -98,9 +99,30 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     )
   }
 
+  const TitleContainer = () => {
+
+    const deleteButtonClasses = `p-button-text p-button-plain p-button-danger ${styles.deleteButton}`;
+    const addCriteriaButtonClasses = `p-button-text p-button-plain ${styles.addCriteriaToSameListButton}`;
+
+    return (
+      <div className={styles.titleContainer}>
+        <div className={styles.titleContainerText}>
+          Clinical
+        </div>
+        <Button icon="pi pi-trash" label="Delete" iconPos="left" className={deleteButtonClasses} />
+        <Button icon="pi pi-plus-circle" label="Add criteria to the same list" iconPos="left" className={addCriteriaButtonClasses} />
+      </div>
+    )
+  }
+
   const ClinicalForm = () => {
     return (
-        <OperatorDropdown />
+        <div style={{display: 'flex', flexDirection: 'column'}}>
+          <OperatorDropdown />
+          <div>
+            <TitleContainer />
+          </div>
+        </div>
     )
   }
 
