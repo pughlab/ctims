@@ -59,16 +59,19 @@
 
 .matchingCriteriaMenuContainer {
   display: flex;
+  flex-direction: column;
   width: 320px;
   height: 556px;
   border-right: 1px solid #E4E4E4;
   border-top: 1px solid #E4E4E4;
   border-bottom: 1px solid #E4E4E4;
+
 }
 
 
 .matchingCriteriaTextContainer {
   margin-top: 20px;
+  margin-bottom: 20px;
   margin-left: 20px;
   height: 16px;
 

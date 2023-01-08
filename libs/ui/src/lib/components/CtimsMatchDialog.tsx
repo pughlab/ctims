@@ -1,10 +1,13 @@
 import styles from './CtimsMatchDialog.module.scss';
-import React, {createRef, CSSProperties, useEffect, useRef, useState} from "react";
+import React, {CSSProperties, useEffect, useRef, useState} from "react";
 import {Dialog} from "primereact/dialog";
 import {JSONSchema7} from "json-schema";
 import {Button} from "primereact/button";
 import {Menu} from "primereact/menu";
 import {Dropdown} from "primereact/dropdown";
+import TreeNode from "primereact/treenode";
+import {Tree, TreeEventNodeParams} from "primereact/tree";
+
 
 interface CtimsMatchDialogProps {
   isDialogVisible: boolean;
@@ -14,35 +17,88 @@ interface CtimsMatchDialogProps {
   onDialogHide: () => void;
 }
 
-const menuItems = [
-  {
-    label: 'Clinical',
-  },
-  {
-    label: 'Genomic',
-  }
-]
+
 
 const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   const [isDialogVisible, setIsDialogVisible] = useState(props.isDialogVisible);
   const [isEmpty, setIsEmpty] = useState(true);
+  const [expandedKeys, setExpandedKeys] = useState({0: true});
+  const [rootNodes, setRootNodes] = useState<TreeNode[]>([]);
+
+  const buildRootNodes = (rootLabel: string, firstChildLabel: string): TreeNode[] => {
+    const r = [
+      {
+        key: '0',
+        label: rootLabel,
+        data: {},
+        children: [
+          {
+            key: '0-0',
+            label: firstChildLabel,
+            data: {},
+          }
+        ]
+      }
+    ];
+    const rootData = r[0].data;
+    const firstChildData = r[0].children[0].data;
+    // @ts-ignore
+    rootData[rootLabel.toLowerCase()] = [];
+    // @ts-ignore
+    firstChildData[firstChildLabel.toLowerCase()] = {};
+    return r;
+  }
+
+  const menuItems = [
+    {
+      label: 'Clinical',
+      command: () => {
+        const rootNodes = buildRootNodes('And', 'Clinical');
+        setRootNodes(rootNodes);
+      }
+    },
+    {
+      label: 'Genomic',
+      command: () => {
+        const rootNodes = buildRootNodes('And', 'Genomic');
+        setRootNodes(rootNodes);
+      }
+    }
+  ];
+
+  // const rootNodes: TreeNode[] = [
+  //     {
+  //       key: '0',
+  //       label: "And",
+  //       data: {
+  //         and: []
+  //       },
+  //       children: [
+  //         {
+  //           key: '0-0',
+  //           label: 'Clinical',
+  //           data: {
+  //             clinical: {}
+  //           },
+  //         }
+  //       ]
+  //     }
+  // ];
 
   const menu = useRef(null);
-  const iRef = useRef(null);
 
   useEffect(() => {
     setIsDialogVisible(props.isDialogVisible);
   }, [props.isDialogVisible])
 
   const menuClick = (e: any) => {
-    console.log('menuClick', iRef.current);
     // @ts-ignore
-    menu.current.toggle(e);
+    menu.current.show(e);
   }
 
   const AddCriteriaButton = () => {
     return (
-      <div className={styles.addCriteriaBtn} onClick={() => {setIsEmpty(false)}}>
+      <div className={styles.addCriteriaBtn} onClick={(e) => {menuClick(e)}}>
         <i className="pi pi-plus-circle"></i>
         <span>Add criteria</span>
       </div>
@@ -138,19 +194,33 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     )
   }
 
+  const onNodeToggle = (e: any) => {
+    console.log('onNodeToggle', e);
+    setExpandedKeys(e.value)
+  }
+
+  const onNodeSelect = (node: TreeEventNodeParams) => {
+    console.log(node.node.data);
+  }
+
   const MatchingMenuAndForm = () => {
     return (
       <>
-        <Menu model={menuItems} ref={menu} popup id="criteria_popup_menu" appendTo={iRef.current}/>
+        <Menu model={menuItems} ref={menu} popup id="criteria_popup_menu"/>
         <div className={styles.matchingMenuAndFormContainer}>
           <div className={styles.matchingCriteriaMenuContainer}>
             <div className={styles.matchingCriteriaTextContainer}>
               <div className={styles.matchingCriteriaText}>Matching Criteria</div>
-              <i ref={iRef} className="pi pi-plus-circle" onClick={(e) => {
+              <i className="pi pi-plus-circle" onClick={(e) => {
                 menuClick(e);
               }}></i>
 
             </div>
+            <Tree value={rootNodes}
+                  expandedKeys={expandedKeys}
+                  selectionMode="single"
+                  onSelect={onNodeSelect}
+                  onToggle={e => onNodeToggle(e) } />
           </div>
           <div className={styles.matchingCriteriaFormContainer}>
             {isEmpty ? <EmptyForm /> : <ClinicalForm />}

@@ -9,6 +9,21 @@
   height: 36px;
 }
 
+.p-tree {
+  padding: 0;
+  border: 0;
+}
+
+.p-tree .p-tree-container .p-treenode .p-treenode-content {
+  padding: 0;
+  border: 0;
+}
+
+.p-tree .p-tree-container .p-treenode .p-treenode-content:focus {
+  outline: none;
+  box-shadow: none;
+}
+
 .p-dialog .p-dialog-content {
   padding: 0;
 }
