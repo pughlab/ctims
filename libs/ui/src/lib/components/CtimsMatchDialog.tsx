@@ -7,6 +7,7 @@ import {Menu} from "primereact/menu";
 import {Dropdown} from "primereact/dropdown";
 import TreeNode from "primereact/treenode";
 import {Tree, TreeEventNodeParams} from "primereact/tree";
+import * as jsonpath from "jsonpath";
 
 
 interface CtimsMatchDialogProps {
@@ -22,8 +23,32 @@ interface CtimsMatchDialogProps {
 const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   const [isDialogVisible, setIsDialogVisible] = useState(props.isDialogVisible);
   const [isEmpty, setIsEmpty] = useState(true);
+  const [selectedKeys, setSelectedKeys] = useState<any>(null);
   const [expandedKeys, setExpandedKeys] = useState({0: true});
   const [rootNodes, setRootNodes] = useState<TreeNode[]>([]);
+  const [componentToRender, setComponentToRender] = useState<any>(null);
+
+  const ClinicalForm = () => {
+    return (
+      <div style={{display: 'flex', flexDirection: 'column'}}>
+        <OperatorDropdown />
+        <div>
+          <TitleContainer title="Clinical" />
+        </div>
+      </div>
+    )
+  }
+
+  const GenomicForm = () => {
+    return (
+      <div style={{display: 'flex', flexDirection: 'column'}}>
+        <OperatorDropdown />
+        <div>
+          <TitleContainer title="Genomic" />
+        </div>
+      </div>
+    )
+  }
 
   const buildRootNodes = (rootLabel: string, firstChildLabel: string): TreeNode[] => {
     const r = [
@@ -41,11 +66,11 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
       }
     ];
     const rootData = r[0].data;
-    const firstChildData = r[0].children[0].data;
     // @ts-ignore
     rootData[rootLabel.toLowerCase()] = [];
+    let component = firstChildLabel.toLowerCase() === 'clinical' ? ClinicalForm : GenomicForm;
     // @ts-ignore
-    firstChildData[firstChildLabel.toLowerCase()] = {};
+    r[0].children[0].data = {component, type: firstChildLabel.toLowerCase()};
     return r;
   }
 
@@ -55,6 +80,8 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
       command: () => {
         const rootNodes = buildRootNodes('And', 'Clinical');
         setRootNodes(rootNodes);
+        setSelectedKeys('0-0')
+        console.log('selectedKeys', selectedKeys);
       }
     },
     {
@@ -62,6 +89,8 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
       command: () => {
         const rootNodes = buildRootNodes('And', 'Genomic');
         setRootNodes(rootNodes);
+        setSelectedKeys('0-0')
+        console.log('selectedKeys', selectedKeys);
       }
     }
   ];
@@ -90,6 +119,15 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   useEffect(() => {
     setIsDialogVisible(props.isDialogVisible);
   }, [props.isDialogVisible])
+  useEffect(() => {
+    // use jsonpath to find key '0-0' in rootNodes
+    const r = jsonpath.query(rootNodes, '$..[?(@.key=="0-0")]');
+    if(r.length > 0) {
+      setIsEmpty(false);
+      console.log('r', r);
+      setComponentToRender(r[0].data.component);
+    }
+  }, [rootNodes])
 
   const menuClick = (e: any) => {
     // @ts-ignore
@@ -172,34 +210,17 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     )
   }
 
-  const ClinicalForm = () => {
-    return (
-        <div style={{display: 'flex', flexDirection: 'column'}}>
-          <OperatorDropdown />
-          <div>
-            <TitleContainer title="Clinical" />
-          </div>
-        </div>
-    )
-  }
 
-  const GenomicForm = () => {
-    return (
-      <div style={{display: 'flex', flexDirection: 'column'}}>
-        <OperatorDropdown />
-        <div>
-          <TitleContainer title="Genomic" />
-        </div>
-      </div>
-    )
-  }
 
   const onNodeToggle = (e: any) => {
-    console.log('onNodeToggle', e);
+    console.log('selectedKeys', selectedKeys);
     setExpandedKeys(e.value)
+    console.log('expandedKeys', expandedKeys);
   }
 
   const onNodeSelect = (node: TreeEventNodeParams) => {
+    console.log('selectedKeys', selectedKeys);
+    console.log('expandedKeys', expandedKeys);
     console.log(node.node.data);
   }
 
@@ -218,12 +239,13 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
             </div>
             <Tree value={rootNodes}
                   expandedKeys={expandedKeys}
+                  selectionKeys={selectedKeys}
                   selectionMode="single"
                   onSelect={onNodeSelect}
                   onToggle={e => onNodeToggle(e) } />
           </div>
           <div className={styles.matchingCriteriaFormContainer}>
-            {isEmpty ? <EmptyForm /> : <ClinicalForm />}
+            {isEmpty ? <EmptyForm /> : componentToRender}
           </div>
         </div>
       </>

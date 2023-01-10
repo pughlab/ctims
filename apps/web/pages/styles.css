@@ -12,16 +12,27 @@
 .p-tree {
   padding: 0;
   border: 0;
+  margin-left: 9px;
 }
 
 .p-tree .p-tree-container .p-treenode .p-treenode-content {
   padding: 0;
   border: 0;
+  height: 16px;
+
 }
 
 .p-tree .p-tree-container .p-treenode .p-treenode-content:focus {
   outline: none;
   box-shadow: none;
+}
+
+.p-tree .p-tree-container .p-treenode .p-treenode-content .p-treenode-label {
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
 }
 
 .p-dialog .p-dialog-content {
