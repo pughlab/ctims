@@ -4,6 +4,7 @@ import {Dialog} from "primereact/dialog";
 import {JSONSchema7} from "json-schema";
 import {Button} from "primereact/button";
 import {Menu} from "primereact/menu";
+import { TieredMenu } from 'primereact/tieredmenu';
 import {Dropdown} from "primereact/dropdown";
 import TreeNode from "primereact/treenode";
 import {Tree, TreeEventNodeParams} from "primereact/tree";
@@ -18,7 +19,14 @@ interface CtimsMatchDialogProps {
   onDialogHide: () => void;
 }
 
-
+const incrementKey = (key: string): string => {
+  // key is of the form '0-0'
+  const keyParts = key.split('-');
+  const lastKeyPart = keyParts[keyParts.length - 1];
+  const newLastKeyPart = parseInt(lastKeyPart) + 1;
+  keyParts[keyParts.length - 1] = newLastKeyPart.toString();
+  return keyParts.join('-');
+}
 
 const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   const [isDialogVisible, setIsDialogVisible] = useState(props.isDialogVisible);
@@ -26,6 +34,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   const [selectedKeys, setSelectedKeys] = useState<any>(null);
   const [expandedKeys, setExpandedKeys] = useState({0: true});
   const [rootNodes, setRootNodes] = useState<TreeNode[]>([]);
+  const [selectedNode, setSelectedNode] = useState<any>(null);
   const [componentToRender, setComponentToRender] = useState<any>(null);
 
   const ClinicalForm = () => {
@@ -95,26 +104,8 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     }
   ];
 
-  // const rootNodes: TreeNode[] = [
-  //     {
-  //       key: '0',
-  //       label: "And",
-  //       data: {
-  //         and: []
-  //       },
-  //       children: [
-  //         {
-  //           key: '0-0',
-  //           label: 'Clinical',
-  //           data: {
-  //             clinical: {}
-  //           },
-  //         }
-  //       ]
-  //     }
-  // ];
-
   const menu = useRef(null);
+  const tieredMenu = useRef(null);
 
   useEffect(() => {
     setIsDialogVisible(props.isDialogVisible);
@@ -125,6 +116,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     if(r.length > 0) {
       setIsEmpty(false);
       console.log('r', r);
+      setSelectedNode(r[0]);
       setComponentToRender(r[0].data.component);
     }
   }, [rootNodes])
@@ -132,6 +124,11 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   const menuClick = (e: any) => {
     // @ts-ignore
     menu.current.show(e);
+  }
+
+  const tieredMenuClick = (e: any) => {
+    // @ts-ignore
+    tieredMenu.current.show(e);
   }
 
   const AddCriteriaButton = () => {
@@ -210,21 +207,99 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     )
   }
 
-
-
   const onNodeToggle = (e: any) => {
     console.log('selectedKeys', selectedKeys);
     setExpandedKeys(e.value)
-    console.log('expandedKeys', expandedKeys);
   }
 
   const onNodeSelect = (node: TreeEventNodeParams) => {
     console.log('selectedKeys', selectedKeys);
     console.log('expandedKeys', expandedKeys);
+    setSelectedNode(node.node);
     console.log(node.node.data);
   }
 
   const MatchingMenuAndForm = () => {
+    const [isMouseOverNode, setIsMouseOverNode] = useState(false);
+
+    const nodeTemplate = (node: TreeNode) => {
+      // console.log('selectedNode', selectedNode);
+      // console.log('node nodeTemplate', selectedNode);
+
+      const tieredMenuModel = [
+        {
+          label: 'Add criteria to the same list',
+          icon: 'pi pi-plus-circle',
+          command: () => {
+            //using jsonpath to find the parent node of the selectedNode
+            const r = jsonpath.query(rootNodes, '$..[?(@.children[0].key=="'+selectedNode.key+'")]');
+            if(r.length > 0) {
+              const parent = r[0];
+              const incrementedKey = incrementKey(selectedNode.key);
+              const newNode = {
+                key: incrementedKey,
+                label: 'Clinical',
+                data: {component: ClinicalForm, type: 'clinical'}
+              }
+              parent.children.push(newNode);
+              setRootNodes([...rootNodes]);
+            }
+            console.log('parentNode result', r);
+            console.log('Add criteria to the same list', selectedNode);
+          }
+        },
+        {
+          label: 'Delete',
+          icon: 'pi pi-trash',
+        },
+        {
+          separator:true
+        },
+        {
+          label: 'Add criteria subgroup',
+          icon: 'pi pi-clone',
+          items: [
+            {
+              label: 'Clinical',
+            },
+            {
+              label: 'Genomic',
+            }
+          ]
+        }
+      ]
+
+      if (selectedNode) {
+        const btnToShow = () => {
+          let show = false;
+          if ((selectedNode as TreeNode).key === node.key && isMouseOverNode) {
+            show = true;
+          }
+          // show=true
+            return show ?
+              <Button icon="pi pi-ellipsis-h"
+                      className={styles.treeMenuBtn}
+                      iconPos="right" onClick={tieredMenuClick} ></Button> : null
+        }
+
+        let label = <b>{node.label}</b>;
+        return (
+          <>
+            <div className={styles.treeNodeContainer} onMouseOver={() => setIsMouseOverNode(true)}
+                 onMouseOut={() => setIsMouseOverNode(false)}>
+              <span className="p-treenode-label" >
+                {label}
+              </span>
+              {btnToShow()}
+              <TieredMenu model={tieredMenuModel} popup ref={tieredMenu} />
+            </div>
+
+          </>
+        );
+      }
+      return null;
+    }
+
     return (
       <>
         <Menu model={menuItems} ref={menu} popup id="criteria_popup_menu"/>
@@ -238,6 +313,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
 
             </div>
             <Tree value={rootNodes}
+                  nodeTemplate={nodeTemplate}
                   expandedKeys={expandedKeys}
                   selectionKeys={selectedKeys}
                   selectionMode="single"

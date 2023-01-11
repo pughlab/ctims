@@ -138,4 +138,34 @@
   width: 233px !important;
 }
 
+.treeNodeContainer {
+  display: flex;
+  width: 100%;
+}
+
+.treeMenuBtn {
+  color: black;
+  height: 16px;
+  padding: 0 !important;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  outline: none !important;
+  vertical-align: baseline !important;
+  margin-left: auto;
+}
+
+.treeMenuBtn:hover {
+  background: none !important;
+  color: black !important;
+}
+
+.treeMenuBtn:focus {
+  background: none !important;
+  color: black !important;
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 
