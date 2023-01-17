@@ -63,12 +63,12 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     const r = [
       {
         key: '0',
-        label: rootLabel,
+        label: rootLabel, // AND/OR
         data: {},
         children: [
           {
             key: '0-0',
-            label: firstChildLabel,
+            label: firstChildLabel, // clinical or genomic or AND/OR
             data: {},
           }
         ]
@@ -110,6 +110,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   useEffect(() => {
     setIsDialogVisible(props.isDialogVisible);
   }, [props.isDialogVisible])
+
   useEffect(() => {
     // use jsonpath to find key '0-0' in rootNodes
     const r = jsonpath.query(rootNodes, '$..[?(@.key=="0-0")]');
