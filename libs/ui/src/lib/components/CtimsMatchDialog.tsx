@@ -217,11 +217,47 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     console.log('selectedKeys', selectedKeys);
     console.log('expandedKeys', expandedKeys);
     setSelectedNode(node.node);
-    console.log(node.node.data);
   }
 
   const MatchingMenuAndForm = () => {
     const [isMouseOverNode, setIsMouseOverNode] = useState(false);
+
+    const findArrayContainingKeyInsideATree = (tree: TreeNode, key: string): TreeNode | null => {
+      let result = null;
+      const traverse = (tree: TreeNode, key: string) => {
+        if (tree.children) {
+          tree.children.forEach((child) => {
+            if (child.key === key) {
+              result = tree;
+            }
+            traverse(child, key);
+          });
+        }
+      };
+      traverse(tree, key);
+      return result;
+    }
+
+    const addCriteria = (node: TreeNode, type: string) => {
+      console.log('rootNodes', rootNodes);
+      const typeLowerCase = type.toLowerCase();
+      if (node.key) {
+        const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], node.key as string);
+        if (parentNode) {
+          // get last element from the children
+          const lastChild: TreeNode = parentNode.children![parentNode.children!.length - 1];
+          const incrementedKey = incrementKey(lastChild.key as string);
+          const newNode = {
+            key: incrementedKey,
+            label: type,
+            data: {component: typeLowerCase === 'clinical' ? ClinicalForm: GenomicForm, type: typeLowerCase}
+          }
+          parentNode.children!.push(newNode);
+        }
+        setRootNodes([...rootNodes]);
+      }
+
+    }
 
     const nodeTemplate = (node: TreeNode) => {
       // console.log('selectedNode', selectedNode);
@@ -231,23 +267,21 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
         {
           label: 'Add criteria to the same list',
           icon: 'pi pi-plus-circle',
-          command: () => {
-            //using jsonpath to find the parent node of the selectedNode
-            const r = jsonpath.query(rootNodes, '$..[?(@.children[0].key=="'+selectedNode.key+'")]');
-            if(r.length > 0) {
-              const parent = r[0];
-              const incrementedKey = incrementKey(selectedNode.key);
-              const newNode = {
-                key: incrementedKey,
-                label: 'Clinical',
-                data: {component: ClinicalForm, type: 'clinical'}
+          items: [
+            {
+              label: 'Clinical',
+              command: () => {
+                addCriteria(node, 'Clinical');
               }
-              parent.children.push(newNode);
-              setRootNodes([...rootNodes]);
+            },
+            {
+              label: 'Genomic',
+              command: () => {
+                addCriteria(node, 'Genomic');
+              }
             }
-            console.log('parentNode result', r);
-            console.log('Add criteria to the same list', selectedNode);
-          }
+          ]
+
         },
         {
           label: 'Delete',
@@ -270,6 +304,11 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
         }
       ]
 
+      const onNodeClick = (e: any) => {
+        console.log('nodeClicked !~', node);
+        setComponentToRender(node.data.component);
+      }
+
       if (selectedNode) {
         const btnToShow = () => {
           let show = false;
@@ -288,7 +327,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
           <>
             <div className={styles.treeNodeContainer} onMouseOver={() => setIsMouseOverNode(true)}
                  onMouseOut={() => setIsMouseOverNode(false)}>
-              <span className="p-treenode-label" >
+              <span className="p-treenode-label" onClick={onNodeClick} style={{width: '80%'}}>
                 {label}
               </span>
               {btnToShow()}
