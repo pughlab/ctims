@@ -1,5 +1,5 @@
 import styles from './CtimsMatchDialog.module.scss';
-import React, {CSSProperties, useEffect, useRef, useState} from "react";
+import React, {createElement, CSSProperties, FunctionComponent, useEffect, useRef, useState} from "react";
 import {Dialog} from "primereact/dialog";
 import {JSONSchema7} from "json-schema";
 import {Button} from "primereact/button";
@@ -9,13 +9,25 @@ import {Dropdown} from "primereact/dropdown";
 import TreeNode from "primereact/treenode";
 import {Tree, TreeEventNodeParams} from "primereact/tree";
 import * as jsonpath from "jsonpath";
+import {withTheme} from "@rjsf/core";
+import {Theme as PrimeTheme} from "../primereact";
+import localValidator from "@rjsf/validator-ajv8";
+import CtimsObjectFieldTemplate from "../custom-rjsf-templates/CtimsObjectFieldTemplate";
+import {RegistryWidgetsType} from "@rjsf/utils";
+import CtimsInput from "../custom-rjsf-templates/CtimsInput";
+import CtimsDropdown from "../custom-rjsf-templates/CtimsDropdown";
+import { render } from 'react-dom';
 
+enum EComponentType {
+  None,
+  ClinicalForm,
+  GenomicForm
+}
+
+const Form = withTheme(PrimeTheme)
 
 interface CtimsMatchDialogProps {
   isDialogVisible: boolean;
-  dialogSchema: JSONSchema7;
-  uiSchema: any;
-  onRjsfFormChange: (data: any) => void;
   onDialogHide: () => void;
 }
 
@@ -35,20 +47,60 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   const [expandedKeys, setExpandedKeys] = useState({0: true});
   const [rootNodes, setRootNodes] = useState<TreeNode[]>([]);
   const [selectedNode, setSelectedNode] = useState<any>(null);
-  const [componentToRender, setComponentToRender] = useState<any>(null);
+  const [componentType, setComponentType] = useState<EComponentType>(EComponentType.None);
+  const [componentFormData, setComponentFormData] = useState<any>({});
 
-  const ClinicalForm = () => {
+
+  const ClinicalForm = (props: any) => {
+    console.log('ClinicalForm loaded: ', selectedNode)
+    // const {stateChanger} = props
+
+    const widgets: RegistryWidgetsType = {
+      TextWidget: CtimsInput,
+      SelectWidget: CtimsDropdown
+    }
+
+    const clinicalFormSchema = {
+      'type': 'object',
+      'required': ['age', 'oncotreePrimaryDiagnosis'],
+      'properties': {
+        'age': {
+          'type': 'string',
+          'title': 'Age',
+        },
+        oncotreePrimaryDiagnosis: {
+          'type': 'string',
+          'title': 'Oncotree Primary Diagnosis',
+        }
+      }
+    }
+    const clinicalUiSchema = {
+      "ui:ObjectFieldTemplate": CtimsObjectFieldTemplate
+    }
+
+    const onFormChange = (data: any) => {
+      console.log('ClinicalForm data: ', data.formData);
+      // const newNode = {...selectedNode, data: data.formData};
+    }
+
     return (
       <div style={{display: 'flex', flexDirection: 'column'}}>
         <OperatorDropdown />
         <div>
           <TitleContainer title="Clinical" />
         </div>
+        <div>
+          <Form schema={clinicalFormSchema as JSONSchema7}
+                uiSchema={clinicalUiSchema}
+                widgets={widgets}
+                onChange={onFormChange}
+                validator={localValidator}/>
+        </div>
       </div>
     )
   }
 
-  const GenomicForm = () => {
+  const GenomicForm = (props: any) => {
     return (
       <div style={{display: 'flex', flexDirection: 'column'}}>
         <OperatorDropdown />
@@ -57,6 +109,18 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
         </div>
       </div>
     )
+  }
+
+  let ComponentToRender: FunctionComponent<any>;
+  switch (componentType) {
+    case EComponentType.ClinicalForm:
+      ComponentToRender = ClinicalForm;
+      break;
+    case EComponentType.GenomicForm:
+      ComponentToRender = GenomicForm;
+      break;
+    default:
+      ComponentToRender = () => null;
   }
 
   const buildRootNodes = (rootLabel: string, firstChildLabel: string): TreeNode[] => {
@@ -77,9 +141,9 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     const rootData = r[0].data;
     // @ts-ignore
     rootData[rootLabel.toLowerCase()] = [];
-    let component = firstChildLabel.toLowerCase() === 'clinical' ? ClinicalForm : GenomicForm;
+    let type = firstChildLabel.toLowerCase() === 'clinical' ? EComponentType.ClinicalForm : EComponentType.GenomicForm;
     // @ts-ignore
-    r[0].children[0].data = {component, type: firstChildLabel.toLowerCase()};
+    r[0].children[0].data = {type};
     return r;
   }
 
@@ -118,7 +182,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
       setIsEmpty(false);
       console.log('r', r);
       setSelectedNode(r[0]);
-      setComponentToRender(r[0].data.component);
+      setComponentType(r[0].data.type);
     }
   }, [rootNodes])
 
@@ -219,7 +283,8 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     setSelectedNode(node.node);
   }
 
-  const MatchingMenuAndForm = () => {
+  const MatchingMenuAndForm = (props: {onMenuNodeClick: (componentType: EComponentType) => void}) => {
+    const {onMenuNodeClick} = props;
     const [isMouseOverNode, setIsMouseOverNode] = useState(false);
 
     const findArrayContainingKeyInsideATree = (tree: TreeNode, key: string): TreeNode | null => {
@@ -240,7 +305,6 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
 
     const addCriteria = (node: TreeNode, type: string) => {
       console.log('rootNodes', rootNodes);
-      const typeLowerCase = type.toLowerCase();
       if (node.key) {
         const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], node.key as string);
         if (parentNode) {
@@ -250,7 +314,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
           const newNode = {
             key: incrementedKey,
             label: type,
-            data: {component: typeLowerCase === 'clinical' ? ClinicalForm: GenomicForm, type: typeLowerCase}
+            data: {type: type === 'Clinical' ? EComponentType.ClinicalForm : EComponentType.GenomicForm},
           }
           parentNode.children!.push(newNode);
         }
@@ -306,7 +370,8 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
 
       const onNodeClick = (e: any) => {
         console.log('nodeClicked !~', node);
-        setComponentToRender(node.data.component);
+        onMenuNodeClick(node.data.type);
+        // console.log('componentType', componentType);
       }
 
       if (selectedNode) {
@@ -315,7 +380,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
           if ((selectedNode as TreeNode).key === node.key && isMouseOverNode) {
             show = true;
           }
-          // show=true
+          show=true
             return show ?
               <Button icon="pi pi-ellipsis-h"
                       className={styles.treeMenuBtn}
@@ -325,8 +390,10 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
         let label = <b>{node.label}</b>;
         return (
           <>
-            <div className={styles.treeNodeContainer} onMouseOver={() => setIsMouseOverNode(true)}
-                 onMouseOut={() => setIsMouseOverNode(false)}>
+            <div className={styles.treeNodeContainer}
+                 // onMouseOver={() => setIsMouseOverNode(true)}
+                 // onMouseOut={() => setIsMouseOverNode(false)}
+            >
               <span className="p-treenode-label" onClick={onNodeClick} style={{width: '80%'}}>
                 {label}
               </span>
@@ -361,7 +428,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
                   onToggle={e => onNodeToggle(e) } />
           </div>
           <div className={styles.matchingCriteriaFormContainer}>
-            {isEmpty ? <EmptyForm /> : componentToRender}
+            {isEmpty ? <EmptyForm /> : <ComponentToRender />}
           </div>
         </div>
       </>
@@ -414,10 +481,15 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     props.onDialogHide();
   }
 
+  const setNewComponentType = (componentType: EComponentType) => {
+    console.log('componentType', componentType)
+    setComponentType(componentType);
+  }
+
   return (
     <Dialog header="<arm_code> matching criteria" footer={footer} visible={isDialogVisible} style={{width: '960px', height: '800px'}} onHide={onDialogHide}>
       <div className={styles.mainContainer}>
-        <MatchingMenuAndForm/>
+        <MatchingMenuAndForm onMenuNodeClick={setNewComponentType}/>
         <MatchingCriteriaPreview/>
       </div>
       {/*<Form schema={props.dialogSchema as JSONSchema7}*/}

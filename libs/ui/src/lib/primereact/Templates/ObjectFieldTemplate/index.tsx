@@ -37,7 +37,8 @@ const ObjectFieldTemplate = ({
         uiOptions
     );
 
-    console.log('schema', schema)
+    // console.log('schema', schema)
+    console.log('formData', formData)
 
     return (
         <>
