@@ -31,6 +31,15 @@ interface CtimsMatchDialogProps {
   onDialogHide: () => void;
 }
 
+interface IFormProps {
+  formDataChanged: (formData: any) => void;
+}
+
+interface IMarchMenuAndFormProps {
+  onMenuNodeClick: (componentType: EComponentType, node: TreeNode) => void;
+  formDataChanged: (formData: any) => void
+}
+
 const incrementKey = (key: string): string => {
   // key is of the form '0-0'
   const keyParts = key.split('-');
@@ -38,6 +47,20 @@ const incrementKey = (key: string): string => {
   const newLastKeyPart = parseInt(lastKeyPart) + 1;
   keyParts[keyParts.length - 1] = newLastKeyPart.toString();
   return keyParts.join('-');
+}
+
+const updateFormDataInNodeByKey = (tree: TreeNode, key: string, formData: any) => {
+  const traverse = (tree: TreeNode, key: string, formData: any) => {
+    if (tree.key === key) {
+      tree.data.formData = formData;
+    }
+    if (tree.children) {
+      tree.children.forEach((child) => {
+        traverse(child, key, formData);
+      });
+    }
+  };
+  traverse(tree, key, formData);
 }
 
 const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
@@ -48,12 +71,12 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   const [rootNodes, setRootNodes] = useState<TreeNode[]>([]);
   const [selectedNode, setSelectedNode] = useState<any>(null);
   const [componentType, setComponentType] = useState<EComponentType>(EComponentType.None);
-  const [componentFormData, setComponentFormData] = useState<any>({});
+  const [formData, setFormData] = useState<any>({});
 
 
-  const ClinicalForm = (props: any) => {
-    console.log('ClinicalForm loaded: ', selectedNode)
-    // const {stateChanger} = props
+  const ClinicalForm = (props: IFormProps) => {
+    console.log('ClinicalForm rootNodes: ', rootNodes)
+    const {formDataChanged} = props
 
     const widgets: RegistryWidgetsType = {
       TextWidget: CtimsInput,
@@ -79,8 +102,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     }
 
     const onFormChange = (data: any) => {
-      console.log('ClinicalForm data: ', data.formData);
-      // const newNode = {...selectedNode, data: data.formData};
+      formDataChanged(data.formData);
     }
 
     return (
@@ -91,6 +113,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
         </div>
         <div>
           <Form schema={clinicalFormSchema as JSONSchema7}
+                formData={formData}
                 uiSchema={clinicalUiSchema}
                 widgets={widgets}
                 onChange={onFormChange}
@@ -100,7 +123,8 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     )
   }
 
-  const GenomicForm = (props: any) => {
+  const GenomicForm = (props: IFormProps) => {
+    console.log('GenomicForm rootNodes: ', rootNodes)
     return (
       <div style={{display: 'flex', flexDirection: 'column'}}>
         <OperatorDropdown />
@@ -111,7 +135,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     )
   }
 
-  let ComponentToRender: FunctionComponent<any>;
+  let ComponentToRender: FunctionComponent<IFormProps>;
   switch (componentType) {
     case EComponentType.ClinicalForm:
       ComponentToRender = ClinicalForm;
@@ -154,6 +178,13 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
         const rootNodes = buildRootNodes('And', 'Clinical');
         setRootNodes(rootNodes);
         setSelectedKeys('0-0')
+        const r = jsonpath.query(rootNodes, '$..[?(@.key=="0-0")]');
+        if(r.length > 0) {
+          setIsEmpty(false);
+          console.log('r', r);
+          setSelectedNode(r[0]);
+          setComponentType(r[0].data.type);
+        }
         console.log('selectedKeys', selectedKeys);
       }
     },
@@ -176,14 +207,15 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   }, [props.isDialogVisible])
 
   useEffect(() => {
+    console.log('useEffect rootNodes', rootNodes);
     // use jsonpath to find key '0-0' in rootNodes
-    const r = jsonpath.query(rootNodes, '$..[?(@.key=="0-0")]');
-    if(r.length > 0) {
-      setIsEmpty(false);
-      console.log('r', r);
-      setSelectedNode(r[0]);
-      setComponentType(r[0].data.type);
-    }
+    // const r = jsonpath.query(rootNodes, '$..[?(@.key=="0-0")]');
+    // if(r.length > 0) {
+    //   setIsEmpty(false);
+    //   console.log('r', r);
+    //   setSelectedNode(r[0]);
+    //   setComponentType(r[0].data.type);
+    // }
   }, [rootNodes])
 
   const menuClick = (e: any) => {
@@ -283,8 +315,8 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     setSelectedNode(node.node);
   }
 
-  const MatchingMenuAndForm = (props: {onMenuNodeClick: (componentType: EComponentType) => void}) => {
-    const {onMenuNodeClick} = props;
+  const MatchingMenuAndForm = (props: IMarchMenuAndFormProps) => {
+    const {onMenuNodeClick, formDataChanged} = props;
     const [isMouseOverNode, setIsMouseOverNode] = useState(false);
 
     const findArrayContainingKeyInsideATree = (tree: TreeNode, key: string): TreeNode | null => {
@@ -324,8 +356,6 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     }
 
     const nodeTemplate = (node: TreeNode) => {
-      // console.log('selectedNode', selectedNode);
-      // console.log('node nodeTemplate', selectedNode);
 
       const tieredMenuModel = [
         {
@@ -370,7 +400,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
 
       const onNodeClick = (e: any) => {
         console.log('nodeClicked !~', node);
-        onMenuNodeClick(node.data.type);
+        onMenuNodeClick(node.data.type, node);
         // console.log('componentType', componentType);
       }
 
@@ -407,6 +437,10 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
       return null;
     }
 
+    const r = (formData: any) => {
+      console.log('formData', formData);
+    }
+
     return (
       <>
         <Menu model={menuItems} ref={menu} popup id="criteria_popup_menu"/>
@@ -428,7 +462,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
                   onToggle={e => onNodeToggle(e) } />
           </div>
           <div className={styles.matchingCriteriaFormContainer}>
-            {isEmpty ? <EmptyForm /> : <ComponentToRender />}
+            {isEmpty ? <EmptyForm /> : <ComponentToRender formDataChanged={formDataChanged}/>}
           </div>
         </div>
       </>
@@ -481,15 +515,23 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     props.onDialogHide();
   }
 
-  const setNewComponentType = (componentType: EComponentType) => {
-    console.log('componentType', componentType)
+  const setNewComponentType = (componentType: EComponentType, node: TreeNode) => {
+    console.log('componentType', node)
     setComponentType(componentType);
+    setFormData(node.data.formData)
+    setSelectedNode({...selectedNode, ...node});
+  }
+
+  const updateFormDataForSelectedNode = (formData: any) => {
+    const rootNode = rootNodes[0];
+    updateFormDataInNodeByKey(rootNode, selectedNode.key, formData);
+    console.log('rootNode update', rootNodes);
   }
 
   return (
     <Dialog header="<arm_code> matching criteria" footer={footer} visible={isDialogVisible} style={{width: '960px', height: '800px'}} onHide={onDialogHide}>
       <div className={styles.mainContainer}>
-        <MatchingMenuAndForm onMenuNodeClick={setNewComponentType}/>
+        <MatchingMenuAndForm onMenuNodeClick={setNewComponentType} formDataChanged={updateFormDataForSelectedNode}/>
         <MatchingCriteriaPreview/>
       </div>
       {/*<Form schema={props.dialogSchema as JSONSchema7}*/}
