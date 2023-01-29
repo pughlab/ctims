@@ -1,5 +1,5 @@
 import styles from './CtimsMatchDialog.module.scss';
-import React, {createElement, CSSProperties, FunctionComponent, useEffect, useRef, useState} from "react";
+import React, {CSSProperties, FunctionComponent, memo, useEffect, useRef, useState} from "react";
 import {Dialog} from "primereact/dialog";
 import {JSONSchema7} from "json-schema";
 import {Button} from "primereact/button";
@@ -16,7 +16,6 @@ import CtimsObjectFieldTemplate from "../custom-rjsf-templates/CtimsObjectFieldT
 import {RegistryWidgetsType} from "@rjsf/utils";
 import CtimsInput from "../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../custom-rjsf-templates/CtimsDropdown";
-import { render } from 'react-dom';
 
 enum EComponentType {
   None,
@@ -33,6 +32,7 @@ interface CtimsMatchDialogProps {
 
 interface IFormProps {
   formDataChanged: (formData: any) => void;
+  formD: any;
 }
 
 interface IMarchMenuAndFormProps {
@@ -74,9 +74,10 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   const [formData, setFormData] = useState<any>({});
 
 
-  const ClinicalForm = (props: IFormProps) => {
-    console.log('ClinicalForm rootNodes: ', rootNodes)
-    const {formDataChanged} = props
+  const ClinicalForm = memo((props: IFormProps) => {
+    const {formDataChanged, formD} = props
+    // console.log('ClinicalForm rootNodes: ', rootNodes)
+    console.log('ClinicalForm formD: ', formD)
 
     const widgets: RegistryWidgetsType = {
       TextWidget: CtimsInput,
@@ -113,7 +114,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
         </div>
         <div>
           <Form schema={clinicalFormSchema as JSONSchema7}
-                formData={formData}
+                formData={formD}
                 uiSchema={clinicalUiSchema}
                 widgets={widgets}
                 onChange={onFormChange}
@@ -121,7 +122,9 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
         </div>
       </div>
     )
-  }
+  }, (prevProps, nextProps) => {
+    return prevProps.formD === nextProps.formD;
+  });
 
   const GenomicForm = (props: IFormProps) => {
     console.log('GenomicForm rootNodes: ', rootNodes)
@@ -437,10 +440,6 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
       return null;
     }
 
-    const r = (formData: any) => {
-      console.log('formData', formData);
-    }
-
     return (
       <>
         <Menu model={menuItems} ref={menu} popup id="criteria_popup_menu"/>
@@ -462,7 +461,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
                   onToggle={e => onNodeToggle(e) } />
           </div>
           <div className={styles.matchingCriteriaFormContainer}>
-            {isEmpty ? <EmptyForm /> : <ComponentToRender formDataChanged={formDataChanged}/>}
+            {isEmpty ? <EmptyForm /> : <ComponentToRender formDataChanged={formDataChanged} formD={formData}/>}
           </div>
         </div>
       </>
@@ -525,6 +524,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   const updateFormDataForSelectedNode = (formData: any) => {
     const rootNode = rootNodes[0];
     updateFormDataInNodeByKey(rootNode, selectedNode.key, formData);
+    // setFormData(formData)
     console.log('rootNode update', rootNodes);
   }
 
