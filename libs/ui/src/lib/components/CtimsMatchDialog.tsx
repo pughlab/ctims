@@ -23,21 +23,14 @@ interface CtimsMatchDialogProps {
   onDialogHide: () => void;
 }
 
-export interface IFormProps {
-  formDataChanged: (formData: any) => void;
-  formD: any;
-}
+
 
 const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   const [isDialogVisible, setIsDialogVisible] = useState(props.isDialogVisible);
-  const [rootNodes, setRootNodes] = useState<TreeNode[]>([]);
-  const [componentType, setComponentType] = useState<EComponentType>(EComponentType.None);
-  const [formData, setFormData] = useState<any>({});
 
   useEffect(() => {
     setIsDialogVisible(props.isDialogVisible);
   }, [props.isDialogVisible])
-
 
   const MatchingCriteriaPreview = () => {
     return (
@@ -85,26 +78,10 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     props.onDialogHide();
   }
 
-  const setNewComponentType = (componentType: EComponentType, node: TreeNode) => {
-    console.log('componentType', node)
-    setComponentType(componentType);
-    setFormData(node.data.formData)
-    // setSelectedNode({...selectedNode, ...node});
-  }
-
-  const updateFormDataForSelectedNode = (formData: any) => {
-    const rootNode = rootNodes[0];
-    // updateFormDataInNodeByKey(rootNode, selectedNode.key, formData);
-    // setFormData(formData)
-    console.log('rootNode update', rootNodes);
-  }
-
   return (
     <Dialog header="<arm_code> matching criteria" footer={footer} visible={isDialogVisible} style={{width: '960px', height: '800px'}} onHide={onDialogHide}>
       <div className={styles.mainContainer}>
-        <MatchingMenuAndForm
-                             formDataChanged={updateFormDataForSelectedNode}
-        />
+        <MatchingMenuAndForm/>
         <MatchingCriteriaPreview/>
       </div>
     </Dialog>

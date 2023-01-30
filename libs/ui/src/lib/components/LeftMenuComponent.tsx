@@ -8,10 +8,11 @@ import {buildRootNodes, findArrayContainingKeyInsideATree, incrementKey} from ".
 import {Menu} from "primereact/menu";
 import * as jsonpath from "jsonpath";
 import {EComponentType} from "./EComponentType";
+import {IRootNode} from "./MatchingMenuAndForm";
 
 interface ILeftMenuComponentProps {
   emitComponentType: (componentType: EComponentType) => void;
-  rootNodesProp: TreeNode[];
+  rootNodesProp: IRootNode;
 }
 
 const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
@@ -29,13 +30,17 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
   useEffect(() => {
     if (rootNodesProp) {
-      setRootNodes(rootNodesProp);
-      setSelectedKeys('0-0')
-      const r = jsonpath.query(rootNodesProp, '$..[?(@.key=="0-0")]');
-      if(r.length > 0) {
-        // setIsEmpty(false);
-        setSelectedNode(r[0]);
-        emitComponentType(r[0].data.type);
+      const {rootLabel, firstChildLabel} = rootNodesProp;
+      if (rootLabel && firstChildLabel) {
+        const roodNodes = buildRootNodes(rootLabel, firstChildLabel);
+        setRootNodes(roodNodes);
+        setSelectedKeys('0-0')
+        const r = jsonpath.query(roodNodes, '$..[?(@.key=="0-0")]');
+        if(r.length > 0) {
+          // setIsEmpty(false);
+          setSelectedNode(r[0]);
+          emitComponentType(r[0].data.type);
+        }
       }
     }
   }, [rootNodesProp]);

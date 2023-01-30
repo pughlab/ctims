@@ -1,11 +1,8 @@
 import styles from './MatchingMenuAndForm.module.scss';
 import {EComponentType} from "./EComponentType";
-import TreeNode from "primereact/treenode";
 import React, {CSSProperties, FunctionComponent, memo, useRef, useState} from "react";
-import {buildRootNodes} from "./helpers";
 import {Menu} from "primereact/menu";
 import LeftMenuComponent from "./LeftMenuComponent";
-import {IFormProps} from "./CtimsMatchDialog";
 import {RegistryWidgetsType} from "@rjsf/utils";
 import CtimsInput from "../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../custom-rjsf-templates/CtimsDropdown";
@@ -19,8 +16,14 @@ import {Theme as PrimeTheme} from "../primereact";
 
 const Form = withTheme(PrimeTheme)
 
-interface IMatchMenuAndFormProps {
-  formDataChanged: (formData: any) => void
+export interface IFormProps {
+  formDataChanged: (formData: any) => void;
+  formD: any;
+}
+
+export interface IRootNode {
+  rootLabel: string;
+  firstChildLabel: string;
 }
 
 const OperatorDropdown = () => {
@@ -79,12 +82,11 @@ const TitleContainer = (props: {title: string}) => {
   )
 }
 
-const MatchingMenuAndForm = (props: IMatchMenuAndFormProps) => {
-  const {formDataChanged} = props;
+const MatchingMenuAndForm = (props: any) => {
 
   const [componentType, setComponentType] = useState<EComponentType>(EComponentType.None);
   const [isEmpty, setIsEmpty] = useState(true);
-  const [rootNodes, setRootNodes] = useState<TreeNode[]>([]);
+  const [buildRootNodeParams, setBuildRootNodeParams] = useState<IRootNode>({rootLabel: '', firstChildLabel: ''});
   const [isMouseOverNode, setIsMouseOverNode] = useState(false);
 
   const menu = useRef(null);
@@ -156,7 +158,7 @@ const MatchingMenuAndForm = (props: IMatchMenuAndFormProps) => {
   });
 
   const GenomicForm = (props: IFormProps) => {
-    console.log('GenomicForm rootNodes: ', rootNodes)
+    // console.log('GenomicForm rootNodes: ', rootNodes)
     return (
       <div style={{display: 'flex', flexDirection: 'column'}}>
         <OperatorDropdown />
@@ -182,18 +184,15 @@ const MatchingMenuAndForm = (props: IMatchMenuAndFormProps) => {
     {
       label: 'Clinical',
       command: () => {
-        const rootNodes = buildRootNodes('And', 'Clinical');
-        setRootNodes(rootNodes);
         setIsEmpty(false);
+        setBuildRootNodeParams({rootLabel: 'And', firstChildLabel: 'Clinical'})
       }
     },
     {
       label: 'Genomic',
       command: () => {
-        const rootNodes = buildRootNodes('And', 'Genomic');
-        setRootNodes(rootNodes);
-        // setSelectedKeys('0-0')
-        // console.log('selectedKeys', selectedKeys);
+        setIsEmpty(false);
+        setBuildRootNodeParams({rootLabel: 'And', firstChildLabel: 'Genomic'})
       }
     }
   ];
@@ -210,13 +209,18 @@ const MatchingMenuAndForm = (props: IMatchMenuAndFormProps) => {
       ComponentToRender = () => null;
   }
 
+  const formDataChanged = (data: any) => {
+    // updateFormDataInNodeByKey(rootNodes[0], '0-0', data);
+    console.log('formDataChanged data: ', data)
+  }
+
   return (
     <>
       <Menu model={menuItems} ref={menu} popup id="criteria_popup_menu"/>
       <div className={styles.matchingMenuAndFormContainer}>
         <LeftMenuComponent emitComponentType={(type) => {
           setComponentType(type);
-        }} rootNodesProp={rootNodes} />
+        }} rootNodesProp={buildRootNodeParams} />
         <div className={styles.matchingCriteriaFormContainer}>
           {isEmpty ? <EmptyForm /> : <ComponentToRender formDataChanged={formDataChanged} formD={{}}/>}
         </div>
