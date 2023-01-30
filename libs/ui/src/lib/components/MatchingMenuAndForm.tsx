@@ -18,8 +18,6 @@ import TreeNode from "primereact/treenode";
 const Form = withTheme(PrimeTheme)
 
 export interface IFormProps {
-  formDataChanged: (formData: any) => void;
-  formD: any;
   node: TreeNode;
 }
 
@@ -91,7 +89,6 @@ const TitleContainer = (props: {title: string}) => {
 
 const MatchingMenuAndForm = (props: any) => {
 
-  // const [componentType, setComponentType] = useState<EComponentType>(EComponentType.None);
   const [componentType, setComponentType] = useState<IComponentType>({type: EComponentType.None, node: {}});
   const [isEmpty, setIsEmpty] = useState(true);
   const [buildRootNodeParams, setBuildRootNodeParams] = useState<IRootNode>({rootLabel: '', firstChildLabel: ''});
@@ -113,10 +110,9 @@ const MatchingMenuAndForm = (props: any) => {
     )
   }
 
-  const ClinicalForm = memo((props: IFormProps) => {
-    const {formDataChanged, formD, node} = props
+  const ClinicalForm = (props: IFormProps) => {
+    const {node} = props
     console.log('ClinicalForm node: ', node)
-    console.log('ClinicalForm formD: ', formD)
 
     const widgets: RegistryWidgetsType = {
       TextWidget: CtimsInput,
@@ -142,7 +138,6 @@ const MatchingMenuAndForm = (props: any) => {
     }
 
     const onFormChange = (data: any) => {
-      formDataChanged(data.formData);
       node.data.formData = data.formData;
       console.log('onFormChange node: ', node)
     }
@@ -163,9 +158,7 @@ const MatchingMenuAndForm = (props: any) => {
         </div>
       </div>
     )
-  }, (prevProps, nextProps) => {
-    return prevProps.formD === nextProps.formD;
-  });
+  }
 
   const GenomicForm = (props: IFormProps) => {
     // console.log('GenomicForm rootNodes: ', rootNodes)
@@ -219,11 +212,6 @@ const MatchingMenuAndForm = (props: any) => {
       ComponentToRender = () => null;
   }
 
-  const formDataChanged = (data: any) => {
-    // updateFormDataInNodeByKey(rootNodes[0], '0-0', data);
-    console.log('formDataChanged data: ', data)
-  }
-
   const onOperatorChange = (type: EComponentType, node: TreeNode) => {
     setComponentType({type, node});
   }
@@ -234,7 +222,7 @@ const MatchingMenuAndForm = (props: any) => {
       <div className={styles.matchingMenuAndFormContainer}>
         <LeftMenuComponent emitComponentType={onOperatorChange} rootNodesProp={buildRootNodeParams} />
         <div className={styles.matchingCriteriaFormContainer}>
-          {isEmpty ? <EmptyForm /> : <ComponentToRender formDataChanged={formDataChanged} formD={{}} node={componentType.node}/>}
+          {isEmpty ? <EmptyForm /> : <ComponentToRender node={componentType.node}/>}
         </div>
       </div>
     </>
