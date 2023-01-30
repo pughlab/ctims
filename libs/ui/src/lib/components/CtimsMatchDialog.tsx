@@ -1,29 +1,13 @@
 import styles from './CtimsMatchDialog.module.scss';
-import React, {CSSProperties, FunctionComponent, memo, useEffect, useRef, useState} from "react";
+import React, {CSSProperties, useEffect, useState} from "react";
 import {Dialog} from "primereact/dialog";
-import {JSONSchema7} from "json-schema";
 import {Button} from "primereact/button";
-import {Menu} from "primereact/menu";
-import {Dropdown} from "primereact/dropdown";
-import TreeNode from "primereact/treenode";
-import {withTheme} from "@rjsf/core";
-import {Theme as PrimeTheme} from "../primereact";
-import localValidator from "@rjsf/validator-ajv8";
-import CtimsObjectFieldTemplate from "../custom-rjsf-templates/CtimsObjectFieldTemplate";
-import {RegistryWidgetsType} from "@rjsf/utils";
-import CtimsInput from "../custom-rjsf-templates/CtimsInput";
-import CtimsDropdown from "../custom-rjsf-templates/CtimsDropdown";
-import LeftMenuComponent from "./LeftMenuComponent";
-import {EComponentType} from "./EComponentType";
-import {buildRootNodes} from "./helpers";
 import MatchingMenuAndForm from "./MatchingMenuAndForm";
 
 interface CtimsMatchDialogProps {
   isDialogVisible: boolean;
   onDialogHide: () => void;
 }
-
-
 
 const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   const [isDialogVisible, setIsDialogVisible] = useState(props.isDialogVisible);
@@ -71,8 +55,6 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
       <Button style={saveBtnStyle} label="Save matching criteria" onClick={handleSubmit} />
     </div>
   );
-
-
 
   const onDialogHide = () => {
     props.onDialogHide();
