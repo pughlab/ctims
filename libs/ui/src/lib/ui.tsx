@@ -595,11 +595,9 @@ export const Ui = (props: UiProps) => {
         onSpecialButtonClick={handleSpecialClick}
         onRjsfFormChange={onFormChange}
       />
-      <CtimsMatchDialog onRjsfFormChange={onFormChange}
-                                  onDialogHide={() => setIsOpen(false)}
+      <CtimsMatchDialog
+                      onDialogHide={() => setIsOpen(false)}
                        isDialogVisible={isOpen}
-                       dialogSchema={dialogSchema as JSONSchema7}
-                       uiSchema={uiSchema}
       />
     </div>
   );

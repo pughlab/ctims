@@ -1,0 +1,70 @@
+.matchingMenuAndFormContainer {
+  display: flex;
+}
+
+.matchingCriteriaMenuContainer {
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+  height: 556px;
+  border-right: 1px solid #E4E4E4;
+  border-top: 1px solid #E4E4E4;
+  border-bottom: 1px solid #E4E4E4;
+
+}
+
+.matchingCriteriaTextContainer {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+  height: 16px;
+
+  i {
+    margin-left: 10px;
+    cursor: pointer;
+  }
+
+  i:hover {
+    color: #2E72D2;
+  }
+}
+
+.matchingCriteriaText {
+  display: inline-block;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  line-height: 16px;
+  min-width: 244px;
+}
+
+.treeNodeContainer {
+  display: flex;
+  width: 100%;
+}
+
+.treeMenuBtn {
+  color: black;
+  height: 16px;
+  padding: 0 !important;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  outline: none !important;
+  vertical-align: baseline !important;
+  margin-left: auto;
+}
+
+.treeMenuBtn:hover {
+  background: none !important;
+  color: black !important;
+}
+
+.treeMenuBtn:focus {
+  background: none !important;
+  color: black !important;
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
