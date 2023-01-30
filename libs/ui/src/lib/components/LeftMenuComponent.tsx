@@ -11,7 +11,7 @@ import {EComponentType} from "./EComponentType";
 import {IRootNode} from "./MatchingMenuAndForm";
 
 interface ILeftMenuComponentProps {
-  emitComponentType: (componentType: EComponentType) => void;
+  emitComponentType: (componentType: EComponentType, note: TreeNode) => void;
   rootNodesProp: IRootNode;
 }
 
@@ -39,7 +39,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         if(r.length > 0) {
           // setIsEmpty(false);
           setSelectedNode(r[0]);
-          emitComponentType(r[0].data.type);
+          emitComponentType(r[0].data.type, r[0]);
         }
       }
     }
@@ -56,7 +56,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         if(r.length > 0) {
           console.log('r', r);
           setSelectedNode(r[0]);
-          emitComponentType(r[0].data.type);
+          emitComponentType(r[0].data.type, r[0]);
         }
         console.log('selectedKeys', selectedKeys);
       }
@@ -147,7 +147,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     const onNodeClick = (e: any) => {
       // console.log('nodeClicked !~', node);
       // onMenuNodeClick(node.data.type, node);
-      emitComponentType(node.data.type);
+      emitComponentType(node.data.type, node);
       // console.log('componentType', componentType);
     }
 

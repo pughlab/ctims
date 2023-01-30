@@ -13,17 +13,24 @@ import {Dropdown} from "primereact/dropdown";
 import {Button} from "primereact/button";
 import {withTheme} from "@rjsf/core";
 import {Theme as PrimeTheme} from "../primereact";
+import TreeNode from "primereact/treenode";
 
 const Form = withTheme(PrimeTheme)
 
 export interface IFormProps {
   formDataChanged: (formData: any) => void;
   formD: any;
+  node: TreeNode;
 }
 
 export interface IRootNode {
   rootLabel: string;
   firstChildLabel: string;
+}
+
+interface IComponentType {
+  type: EComponentType;
+  node: TreeNode;
 }
 
 const OperatorDropdown = () => {
@@ -84,7 +91,8 @@ const TitleContainer = (props: {title: string}) => {
 
 const MatchingMenuAndForm = (props: any) => {
 
-  const [componentType, setComponentType] = useState<EComponentType>(EComponentType.None);
+  // const [componentType, setComponentType] = useState<EComponentType>(EComponentType.None);
+  const [componentType, setComponentType] = useState<IComponentType>({type: EComponentType.None, node: {}});
   const [isEmpty, setIsEmpty] = useState(true);
   const [buildRootNodeParams, setBuildRootNodeParams] = useState<IRootNode>({rootLabel: '', firstChildLabel: ''});
   const [isMouseOverNode, setIsMouseOverNode] = useState(false);
@@ -106,8 +114,8 @@ const MatchingMenuAndForm = (props: any) => {
   }
 
   const ClinicalForm = memo((props: IFormProps) => {
-    const {formDataChanged, formD} = props
-    // console.log('ClinicalForm rootNodes: ', rootNodes)
+    const {formDataChanged, formD, node} = props
+    console.log('ClinicalForm node: ', node)
     console.log('ClinicalForm formD: ', formD)
 
     const widgets: RegistryWidgetsType = {
@@ -135,6 +143,8 @@ const MatchingMenuAndForm = (props: any) => {
 
     const onFormChange = (data: any) => {
       formDataChanged(data.formData);
+      node.data.formData = data.formData;
+      console.log('onFormChange node: ', node)
     }
 
     return (
@@ -145,7 +155,7 @@ const MatchingMenuAndForm = (props: any) => {
         </div>
         <div>
           <Form schema={clinicalFormSchema as JSONSchema7}
-                formData={formD}
+                formData={node.data.formData}
                 uiSchema={clinicalUiSchema}
                 widgets={widgets}
                 onChange={onFormChange}
@@ -198,7 +208,7 @@ const MatchingMenuAndForm = (props: any) => {
   ];
 
   let ComponentToRender: FunctionComponent<IFormProps>;
-  switch (componentType) {
+  switch (componentType.type) {
     case EComponentType.ClinicalForm:
       ComponentToRender = ClinicalForm;
       break;
@@ -214,15 +224,17 @@ const MatchingMenuAndForm = (props: any) => {
     console.log('formDataChanged data: ', data)
   }
 
+  const onOperatorChange = (type: EComponentType, node: TreeNode) => {
+    setComponentType({type, node});
+  }
+
   return (
     <>
       <Menu model={menuItems} ref={menu} popup id="criteria_popup_menu"/>
       <div className={styles.matchingMenuAndFormContainer}>
-        <LeftMenuComponent emitComponentType={(type) => {
-          setComponentType(type);
-        }} rootNodesProp={buildRootNodeParams} />
+        <LeftMenuComponent emitComponentType={onOperatorChange} rootNodesProp={buildRootNodeParams} />
         <div className={styles.matchingCriteriaFormContainer}>
-          {isEmpty ? <EmptyForm /> : <ComponentToRender formDataChanged={formDataChanged} formD={{}}/>}
+          {isEmpty ? <EmptyForm /> : <ComponentToRender formDataChanged={formDataChanged} formD={{}} node={componentType.node}/>}
         </div>
       </div>
     </>
