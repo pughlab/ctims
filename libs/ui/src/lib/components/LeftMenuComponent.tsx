@@ -1,8 +1,8 @@
+import styles from "./LeftMenuComponent.module.scss";
 import {Tree, TreeEventNodeParams} from "primereact/tree";
-import React, {useRef, useState} from "react";
+import React, {memo, useEffect, useRef, useState} from "react";
 import TreeNode from "primereact/treenode";
 import {Button} from "primereact/button";
-import styles from "./CtimsMatchDialog.module.scss";
 import {TieredMenu} from "primereact/tieredmenu";
 import {buildRootNodes, findArrayContainingKeyInsideATree, incrementKey} from "./helpers";
 import {Menu} from "primereact/menu";
@@ -11,12 +11,12 @@ import {EComponentType} from "./EComponentType";
 
 interface ILeftMenuComponentProps {
   emitComponentType: (componentType: EComponentType) => void;
+  rootNodesProp: TreeNode[];
 }
 
+const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
-const LeftMenuComponent = (props: ILeftMenuComponentProps) => {
-
-  const {emitComponentType} = props;
+  const {emitComponentType, rootNodesProp} = props;
 
   const [rootNodes, setRootNodes] = useState<TreeNode[]>([]);
   const [selectedNode, setSelectedNode] = useState<any>(null);
@@ -27,6 +27,19 @@ const LeftMenuComponent = (props: ILeftMenuComponentProps) => {
   const tieredMenu = useRef(null);
   const menu = useRef(null);
 
+  useEffect(() => {
+    if (rootNodesProp) {
+      setRootNodes(rootNodesProp);
+      setSelectedKeys('0-0')
+      const r = jsonpath.query(rootNodesProp, '$..[?(@.key=="0-0")]');
+      if(r.length > 0) {
+        // setIsEmpty(false);
+        setSelectedNode(r[0]);
+        emitComponentType(r[0].data.type);
+      }
+    }
+  }, [rootNodesProp]);
+
   const menuItems = [
     {
       label: 'Clinical',
@@ -36,10 +49,8 @@ const LeftMenuComponent = (props: ILeftMenuComponentProps) => {
         setSelectedKeys('0-0')
         const r = jsonpath.query(rootNodes, '$..[?(@.key=="0-0")]');
         if(r.length > 0) {
-          // setIsEmpty(false);
           console.log('r', r);
           setSelectedNode(r[0]);
-          // setComponentType(r[0].data.type);
           emitComponentType(r[0].data.type);
         }
         console.log('selectedKeys', selectedKeys);
@@ -57,7 +68,6 @@ const LeftMenuComponent = (props: ILeftMenuComponentProps) => {
   ];
 
   const addCriteria = (node: TreeNode, type: string) => {
-    console.log('rootNodes', rootNodes);
     if (node.key) {
       const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], node.key as string);
       if (parentNode) {
@@ -79,6 +89,11 @@ const LeftMenuComponent = (props: ILeftMenuComponentProps) => {
   const tieredMenuClick = (e: any) => {
     // @ts-ignore
     tieredMenu.current.show(e);
+  }
+
+  const menuClick = (e: any) => {
+    // @ts-ignore
+    menu.current.show(e);
   }
 
   const nodeTemplate = (node: TreeNode) => {
@@ -125,8 +140,9 @@ const LeftMenuComponent = (props: ILeftMenuComponentProps) => {
     ]
 
     const onNodeClick = (e: any) => {
-      console.log('nodeClicked !~', node);
+      // console.log('nodeClicked !~', node);
       // onMenuNodeClick(node.data.type, node);
+      emitComponentType(node.data.type);
       // console.log('componentType', componentType);
     }
 
@@ -164,8 +180,8 @@ const LeftMenuComponent = (props: ILeftMenuComponentProps) => {
   }
 
   const onNodeSelect = (node: TreeEventNodeParams) => {
-    console.log('selectedKeys', selectedKeys);
-    console.log('expandedKeys', expandedKeys);
+    // console.log('selectedKeys', selectedKeys);
+    // console.log('expandedKeys', expandedKeys);
     setSelectedNode(node.node);
   }
 
@@ -177,16 +193,27 @@ const LeftMenuComponent = (props: ILeftMenuComponentProps) => {
   return (
     <>
       <Menu model={menuItems} ref={menu} popup id="criteria_popup_menu"/>
-      <Tree value={rootNodes}
-            nodeTemplate={nodeTemplate}
-            expandedKeys={expandedKeys}
-            selectionKeys={selectedKeys}
-            selectionMode="single"
-            onSelect={onNodeSelect}
-            onToggle={e => onNodeToggle(e) } />
+        <div className={styles.matchingCriteriaMenuContainer}>
+          <div className={styles.matchingCriteriaTextContainer}>
+            <div className={styles.matchingCriteriaText}>Matching Criteria</div>
+            <i className="pi pi-plus-circle" onClick={(e) => {
+              menuClick(e);
+            }}></i>
+
+          </div>
+          <Tree value={rootNodes}
+                nodeTemplate={nodeTemplate}
+                expandedKeys={expandedKeys}
+                selectionKeys={selectedKeys}
+                selectionMode="single"
+                onSelect={onNodeSelect}
+                onToggle={e => onNodeToggle(e) } />
+        </div>
     </>
 
     )
 
-}
+}, (prevProps, nextProps) => {
+  return prevProps.rootNodesProp === nextProps.rootNodesProp;
+});
 export default LeftMenuComponent;

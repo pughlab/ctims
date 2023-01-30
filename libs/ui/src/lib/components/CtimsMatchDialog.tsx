@@ -4,11 +4,8 @@ import {Dialog} from "primereact/dialog";
 import {JSONSchema7} from "json-schema";
 import {Button} from "primereact/button";
 import {Menu} from "primereact/menu";
-import { TieredMenu } from 'primereact/tieredmenu';
 import {Dropdown} from "primereact/dropdown";
 import TreeNode from "primereact/treenode";
-import {Tree, TreeEventNodeParams} from "primereact/tree";
-import * as jsonpath from "jsonpath";
 import {withTheme} from "@rjsf/core";
 import {Theme as PrimeTheme} from "../primereact";
 import localValidator from "@rjsf/validator-ajv8";
@@ -16,12 +13,9 @@ import CtimsObjectFieldTemplate from "../custom-rjsf-templates/CtimsObjectFieldT
 import {RegistryWidgetsType} from "@rjsf/utils";
 import CtimsInput from "../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../custom-rjsf-templates/CtimsDropdown";
-
-enum EComponentType {
-  None,
-  ClinicalForm,
-  GenomicForm
-}
+import LeftMenuComponent from "./LeftMenuComponent";
+import {EComponentType} from "./EComponentType";
+import {buildRootNodes} from "./helpers";
 
 const Form = withTheme(PrimeTheme)
 
@@ -38,38 +32,13 @@ interface IFormProps {
 interface IMarchMenuAndFormProps {
   onMenuNodeClick: (componentType: EComponentType, node: TreeNode) => void;
   formDataChanged: (formData: any) => void
-}
-
-const incrementKey = (key: string): string => {
-  // key is of the form '0-0'
-  const keyParts = key.split('-');
-  const lastKeyPart = keyParts[keyParts.length - 1];
-  const newLastKeyPart = parseInt(lastKeyPart) + 1;
-  keyParts[keyParts.length - 1] = newLastKeyPart.toString();
-  return keyParts.join('-');
-}
-
-const updateFormDataInNodeByKey = (tree: TreeNode, key: string, formData: any) => {
-  const traverse = (tree: TreeNode, key: string, formData: any) => {
-    if (tree.key === key) {
-      tree.data.formData = formData;
-    }
-    if (tree.children) {
-      tree.children.forEach((child) => {
-        traverse(child, key, formData);
-      });
-    }
-  };
-  traverse(tree, key, formData);
+  onComponentTypeChange: (componentType: EComponentType) => void;
 }
 
 const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   const [isDialogVisible, setIsDialogVisible] = useState(props.isDialogVisible);
   const [isEmpty, setIsEmpty] = useState(true);
-  const [selectedKeys, setSelectedKeys] = useState<any>(null);
-  const [expandedKeys, setExpandedKeys] = useState({0: true});
   const [rootNodes, setRootNodes] = useState<TreeNode[]>([]);
-  const [selectedNode, setSelectedNode] = useState<any>(null);
   const [componentType, setComponentType] = useState<EComponentType>(EComponentType.None);
   const [formData, setFormData] = useState<any>({});
 
@@ -150,45 +119,13 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
       ComponentToRender = () => null;
   }
 
-  const buildRootNodes = (rootLabel: string, firstChildLabel: string): TreeNode[] => {
-    const r = [
-      {
-        key: '0',
-        label: rootLabel, // AND/OR
-        data: {},
-        children: [
-          {
-            key: '0-0',
-            label: firstChildLabel, // clinical or genomic or AND/OR
-            data: {},
-          }
-        ]
-      }
-    ];
-    const rootData = r[0].data;
-    // @ts-ignore
-    rootData[rootLabel.toLowerCase()] = [];
-    let type = firstChildLabel.toLowerCase() === 'clinical' ? EComponentType.ClinicalForm : EComponentType.GenomicForm;
-    // @ts-ignore
-    r[0].children[0].data = {type};
-    return r;
-  }
-
   const menuItems = [
     {
       label: 'Clinical',
       command: () => {
         const rootNodes = buildRootNodes('And', 'Clinical');
         setRootNodes(rootNodes);
-        setSelectedKeys('0-0')
-        const r = jsonpath.query(rootNodes, '$..[?(@.key=="0-0")]');
-        if(r.length > 0) {
-          setIsEmpty(false);
-          console.log('r', r);
-          setSelectedNode(r[0]);
-          setComponentType(r[0].data.type);
-        }
-        console.log('selectedKeys', selectedKeys);
+        setIsEmpty(false);
       }
     },
     {
@@ -196,8 +133,8 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
       command: () => {
         const rootNodes = buildRootNodes('And', 'Genomic');
         setRootNodes(rootNodes);
-        setSelectedKeys('0-0')
-        console.log('selectedKeys', selectedKeys);
+        // setSelectedKeys('0-0')
+        // console.log('selectedKeys', selectedKeys);
       }
     }
   ];
@@ -209,26 +146,10 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     setIsDialogVisible(props.isDialogVisible);
   }, [props.isDialogVisible])
 
-  useEffect(() => {
-    console.log('useEffect rootNodes', rootNodes);
-    // use jsonpath to find key '0-0' in rootNodes
-    // const r = jsonpath.query(rootNodes, '$..[?(@.key=="0-0")]');
-    // if(r.length > 0) {
-    //   setIsEmpty(false);
-    //   console.log('r', r);
-    //   setSelectedNode(r[0]);
-    //   setComponentType(r[0].data.type);
-    // }
-  }, [rootNodes])
 
   const menuClick = (e: any) => {
     // @ts-ignore
     menu.current.show(e);
-  }
-
-  const tieredMenuClick = (e: any) => {
-    // @ts-ignore
-    tieredMenu.current.show(e);
   }
 
   const AddCriteriaButton = () => {
@@ -307,159 +228,17 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     )
   }
 
-  const onNodeToggle = (e: any) => {
-    console.log('selectedKeys', selectedKeys);
-    setExpandedKeys(e.value)
-  }
-
-  const onNodeSelect = (node: TreeEventNodeParams) => {
-    console.log('selectedKeys', selectedKeys);
-    console.log('expandedKeys', expandedKeys);
-    setSelectedNode(node.node);
-  }
-
   const MatchingMenuAndForm = (props: IMarchMenuAndFormProps) => {
-    const {onMenuNodeClick, formDataChanged} = props;
+    const {onMenuNodeClick, formDataChanged, onComponentTypeChange} = props;
     const [isMouseOverNode, setIsMouseOverNode] = useState(false);
-
-    const findArrayContainingKeyInsideATree = (tree: TreeNode, key: string): TreeNode | null => {
-      let result = null;
-      const traverse = (tree: TreeNode, key: string) => {
-        if (tree.children) {
-          tree.children.forEach((child) => {
-            if (child.key === key) {
-              result = tree;
-            }
-            traverse(child, key);
-          });
-        }
-      };
-      traverse(tree, key);
-      return result;
-    }
-
-    const addCriteria = (node: TreeNode, type: string) => {
-      console.log('rootNodes', rootNodes);
-      if (node.key) {
-        const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], node.key as string);
-        if (parentNode) {
-          // get last element from the children
-          const lastChild: TreeNode = parentNode.children![parentNode.children!.length - 1];
-          const incrementedKey = incrementKey(lastChild.key as string);
-          const newNode = {
-            key: incrementedKey,
-            label: type,
-            data: {type: type === 'Clinical' ? EComponentType.ClinicalForm : EComponentType.GenomicForm},
-          }
-          parentNode.children!.push(newNode);
-        }
-        setRootNodes([...rootNodes]);
-      }
-
-    }
-
-    const nodeTemplate = (node: TreeNode) => {
-
-      const tieredMenuModel = [
-        {
-          label: 'Add criteria to the same list',
-          icon: 'pi pi-plus-circle',
-          items: [
-            {
-              label: 'Clinical',
-              command: () => {
-                addCriteria(node, 'Clinical');
-              }
-            },
-            {
-              label: 'Genomic',
-              command: () => {
-                addCriteria(node, 'Genomic');
-              }
-            }
-          ]
-
-        },
-        {
-          label: 'Delete',
-          icon: 'pi pi-trash',
-        },
-        {
-          separator:true
-        },
-        {
-          label: 'Add criteria subgroup',
-          icon: 'pi pi-clone',
-          items: [
-            {
-              label: 'Clinical',
-            },
-            {
-              label: 'Genomic',
-            }
-          ]
-        }
-      ]
-
-      const onNodeClick = (e: any) => {
-        console.log('nodeClicked !~', node);
-        onMenuNodeClick(node.data.type, node);
-        // console.log('componentType', componentType);
-      }
-
-      if (selectedNode) {
-        const btnToShow = () => {
-          let show = false;
-          if ((selectedNode as TreeNode).key === node.key && isMouseOverNode) {
-            show = true;
-          }
-          show=true
-            return show ?
-              <Button icon="pi pi-ellipsis-h"
-                      className={styles.treeMenuBtn}
-                      iconPos="right" onClick={tieredMenuClick} ></Button> : null
-        }
-
-        let label = <b>{node.label}</b>;
-        return (
-          <>
-            <div className={styles.treeNodeContainer}
-                 // onMouseOver={() => setIsMouseOverNode(true)}
-                 // onMouseOut={() => setIsMouseOverNode(false)}
-            >
-              <span className="p-treenode-label" onClick={onNodeClick} style={{width: '80%'}}>
-                {label}
-              </span>
-              {btnToShow()}
-              <TieredMenu model={tieredMenuModel} popup ref={tieredMenu} />
-            </div>
-
-          </>
-        );
-      }
-      return null;
-    }
 
     return (
       <>
         <Menu model={menuItems} ref={menu} popup id="criteria_popup_menu"/>
         <div className={styles.matchingMenuAndFormContainer}>
-          <div className={styles.matchingCriteriaMenuContainer}>
-            <div className={styles.matchingCriteriaTextContainer}>
-              <div className={styles.matchingCriteriaText}>Matching Criteria</div>
-              <i className="pi pi-plus-circle" onClick={(e) => {
-                menuClick(e);
-              }}></i>
-
-            </div>
-            <Tree value={rootNodes}
-                  nodeTemplate={nodeTemplate}
-                  expandedKeys={expandedKeys}
-                  selectionKeys={selectedKeys}
-                  selectionMode="single"
-                  onSelect={onNodeSelect}
-                  onToggle={e => onNodeToggle(e) } />
-          </div>
+          <LeftMenuComponent emitComponentType={(type) => {
+            onComponentTypeChange(type);
+          }} rootNodesProp={rootNodes} />
           <div className={styles.matchingCriteriaFormContainer}>
             {isEmpty ? <EmptyForm /> : <ComponentToRender formDataChanged={formDataChanged} formD={formData}/>}
           </div>
@@ -518,12 +297,12 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     console.log('componentType', node)
     setComponentType(componentType);
     setFormData(node.data.formData)
-    setSelectedNode({...selectedNode, ...node});
+    // setSelectedNode({...selectedNode, ...node});
   }
 
   const updateFormDataForSelectedNode = (formData: any) => {
     const rootNode = rootNodes[0];
-    updateFormDataInNodeByKey(rootNode, selectedNode.key, formData);
+    // updateFormDataInNodeByKey(rootNode, selectedNode.key, formData);
     // setFormData(formData)
     console.log('rootNode update', rootNodes);
   }
@@ -531,18 +310,12 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   return (
     <Dialog header="<arm_code> matching criteria" footer={footer} visible={isDialogVisible} style={{width: '960px', height: '800px'}} onHide={onDialogHide}>
       <div className={styles.mainContainer}>
-        <MatchingMenuAndForm onMenuNodeClick={setNewComponentType} formDataChanged={updateFormDataForSelectedNode}/>
+        <MatchingMenuAndForm onMenuNodeClick={setNewComponentType}
+                             formDataChanged={updateFormDataForSelectedNode}
+                             onComponentTypeChange={(type) => {setComponentType(type)}}
+        />
         <MatchingCriteriaPreview/>
       </div>
-      {/*<Form schema={props.dialogSchema as JSONSchema7}*/}
-      {/*      templates={{*/}
-      {/*        ArrayFieldItemTemplate: CtimsArrayFieldItemTemplate,*/}
-      {/*        ArrayFieldTemplate: CtimsArrayFieldTemplate,*/}
-      {/*      }}*/}
-      {/*      onChange={(data) => {props.onRjsfFormChange(data)}}*/}
-      {/*      uiSchema={props.uiSchema}*/}
-      {/*      widgets={widgets}*/}
-      {/*      onSubmit={(data) => {handleSubmit(data.formData)}} validator={localValidator}/>*/}
     </Dialog>
   )
 }

@@ -49,3 +49,17 @@ export const buildRootNodes = (rootLabel: string, firstChildLabel: string): Tree
   r[0].children[0].data = {type};
   return r;
 }
+
+export const updateFormDataInNodeByKey = (tree: TreeNode, key: string, formData: any) => {
+  const traverse = (tree: TreeNode, key: string, formData: any) => {
+    if (tree.key === key) {
+      tree.data.formData = formData;
+    }
+    if (tree.children) {
+      tree.children.forEach((child) => {
+        traverse(child, key, formData);
+      });
+    }
+  };
+  traverse(tree, key, formData);
+}
