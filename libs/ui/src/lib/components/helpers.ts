@@ -63,3 +63,21 @@ export const updateFormDataInNodeByKey = (tree: TreeNode, key: string, formData:
   };
   traverse(tree, key, formData);
 }
+
+export const makePropertiesWritable = (obj: any) => {
+  for (const prop in obj) {
+    if (typeof obj[prop] === 'object' && obj[prop] !== null) {
+      makePropertiesWritable(obj[prop]);
+    }
+    Object.defineProperty(obj, prop, { writable: true });
+  }
+}
+
+export const logReadableWritableProperties = (obj: any) => {
+  for (const prop in obj) {
+    if (typeof obj[prop] === 'object' && obj[prop] !== null) {
+      logReadableWritableProperties(obj[prop]);
+    }
+    console.log('logReadableWritableProperties: ' + prop, Object.getOwnPropertyDescriptor(obj, prop));
+  }
+}

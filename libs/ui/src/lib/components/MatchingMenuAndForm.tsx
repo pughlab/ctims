@@ -6,7 +6,6 @@ import LeftMenuComponent from "./LeftMenuComponent";
 import {RegistryWidgetsType} from "@rjsf/utils";
 import CtimsInput from "../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../custom-rjsf-templates/CtimsDropdown";
-import CtimsObjectFieldTemplate from "../custom-rjsf-templates/CtimsObjectFieldTemplate";
 import {JSONSchema7} from "json-schema";
 import localValidator from "@rjsf/validator-ajv8";
 import {Dropdown} from "primereact/dropdown";
@@ -15,10 +14,19 @@ import {withTheme} from "@rjsf/core";
 import {Theme as PrimeTheme} from "../primereact";
 import TreeNode from "primereact/treenode";
 import CtimsMatchDialogObjectFieldTemplate from "../custom-rjsf-templates/CtimsMatchDialogObjectFieldTemplate";
+import {useDispatch} from "react-redux";
+import {addAdjacentNode} from "../../../../../apps/web/pages/store/slices/treeActionsSlice";
+import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
+import {makePropertiesWritable} from "./helpers";
 
 const Form = withTheme(PrimeTheme)
 
 export interface IFormProps {
+  node: TreeNode;
+}
+
+export interface ITitleContainerProps {
+  title: string;
   node: TreeNode;
 }
 
@@ -83,8 +91,19 @@ const OperatorDropdown = () => {
   )
 }
 
-const TitleContainer = (props: {title: string}) => {
-  const {title} = props;
+const TitleContainer = (props: ITitleContainerProps) => {
+  const {title, node} = props;
+
+  const dispatch = useDispatch();
+
+  const onAddCriteria = () => {
+    console.log('onAddCriteria');
+    // since redux makes all properties of the node immutable, we need to clone it
+    // otherwise we will encounter an error: TypeError: Cannot assign to read only property 'formData' of object '#<Object>'
+    // in onFormChange in ClinicalForm and GenomicForm components
+    let newNode = structuredClone(node);
+    dispatch(addAdjacentNode({node: newNode, type: title}));
+  }
 
   const deleteButtonClasses = `p-button-text p-button-plain p-button-danger ${styles.deleteButton}`;
   const addCriteriaButtonClasses = `p-button-text p-button-plain ${styles.addCriteriaToSameListButton}`;
@@ -95,7 +114,12 @@ const TitleContainer = (props: {title: string}) => {
         {title}
       </div>
       <Button icon="pi pi-trash" label="Delete" iconPos="left" className={deleteButtonClasses} />
-      <Button icon="pi pi-plus-circle" label="Add criteria to the same list" iconPos="left" className={addCriteriaButtonClasses} />
+      <Button icon="pi pi-plus-circle"
+              label="Add criteria to the same list"
+              iconPos="left"
+              className={addCriteriaButtonClasses}
+              onClick={onAddCriteria}
+      />
     </div>
   )
 }
@@ -172,7 +196,7 @@ const MatchingMenuAndForm = (props: any) => {
       <div style={formContainerStyle}>
         <OperatorDropdown />
         <div>
-          <TitleContainer title="Clinical" />
+          <TitleContainer title="Clinical" node={node} />
         </div>
         <div>
           <Form schema={clinicalFormSchema as JSONSchema7}
@@ -553,7 +577,7 @@ const MatchingMenuAndForm = (props: any) => {
     <div style={formContainerStyle}>
       <OperatorDropdown />
       <div>
-        <TitleContainer title="Genomic" />
+        <TitleContainer title="Genomic" node={node} />
       </div>
       <div>
         <Form schema={genomicFormSchema as JSONSchema7}
