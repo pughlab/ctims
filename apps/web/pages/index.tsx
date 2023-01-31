@@ -1,4 +1,7 @@
 'use client'
+import styles from './index.module.scss';
+import {CheckboxDemo} from "../components/CheckboxDemo";
+import {ChipsDemo} from "../components/ChipsDemo";
 
 import Login from "../components/Login";
 
