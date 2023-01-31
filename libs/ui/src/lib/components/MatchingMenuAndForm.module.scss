@@ -18,12 +18,36 @@
   }
 }
 
+.deleteButton {
+  color: #EF4444 !important;
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.addCriteriaToSameListButton {
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  width: 233px !important;
+}
+
 .titleContainer {
   display: flex;
   width: 600px;
   margin-top: 20px;
   margin-left: 20px;
   margin-right: 20px;
+}
+
+.titleContainerText {
+  width: 250px;
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 28px;
 }
 
 .matchingCriteriaFormContainerEmpty {

@@ -11,19 +11,18 @@ import {EComponentType} from "./EComponentType";
 import {IRootNode} from "./MatchingMenuAndForm";
 
 interface ILeftMenuComponentProps {
-  emitComponentType: (componentType: EComponentType, note: TreeNode) => void;
+  onTreeNodeClick: (componentType: EComponentType, note: TreeNode) => void;
   rootNodesProp: IRootNode;
 }
 
 const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
-  const {emitComponentType, rootNodesProp} = props;
+  const {onTreeNodeClick, rootNodesProp} = props;
 
   const [rootNodes, setRootNodes] = useState<TreeNode[]>([]);
   const [selectedNode, setSelectedNode] = useState<any>(null);
   const [selectedKeys, setSelectedKeys] = useState<any>(null);
   const [expandedKeys, setExpandedKeys] = useState({0: true});
-  const [isMouseOverNode, setIsMouseOverNode] = useState(false);
 
   const tieredMenu = useRef(null);
   const menu = useRef(null);
@@ -39,7 +38,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         if(r.length > 0) {
           // setIsEmpty(false);
           setSelectedNode(r[0]);
-          emitComponentType(r[0].data.type, r[0]);
+          onTreeNodeClick(r[0].data.type, r[0]);
         }
       }
     }
@@ -56,7 +55,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         if(r.length > 0) {
           console.log('r', r);
           setSelectedNode(r[0]);
-          emitComponentType(r[0].data.type, r[0]);
+          onTreeNodeClick(r[0].data.type, r[0]);
         }
         console.log('selectedKeys', selectedKeys);
       }
@@ -103,6 +102,8 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
   const nodeTemplate = (node: TreeNode) => {
 
+    const [isMouseOverNode, setIsMouseOverNode] = useState(false);
+
     const tieredMenuModel = [
       {
         label: 'Add criteria to the same list',
@@ -144,20 +145,13 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       }
     ]
 
-    const onNodeClick = (e: any) => {
-      // console.log('nodeClicked !~', node);
-      // onMenuNodeClick(node.data.type, node);
-      emitComponentType(node.data.type, node);
-      // console.log('componentType', componentType);
-    }
-
     if (selectedNode) {
       const btnToShow = () => {
         let show = false;
         if ((selectedNode as TreeNode).key === node.key && isMouseOverNode) {
           show = true;
         }
-        show=true
+        // show=true
         return show ?
           <Button icon="pi pi-ellipsis-h"
                   className={styles.treeMenuBtn}
@@ -168,14 +162,14 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       return (
         <>
           <div className={styles.treeNodeContainer}
-            // onMouseOver={() => setIsMouseOverNode(true)}
-            // onMouseOut={() => setIsMouseOverNode(false)}
+            onMouseOver={() => setIsMouseOverNode(true)}
+            onMouseOut={() => setIsMouseOverNode(false)}
           >
-              <span className="p-treenode-label" onClick={onNodeClick} style={{width: '80%'}}>
+              <span className="p-treenode-label" style={{width: '80%'}}>
                 {label}
               </span>
-            {btnToShow()}
-            <TieredMenu model={tieredMenuModel} popup ref={tieredMenu} />
+              {btnToShow()}
+              <TieredMenu model={tieredMenuModel} popup ref={tieredMenu} />
           </div>
 
         </>
@@ -188,6 +182,8 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     // console.log('selectedKeys', selectedKeys);
     // console.log('expandedKeys', expandedKeys);
     setSelectedNode(node.node);
+    setSelectedKeys(node.node.key as string)
+    onTreeNodeClick(node.node.data.type, node.node);
   }
 
   const onNodeToggle = (e: any) => {

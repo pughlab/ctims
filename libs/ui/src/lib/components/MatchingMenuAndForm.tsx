@@ -212,7 +212,7 @@ const MatchingMenuAndForm = (props: any) => {
       ComponentToRender = () => null;
   }
 
-  const onOperatorChange = (type: EComponentType, node: TreeNode) => {
+  const treeNodeClicked = (type: EComponentType, node: TreeNode) => {
     setComponentType({type, node});
   }
 
@@ -220,7 +220,7 @@ const MatchingMenuAndForm = (props: any) => {
     <>
       <Menu model={menuItems} ref={menu} popup id="criteria_popup_menu"/>
       <div className={styles.matchingMenuAndFormContainer}>
-        <LeftMenuComponent emitComponentType={onOperatorChange} rootNodesProp={buildRootNodeParams} />
+        <LeftMenuComponent onTreeNodeClick={treeNodeClicked} rootNodesProp={buildRootNodeParams} />
         <div className={styles.matchingCriteriaFormContainer}>
           {isEmpty ? <EmptyForm /> : <ComponentToRender node={componentType.node}/>}
         </div>
