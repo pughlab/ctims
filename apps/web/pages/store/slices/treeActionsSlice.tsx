@@ -1,8 +1,7 @@
-import TreeNode from "primereact/treenode";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 export interface IAddCriteria {
-  node: TreeNode;
+  nodeKey: string;
   type: string;
 }
 
@@ -12,7 +11,7 @@ export interface TreeActionsState {
 
 const initialState: TreeActionsState = {
   addCriteria: {
-    node: null,
+    nodeKey: '',
     type: ''
   }
 };

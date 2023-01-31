@@ -98,11 +98,7 @@ const TitleContainer = (props: ITitleContainerProps) => {
 
   const onAddCriteria = () => {
     console.log('onAddCriteria');
-    // since redux makes all properties of the node immutable, we need to clone it
-    // otherwise we will encounter an error: TypeError: Cannot assign to read only property 'formData' of object '#<Object>'
-    // in onFormChange in ClinicalForm and GenomicForm components
-    let newNode = structuredClone(node);
-    dispatch(addAdjacentNode({node: newNode, type: title}));
+    dispatch(addAdjacentNode({nodeKey: node.key as string, type: title}));
   }
 
   const deleteButtonClasses = `p-button-text p-button-plain p-button-danger ${styles.deleteButton}`;

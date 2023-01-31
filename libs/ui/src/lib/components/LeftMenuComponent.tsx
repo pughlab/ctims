@@ -4,20 +4,13 @@ import React, {memo, useEffect, useRef, useState} from "react";
 import TreeNode from "primereact/treenode";
 import {Button} from "primereact/button";
 import {TieredMenu} from "primereact/tieredmenu";
-import {
-  buildRootNodes,
-  findArrayContainingKeyInsideATree,
-  incrementKey,
-  logReadableWritableProperties,
-  makePropertiesWritable
-} from "./helpers";
+import {buildRootNodes, findArrayContainingKeyInsideATree, incrementKey} from "./helpers";
 import {Menu} from "primereact/menu";
 import * as jsonpath from "jsonpath";
 import {EComponentType} from "./EComponentType";
 import {IRootNode} from "./MatchingMenuAndForm";
 import {useSelector} from "react-redux";
 import {IAddCriteria} from "../../../../../apps/web/pages/store/slices/treeActionsSlice";
-import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
 
 interface ILeftMenuComponentProps {
   onTreeNodeClick: (componentType: EComponentType, note: TreeNode) => void;
@@ -36,15 +29,10 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   const newNodeValue: IAddCriteria = useSelector((state: any) => state.treeActions.addCriteria);
 
   useEffect(() => {
-    if (newNodeValue && newNodeValue.node && newNodeValue.type) {
-      let {node, type} = newNodeValue;
-      // redux makes all properties read-only, we will clone the object and make the properties writable
-      // this has direct impact on how formData gets updated for each tree node
-      // see onFormChange in ClinicalForm and GenomicFom components
-      let newNode = structuredClone(node);
-      makePropertiesWritable(newNode);
+    if (newNodeValue && newNodeValue.nodeKey && newNodeValue.type) {
+      let {nodeKey, type}: {nodeKey: string, type: string} = newNodeValue;
 
-      addCriteria(newNode, type);
+      addCriteria(nodeKey, type);
     }
   }, [newNodeValue]);
 
@@ -95,10 +83,10 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     }
   ];
 
-  const addCriteria = (node: TreeNode, type: string) => {
-    if (node.key) {
+  const addCriteria = (nodeKey: string, type: string) => {
+    if (nodeKey) {
       console.log('rootNodes[0]', rootNodes[0]);
-      const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], node.key as string);
+      const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
       if (parentNode) {
         // get last element from the children
         const lastChild: TreeNode = parentNode.children![parentNode.children!.length - 1];
@@ -137,13 +125,13 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           {
             label: 'Clinical',
             command: () => {
-              addCriteria(node, 'Clinical');
+              addCriteria(node.key as string, 'Clinical');
             }
           },
           {
             label: 'Genomic',
             command: () => {
-              addCriteria(node, 'Genomic');
+              addCriteria(node.key as string, 'Genomic');
             }
           }
         ]
