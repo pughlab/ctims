@@ -4,13 +4,19 @@ import React, {memo, useEffect, useRef, useState} from "react";
 import TreeNode from "primereact/treenode";
 import {Button} from "primereact/button";
 import {TieredMenu} from "primereact/tieredmenu";
-import {buildRootNodes, findArrayContainingKeyInsideATree, incrementKey} from "./helpers";
+import {
+  buildRootNodes,
+  deleteNodeFromChildrenArrayByKey,
+  findArrayContainingKeyInsideATree,
+  incrementKey
+} from "./helpers";
 import {Menu} from "primereact/menu";
 import * as jsonpath from "jsonpath";
 import {EComponentType} from "./EComponentType";
 import {IRootNode} from "./MatchingMenuAndForm";
 import {useSelector} from "react-redux";
-import {IAddCriteria} from "../../../../../apps/web/pages/store/slices/treeActionsSlice";
+import {IAddCriteria, IDeleteCriteria} from "../../../../../apps/web/pages/store/slices/treeActionsSlice";
+import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
 
 interface ILeftMenuComponentProps {
   onTreeNodeClick: (componentType: EComponentType, note: TreeNode) => void;
@@ -27,6 +33,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   const [expandedKeys, setExpandedKeys] = useState({0: true});
 
   const newNodeValue: IAddCriteria = useSelector((state: any) => state.treeActions.addCriteria);
+  const nodeKeyToBeDeleted: IDeleteCriteria = useSelector((state: any) => state.treeActions.deleteCriteria);
 
   useEffect(() => {
     if (newNodeValue && newNodeValue.nodeKey && newNodeValue.type) {
@@ -35,6 +42,17 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       addCriteria(nodeKey, type);
     }
   }, [newNodeValue]);
+
+  useEffect(() => {
+    if (nodeKeyToBeDeleted) {
+      console.log('nodeKeyToBeDeleted', nodeKeyToBeDeleted);
+      const newRootNodes = structuredClone(rootNodes);
+      deleteNodeFromChildrenArrayByKey(newRootNodes[0], nodeKeyToBeDeleted.nodeKey);
+      console.log('newRootNodes', newRootNodes);
+      setRootNodes(newRootNodes);
+
+    }
+  }, [nodeKeyToBeDeleted]);
 
   const tieredMenu = useRef(null);
   const menu = useRef(null);
@@ -228,6 +246,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     )
 
 }, (prevProps, nextProps) => {
-  return prevProps.rootNodesProp === nextProps.rootNodesProp;
+  // return prevProps.rootNodesProp === nextProps.rootNodesProp;
+  return false;
 });
 export default LeftMenuComponent;

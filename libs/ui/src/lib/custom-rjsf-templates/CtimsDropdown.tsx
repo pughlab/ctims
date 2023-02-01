@@ -57,7 +57,7 @@ const CtimsDropdown = (props: WidgetProps) => {
  } = props;
 
   const { enumOptions, enumDisabled } = options;
-  console.log('CtimsDropdown options', options);
+  // console.log('CtimsDropdown options', options);
 
   const emptyValue = multiple ? [] : "";
 

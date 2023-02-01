@@ -81,3 +81,18 @@ export const logReadableWritableProperties = (obj: any) => {
     console.log('logReadableWritableProperties: ' + prop, Object.getOwnPropertyDescriptor(obj, prop));
   }
 }
+
+export const deleteNodeFromChildrenArrayByKey = (tree: TreeNode, key: string) => {
+  const traverse = (tree: TreeNode, key: string) => {
+    if (tree.children) {
+      const indexToDelete = tree.children.findIndex((child) => child.key === key);
+      if (indexToDelete !== -1) {
+        tree.children.splice(indexToDelete, 1);
+      }
+      tree.children.forEach((child) => {
+        traverse(child, key);
+      });
+    }
+  };
+  traverse(tree, key);
+}

@@ -15,9 +15,7 @@ import {Theme as PrimeTheme} from "../primereact";
 import TreeNode from "primereact/treenode";
 import CtimsMatchDialogObjectFieldTemplate from "../custom-rjsf-templates/CtimsMatchDialogObjectFieldTemplate";
 import {useDispatch} from "react-redux";
-import {addAdjacentNode} from "../../../../../apps/web/pages/store/slices/treeActionsSlice";
-import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
-import {makePropertiesWritable} from "./helpers";
+import {addAdjacentNode, deleteNode} from "../../../../../apps/web/pages/store/slices/treeActionsSlice";
 
 const Form = withTheme(PrimeTheme)
 
@@ -97,8 +95,12 @@ const TitleContainer = (props: ITitleContainerProps) => {
   const dispatch = useDispatch();
 
   const onAddCriteria = () => {
-    console.log('onAddCriteria');
     dispatch(addAdjacentNode({nodeKey: node.key as string, type: title}));
+  }
+
+  const onDeleteCriteria = () => {
+    console.log('onDeleteCriteria');
+    dispatch(deleteNode({nodeKey: node.key as string}));
   }
 
   const deleteButtonClasses = `p-button-text p-button-plain p-button-danger ${styles.deleteButton}`;
@@ -109,7 +111,12 @@ const TitleContainer = (props: ITitleContainerProps) => {
       <div className={styles.titleContainerText}>
         {title}
       </div>
-      <Button icon="pi pi-trash" label="Delete" iconPos="left" className={deleteButtonClasses} />
+      <Button icon="pi pi-trash"
+              label="Delete"
+              iconPos="left"
+              className={deleteButtonClasses}
+              onClick={onDeleteCriteria}
+      />
       <Button icon="pi pi-plus-circle"
               label="Add criteria to the same list"
               iconPos="left"
