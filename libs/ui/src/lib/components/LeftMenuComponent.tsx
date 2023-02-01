@@ -44,7 +44,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   }, [newNodeValue]);
 
   useEffect(() => {
-    if (nodeKeyToBeDeleted) {
+    if (nodeKeyToBeDeleted.nodeKey) {
       console.log('nodeKeyToBeDeleted', nodeKeyToBeDeleted);
       const newRootNodes = structuredClone(rootNodes);
       deleteNodeFromChildrenArrayByKey(newRootNodes[0], nodeKeyToBeDeleted.nodeKey);

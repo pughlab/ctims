@@ -258,7 +258,7 @@ const CtimsFormComponent = (props: CtimsFormComponentProps) => {
                         type: 'object',
                         properties: {
                           // fields in the form
-                          "ctimsButton": {type: 'string', title: 'Ctims Button'},
+                          "ctimsButton": {type: 'string', title: 'Open Match Dialog'},
                           "fieldShouldBeInDialog": {type: 'string', title: 'Field Should Be In Dialog'},
 
                         }
