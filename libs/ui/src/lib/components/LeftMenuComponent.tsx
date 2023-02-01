@@ -5,7 +5,7 @@ import TreeNode from "primereact/treenode";
 import {Button} from "primereact/button";
 import {TieredMenu} from "primereact/tieredmenu";
 import {
-  buildRootNodes,
+  buildRootNodes, createSubGroupKey,
   deleteNodeFromChildrenArrayByKey,
   findArrayContainingKeyInsideATree,
   incrementKey
@@ -39,7 +39,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     if (newNodeValue && newNodeValue.nodeKey && newNodeValue.type) {
       let {nodeKey, type}: {nodeKey: string, type: string} = newNodeValue;
 
-      addCriteria(nodeKey, type);
+      addCriteriaToSameList(nodeKey, type);
     }
   }, [newNodeValue]);
 
@@ -101,7 +101,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     }
   ];
 
-  const addCriteria = (nodeKey: string, type: string) => {
+  const addCriteriaToSameList = (nodeKey: string, type: string) => {
     if (nodeKey) {
       console.log('rootNodes[0]', rootNodes[0]);
       const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
@@ -118,7 +118,29 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       }
       setRootNodes([...rootNodes]);
     }
+  }
 
+  const addCriteriaSubList = (nodeKey: string, type: string) => {
+    if (nodeKey) {
+      const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
+      if (parentNode) {
+        const incrementedKey = incrementKey(nodeKey);
+        const newNode = {
+          key: incrementedKey,
+          label: 'And',
+          data: {},
+          children: [
+            {
+              key: createSubGroupKey(incrementedKey),
+              label: type,
+              data: {type: type === 'Clinical' ? EComponentType.ClinicalForm : EComponentType.GenomicForm},
+            }
+          ]
+        };
+        parentNode.children!.push(newNode);
+      }
+      setRootNodes([...rootNodes]);
+    }
   }
 
   const tieredMenuClick = (e: any) => {
@@ -143,13 +165,13 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           {
             label: 'Clinical',
             command: () => {
-              addCriteria(node.key as string, 'Clinical');
+              addCriteriaToSameList(node.key as string, 'Clinical');
             }
           },
           {
             label: 'Genomic',
             command: () => {
-              addCriteria(node.key as string, 'Genomic');
+              addCriteriaToSameList(node.key as string, 'Genomic');
             }
           }
         ]
@@ -168,10 +190,17 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         items: [
           {
             label: 'Clinical',
+            command: () => {
+              addCriteriaSubList(node.key as string, 'Clinical');
+            }
           },
           {
             label: 'Genomic',
-          }
+            command: () => {
+              addCriteriaSubList(node.key as string, 'Genomic');
+
+            }
+          },
         ]
       }
     ]

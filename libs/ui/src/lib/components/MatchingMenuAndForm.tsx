@@ -151,7 +151,7 @@ const MatchingMenuAndForm = (props: any) => {
 
   const ClinicalForm = (props: IFormProps) => {
     const {node} = props
-    // console.log('ClinicalForm node: ', node)
+    console.log('ClinicalForm node: ', node)
 
     const clinicalFormSchema = {
       'type': 'object',
@@ -215,6 +215,7 @@ const MatchingMenuAndForm = (props: any) => {
 
   const GenomicForm = (props: IFormProps) => {
     const {node} = props
+    console.log('GenomicForm node: ', node)
 
   const genomicFormSchema = {
         'definitions': {
@@ -240,78 +241,24 @@ const MatchingMenuAndForm = (props: any) => {
               "5_prime_UTR",
             ],
             "enum": [
-              {
-                "label": "Missense Mutation",
-                "value": "Missense_Mutation",
-              },
-              {
-                "label": "Missense and Splice Region",
-                "value": "Missense and Splice_Region",
-              },
-              {
-                "label": "Del Ins",
-                "value": "Del_Ins",
-              },
-              {
-                "label": "Frame Shift Del",
-                "value": "Frame_Shift_Del",
-              },
-              {
-                "label": "Frame Shift Ins",
-                "value": "Frame_Shift_Ins",
-              },
-              {
-                "label": "Frameshift",
-                "value": "Frameshift",
-              },
-              {
-                "label": "Frameshift mutation",
-                "value": "Frameshift_mutation",
-              },
-              {
-                "label": "In Frame Del",
-                "value": "In_Frame_Del",
-              },
-              {
-                "label": "In Frame Ins",
-                "value": "In_Frame_Ins",
-              },
-              {
-                "label": "Initiator Codon",
-                "value": "Initiator_Codon",
-              },
-              {
-                "label": "Intron mutation",
-                "value": "Intron_mutation",
-              },
-              {
-                "label": "Intron",
-                "value": "Intron",
-              },
-              {
-                "label": "3'UTR",
-                "value": "3'UTR",
-              },
-              {
-                "label": "3_prime_UTR",
-                "value": "3_prime_UTR",
-              },
-              {
-                "label": "5'Flank",
-                "value": "5'Flank",
-              },
-              {
-                "label": "5'UTR",
-                "value": "5'UTR",
-              },
-              {
-                "label": "5'UTR_mutation",
-                "value": "5'UTR_mutation",
-              },
-              {
-                "label": "5_prime_UTR",
-                "value": "5_prime_UTR",
-              }
+              "Missense_Mutation",
+              "Missense and Splice_Region",
+              "Del_Ins",
+              "Frame_Shift_Del",
+              "Frame_Shift_Ins",
+              "Frameshift",
+              "Frameshift_mutation",
+              "In_Frame_Del",
+              "In_Frame_Ins",
+              "Initiator_Codon",
+              "Intron_mutation",
+              "Intron",
+              "3'UTR",
+              "3_prime_UTR",
+              "5'Flank",
+              "5'UTR",
+              "5'UTR_mutation",
+              "5_prime_UTR",
             ]
           },
           'cnv_call': {
@@ -322,22 +269,10 @@ const MatchingMenuAndForm = (props: any) => {
               "High level amplification",
             ],
             "enum": [
-              {
-                "label": "Heterozygous deletion",
-                "value": "Heterozygous_deletion",
-              },
-              {
-                "label": "Homozygous deletion",
-                "value": "Homozygous_deletion",
-              },
-              {
-                "label": "Gain",
-                "value": "Gain",
-              },
-              {
-                "label": "High level amplification",
-                "value": "High_level_amplification",
-              }
+              "Heterozygous_deletion",
+              "Homozygous_deletion",
+              "Gain",
+              "High_level_amplification",
             ]
           },
           'wildtype': {
@@ -346,14 +281,8 @@ const MatchingMenuAndForm = (props: any) => {
               "False",
             ],
             "enum": [
-              {
-                "label": "True",
-                "value": "true",
-              },
-              {
-                "label": "False",
-                "value": "false",
-              }
+              "True",
+              "False"
             ]
           },
           'pole_status': {
@@ -364,22 +293,10 @@ const MatchingMenuAndForm = (props: any) => {
               "Insufficient Variants",
             ],
             "enum": [
-              {
-                "label": "Yes",
-                "value": "yes",
-              },
-              {
-                "label": "No",
-                "value": "no",
-              },
-              {
-                "label": "Cannot Access",
-                "value": "cannot_access",
-              },
-              {
-                "label": "Insufficient Variants",
-                "value": "insufficient_variants",
-              }
+              "yes",
+              "no",
+              "cannot_access",
+              "insufficient_variants",
             ],
           },
           'uva_status': {
@@ -390,22 +307,10 @@ const MatchingMenuAndForm = (props: any) => {
               "Insufficient Variants",
             ],
             "enum": [
-              {
-                "label": "Yes",
-                "value": "yes",
-              },
-              {
-                "label": "No",
-                "value": "no",
-              },
-              {
-                "label": "Cannot Access",
-                "value": "cannot_access",
-              },
-              {
-                "label": "Insufficient Variants",
-                "value": "insufficient_variants",
-              }
+              "yes",
+              "no",
+              "cannot_access",
+              "insufficient_variants",
             ],
           },
           'tobacco_status': {
@@ -416,22 +321,10 @@ const MatchingMenuAndForm = (props: any) => {
               "Insufficient Variants",
             ],
             "enum": [
-              {
-                "label": "Yes",
-                "value": "yes",
-              },
-              {
-                "label": "No",
-                "value": "no",
-              },
-              {
-                "label": "Cannot Access",
-                "value": "cannot_access",
-              },
-              {
-                "label": "Insufficient Variants",
-                "value": "insufficient_variants",
-              }
+              "yes",
+              "no",
+              "cannot_access",
+              "insufficient_variants",
             ],
           },
           'apobec_status': {
@@ -442,22 +335,10 @@ const MatchingMenuAndForm = (props: any) => {
               "Insufficient Variants",
             ],
             "enum": [
-              {
-                "label": "Yes",
-                "value": "yes",
-              },
-              {
-                "label": "No",
-                "value": "no",
-              },
-              {
-                "label": "Cannot Access",
-                "value": "cannot_access",
-              },
-              {
-                "label": "Insufficient Variants",
-                "value": "insufficient_variants",
-              }
+              "yes",
+              "no",
+              "cannot_access",
+              "insufficient_variants",
             ],
           },
           'temozolomide_status': {
@@ -468,22 +349,10 @@ const MatchingMenuAndForm = (props: any) => {
               "Insufficient Variants",
             ],
             "enum": [
-              {
-                "label": "Yes",
-                "value": "yes",
-              },
-              {
-                "label": "No",
-                "value": "no",
-              },
-              {
-                "label": "Cannot Access",
-                "value": "cannot_access",
-              },
-              {
-                "label": "Insufficient Variants",
-                "value": "insufficient_variants",
-              }
+              "yes",
+              "no",
+              "cannot_access",
+              "insufficient_variants",
             ],
           },
           'mmr_status': {
@@ -492,14 +361,8 @@ const MatchingMenuAndForm = (props: any) => {
               "MMR-Deficient"
             ],
             "enum": [
-              {
-                "label": "MMR-Proficient",
-                "value": "mmr_proficient",
-              },
-              {
-                "label": "MMR-Deficient",
-                "value": "mmr_deficient",
-              }
+              "mmr_proficient",
+              "mmr_deficient",
             ]
           }
         },

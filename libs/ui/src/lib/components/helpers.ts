@@ -26,6 +26,15 @@ export const incrementKey = (key: string): string => {
   return keyParts.join('-');
 }
 
+export const createSubGroupKey = (key: string) => {
+  const keyParts = key.split('-');
+  const newKeyParts = keyParts.map((keyPart) => {
+    return '0';
+  });
+  newKeyParts.push('0');
+  return newKeyParts.join('-');
+}
+
 export const buildRootNodes = (rootLabel: string, firstChildLabel: string): TreeNode[] => {
   const r = [
     {
