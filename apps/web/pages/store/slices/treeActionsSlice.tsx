@@ -9,9 +9,15 @@ export interface IDeleteCriteria {
   nodeKey: string;
 }
 
+export interface IOperatorChange {
+  nodeKey: string;
+  operator: string;
+}
+
 export interface TreeActionsState {
   addCriteria: IAddCriteria;
   deleteCriteria: IDeleteCriteria;
+  operatorChange: IOperatorChange;
 }
 
 const initialState: TreeActionsState = {
@@ -21,6 +27,10 @@ const initialState: TreeActionsState = {
   },
   deleteCriteria: {
     nodeKey: '',
+  },
+  operatorChange: {
+    nodeKey: '',
+    operator: ''
   }
 };
 
@@ -33,9 +43,12 @@ export const treeActionsSlice = createSlice({
     },
     deleteNode: (state, action: PayloadAction<IDeleteCriteria>) => {
       state.deleteCriteria = action.payload;
+    },
+    operatorChange: (state, action: PayloadAction<IOperatorChange>) => {
+      state.operatorChange = action.payload;
     }
   }
 });
 
-export const { addAdjacentNode, deleteNode } = treeActionsSlice.actions;
+export const { addAdjacentNode, deleteNode, operatorChange } = treeActionsSlice.actions;
 export default treeActionsSlice.reducer;

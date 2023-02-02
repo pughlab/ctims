@@ -15,7 +15,11 @@ import * as jsonpath from "jsonpath";
 import {EComponentType} from "./EComponentType";
 import {IRootNode} from "./MatchingMenuAndForm";
 import {useSelector} from "react-redux";
-import {IAddCriteria, IDeleteCriteria} from "../../../../../apps/web/pages/store/slices/treeActionsSlice";
+import {
+  IAddCriteria,
+  IDeleteCriteria,
+  IOperatorChange
+} from "../../../../../apps/web/pages/store/slices/treeActionsSlice";
 import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
 
 interface ILeftMenuComponentProps {
@@ -34,6 +38,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
   const newNodeValue: IAddCriteria = useSelector((state: any) => state.treeActions.addCriteria);
   const nodeKeyToBeDeleted: IDeleteCriteria = useSelector((state: any) => state.treeActions.deleteCriteria);
+  const operatorChanged: IOperatorChange = useSelector((state: any) => state.treeActions.operatorChange);
 
   useEffect(() => {
     if (newNodeValue && newNodeValue.nodeKey && newNodeValue.type) {
@@ -50,9 +55,21 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       deleteNodeFromChildrenArrayByKey(newRootNodes[0], nodeKeyToBeDeleted.nodeKey);
       console.log('newRootNodes', newRootNodes);
       setRootNodes(newRootNodes);
-
     }
   }, [nodeKeyToBeDeleted]);
+
+  useEffect(() => {
+    if (operatorChanged && operatorChanged.nodeKey && operatorChanged.operator) {
+      const {nodeKey, operator} = operatorChanged;
+      const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
+      // operator to lower case and capitalize first letter
+      const newOperator = operator.toLowerCase().charAt(0).toUpperCase() + operator.toLowerCase().slice(1);
+      if (parentNode) {
+        parentNode.label = newOperator;
+      }
+      setRootNodes([...rootNodes]);
+    }
+  }, [operatorChanged]);
 
   const tieredMenu = useRef(null);
   const menu = useRef(null);
