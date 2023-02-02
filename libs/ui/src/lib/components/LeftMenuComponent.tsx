@@ -53,7 +53,9 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   useEffect(() => {
     if (formChangedCounter > 0) {
       console.log('form changed in left menu component');
-      dispatch(setCtmlDialogModel(convertTreeNodeArrayToCtimsFormat(rootNodes)));
+      // convert view model (rootNodes) to ctims format
+      const ctimsFormat = convertTreeNodeArrayToCtimsFormat(rootNodes);
+      dispatch(setCtmlDialogModel(ctimsFormat));
     }
   }, [formChangedCounter]);
 
