@@ -1,5 +1,6 @@
 import TreeNode from "primereact/treenode";
 import {EComponentType} from "./EComponentType";
+import { v4 as uuidv4 } from 'uuid';
 
 export const findArrayContainingKeyInsideATree = (tree: TreeNode, key: string): TreeNode | null => {
   let result = null;
@@ -39,11 +40,13 @@ export const buildRootNodes = (rootLabel: string, firstChildLabel: string): Tree
   const r = [
     {
       key: '0',
+      // key: uuidv4(),
       label: rootLabel, // AND/OR
       data: {},
       children: [
         {
-          key: '0-0',
+          // key: '0-0',
+          key: uuidv4(),
           label: firstChildLabel, // clinical or genomic or AND/OR
           data: {},
         }

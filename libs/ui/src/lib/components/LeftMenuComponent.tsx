@@ -22,6 +22,8 @@ import {
 } from "../../../../../apps/web/pages/store/slices/modalActionsSlice";
 import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
 import {useDispatch} from "react-redux";
+import { v4 as uuidv4 } from 'uuid';
+
 
 interface ILeftMenuComponentProps {
   onTreeNodeClick: (componentType: EComponentType, note: TreeNode) => void;
@@ -95,8 +97,10 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       if (rootLabel && firstChildLabel) {
         const roodNodes = buildRootNodes(rootLabel, firstChildLabel);
         setRootNodes(roodNodes);
-        setSelectedKeys('0-0')
-        const r = jsonpath.query(roodNodes, '$..[?(@.key=="0-0")]');
+        const firstSelectedKey = roodNodes[0].children![0].key;
+        // setSelectedKeys('0-0')
+        setSelectedKeys(firstSelectedKey)
+        const r = jsonpath.query(roodNodes, `$..[?(@.key=="${firstSelectedKey}")]`);
         if(r.length > 0) {
           // setIsEmpty(false);
           setSelectedNode(r[0]);
@@ -112,8 +116,11 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       command: () => {
         const rootNodes = buildRootNodes('And', 'Clinical');
         setRootNodes(rootNodes);
-        setSelectedKeys('0-0')
-        const r = jsonpath.query(rootNodes, '$..[?(@.key=="0-0")]');
+        const firstSelectedKey = rootNodes[0].children![0].key;
+        // setSelectedKeys('0-0')
+        setSelectedKeys(firstSelectedKey)
+        // const r = jsonpath.query(rootNodes, '$..[?(@.key=="0-0")]');
+        const r = jsonpath.query(rootNodes, `$..[?(@.key=="${firstSelectedKey}")]`);
         if(r.length > 0) {
           console.log('r', r);
           setSelectedNode(r[0]);
@@ -127,7 +134,14 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       command: () => {
         const rootNodes = buildRootNodes('And', 'Genomic');
         setRootNodes(rootNodes);
-        setSelectedKeys('0-0')
+        const firstSelectedKey = rootNodes[0].children![0].key;
+        setSelectedKeys(firstSelectedKey)
+        const r = jsonpath.query(rootNodes, `$..[?(@.key=="${firstSelectedKey}")]`);
+        if(r.length > 0) {
+          console.log('r', r);
+          setSelectedNode(r[0]);
+          onTreeNodeClick(r[0].data.type, r[0]);
+        }
         console.log('selectedKeys', selectedKeys);
       }
     }
@@ -142,7 +156,8 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         const lastChild: TreeNode = parentNode.children![parentNode.children!.length - 1];
         const incrementedKey = incrementKey(lastChild.key as string);
         const newNode = {
-          key: incrementedKey,
+          // key: incrementedKey,
+          key: uuidv4(),
           label: type,
           data: {type: type === 'Clinical' ? EComponentType.ClinicalForm : EComponentType.GenomicForm},
         }
@@ -158,12 +173,14 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       if (parentNode) {
         const incrementedKey = incrementKey(nodeKey);
         const newNode = {
-          key: incrementedKey,
+          // key: incrementedKey,
+          key: uuidv4(),
           label: 'And',
           data: {},
           children: [
             {
-              key: createSubGroupKey(incrementedKey),
+              // key: createSubGroupKey(incrementedKey),
+              key: uuidv4(),
               label: type,
               data: {type: type === 'Clinical' ? EComponentType.ClinicalForm : EComponentType.GenomicForm},
             }

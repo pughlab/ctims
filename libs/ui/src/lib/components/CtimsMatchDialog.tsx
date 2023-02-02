@@ -1,5 +1,5 @@
 import styles from './CtimsMatchDialog.module.scss';
-import React, {CSSProperties, useEffect, useMemo, useRef, useState} from "react";
+import React, {CSSProperties, useEffect, useRef, useState} from "react";
 import {Dialog} from "primereact/dialog";
 import {Button} from "primereact/button";
 import MatchingMenuAndForm from "./MatchingMenuAndForm";
@@ -81,7 +81,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
           ref={op}
           showCloseIcon
           id="overlay_panel"
-          style={{ width: "550px" }}
+          style={{ width: "750px" }}
         >
           <CtmlModelPreview />
         </OverlayPanel>
