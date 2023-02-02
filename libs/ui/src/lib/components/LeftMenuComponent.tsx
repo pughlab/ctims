@@ -5,6 +5,7 @@ import TreeNode from "primereact/treenode";
 import {Button} from "primereact/button";
 import {TieredMenu} from "primereact/tieredmenu";
 import {
+  buildEmptyGroup,
   buildRootNodes, convertTreeNodeArrayToCtimsFormat, createSubGroupKey,
   deleteNodeFromChildrenArrayByKey,
   findArrayContainingKeyInsideATree,
@@ -97,17 +98,25 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     if (rootNodesProp) {
       const {rootLabel, firstChildLabel} = rootNodesProp;
       if (rootLabel && firstChildLabel) {
-        const roodNodes = buildRootNodes(rootLabel, firstChildLabel);
-        setRootNodes(roodNodes);
-        const firstSelectedKey = roodNodes[0].children![0].key;
-        // setSelectedKeys('0-0')
-        setSelectedKeys(firstSelectedKey)
-        const r = jsonpath.query(roodNodes, `$..[?(@.key=="${firstSelectedKey}")]`);
-        if(r.length > 0) {
-          // setIsEmpty(false);
-          setSelectedNode(r[0]);
-          onTreeNodeClick(r[0].data.type, r[0]);
+        if (firstChildLabel === 'Empty Group') {
+          const roodNodes = buildEmptyGroup(rootLabel);
+          const firstSelectedKey = roodNodes[0].key;
+          setRootNodes(roodNodes);
+          setSelectedNode(roodNodes[0]);
+          setSelectedKeys(firstSelectedKey)
+          onTreeNodeClick(EComponentType.None, roodNodes[0]);
+        } else {
+          const roodNodes = buildRootNodes(rootLabel, firstChildLabel);
+          setRootNodes(roodNodes);
+          const firstSelectedKey = roodNodes[0].children![0].key;
+          setSelectedKeys(firstSelectedKey)
+          const r = jsonpath.query(roodNodes, `$..[?(@.key=="${firstSelectedKey}")]`);
+          if(r.length > 0) {
+            setSelectedNode(r[0]);
+            onTreeNodeClick(r[0].data.type, r[0]);
+          }
         }
+
       }
     }
   }, [rootNodesProp]);
@@ -308,9 +317,9 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         <div className={styles.matchingCriteriaMenuContainer}>
           <div className={styles.matchingCriteriaTextContainer}>
             <div className={styles.matchingCriteriaText}>Matching Criteria</div>
-            <i className="pi pi-plus-circle" onClick={(e) => {
-              menuClick(e);
-            }}></i>
+            {/*<i className="pi pi-plus-circle" onClick={(e) => {*/}
+            {/*  menuClick(e);*/}
+            {/*}}></i>*/}
 
           </div>
           <Tree value={rootNodes}

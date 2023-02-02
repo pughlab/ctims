@@ -492,6 +492,16 @@ const MatchingMenuAndForm = (props: any) => {
 
   const menuItems = [
     {
+      label: 'Empty Group',
+      command: () => {
+        setIsEmpty(false);
+        setBuildRootNodeParams({rootLabel: 'And', firstChildLabel: 'Empty Group'})
+      }
+    },
+    {
+      separator: true,
+    },
+    {
       label: 'Clinical',
       command: () => {
         setIsEmpty(false);
@@ -516,7 +526,7 @@ const MatchingMenuAndForm = (props: any) => {
       ComponentToRender = GenomicForm;
       break;
     default:
-      ComponentToRender = () => null;
+      ComponentToRender = (props: any) => null;
   }
 
   const treeNodeClicked = (type: EComponentType, node: TreeNode) => {

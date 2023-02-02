@@ -36,16 +36,26 @@ export const createSubGroupKey = (key: string) => {
   return newKeyParts.join('-');
 }
 
+export const buildEmptyGroup = (label: string): TreeNode[] => {
+  const r = [
+    {
+      key: '0',
+      label: label, // AND/OR
+      data: {},
+      children: []
+    }
+  ];
+  return r;
+}
+
 export const buildRootNodes = (rootLabel: string, firstChildLabel: string): TreeNode[] => {
   const r = [
     {
       key: '0',
-      // key: uuidv4(),
       label: rootLabel, // AND/OR
       data: {},
       children: [
         {
-          // key: '0-0',
           key: uuidv4(),
           label: firstChildLabel, // clinical or genomic or AND/OR
           data: {},
