@@ -19,7 +19,8 @@ const CtmlModelPreview = () => {
   const ctmlModel = useSelector((state: any) => state.modalActions.ctmlDialogModel);
   return (
     <div>
-      <BrowserReactJsonView src={ctmlModel} displayObjectSize={false} displayDataTypes={false} />
+      {/*<BrowserReactJsonView src={ctmlModel} displayObjectSize={false} displayDataTypes={false} />*/}
+      <pre>{JSON.stringify(ctmlModel, null, 2)}</pre>
     </div>
   )
 }
