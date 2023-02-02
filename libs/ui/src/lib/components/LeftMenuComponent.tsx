@@ -5,7 +5,7 @@ import TreeNode from "primereact/treenode";
 import {Button} from "primereact/button";
 import {TieredMenu} from "primereact/tieredmenu";
 import {
-  buildRootNodes, createSubGroupKey,
+  buildRootNodes, convertTreeNodeArrayToCtimsFormat, createSubGroupKey,
   deleteNodeFromChildrenArrayByKey,
   findArrayContainingKeyInsideATree,
   incrementKey
@@ -41,6 +41,10 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   const operatorChanged: IOperatorChange = useSelector((state: any) => state.treeActions.operatorChange);
 
   useEffect(() => {
+    console.log('rootNodes state changed ', convertTreeNodeArrayToCtimsFormat(rootNodes));
+  }, [rootNodes]);
+
+  useEffect(() => {
     if (newNodeValue && newNodeValue.nodeKey && newNodeValue.type) {
       let {nodeKey, type}: {nodeKey: string, type: string} = newNodeValue;
 
@@ -59,7 +63,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   }, [nodeKeyToBeDeleted]);
 
   useEffect(() => {
-    if (operatorChanged && operatorChanged.nodeKey && operatorChanged.operator) {
+    if (operatorChanged && operatorChanged.nodeKey && operatorChanged.operator && rootNodes.length > 0) {
       const {nodeKey, operator} = operatorChanged;
       const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
       // operator to lower case and capitalize first letter

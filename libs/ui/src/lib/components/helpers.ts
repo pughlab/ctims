@@ -105,3 +105,29 @@ export const deleteNodeFromChildrenArrayByKey = (tree: TreeNode, key: string) =>
   };
   traverse(tree, key);
 }
+
+export const convertTreeNodeArrayToCtimsFormat = (input: any[]): any => {
+  let result: any = { match: [] };
+  input.forEach((item: any) => {
+    let current: any = {};
+    switch (item.label) {
+      case "And":
+        current = { and: [] };
+        break;
+      case "Or":
+        current = { or: [] };
+        break;
+      case "Clinical":
+        current = { clinical: item.data.formData || {} };
+        break;
+      case "Genomic":
+        current = { genomic: item.data.formData || {} };
+        break;
+    }
+    if (item.children) {
+      current[Object.keys(current)[0]] = [...current[Object.keys(current)[0]], ...convertTreeNodeArrayToCtimsFormat(item.children).match];
+    }
+    result.match.push(current);
+  });
+  return result;
+}
