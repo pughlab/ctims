@@ -15,7 +15,7 @@ import {Theme as PrimeTheme} from "../primereact";
 import TreeNode from "primereact/treenode";
 import CtimsMatchDialogObjectFieldTemplate from "../custom-rjsf-templates/CtimsMatchDialogObjectFieldTemplate";
 import {useDispatch} from "react-redux";
-import {addAdjacentNode, deleteNode, operatorChange} from "../../../../../apps/web/pages/store/slices/treeActionsSlice";
+import {addAdjacentNode, deleteNode, operatorChange, formChange} from "../../../../../apps/web/pages/store/slices/modalActionsSlice";
 
 const Form = withTheme(PrimeTheme)
 
@@ -200,6 +200,7 @@ const MatchingMenuAndForm = (props: any) => {
 
     const onFormChange = (data: any) => {
       node.data.formData = data.formData;
+      dispatch(formChange());
       console.log('onFormChange node: ', node)
     }
 
@@ -451,6 +452,7 @@ const MatchingMenuAndForm = (props: any) => {
 
     const onFormChange = (data: any) => {
       node.data.formData = data.formData;
+      dispatch(formChange());
       console.log('onFormChange node: ', node)
     }
 

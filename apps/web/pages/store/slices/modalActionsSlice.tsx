@@ -14,10 +14,16 @@ export interface IOperatorChange {
   operator: string;
 }
 
+export interface IFormChange {
+  counter: number;
+}
+
 export interface TreeActionsState {
   addCriteria: IAddCriteria;
   deleteCriteria: IDeleteCriteria;
   operatorChange: IOperatorChange;
+  formChangeCounter: number;
+  ctmlDialogModel: any;
 }
 
 const initialState: TreeActionsState = {
@@ -31,11 +37,13 @@ const initialState: TreeActionsState = {
   operatorChange: {
     nodeKey: '',
     operator: ''
-  }
+  },
+  formChangeCounter: 0,
+  ctmlDialogModel: null
 };
 
-export const treeActionsSlice = createSlice({
-  name: 'treeActions',
+export const modalActionsSlice = createSlice({
+  name: 'modalActions',
   initialState,
   reducers: {
     addAdjacentNode: (state, action: PayloadAction<IAddCriteria>) => {
@@ -46,9 +54,15 @@ export const treeActionsSlice = createSlice({
     },
     operatorChange: (state, action: PayloadAction<IOperatorChange>) => {
       state.operatorChange = action.payload;
+    },
+    formChange: (state) => {
+      state.formChangeCounter += 1;
+    },
+    setCtmlDialogModel: (state, action: PayloadAction<any>) => {
+      state.ctmlDialogModel = action.payload;
     }
   }
 });
 
-export const { addAdjacentNode, deleteNode, operatorChange } = treeActionsSlice.actions;
-export default treeActionsSlice.reducer;
+export const { addAdjacentNode, deleteNode, operatorChange, formChange, setCtmlDialogModel } = modalActionsSlice.actions;
+export default modalActionsSlice.reducer;

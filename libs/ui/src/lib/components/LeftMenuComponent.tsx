@@ -18,9 +18,10 @@ import {useSelector} from "react-redux";
 import {
   IAddCriteria,
   IDeleteCriteria,
-  IOperatorChange
-} from "../../../../../apps/web/pages/store/slices/treeActionsSlice";
+  IOperatorChange, setCtmlDialogModel
+} from "../../../../../apps/web/pages/store/slices/modalActionsSlice";
 import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
+import {useDispatch} from "react-redux";
 
 interface ILeftMenuComponentProps {
   onTreeNodeClick: (componentType: EComponentType, note: TreeNode) => void;
@@ -36,13 +37,23 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   const [selectedKeys, setSelectedKeys] = useState<any>(null);
   const [expandedKeys, setExpandedKeys] = useState({0: true});
 
-  const newNodeValue: IAddCriteria = useSelector((state: any) => state.treeActions.addCriteria);
-  const nodeKeyToBeDeleted: IDeleteCriteria = useSelector((state: any) => state.treeActions.deleteCriteria);
-  const operatorChanged: IOperatorChange = useSelector((state: any) => state.treeActions.operatorChange);
+  const newNodeValue: IAddCriteria = useSelector((state: any) => state.modalActions.addCriteria);
+  const nodeKeyToBeDeleted: IDeleteCriteria = useSelector((state: any) => state.modalActions.deleteCriteria);
+  const operatorChanged: IOperatorChange = useSelector((state: any) => state.modalActions.operatorChange);
+  const formChangedCounter: number = useSelector((state: any) => state.modalActions.formChangeCounter);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     console.log('rootNodes state changed ', convertTreeNodeArrayToCtimsFormat(rootNodes));
   }, [rootNodes]);
+
+  useEffect(() => {
+    if (formChangedCounter > 0) {
+      console.log('form changed in left menu component');
+      dispatch(setCtmlDialogModel(convertTreeNodeArrayToCtimsFormat(rootNodes)));
+    }
+  }, [formChangedCounter]);
 
   useEffect(() => {
     if (newNodeValue && newNodeValue.nodeKey && newNodeValue.type) {
