@@ -8,7 +8,7 @@ import {
   buildEmptyGroup,
   buildRootNodes, convertTreeNodeArrayToCtimsFormat, createSubGroupKey,
   deleteNodeFromChildrenArrayByKey,
-  findArrayContainingKeyInsideATree,
+  findArrayContainingKeyInsideATree, findObjectByKeyInTree,
   incrementKey
 } from "./helpers";
 import {Menu} from "primereact/menu";
@@ -64,7 +64,8 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     if (newNodeValue && newNodeValue.nodeKey && newNodeValue.type) {
       let {nodeKey, type}: {nodeKey: string, type: string} = newNodeValue;
 
-      addCriteriaToSameList(nodeKey, type);
+      // Callback when add criteria button is clicked ( the one inside the form )
+      addCriteria(nodeKey, type);
     }
   }, [newNodeValue]);
 
@@ -75,6 +76,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       deleteNodeFromChildrenArrayByKey(newRootNodes[0], nodeKeyToBeDeleted.nodeKey);
       console.log('newRootNodes', newRootNodes);
       setRootNodes(newRootNodes);
+      onTreeNodeClick(EComponentType.None, newRootNodes[0]);
     }
   }, [nodeKeyToBeDeleted]);
 
@@ -158,16 +160,11 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     }
   ];
 
-  const addCriteriaToSameList = (nodeKey: string, type: string) => {
+  const addCriteria = (nodeKey: string, type: string) => {
     if (nodeKey) {
-      console.log('rootNodes[0]', rootNodes[0]);
       const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
       if (parentNode) {
-        // get last element from the children
-        const lastChild: TreeNode = parentNode.children![parentNode.children!.length - 1];
-        const incrementedKey = incrementKey(lastChild.key as string);
         const newNode = {
-          // key: incrementedKey,
           key: uuidv4(),
           label: type,
           data: {type: type === 'Clinical' ? EComponentType.ClinicalForm : EComponentType.GenomicForm},
@@ -178,19 +175,48 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     }
   }
 
+  const addCriteriaToSameList = (nodeKey: string, type: string) => {
+    if (nodeKey) {
+      const parentNode = findObjectByKeyInTree(rootNodes[0], nodeKey as string);
+      if (parentNode) {
+        // get last element from the children
+        const newNode = {
+          key: uuidv4(),
+          label: type,
+          data: {type: type === 'Clinical' ? EComponentType.ClinicalForm : EComponentType.GenomicForm},
+        }
+        parentNode.children!.push(newNode);
+      }
+      setRootNodes([...rootNodes]);
+    }
+  }
+
+  const addSubGroup = (nodeKey: string) => {
+    if (nodeKey) {
+      const parentNode = findObjectByKeyInTree(rootNodes[0], nodeKey as string);
+      if (parentNode) {
+        const newNode = {
+          key: uuidv4(),
+          label: 'And',
+          data: {},
+          children: []
+        };
+        parentNode.children!.push(newNode);
+      }
+      setRootNodes([...rootNodes]);
+    }
+  }
+
   const addCriteriaSubList = (nodeKey: string, type: string) => {
     if (nodeKey) {
       const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
       if (parentNode) {
-        const incrementedKey = incrementKey(nodeKey);
         const newNode = {
-          // key: incrementedKey,
           key: uuidv4(),
           label: 'And',
           data: {},
           children: [
             {
-              // key: createSubGroupKey(incrementedKey),
               key: uuidv4(),
               label: type,
               data: {type: type === 'Clinical' ? EComponentType.ClinicalForm : EComponentType.GenomicForm},
@@ -225,13 +251,13 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           {
             label: 'Clinical',
             command: () => {
-              addCriteriaToSameList(node.key as string, 'Clinical');
+              addCriteriaToSameList(selectedNode.key as string, 'Clinical');
             }
           },
           {
             label: 'Genomic',
             command: () => {
-              addCriteriaToSameList(node.key as string, 'Genomic');
+              addCriteriaToSameList(selectedNode.key as string, 'Genomic');
             }
           }
         ]
@@ -240,6 +266,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       {
         label: 'Delete',
         icon: 'pi pi-trash',
+        command: () => { console.log('delete node selectedNode ', selectedNode) }
       },
       {
         separator:true
@@ -247,28 +274,30 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       {
         label: 'Add criteria subgroup',
         icon: 'pi pi-clone',
-        items: [
-          {
-            label: 'Clinical',
-            command: () => {
-              addCriteriaSubList(node.key as string, 'Clinical');
-            }
-          },
-          {
-            label: 'Genomic',
-            command: () => {
-              addCriteriaSubList(node.key as string, 'Genomic');
-
-            }
-          },
-        ]
+        command: () => { addSubGroup(selectedNode.key) }
+        // items: [
+        //   {
+        //     label: 'Clinical',
+        //     command: () => {
+        //       addCriteriaSubList(node.key as string, 'Clinical');
+        //     }
+        //   },
+        //   {
+        //     label: 'Genomic',
+        //     command: () => {
+        //       addCriteriaSubList(node.key as string, 'Genomic');
+        //
+        //     }
+        //   },
+        // ]
       }
     ]
 
     if (selectedNode) {
       const btnToShow = () => {
         let show = false;
-        if ((selectedNode as TreeNode).key === node.key && isMouseOverNode) {
+        if ((selectedNode as TreeNode).key === node.key && isMouseOverNode && (node.label === 'And' || node.label === 'Or')) {
+        // if (isMouseOverNode && (node.label === 'And' || node.label === 'Or')) {
           show = true;
         }
         // show=true

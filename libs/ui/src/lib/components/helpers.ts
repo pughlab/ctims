@@ -18,6 +18,22 @@ export const findArrayContainingKeyInsideATree = (tree: TreeNode, key: string): 
   return result;
 }
 
+export const findObjectByKeyInTree = (tree: TreeNode, key: string) => {
+  let result: any = null;
+  const traverse = (tree: TreeNode, key: string) => {
+    if (tree.key === key) {
+      result = tree;
+    }
+    if (tree.children) {
+      tree.children.forEach((child: TreeNode) => {
+        traverse(child, key);
+      });
+    }
+  };
+  traverse(tree, key);
+  return result;
+}
+
 export const incrementKey = (key: string): string => {
   // key is of the form '0-0'
   const keyParts = key.split('-');
