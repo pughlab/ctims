@@ -52,7 +52,7 @@ const CtimsItemObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
         backgroundColor: '#e0e0e0',
     }
 
-    // console.log('uiSchema', uiSchema)
+    registry.formContext = formData
     // console.log('title', title)
 
     return (

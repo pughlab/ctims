@@ -13,6 +13,7 @@ const BrowserReactJsonView = dynamic(() => import('react-json-view'), {
 interface CtimsMatchDialogProps {
   isDialogVisible: boolean;
   onDialogHide: () => void;
+  armCode?: string;
 }
 
 const CtmlModelPreview = () => {
@@ -66,9 +67,6 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   }
 
   const footer = () => {
-
-
-
     const handleSubmit = (e: any) => {
       console.log('clicked submit');
       op.current?.toggle(e)
@@ -89,12 +87,21 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     )
   }
 
+  const header = (props: {armCode: string}) => {
+    console.log('header props', props);
+    return (
+      <div>
+        <span>{props.armCode} matching criteria</span>
+      </div>
+    )
+  }
+
   const onDialogHide = () => {
     props.onDialogHide();
   }
 
   return (
-    <Dialog header="<arm_code> matching criteria" footer={footer} visible={isDialogVisible} style={{width: '960px', height: '800px'}} onHide={onDialogHide}>
+    <Dialog header={() => header({armCode: props.armCode as string})} footer={footer} visible={isDialogVisible} style={{width: '960px', height: '800px'}} onHide={onDialogHide}>
       <div className={styles.mainContainer}>
         <MatchingMenuAndForm />
         <MatchingCriteriaPreview/>

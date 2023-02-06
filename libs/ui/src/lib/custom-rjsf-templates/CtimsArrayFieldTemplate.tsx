@@ -63,7 +63,7 @@ const CtimsArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
 
     const getArrayItemName = (item: ArrayFieldTemplateItemType, index: number) => {
         const {children} = item
-        console.log('children', children);
+        // console.log('children', children);
         const newProps = {...children.props}
         const originalName: string = children.props.name
         const schema = children.props.schema

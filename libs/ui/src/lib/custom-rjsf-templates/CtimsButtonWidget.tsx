@@ -5,6 +5,7 @@ const CtimsButtonWidget = (props: WidgetProps) => {
     id,
     label,
     disabled,
+    formContext,
     readonly,
     onChange,
     uiSchema,
@@ -14,6 +15,7 @@ const CtimsButtonWidget = (props: WidgetProps) => {
 
   const buttonClick = (e: any) => {
     e.preventDefault();
+    console.log('Match dialog Arm Code: ', formContext.arm_code);
     console.log('buttonClick', props);
   }
 
@@ -21,7 +23,7 @@ const CtimsButtonWidget = (props: WidgetProps) => {
     <button
       id={id}
       disabled={disabled || readonly}
-      onClick={(e) => btnClick(e, id)}
+      onClick={(e) => btnClick(e, formContext.arm_code, id)}
       // onClick={(e) => buttonClick(e)}
     >
       {label || 'Submit'}
