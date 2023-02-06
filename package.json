@@ -10,9 +10,12 @@
     "schema:generate-client": "npx prisma generate --schema=./apps/api/prisma/schema.prisma",
     "build": "nx build",
     "test": "nx test",
-    "build-web": "nx build web --verbose"
+    "build-web": "nx build web --verbose --development",
+    "build-base": "nx run-many --target=build --projects=api,web --parallel",
+    "build-all": "npx nx run-many --target=build --all"
   },
   "private": true,
+  "type": "commonjs",
   "dependencies": {
     "@ant-design/icons": "^4.5.0",
     "@nestjs/common": "^8.0.0",
