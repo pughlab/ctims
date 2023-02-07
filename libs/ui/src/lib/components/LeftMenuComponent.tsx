@@ -63,10 +63,8 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       if (storedViewModel) {
         const storedViewModelClone: TreeNode[] = structuredClone(storedViewModel);
         makePropertiesWritable(storedViewModelClone[0]);
-        console.log('storedViewModelClone ', storedViewModelClone);
         setRootNodes(storedViewModelClone);
         const firstSelectedKey = storedViewModelClone[0].children![0].key;
-        console.log('firstSelectedKey', firstSelectedKey);
         setSelectedKeys(firstSelectedKey)
         const r = jsonpath.query(storedViewModelClone, `$..[?(@.key=="${firstSelectedKey}")]`);
         if(r.length > 0) {

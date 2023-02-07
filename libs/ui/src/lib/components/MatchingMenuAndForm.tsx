@@ -498,23 +498,23 @@ const MatchingMenuAndForm = (props: any) => {
         setBuildRootNodeParams({rootLabel: 'And', firstChildLabel: 'Empty Group'})
       }
     },
-    {
-      separator: true,
-    },
-    {
-      label: 'Clinical',
-      command: () => {
-        setIsEmpty(false);
-        setBuildRootNodeParams({rootLabel: 'And', firstChildLabel: 'Clinical'})
-      }
-    },
-    {
-      label: 'Genomic',
-      command: () => {
-        setIsEmpty(false);
-        setBuildRootNodeParams({rootLabel: 'And', firstChildLabel: 'Genomic'})
-      }
-    }
+    // {
+    //   separator: true,
+    // },
+    // {
+    //   label: 'Clinical',
+    //   command: () => {
+    //     setIsEmpty(false);
+    //     setBuildRootNodeParams({rootLabel: 'And', firstChildLabel: 'Clinical'})
+    //   }
+    // },
+    // {
+    //   label: 'Genomic',
+    //   command: () => {
+    //     setIsEmpty(false);
+    //     setBuildRootNodeParams({rootLabel: 'And', firstChildLabel: 'Genomic'})
+    //   }
+    // }
   ];
 
   let ComponentToRender: FunctionComponent<IFormProps>;
