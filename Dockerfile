@@ -19,8 +19,6 @@ ENV NODE_ENV=production
 
 RUN npx nx run-many --target=build --all
 
-RUN ls -lah dist/apps/web
-
 ## deploy
 FROM build as deploy
 WORKDIR /var/www/html
