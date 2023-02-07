@@ -10,9 +10,7 @@
     "schema:generate-client": "npx prisma generate --schema=./apps/api/prisma/schema.prisma",
     "build": "nx build",
     "test": "nx test",
-    "build-web": "nx build web --verbose --development",
-    "build-base": "nx run-many --target=build --projects=api,web --parallel",
-    "build-all": "npx nx run-many --target=build --all"
+    "build-all": "nx run-many --target=build --projects=api,web --parallel",
   },
   "private": true,
   "type": "commonjs",
