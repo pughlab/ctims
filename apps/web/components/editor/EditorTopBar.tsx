@@ -1,6 +1,7 @@
 import styles from './EditorTopBar.module.scss';
 import {useRouter} from "next/router";
 import { Button } from 'primereact/button';
+import {store} from "../../pages/store/store";
 
 
 const EditorTopBar = () => {
@@ -10,6 +11,21 @@ const EditorTopBar = () => {
   const backClick = (e) => {
     e.preventDefault();
     router.back();
+  }
+
+  const onExportClick = () => {
+    const state = store.getState();
+    const ctmlModel = state.ctmlModel.ctmlModel;
+    const ctmlModelString = JSON.stringify(ctmlModel, null, 2);
+    const blob = new Blob([ctmlModelString], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'ctml-model.json');
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   return (
@@ -26,7 +42,9 @@ const EditorTopBar = () => {
         </div>
         <div className={styles.menuBtnGroup}>
           <Button label="Discard" className="p-button-text p-button-plain" />
-          <Button label="Export" className="p-button-text p-button-plain" />
+          <Button label="Export"
+                  onClick={onExportClick}
+                  className="p-button-text p-button-plain" />
           <Button label="Save" className={styles.saveBtn} />
         </div>
 

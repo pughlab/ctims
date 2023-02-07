@@ -1,6 +1,5 @@
 import EditorTopBar from "../../../components/editor/EditorTopBar";
 import {Ui} from "@ctims-mono-repo/ui";
-import { Tree } from 'primereact/tree';
 
 import React, {useEffect, useState} from "react";
 

@@ -1,11 +1,13 @@
 import './ui.module.scss';
 // import {schema, uiSchema} from "./custom-rjsf-templates/generatedSchema";
-import {CSSProperties, useEffect, useState} from "react";
+import {CSSProperties, useEffect, useRef, useState} from "react";
 import CtimsFormComponentMemo from './components/CtimsFormComponent';
 import CtimsMatchDialog from './components/CtimsMatchDialog';
 import {useDispatch} from "react-redux";
 import {resetFormChangeCounter} from "../../../../apps/web/pages/store/slices/modalActionsSlice";
 import {resetActiveArmId, setActiveArmId} from "../../../../apps/web/pages/store/slices/matchViewModelSlice";
+import {setCtmlModel} from "../../../../apps/web/pages/store/slices/ctmlModelSlice";
+import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
 
 
 const containerStyle: CSSProperties = {
@@ -21,6 +23,8 @@ export const Ui = (props: UiProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [armCode, setArmCode] = useState('');
   const [formData, setFormData] = useState({});
+
+  const formRef = useRef<any>();
 
   const dispatch = useDispatch();
 
@@ -44,18 +48,23 @@ export const Ui = (props: UiProps) => {
 
   const onFormChange = (data: any) => {
     console.log('onChange event', data)
+    const formDataClone = structuredClone(data.formData)
+    dispatch(setCtmlModel(formDataClone))
   }
 
   const onDialogHideCallback = () => {
     setIsOpen(false);
     dispatch(resetFormChangeCounter())
     dispatch(resetActiveArmId())
+    const formDataClone = structuredClone(formRef.current.state.formData)
+    dispatch(setCtmlModel(formDataClone))
   }
 
   // @ts-ignore
   return (
     <div style={containerStyle}>
       <CtimsFormComponentMemo
+        ref={formRef}
         onSpecialButtonClick={handleSpecialClick}
         onRjsfFormChange={onFormChange}
       />
