@@ -58,11 +58,14 @@ export const modalActionsSlice = createSlice({
     formChange: (state) => {
       state.formChangeCounter += 1;
     },
+    resetFormChangeCounter: (state) => {
+      state.formChangeCounter = 0;
+    },
     setCtmlDialogModel: (state, action: PayloadAction<any>) => {
       state.ctmlDialogModel = action.payload;
     }
   }
 });
 
-export const { addAdjacentNode, deleteNode, operatorChange, formChange, setCtmlDialogModel } = modalActionsSlice.actions;
+export const { addAdjacentNode, deleteNode, operatorChange, formChange, setCtmlDialogModel, resetFormChangeCounter } = modalActionsSlice.actions;
 export default modalActionsSlice.reducer;

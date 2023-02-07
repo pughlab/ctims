@@ -544,9 +544,9 @@ const CtimsFormComponent = (props: CtimsFormComponentProps) => {
               "match": {
                 "ctimsButton": {
                   "ui:widget": CtimsButtonWidget,
-                  onClick: (e: any, armCode: string, id: string) => {
+                  onClick: (e: any, formData: any, armCode: string, id: string) => {
                     e.preventDefault();
-                    props.onSpecialButtonClick(armCode, id);
+                    props.onSpecialButtonClick(formData, armCode, id);
                   },
                 },
                 "fieldShouldBeInDialog": {

@@ -3,6 +3,9 @@ import './ui.module.scss';
 import {CSSProperties, useEffect, useState} from "react";
 import CtimsFormComponentMemo from './components/CtimsFormComponent';
 import CtimsMatchDialog from './components/CtimsMatchDialog';
+import {useDispatch} from "react-redux";
+import {resetFormChangeCounter} from "../../../../apps/web/pages/store/slices/modalActionsSlice";
+import {resetActiveArmId, setActiveArmId} from "../../../../apps/web/pages/store/slices/matchViewModelSlice";
 
 
 const containerStyle: CSSProperties = {
@@ -17,15 +20,21 @@ export const Ui = (props: UiProps) => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [armCode, setArmCode] = useState('');
+  const [formData, setFormData] = useState({});
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     console.log('My component was re-rendered');
   });
 
-  const handleSpecialClick = (armCode: string, id: string) => {
+  const handleSpecialClick = (formD: any, armCode: string, id: string) => {
+    console.log('handleSpecialClick formData: ', formD);
     console.log('handleSpecialClick armCode: ', armCode);
     console.log('handleSpecialClick id: ', id);
     setArmCode(armCode)
+    setFormData(formD)
+    dispatch(setActiveArmId(id))
     setIsOpen(true);
   }
 
@@ -37,6 +46,12 @@ export const Ui = (props: UiProps) => {
     console.log('onChange event', data)
   }
 
+  const onDialogHideCallback = () => {
+    setIsOpen(false);
+    dispatch(resetFormChangeCounter())
+    dispatch(resetActiveArmId())
+  }
+
   // @ts-ignore
   return (
     <div style={containerStyle}>
@@ -45,9 +60,10 @@ export const Ui = (props: UiProps) => {
         onRjsfFormChange={onFormChange}
       />
       <CtimsMatchDialog
-                      onDialogHide={() => setIsOpen(false)}
+                      onDialogHide={onDialogHideCallback}
                       isDialogVisible={isOpen}
                       armCode={armCode}
+                      formData={formData}
       />
     </div>
   );

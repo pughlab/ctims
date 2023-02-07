@@ -52,8 +52,8 @@ const CtimsItemObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
         backgroundColor: '#e0e0e0',
     }
 
+    // This magic line allows two-way communication between the main form and the dialog
     registry.formContext = formData
-    // console.log('title', title)
 
     return (
         <>

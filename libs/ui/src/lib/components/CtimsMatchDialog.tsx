@@ -6,6 +6,7 @@ import MatchingMenuAndForm from "./MatchingMenuAndForm";
 import {OverlayPanel} from "primereact/overlaypanel";
 import {useSelector} from "react-redux";
 import dynamic from 'next/dynamic';
+import {store} from "../../../../../apps/web/pages/store/store";
 const BrowserReactJsonView = dynamic(() => import('react-json-view'), {
   ssr: false,
 });
@@ -14,6 +15,7 @@ interface CtimsMatchDialogProps {
   isDialogVisible: boolean;
   onDialogHide: () => void;
   armCode?: string;
+  formData?: any;
 }
 
 const CtmlModelPreview = () => {
@@ -28,6 +30,7 @@ const CtmlModelPreview = () => {
 
 const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   const [isDialogVisible, setIsDialogVisible] = useState(props.isDialogVisible);
+  let {formData} = props;
 
   const op = useRef<OverlayPanel>(null);
 
@@ -66,29 +69,31 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     height: '36px'
   }
 
-  const footer = () => {
+  const footer = (props: {saveMatchingCriteriaClicked: () => void}) => {
+    const {saveMatchingCriteriaClicked} = props;
+
     const handleSubmit = (e: any) => {
-      console.log('clicked submit');
+      console.log('clicked submit', formData);
+      // formData.match = {sup: 'sup'}
       op.current?.toggle(e)
     }
     return (
       <div style={{marginTop: '10px'}}>
         <Button style={dismissBtnStyle} label="Discard" className="p-button-text" onClick={handleSubmit} />
-        <Button style={saveBtnStyle} label="Save matching criteria" onClick={handleSubmit} />
-        <OverlayPanel
-          ref={op}
-          showCloseIcon
-          id="overlay_panel"
-          style={{ width: "750px" }}
-        >
-          <CtmlModelPreview />
-        </OverlayPanel>
+        <Button style={saveBtnStyle} label="Save matching criteria" onClick={saveMatchingCriteriaClicked} />
+        {/*<OverlayPanel*/}
+        {/*  ref={op}*/}
+        {/*  showCloseIcon*/}
+        {/*  id="overlay_panel"*/}
+        {/*  style={{ width: "750px" }}*/}
+        {/*>*/}
+        {/*  <CtmlModelPreview />*/}
+        {/*</OverlayPanel>*/}
       </div>
     )
   }
 
   const header = (props: {armCode: string}) => {
-    console.log('header props', props);
     return (
       <div>
         <span>{props.armCode} matching criteria</span>
@@ -100,8 +105,20 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     props.onDialogHide();
   }
 
+  const saveClickCallback = () => {
+    const currentState = store.getState();
+    const ctmlModel = currentState.modalActions.ctmlDialogModel;
+    console.log('callback from footer', currentState.modalActions.ctmlDialogModel);
+    formData.match = ctmlModel.match;
+
+  }
+
   return (
-    <Dialog header={() => header({armCode: props.armCode as string})} footer={footer} visible={isDialogVisible} style={{width: '960px', height: '800px'}} onHide={onDialogHide}>
+    <Dialog header={() => header({armCode: props.armCode as string})}
+            footer={() => footer({saveMatchingCriteriaClicked: saveClickCallback})}
+            visible={isDialogVisible}
+            style={{width: '960px', height: '800px'}}
+            onHide={onDialogHide}>
       <div className={styles.mainContainer}>
         <MatchingMenuAndForm />
         <MatchingCriteriaPreview/>

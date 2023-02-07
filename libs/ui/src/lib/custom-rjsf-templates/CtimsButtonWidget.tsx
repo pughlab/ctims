@@ -23,7 +23,7 @@ const CtimsButtonWidget = (props: WidgetProps) => {
     <button
       id={id}
       disabled={disabled || readonly}
-      onClick={(e) => btnClick(e, formContext.arm_code, id)}
+      onClick={(e) => btnClick(e, formContext, formContext.arm_code, id)}
       // onClick={(e) => buttonClick(e)}
     >
       {label || 'Submit'}

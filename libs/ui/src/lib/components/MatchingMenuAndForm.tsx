@@ -530,6 +530,7 @@ const MatchingMenuAndForm = (props: any) => {
   }
 
   const treeNodeClicked = (type: EComponentType, node: TreeNode) => {
+    setIsEmpty(false);
     setComponentType({type, node});
   }
 

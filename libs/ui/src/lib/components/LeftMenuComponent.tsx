@@ -6,10 +6,10 @@ import {Button} from "primereact/button";
 import {TieredMenu} from "primereact/tieredmenu";
 import {
   buildEmptyGroup,
-  buildRootNodes, convertTreeNodeArrayToCtimsFormat, createSubGroupKey,
+  buildRootNodes, convertTreeNodeArrayToCtimsFormat,
   deleteNodeFromChildrenArrayByKey,
   findArrayContainingKeyInsideATree, findObjectByKeyInTree,
-  incrementKey
+  makePropertiesWritable
 } from "./helpers";
 import {Menu} from "primereact/menu";
 import * as jsonpath from "jsonpath";
@@ -24,6 +24,8 @@ import {
 import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
 import {useDispatch} from "react-redux";
 import { v4 as uuidv4 } from 'uuid';
+import {IKeyToViewModel, setMatchViewModel} from "../../../../../apps/web/pages/store/slices/matchViewModelSlice";
+import {store} from "../../../../../apps/web/pages/store/store";
 
 
 interface ILeftMenuComponentProps {
@@ -52,8 +54,34 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   }, [rootNodes]);
 
   useEffect(() => {
+    const state = store.getState();
+    const activeArmId: string = state.matchViewModelActions.activeArmId;
+    const storedViewModel: TreeNode[] = state.matchViewModelActions.viewModel[activeArmId];
+
+    if (formChangedCounter === 0) {
+      console.log('seems like dialog just opened');
+      if (storedViewModel) {
+        const storedViewModelClone: TreeNode[] = structuredClone(storedViewModel);
+        makePropertiesWritable(storedViewModelClone[0]);
+        console.log('storedViewModelClone ', storedViewModelClone);
+        setRootNodes(storedViewModelClone);
+        const firstSelectedKey = storedViewModelClone[0].children![0].key;
+        console.log('firstSelectedKey', firstSelectedKey);
+        setSelectedKeys(firstSelectedKey)
+        const r = jsonpath.query(storedViewModelClone, `$..[?(@.key=="${firstSelectedKey}")]`);
+        if(r.length > 0) {
+          console.log('r[0]', r[0])
+          setSelectedNode(r[0]);
+          onTreeNodeClick(r[0].data.type, r[0]);
+        }
+      }
+    }
+
     if (formChangedCounter > 0) {
       console.log('form changed in left menu component');
+      const viewModel: IKeyToViewModel = {};
+      viewModel[activeArmId] = structuredClone(rootNodes);
+      dispatch(setMatchViewModel(viewModel))
       // convert view model (rootNodes) to ctims format
       const ctimsFormat = convertTreeNodeArrayToCtimsFormat(rootNodes);
       dispatch(setCtmlDialogModel(ctimsFormat));
@@ -61,7 +89,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   }, [formChangedCounter]);
 
   useEffect(() => {
-    if (newNodeValue && newNodeValue.nodeKey && newNodeValue.type) {
+    if (newNodeValue && newNodeValue.nodeKey && newNodeValue.type && rootNodes.length > 0) {
       let {nodeKey, type}: {nodeKey: string, type: string} = newNodeValue;
 
       // Callback when add criteria button is clicked ( the one inside the form )
