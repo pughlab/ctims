@@ -53,31 +53,39 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     console.log('rootNodes state changed ', convertTreeNodeArrayToCtimsFormat(rootNodes));
   }, [rootNodes]);
 
+  const setRootNodesState = (newRootNodes: TreeNode[]) => {
+    setRootNodes(newRootNodes);
+    const firstSelectedKey = newRootNodes[0].children![0].key;
+    setSelectedKeys(firstSelectedKey)
+    const r = jsonpath.query(newRootNodes, `$..[?(@.key=="${firstSelectedKey}")]`);
+    if(r.length > 0) {
+      setSelectedNode(r[0]);
+      onTreeNodeClick(r[0].data.type, r[0]);
+    }
+  }
+
   useEffect(() => {
     const state = store.getState();
     const activeArmId: string = state.matchViewModelActions.activeArmId;
     const storedViewModel: TreeNode[] = state.matchViewModelActions.viewModel[activeArmId];
 
+    // formChangedCounter is used to determine if the dialog just opened or if the form was changed
     if (formChangedCounter === 0) {
-      console.log('seems like dialog just opened');
+      // check if there is a view model stored in the redux store for the clicked arm id
       if (storedViewModel) {
+        // clone the view model from the redux store
         const storedViewModelClone: TreeNode[] = structuredClone(storedViewModel);
+        // make the properties writable so that we can add new properties to the nodes and modify form data
         makePropertiesWritable(storedViewModelClone[0]);
-        setRootNodes(storedViewModelClone);
-        const firstSelectedKey = storedViewModelClone[0].children![0].key;
-        setSelectedKeys(firstSelectedKey)
-        const r = jsonpath.query(storedViewModelClone, `$..[?(@.key=="${firstSelectedKey}")]`);
-        if(r.length > 0) {
-          console.log('r[0]', r[0])
-          setSelectedNode(r[0]);
-          onTreeNodeClick(r[0].data.type, r[0]);
-        }
+        setRootNodesState(storedViewModelClone);
       }
     }
 
+    // if the form was changed, update the redux store with the new view model and ctims format
     if (formChangedCounter > 0) {
       console.log('form changed in left menu component');
       const viewModel: IKeyToViewModel = {};
+      // we have to make a clone of the root nodes because if we don't clone the object writability will be lost
       viewModel[activeArmId] = structuredClone(rootNodes);
       dispatch(setMatchViewModel(viewModel))
       // convert view model (rootNodes) to ctims format
@@ -95,17 +103,18 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     }
   }, [newNodeValue]);
 
+  // when a node is deleted we update the root nodes state
   useEffect(() => {
     if (nodeKeyToBeDeleted.nodeKey) {
-      console.log('nodeKeyToBeDeleted', nodeKeyToBeDeleted);
       const newRootNodes = structuredClone(rootNodes);
       deleteNodeFromChildrenArrayByKey(newRootNodes[0], nodeKeyToBeDeleted.nodeKey);
-      console.log('newRootNodes', newRootNodes);
       setRootNodes(newRootNodes);
+      // after deleting a node we set the component to none
       onTreeNodeClick(EComponentType.None, newRootNodes[0]);
     }
   }, [nodeKeyToBeDeleted]);
 
+  // when the operator is changed we update the label of the node (AND/OR)
   useEffect(() => {
     if (operatorChanged && operatorChanged.nodeKey && operatorChanged.operator && rootNodes.length > 0) {
       const {nodeKey, operator} = operatorChanged;
@@ -122,6 +131,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   const tieredMenu = useRef(null);
   const menu = useRef(null);
 
+  // This prop is set from MatchingMenuAndFormComponent
   useEffect(() => {
     if (rootNodesProp) {
       const {rootLabel, firstChildLabel} = rootNodesProp;
@@ -135,53 +145,28 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           onTreeNodeClick(EComponentType.None, roodNodes[0]);
         } else {
           const roodNodes = buildRootNodes(rootLabel, firstChildLabel);
-          setRootNodes(roodNodes);
-          const firstSelectedKey = roodNodes[0].children![0].key;
-          setSelectedKeys(firstSelectedKey)
-          const r = jsonpath.query(roodNodes, `$..[?(@.key=="${firstSelectedKey}")]`);
-          if(r.length > 0) {
-            setSelectedNode(r[0]);
-            onTreeNodeClick(r[0].data.type, r[0]);
-          }
+          setRootNodesState(roodNodes);
         }
 
       }
     }
   }, [rootNodesProp]);
 
+
+  // Unused because we removed little plus sign next to matching criteria text
   const menuItems = [
     {
       label: 'Clinical',
       command: () => {
         const rootNodes = buildRootNodes('And', 'Clinical');
-        setRootNodes(rootNodes);
-        const firstSelectedKey = rootNodes[0].children![0].key;
-        // setSelectedKeys('0-0')
-        setSelectedKeys(firstSelectedKey)
-        // const r = jsonpath.query(rootNodes, '$..[?(@.key=="0-0")]');
-        const r = jsonpath.query(rootNodes, `$..[?(@.key=="${firstSelectedKey}")]`);
-        if(r.length > 0) {
-          console.log('r', r);
-          setSelectedNode(r[0]);
-          onTreeNodeClick(r[0].data.type, r[0]);
-        }
-        console.log('selectedKeys', selectedKeys);
+        setRootNodesState(rootNodes);
       }
     },
     {
       label: 'Genomic',
       command: () => {
         const rootNodes = buildRootNodes('And', 'Genomic');
-        setRootNodes(rootNodes);
-        const firstSelectedKey = rootNodes[0].children![0].key;
-        setSelectedKeys(firstSelectedKey)
-        const r = jsonpath.query(rootNodes, `$..[?(@.key=="${firstSelectedKey}")]`);
-        if(r.length > 0) {
-          console.log('r', r);
-          setSelectedNode(r[0]);
-          onTreeNodeClick(r[0].data.type, r[0]);
-        }
-        console.log('selectedKeys', selectedKeys);
+        setRootNodesState(rootNodes);
       }
     }
   ];
@@ -226,28 +211,6 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           label: 'And',
           data: {},
           children: []
-        };
-        parentNode.children!.push(newNode);
-      }
-      setRootNodes([...rootNodes]);
-    }
-  }
-
-  const addCriteriaSubList = (nodeKey: string, type: string) => {
-    if (nodeKey) {
-      const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
-      if (parentNode) {
-        const newNode = {
-          key: uuidv4(),
-          label: 'And',
-          data: {},
-          children: [
-            {
-              key: uuidv4(),
-              label: type,
-              data: {type: type === 'Clinical' ? EComponentType.ClinicalForm : EComponentType.GenomicForm},
-            }
-          ]
         };
         parentNode.children!.push(newNode);
       }
@@ -322,8 +285,8 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     if (selectedNode) {
       const btnToShow = () => {
         let show = false;
+        // we only display the three dots menu over the node if the node is selected and the mouse is over the node and the node is not a leaf
         if ((selectedNode as TreeNode).key === node.key && isMouseOverNode && (node.label === 'And' || node.label === 'Or')) {
-        // if (isMouseOverNode && (node.label === 'And' || node.label === 'Or')) {
           show = true;
         }
         // show=true
@@ -368,7 +331,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
   return (
     <>
-      <Menu model={menuItems} ref={menu} popup id="criteria_popup_menu"/>
+      {/*<Menu model={menuItems} ref={menu} popup id="criteria_popup_menu"/>*/}
         <div className={styles.matchingCriteriaMenuContainer}>
           <div className={styles.matchingCriteriaTextContainer}>
             <div className={styles.matchingCriteriaText}>Matching Criteria</div>
