@@ -93,10 +93,10 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     )
   }
 
-  const header = (props: {armCode: string}) => {
+  const header = ({armCode}: {armCode: string}) => {
     return (
       <div>
-        <span>{props.armCode} matching criteria</span>
+        <span>{armCode} matching criteria</span>
       </div>
     )
   }
@@ -110,7 +110,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     const ctmlModel = currentState.modalActions.ctmlDialogModel;
     console.log('callback from footer', currentState.modalActions.ctmlDialogModel);
     formData.match = ctmlModel.match;
-
+    onDialogHide();
   }
 
   return (
