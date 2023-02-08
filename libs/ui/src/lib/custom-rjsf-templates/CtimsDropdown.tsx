@@ -1,5 +1,4 @@
 import { WidgetProps, asNumber, guessType } from "@rjsf/utils";
-import cn from "clsx";
 import { Dropdown, DropdownChangeParams } from "primereact/dropdown";
 import React from "react";
 import { MultiSelect, MultiSelectChangeParams } from "primereact/multiselect";
@@ -58,6 +57,7 @@ const CtimsDropdown = (props: WidgetProps) => {
  } = props;
 
   const { enumOptions, enumDisabled } = options;
+  // console.log('CtimsDropdown options', options);
 
   const emptyValue = multiple ? [] : "";
 

@@ -4,12 +4,13 @@
   "license": "MIT",
   "scripts": {
     "start:backend": "nx serve api",
-    "start-web": "nx serve web",
+    "start-web": "nx serve web --verbose",
     "schema:format": "npx prisma format --schema=./apps/api/prisma/schema.prisma",
     "schema:push": "npx prisma db push --schema=./apps/api/prisma/schema.prisma",
     "schema:generate-client": "npx prisma generate --schema=./apps/api/prisma/schema.prisma",
     "build": "nx build",
-    "test": "nx test"
+    "test": "nx test",
+    "build-web": "nx build web --verbose"
   },
   "private": true,
   "dependencies": {
@@ -37,6 +38,7 @@
     "primereact": "^8.7.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-json-view": "^1.21.3",
     "react-redux": "^8.0.5",
     "reflect-metadata": "^0.1.13",
     "regenerator-runtime": "0.13.7",

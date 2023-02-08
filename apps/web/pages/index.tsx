@@ -2,7 +2,7 @@
 import styles from './index.module.scss';
 import {CheckboxDemo} from "../components/CheckboxDemo";
 import {ChipsDemo} from "../components/ChipsDemo";
-import {DataTableDemo} from "../components/DataTableDemo";
+
 import Login from "../components/Login";
 
 export function Index() {

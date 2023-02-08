@@ -1,32 +1,38 @@
 import styles from './CtimsMatchDialog.module.scss';
-import React, {CSSProperties, FunctionComponent, memo, useEffect, useRef, useState} from "react";
+import React, {CSSProperties, useEffect, useRef, useState} from "react";
 import {Dialog} from "primereact/dialog";
-import {JSONSchema7} from "json-schema";
 import {Button} from "primereact/button";
-import {Menu} from "primereact/menu";
-import {Dropdown} from "primereact/dropdown";
-import TreeNode from "primereact/treenode";
-import {withTheme} from "@rjsf/core";
-import {Theme as PrimeTheme} from "../primereact";
-import localValidator from "@rjsf/validator-ajv8";
-import CtimsObjectFieldTemplate from "../custom-rjsf-templates/CtimsObjectFieldTemplate";
-import {RegistryWidgetsType} from "@rjsf/utils";
-import CtimsInput from "../custom-rjsf-templates/CtimsInput";
-import CtimsDropdown from "../custom-rjsf-templates/CtimsDropdown";
-import LeftMenuComponent from "./LeftMenuComponent";
-import {EComponentType} from "./EComponentType";
-import {buildRootNodes} from "./helpers";
 import MatchingMenuAndForm from "./MatchingMenuAndForm";
+import {OverlayPanel} from "primereact/overlaypanel";
+import {useSelector} from "react-redux";
+import dynamic from 'next/dynamic';
+import {store} from "../../../../../apps/web/pages/store/store";
+const BrowserReactJsonView = dynamic(() => import('react-json-view'), {
+  ssr: false,
+});
 
 interface CtimsMatchDialogProps {
   isDialogVisible: boolean;
   onDialogHide: () => void;
+  armCode?: string;
+  formData?: any;
 }
 
-
+const CtmlModelPreview = () => {
+  const ctmlModel = useSelector((state: any) => state.modalActions.ctmlDialogModel);
+  return (
+    <div>
+      {/*<BrowserReactJsonView src={ctmlModel} displayObjectSize={false} displayDataTypes={false} />*/}
+      <pre>{JSON.stringify(ctmlModel, null, 2)}</pre>
+    </div>
+  )
+}
 
 const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   const [isDialogVisible, setIsDialogVisible] = useState(props.isDialogVisible);
+  let {formData} = props;
+
+  const op = useRef<OverlayPanel>(null);
 
   useEffect(() => {
     setIsDialogVisible(props.isDialogVisible);
@@ -40,9 +46,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     )
   }
 
-  const handleSubmit = () => {
-    console.log('clicked submit');
-  }
+
 
   const dismissBtnStyle: CSSProperties = {
     height: '36px',
@@ -65,23 +69,58 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     height: '36px'
   }
 
-  const footer = (
-    <div style={{marginTop: '10px'}}>
-      <Button style={dismissBtnStyle} label="Discard" className="p-button-text" onClick={handleSubmit} />
-      <Button style={saveBtnStyle} label="Save matching criteria" onClick={handleSubmit} />
-    </div>
-  );
+  const footer = (props: {saveMatchingCriteriaClicked: () => void}) => {
+    const {saveMatchingCriteriaClicked} = props;
 
+    const handleSubmit = (e: any) => {
+      console.log('clicked submit', formData);
+      // formData.match = {sup: 'sup'}
+      op.current?.toggle(e)
+    }
+    return (
+      <div style={{marginTop: '10px'}}>
+        <Button style={dismissBtnStyle} label="Discard" className="p-button-text" onClick={handleSubmit} />
+        <Button style={saveBtnStyle} label="Save matching criteria" onClick={saveMatchingCriteriaClicked} />
+        {/*<OverlayPanel*/}
+        {/*  ref={op}*/}
+        {/*  showCloseIcon*/}
+        {/*  id="overlay_panel"*/}
+        {/*  style={{ width: "750px" }}*/}
+        {/*>*/}
+        {/*  <CtmlModelPreview />*/}
+        {/*</OverlayPanel>*/}
+      </div>
+    )
+  }
 
+  const header = ({armCode}: {armCode: string}) => {
+    return (
+      <div>
+        <span>{armCode} matching criteria</span>
+      </div>
+    )
+  }
 
   const onDialogHide = () => {
     props.onDialogHide();
   }
 
+  const saveClickCallback = () => {
+    const currentState = store.getState();
+    const ctmlModel = currentState.modalActions.ctmlDialogModel;
+    console.log('callback from footer', currentState.modalActions.ctmlDialogModel);
+    formData.match = ctmlModel.match;
+    onDialogHide();
+  }
+
   return (
-    <Dialog header="<arm_code> matching criteria" footer={footer} visible={isDialogVisible} style={{width: '960px', height: '800px'}} onHide={onDialogHide}>
+    <Dialog header={() => header({armCode: props.armCode as string})}
+            footer={() => footer({saveMatchingCriteriaClicked: saveClickCallback})}
+            visible={isDialogVisible}
+            style={{width: '960px', height: '800px'}}
+            onHide={onDialogHide}>
       <div className={styles.mainContainer}>
-        <MatchingMenuAndForm/>
+        <MatchingMenuAndForm />
         <MatchingCriteriaPreview/>
       </div>
     </Dialog>

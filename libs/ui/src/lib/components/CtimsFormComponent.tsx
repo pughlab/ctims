@@ -8,7 +8,7 @@ import {JSONSchema7} from "json-schema";
 import CtimsArrayFieldItemTemplate from "../custom-rjsf-templates/CtimsArrayFieldItemTemplate";
 import CtimsArrayFieldTemplate from "../custom-rjsf-templates/CtimsArrayFieldTemplate";
 import localValidator from "@rjsf/validator-ajv8";
-import {CSSProperties, memo} from "react";
+import {CSSProperties, ForwardedRef, forwardRef, memo, useEffect, useRef} from "react";
 import {withTheme} from "@rjsf/core";
 import {Theme as PrimeTheme} from "../primereact";
 import {RegistryWidgetsType} from "@rjsf/utils";
@@ -26,7 +26,7 @@ const containerStyle: CSSProperties = {
   width: '100%',
 }
 
-const CtimsFormComponent = (props: CtimsFormComponentProps) => {
+const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: ForwardedRef<any>) => {
 
   const schema = {
     "type": "object",
@@ -258,7 +258,7 @@ const CtimsFormComponent = (props: CtimsFormComponentProps) => {
                         type: 'object',
                         properties: {
                           // fields in the form
-                          "ctimsButton": {type: 'string', title: 'Ctims Button'},
+                          "ctimsButton": {type: 'string', title: 'Open Match Dialog'},
                           "fieldShouldBeInDialog": {type: 'string', title: 'Field Should Be In Dialog'},
 
                         }
@@ -276,6 +276,9 @@ const CtimsFormComponent = (props: CtimsFormComponentProps) => {
   }
   const uiSchema = {
     "ui:spacing": 16,
+    "ui:submitButtonOptions": {
+      "norender": true,
+    },
     "ui:layout": [
       {
         "clinicalMetadata": {
@@ -544,10 +547,9 @@ const CtimsFormComponent = (props: CtimsFormComponentProps) => {
               "match": {
                 "ctimsButton": {
                   "ui:widget": CtimsButtonWidget,
-                  onClick: (e: any, id?: string) => {
+                  onClick: (e: any, formData: any, armCode: string, id: string) => {
                     e.preventDefault();
-                    console.log("clicked", id);
-                    props.onSpecialButtonClick(id);
+                    props.onSpecialButtonClick(formData, armCode, id);
                   },
                 },
                 "fieldShouldBeInDialog": {
@@ -568,14 +570,19 @@ const CtimsFormComponent = (props: CtimsFormComponentProps) => {
     console.log(e);
   };
 
+  // const onChangeTest = (e: any) => {
+  //   console.log('formRef', formRef.current.state.formData);
+  // }
+
   return (
     <div style={containerStyle}>
-      <Form schema={schema as JSONSchema7}
+      <Form ref={ref} schema={schema as JSONSchema7}
             templates={{
               ArrayFieldItemTemplate: CtimsArrayFieldItemTemplate,
               ArrayFieldTemplate: CtimsArrayFieldTemplate,
             }}
             onChange={(data) => {
+              // onChangeTest(data)
               props.onRjsfFormChange(data)
             }} // @ts-ignore
             uiSchema={uiSchema}
@@ -585,7 +592,7 @@ const CtimsFormComponent = (props: CtimsFormComponentProps) => {
             }} validator={localValidator}/>
     </div>
   )
-};
+});
 
 // prevent component from re-rendering
 const CtimsFormComponentMemo = memo(CtimsFormComponent, (prevProps: any, nextProps: any) => true);
