@@ -41,7 +41,8 @@ const CtimsItemObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
 
     }
     const arrayContainer: React.CSSProperties = {
-        width: '640px',
+        // width: '640px',
+        width: '100%',
         marginLeft: 'auto',
     }
 

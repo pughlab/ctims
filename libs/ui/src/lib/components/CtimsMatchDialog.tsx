@@ -36,6 +36,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
 
   useEffect(() => {
     setIsDialogVisible(props.isDialogVisible);
+    console.log('CtimsMatchDialog useEffect', formData);
   }, [props.isDialogVisible])
 
   const MatchingCriteriaPreview = () => {
