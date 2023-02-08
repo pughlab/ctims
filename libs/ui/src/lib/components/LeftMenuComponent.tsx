@@ -20,12 +20,12 @@ import {
   IAddCriteria,
   IDeleteCriteria,
   IOperatorChange, setCtmlDialogModel
-} from "../../../../../apps/web/pages/store/slices/modalActionsSlice";
+} from "../../../../../apps/web/store/slices/modalActionsSlice";
 import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
 import {useDispatch} from "react-redux";
 import { v4 as uuidv4 } from 'uuid';
-import {IKeyToViewModel, setMatchViewModel} from "../../../../../apps/web/pages/store/slices/matchViewModelSlice";
-import {store} from "../../../../../apps/web/pages/store/store";
+import {IKeyToViewModel, setMatchViewModel} from "../../../../../apps/web/store/slices/matchViewModelSlice";
+import {store} from "../../../../../apps/web/store/store";
 
 
 interface ILeftMenuComponentProps {

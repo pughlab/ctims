@@ -15,7 +15,7 @@ import {Theme as PrimeTheme} from "../primereact";
 import TreeNode from "primereact/treenode";
 import CtimsMatchDialogObjectFieldTemplate from "../custom-rjsf-templates/CtimsMatchDialogObjectFieldTemplate";
 import {useDispatch} from "react-redux";
-import {addAdjacentNode, deleteNode, operatorChange, formChange} from "../../../../../apps/web/pages/store/slices/modalActionsSlice";
+import {addAdjacentNode, deleteNode, operatorChange, formChange} from "../../../../../apps/web/store/slices/modalActionsSlice";
 
 const Form = withTheme(PrimeTheme)
 

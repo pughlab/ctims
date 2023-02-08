@@ -1,7 +1,7 @@
 import styles from './EditorTopBar.module.scss';
 import {useRouter} from "next/router";
 import { Button } from 'primereact/button';
-import {store} from "../../pages/store/store";
+import {store} from "../../store/store";
 
 
 const EditorTopBar = () => {
