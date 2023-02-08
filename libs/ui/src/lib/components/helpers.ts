@@ -160,3 +160,33 @@ export const convertTreeNodeArrayToCtimsFormat = (input: any[]): any => {
   });
   return result;
 }
+
+export const convertCtimsFormatToTreeNodeArray = (output: any): TreeNode[] => {
+  let result: TreeNode[] = [];
+  output.match.forEach((item: any) => {
+    let current: any = {};
+    switch (Object.keys(item)[0]) {
+      case "and":
+        current = { key: "0", label: "And", data: { and: [] }, children: [] };
+        break;
+      case "or":
+        current = { key: uuidv4(), label: "Or", data: {}, children: [] };
+        break;
+      case "clinical":
+        current = { key: uuidv4(), label: "Clinical", data: { type: 1, formData: item.clinical } };
+        break;
+      case "genomic":
+        current = { key: uuidv4(), label: "Genomic", data: { type: 2, formData: item.genomic } };
+        break;
+    }
+    if (item[Object.keys(item)[0]].length > 0) {
+      current.children = [...current.children, ...convertCtimsFormatToTreeNodeArray({ match: item[Object.keys(item)[0]] })];
+    }
+    result.push(current);
+  });
+  return result;
+}
+
+export const isObjectEmpty = (obj: any) => {
+  return Object.keys(obj).length === 0 && obj.constructor === Object;
+}

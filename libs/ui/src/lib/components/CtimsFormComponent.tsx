@@ -238,19 +238,20 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                   "items": {
                     "type": "object",
                     "properties": {
-                      "arm_code": {"type": "string"},
-                      "arm_description": {"type": "string"},
-                      "arm_internal_id": {"type": "integer"},
-                      "arm_suspended": {"type": "string"},
+                      "arm_code": {"type": "string", title: 'Arm Code'},
+                      "arm_description": {"type": "string", title: 'Arm Description'},
+                      "arm_internal_id": {"type": "integer", title: 'Arm Internal Id'},
+                      "arm_suspended": {"type": "string", title: 'Arm Suspended'},
                       "dose_level": {
                         "type": "array",
+                        title: 'Dose Level',
                         "items": {
                           "type": "object",
                           "properties": {
-                            "level_code": {"type": "string"},
-                            "level_description": {"type": "string"},
-                            "level_internal_id": {"type": "integer"},
-                            "level_suspended": {"type": "string"}
+                            "level_code": {"type": "string", title: 'Level Code'},
+                            "level_description": {"type": "string", title: 'Level Description'},
+                            "level_internal_id": {"type": "integer", title: 'Level Internal Id'},
+                            "level_suspended": {"type": "string", title: 'Level Suspended'},
                           }
                         }
                       },
@@ -569,10 +570,6 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
   const handleSubmit = (e: any) => {
     console.log(e);
   };
-
-  // const onChangeTest = (e: any) => {
-  //   console.log('formRef', formRef.current.state.formData);
-  // }
 
   return (
     <div style={containerStyle}>

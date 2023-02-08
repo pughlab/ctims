@@ -6,9 +6,9 @@ import {Button} from "primereact/button";
 import {TieredMenu} from "primereact/tieredmenu";
 import {
   buildEmptyGroup,
-  buildRootNodes, convertTreeNodeArrayToCtimsFormat,
+  buildRootNodes, convertCtimsFormatToTreeNodeArray, convertTreeNodeArrayToCtimsFormat,
   deleteNodeFromChildrenArrayByKey,
-  findArrayContainingKeyInsideATree, findObjectByKeyInTree,
+  findArrayContainingKeyInsideATree, findObjectByKeyInTree, isObjectEmpty,
   makePropertiesWritable
 } from "./helpers";
 import {Menu} from "primereact/menu";
@@ -49,9 +49,9 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    console.log('rootNodes state changed ', convertTreeNodeArrayToCtimsFormat(rootNodes));
-  }, [rootNodes]);
+  // useEffect(() => {
+  //   console.log('rootNodes state changed ', convertTreeNodeArrayToCtimsFormat(rootNodes));
+  // }, [rootNodes]);
 
   const setRootNodesState = (newRootNodes: TreeNode[]) => {
     setRootNodes(newRootNodes);
@@ -68,16 +68,27 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     const state = store.getState();
     const activeArmId: string = state.matchViewModelActions.activeArmId;
     const storedViewModel: TreeNode[] = state.matchViewModelActions.viewModel[activeArmId];
+    const currentCtmlMatchModel: any = state.matchViewModelActions.ctmlMatchModel;
+
 
     // formChangedCounter is used to determine if the dialog just opened or if the form was changed
     if (formChangedCounter === 0) {
+      // console.log('current ctml match model ', currentCtmlMatchModel);
       // check if there is a view model stored in the redux store for the clicked arm id
-      if (storedViewModel) {
-        // clone the view model from the redux store
-        const storedViewModelClone: TreeNode[] = structuredClone(storedViewModel);
-        // make the properties writable so that we can add new properties to the nodes and modify form data
-        makePropertiesWritable(storedViewModelClone[0]);
-        setRootNodesState(storedViewModelClone);
+      // if (storedViewModel) {
+      //   // clone the view model from the redux store
+      //   const storedViewModelClone: TreeNode[] = structuredClone(storedViewModel);
+      //   // make the properties writable so that we can add new properties to the nodes and modify form data
+      //   makePropertiesWritable(storedViewModelClone[0]);
+      //   setRootNodesState(storedViewModelClone);
+      //   console.log('stored view model ', storedViewModelClone);
+      // }
+      if (!isObjectEmpty(currentCtmlMatchModel.match)) {
+
+        // console.log('currentCtmlMatchModel.match', currentCtmlMatchModel.match)
+        const newViewModel = convertCtimsFormatToTreeNodeArray({match: currentCtmlMatchModel.match});
+        setRootNodesState(newViewModel)
+        console.log('new view model ', newViewModel);
       }
     }
 

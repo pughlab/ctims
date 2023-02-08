@@ -5,7 +5,11 @@ import CtimsFormComponentMemo from './components/CtimsFormComponent';
 import CtimsMatchDialog from './components/CtimsMatchDialog';
 import {useDispatch} from "react-redux";
 import {resetFormChangeCounter} from "../../../../apps/web/pages/store/slices/modalActionsSlice";
-import {resetActiveArmId, setActiveArmId} from "../../../../apps/web/pages/store/slices/matchViewModelSlice";
+import {
+  resetActiveArmId,
+  setActiveArmId,
+  setCtmlMatchModel
+} from "../../../../apps/web/pages/store/slices/matchViewModelSlice";
 import {setCtmlModel} from "../../../../apps/web/pages/store/slices/ctmlModelSlice";
 import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
 
@@ -38,6 +42,7 @@ export const Ui = (props: UiProps) => {
     console.log('handleSpecialClick id: ', id);
     setArmCode(armCode)
     setFormData(formD)
+    dispatch(setCtmlMatchModel(structuredClone(formD)))
     dispatch(setActiveArmId(id))
     setIsOpen(true);
   }

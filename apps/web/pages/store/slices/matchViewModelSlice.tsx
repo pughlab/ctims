@@ -8,11 +8,13 @@ export interface IKeyToViewModel {
 export interface IMatchViewModelState {
   viewModel: IKeyToViewModel;
   activeArmId: string;
+  ctmlMatchModel: any;
 }
 
 const initialState: IMatchViewModelState = {
   viewModel: {},
-  activeArmId: ''
+  activeArmId: '',
+  ctmlMatchModel: null
 }
 
 export const matchViewModelSlice = createSlice({
@@ -27,9 +29,12 @@ export const matchViewModelSlice = createSlice({
     },
     resetActiveArmId: (state) => {
       state.activeArmId = '';
+    },
+    setCtmlMatchModel: (state, action: PayloadAction<any>) => {
+      state.ctmlMatchModel = action.payload;
     }
   }
 })
 
-export const {setMatchViewModel, setActiveArmId, resetActiveArmId} = matchViewModelSlice.actions
+export const {setMatchViewModel, setActiveArmId, resetActiveArmId, setCtmlMatchModel} = matchViewModelSlice.actions
 export default matchViewModelSlice.reducer
