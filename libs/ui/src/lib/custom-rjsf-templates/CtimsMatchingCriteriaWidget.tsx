@@ -2,10 +2,9 @@ import {WidgetProps} from "@rjsf/utils";
 import React, {CSSProperties} from "react";
 import {Panel} from "primereact/panel";
 import {Ripple} from "primereact/ripple";
+import {useSelector} from "react-redux";
 
-const headerTemplate = (options: any, props: {
-  title: string,
-}) => {
+const headerTemplate = (options: any, props: { title: string, }) => {
   const {title} = props;
   const toggleIcon = options.collapsed ? 'pi pi-chevron-down' : 'pi pi-chevron-up';
   // const className = `${options.className} justify-content-start`;
@@ -31,7 +30,7 @@ const headerTemplate = (options: any, props: {
                 {title}
             </span>
       <div>
-        <i className="pi pi-trash" style={trashIconStyle}></i>)
+        <i className="pi pi-trash" style={trashIconStyle}></i>
         <button className={options.togglerClassName} onClick={options.onTogglerClick}>
           <span className={toggleIcon}></span>
           <Ripple />
@@ -52,6 +51,10 @@ const CtimsMatchingCriteriaWidget = (props: WidgetProps) => {
     uiSchema,
   } = props;
 
+  // Will trigger re-render when the ctmlModel changes and thus will display the preview
+  // The dispatch is called from ui.tsx in onDialogHideCallback
+  const ctmlModel: any = useSelector((state: any) => state.ctmlModel.ctmlModel);
+
   const btnClick = uiSchema!['onClick'];
 
   const containerStyle: CSSProperties = {
@@ -59,17 +62,28 @@ const CtimsMatchingCriteriaWidget = (props: WidgetProps) => {
     marginLeft: 'auto',
   }
 
+  const previewStyle: CSSProperties = {
+    height: '300px',
+    border: '1px solid #d9d9d9',
+  }
+
   const headerTemplateOptions = {
     title: 'Matching Criteria',
+  }
+
+  const preStyle: CSSProperties = {
+    height: '100%',
+    overflowY: 'scroll',
   }
 
   return (
       <div style={containerStyle}>
         <Panel headerTemplate={(props) => headerTemplate(props, headerTemplateOptions)} toggleable>
-          <div className="flex-grow-1">
-
+          <div style={previewStyle}>
+            <pre style={preStyle}>{JSON.stringify(formContext.match, null, 2)}</pre>
           </div>
         </Panel>
       </div>
   )
 }
+export default CtimsMatchingCriteriaWidget;

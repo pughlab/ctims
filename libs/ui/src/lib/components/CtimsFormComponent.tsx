@@ -8,12 +8,13 @@ import {JSONSchema7} from "json-schema";
 import CtimsArrayFieldItemTemplate from "../custom-rjsf-templates/CtimsArrayFieldItemTemplate";
 import CtimsArrayFieldTemplate from "../custom-rjsf-templates/CtimsArrayFieldTemplate";
 import localValidator from "@rjsf/validator-ajv8";
-import {CSSProperties, ForwardedRef, forwardRef, memo, useEffect, useRef} from "react";
+import {CSSProperties, ForwardedRef, forwardRef, memo} from "react";
 import {withTheme} from "@rjsf/core";
 import {Theme as PrimeTheme} from "../primereact";
 import {RegistryWidgetsType} from "@rjsf/utils";
 import CtimsInput from "../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../custom-rjsf-templates/CtimsDropdown";
+import CtimsMatchingCriteriaWidget from "../custom-rjsf-templates/CtimsMatchingCriteriaWidget";
 
 const Form = withTheme(PrimeTheme)
 
@@ -260,8 +261,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                         properties: {
                           // fields in the form
                           "ctimsButton": {type: 'string', title: 'Open Match Dialog'},
-                          "fieldShouldBeInDialog": {type: 'string', title: 'Field Should Be In Dialog'},
-
+                          "matchingCriteriaWidget": {type: 'string', title: 'Matching Criteria Widget'},
                         }
                       }
                     }
@@ -553,11 +553,9 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                     props.onSpecialButtonClick(formData, armCode, id);
                   },
                 },
-                "fieldShouldBeInDialog": {
-                  "ui:options": {
-                    "dialog": true
-                  },
-                }
+                matchingCriteriaWidget: {
+                  "ui:widget": CtimsMatchingCriteriaWidget,
+                },
               }
             }
           }
