@@ -6,7 +6,7 @@ import MatchingMenuAndForm from "./MatchingMenuAndForm";
 import {OverlayPanel} from "primereact/overlaypanel";
 import {useSelector} from "react-redux";
 import dynamic from 'next/dynamic';
-import {store} from "../../../../../apps/web/pages/store/store";
+import {store} from "../../../../../apps/web/store/store";
 const BrowserReactJsonView = dynamic(() => import('react-json-view'), {
   ssr: false,
 });

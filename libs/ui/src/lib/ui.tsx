@@ -4,13 +4,13 @@ import {CSSProperties, useEffect, useRef, useState} from "react";
 import CtimsFormComponentMemo from './components/CtimsFormComponent';
 import CtimsMatchDialog from './components/CtimsMatchDialog';
 import {useDispatch} from "react-redux";
-import {resetFormChangeCounter} from "../../../../apps/web/pages/store/slices/modalActionsSlice";
+import {resetFormChangeCounter} from "../../../../apps/web/store/slices/modalActionsSlice";
 import {
   resetActiveArmId,
   setActiveArmId,
   setCtmlMatchModel
-} from "../../../../apps/web/pages/store/slices/matchViewModelSlice";
-import {setCtmlModel} from "../../../../apps/web/pages/store/slices/ctmlModelSlice";
+} from "../../../../apps/web/store/slices/matchViewModelSlice";
+import {setCtmlModel} from "../../../../apps/web/store/slices/ctmlModelSlice";
 import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
 
 

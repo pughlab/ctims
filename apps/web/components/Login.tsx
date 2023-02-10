@@ -6,7 +6,7 @@ import useHasMounted from "../hooks/useHasMounted";
 import Layout from "./Layout";
 import {Button} from "primereact/button";
 import {useDispatch, useSelector} from "react-redux";
-import {increment} from "../pages/store/slices/counterSlice";
+import {increment} from "../store/slices/counterSlice";
 
 const Login = () => {
   const hasMounted = useHasMounted();
