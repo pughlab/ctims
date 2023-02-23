@@ -2,6 +2,10 @@ import TreeNode from "primereact/treenode";
 import {EComponentType} from "./EComponentType";
 import { v4 as uuidv4 } from 'uuid';
 
+export const stringContains = (str: string, search: string) => {
+  return str.toLowerCase().indexOf(search.toLowerCase()) !== -1;
+}
+
 export const findArrayContainingKeyInsideATree = (tree: TreeNode, key: string): TreeNode | null => {
   let result = null;
   const traverse = (tree: TreeNode, key: string) => {

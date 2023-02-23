@@ -1,5 +1,6 @@
 import {ArrayFieldTemplateItemType, ArrayFieldTemplateProps, getTemplate, getUiOptions} from "@rjsf/utils";
-import React from 'react'
+import React, {CSSProperties} from 'react'
+import {stringContains} from "../components/helpers";
 
 const CtimsArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
     const {
@@ -78,8 +79,11 @@ const CtimsArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
         return newChildren
     };
 
-    const arrayStyle: React.CSSProperties = {
-        // width: '1000px'
+    const arrayStyle: CSSProperties = {
+    }
+
+    if (stringContains(title.toLowerCase(), 'dose')) {
+      arrayStyle.marginTop = '24px';
     }
 
     const caretStyle: React.CSSProperties = {
@@ -100,7 +104,7 @@ const CtimsArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
             {/*    />*/}
             {/*)}*/}
 
-            <div key={`array-item-list-${idSchema.$id}`} id={`array-item-list-${idSchema.$id}`}>
+            <div key={`array-item-list-${idSchema.$id}`} id={`array-item-list-${idSchema.$id}`} style={arrayStyle}>
                 {items && items.map((item: ArrayFieldTemplateItemType, index) => {
                     // deep clone item without stringifying and parsing
                     const { key, ...itemProps } = item;

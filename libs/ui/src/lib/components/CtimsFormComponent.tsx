@@ -258,6 +258,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                       },
                       "match": {
                         type: 'object',
+                        title: '',
                         properties: {
                           // fields in the form
                           "ctimsButton": {type: 'string', title: 'Open Match Dialog'},
@@ -556,6 +557,11 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                 matchingCriteriaWidget: {
                   "ui:widget": CtimsMatchingCriteriaWidget,
                 },
+              },
+              "dose_level": {
+               "items": {
+                  "ui:ObjectFieldTemplate": CtimsItemObjectFieldTemplate,
+               }
               }
             }
           }

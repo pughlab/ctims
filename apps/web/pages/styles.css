@@ -49,6 +49,14 @@
   border: 0;
 }
 
+.ctimsGrayPanel .p-panel-content {
+  background-color: rgba(0, 0, 0, 0.02);
+  box-shadow: none;
+  border-left: 1px solid #E4E4E4;
+  border-right: 1px solid #E4E4E4;
+  border-bottom: 1px solid #E4E4E4;
+}
+
 .ctimsPanelHeaderTop {
   display: flex;
   justify-content: space-between;
@@ -58,6 +66,34 @@
   font-weight: 700;
   height: 56px;
   border: 0;
+  color: #343a40;
+  border-top-right-radius: 6px;
+  border-top-left-radius: 6px;
+  padding: 0.75rem 1.25rem
+}
+
+.ctimsPanelHeaderTopArm {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid #E4E4E4;
+  font-weight: 700;
+  height: 56px;
+  color: #343a40;
+  border-top-right-radius: 6px;
+  border-top-left-radius: 6px;
+  padding: 0.75rem 1.25rem
+}
+
+.ctimsPanelHeaderMatching {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid #E4E4E4;
+  font-weight: 700;
+  height: 56px;
   color: #343a40;
   border-top-right-radius: 6px;
   border-top-left-radius: 6px;
@@ -75,6 +111,10 @@
   border: 0;
   color: #343a40;
   padding: 0.75rem 1.25rem
+}
+
+.grayAddIemContainer {
+  background: rgba(0, 0, 0, 0.02);
 }
 
 .p-inputtext {

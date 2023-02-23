@@ -1,7 +1,8 @@
 import {ArrayFieldTemplateItemType} from "@rjsf/utils";
 import {Panel} from "primereact/panel";
-import React from "react";
+import React, {CSSProperties} from "react";
 import {Ripple} from "primereact/ripple";
+import {stringContains} from "../components/helpers";
 
 const headerTemplate = (options: any, props: {
     title: string,
@@ -11,8 +12,10 @@ const headerTemplate = (options: any, props: {
 }) => {
     const {title, onDropIndexClick, index, hasRemove} = props;
     const toggleIcon = options.collapsed ? 'pi pi-chevron-down' : 'pi pi-chevron-up';
-    // const className = `${options.className} justify-content-start`;
     let className = `ctimsPanelHeaderTop justify-content-start`;
+    if(stringContains(title.toLowerCase(), 'arm') || stringContains(title.toLowerCase(), 'dose')) {
+        className = `ctimsPanelHeaderTopArm justify-content-start`;
+    }
     if (index > 0) {
         className = `ctimsPanelHeaderOther justify-content-start`;
     }
@@ -69,14 +72,22 @@ const CtimsArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
         hasRemove
     }
 
-    const style: React.CSSProperties = {
-        // paddingLeft: '300px',
+    const style: CSSProperties = {
+    }
+
+    if (stringContains(title.toLowerCase(), 'dose')) {
+        style.marginTop = '24px';
+    }
+
+    let className = ''
+    if (stringContains(title.toLowerCase(), 'arm')) {
+      className = 'ctimsGrayPanel';
     }
 
     return (
         <div key={`array-item-${index}`} className="flex align-items-start gap-2 p-2 border-1 border-round" style={style}>
-            <Panel headerTemplate={(props) => headerTemplate(props, headerTemplateOptions)} toggleable>
-                <div className="flex-grow-1">{children}</div>
+            <Panel headerTemplate={(props) => headerTemplate(props, headerTemplateOptions)} className={className} toggleable>
+                <div id="panel-children">{children}</div>
             </Panel>
         </div>
     )

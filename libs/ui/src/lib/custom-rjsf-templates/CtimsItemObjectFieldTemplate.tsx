@@ -1,5 +1,6 @@
 import {getTemplate, getUiOptions, ObjectFieldTemplatePropertyType, ObjectFieldTemplateProps} from "@rjsf/utils";
 import React from "react";
+import {stringContains} from "../components/helpers";
 
 const CtimsItemObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
     const {

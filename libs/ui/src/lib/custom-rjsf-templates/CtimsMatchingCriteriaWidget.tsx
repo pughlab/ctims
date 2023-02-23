@@ -7,11 +7,8 @@ import {useSelector} from "react-redux";
 const headerTemplate = (options: any, props: { title: string, }) => {
   const {title} = props;
   const toggleIcon = options.collapsed ? 'pi pi-chevron-down' : 'pi pi-chevron-up';
-  // const className = `${options.className} justify-content-start`;
-  let className = `ctimsPanelHeaderTop justify-content-start`;
-  // if (index > 0) {
-  //   className = `ctimsPanelHeaderOther justify-content-start`;
-  // }
+  let className = `ctimsPanelHeaderMatching justify-content-start`;
+
   const titleClassName = `${options.titleClassName} pl-1`;
 
   const titleStyle: React.CSSProperties = {
@@ -30,7 +27,7 @@ const headerTemplate = (options: any, props: { title: string, }) => {
                 {title}
             </span>
       <div>
-        <i className="pi pi-trash" style={trashIconStyle}></i>
+        {/*<i className="pi pi-trash" style={trashIconStyle}></i>*/}
         <button className={options.togglerClassName} onClick={options.onTogglerClick}>
           <span className={toggleIcon}></span>
           <Ripple />
@@ -60,6 +57,7 @@ const CtimsMatchingCriteriaWidget = (props: WidgetProps) => {
   const containerStyle: CSSProperties = {
     width: '100%',
     marginLeft: 'auto',
+    marginTop: '16px',
   }
 
   const previewStyle: CSSProperties = {
@@ -76,6 +74,39 @@ const CtimsMatchingCriteriaWidget = (props: WidgetProps) => {
     overflowY: 'scroll',
   }
 
+  const addItemContainerStyle: React.CSSProperties = {
+    display: "flex",
+    flexDirection: "row",
+    cursor: "pointer",
+    height: '56px',
+    lineHeight: '56px',
+    backgroundColor: 'rgba(0, 0, 0, 0.02)',
+    borderBottomLeftRadius: '8px',
+    borderBottomRightRadius: '8px',
+    borderLeft: '1px solid #E4E4E4',
+    borderRight: '1px solid #E4E4E4',
+    borderBottom: '1px solid #E4E4E4',
+  }
+
+  const titleStyle: React.CSSProperties = {
+    color: "#2E72D2",
+    fontFamily: "Inter, sans-serif",
+    fontWeight: 600,
+    fontSize: "14px",
+    marginLeft: '4px',
+  }
+
+  const circleStyle: React.CSSProperties = {
+    lineHeight: '56px',
+    color: "#2E72D2",
+    marginLeft: '20px',
+  }
+
+  const caretStyle: React.CSSProperties = {
+    marginLeft: '6px',
+    color: "#2E72D2",
+  }
+
   return (
       <div style={containerStyle}>
         <Panel headerTemplate={(props) => headerTemplate(props, headerTemplateOptions)} toggleable>
@@ -83,6 +114,11 @@ const CtimsMatchingCriteriaWidget = (props: WidgetProps) => {
             <pre style={preStyle}>{JSON.stringify(formContext.match, null, 2)}</pre>
           </div>
         </Panel>
+        <div style={addItemContainerStyle} onClick={btnClick}>
+          <i className="pi pi-pencil" style={circleStyle}></i>
+          <div style={titleStyle}>Edit matching criteria</div>
+          <i className="bi bi-caret-down-fill" style={caretStyle}></i>
+        </div>
       </div>
   )
 }
