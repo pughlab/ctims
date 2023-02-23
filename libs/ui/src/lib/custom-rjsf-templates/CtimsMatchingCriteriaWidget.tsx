@@ -5,6 +5,7 @@ import {Ripple} from "primereact/ripple";
 import { TabView, TabPanel } from 'primereact/tabview';
 import {useSelector} from "react-redux";
 import {stringify} from 'yaml'
+import {isObjectEmpty} from "../components/helpers";
 
 const headerTemplate = (options: any, props: { title: string, }) => {
   const {title} = props;
@@ -122,6 +123,9 @@ const CtimsMatchingCriteriaWidget = (props: WidgetProps) => {
     borderRadius: '4px',
   }
 
+  const yamlString = stringify(formContext.match, null, 2);
+  const jsonString = JSON.stringify(formContext.match, null, 2);
+
   return (
       <div style={containerStyle}>
         <Panel headerTemplate={(props) => headerTemplate(props, headerTemplateOptions)} toggleable>
@@ -129,12 +133,16 @@ const CtimsMatchingCriteriaWidget = (props: WidgetProps) => {
             <TabView>
               <TabPanel header="YAML">
                 <div style={previewStyle}>
-                  <pre style={preStyle}>{stringify(formContext.match, null, 2)}</pre>
+                  {isObjectEmpty(formContext.match) ?
+                    null: <pre style={preStyle}>{yamlString}</pre>
+                  }
                 </div>
               </TabPanel>
               <TabPanel header="JSON">
                 <div style={previewStyle}>
-                  <pre style={preStyle}>{JSON.stringify(formContext.match, null, 2)}</pre>
+                  {isObjectEmpty(formContext.match) ?
+                    null: <pre style={preStyle}>{jsonString}</pre>
+                  }
                 </div>
               </TabPanel>
             </TabView>

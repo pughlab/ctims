@@ -192,5 +192,8 @@ export const convertCtimsFormatToTreeNodeArray = (output: any): TreeNode[] => {
 }
 
 export const isObjectEmpty = (obj: any) => {
-  return Object.keys(obj).length === 0 && obj.constructor === Object;
+  if (obj) {
+    return Object.keys(obj).length === 0 && obj.constructor === Object;
+  }
+  return true;
 }

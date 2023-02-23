@@ -16,9 +16,15 @@ const headerTemplate = (options: any, props: {
     if(stringContains(title.toLowerCase(), 'arm') || stringContains(title.toLowerCase(), 'dose')) {
         className = `ctimsPanelHeaderTopArm justify-content-start`;
     }
+
     if (index > 0) {
         className = `ctimsPanelHeaderOther justify-content-start`;
     }
+
+    if (index > 0 && (stringContains(title.toLowerCase(), 'arm') || stringContains(title.toLowerCase(), 'dose'))) {
+      className = `ctimsPanelHeaderTopArmOther justify-content-start`;
+    }
+
     const titleClassName = `${options.titleClassName} pl-1`;
 
     const titleStyle: React.CSSProperties = {
@@ -75,7 +81,7 @@ const CtimsArrayFieldItemTemplate = (props: ArrayFieldTemplateItemType) => {
     const style: CSSProperties = {
     }
 
-    if (stringContains(title.toLowerCase(), 'dose')) {
+    if (stringContains(title.toLowerCase(), 'dose') && index === 0) {
         style.marginTop = '24px';
     }
 
