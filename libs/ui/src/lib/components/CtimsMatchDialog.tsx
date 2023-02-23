@@ -39,15 +39,6 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     console.log('CtimsMatchDialog useEffect', formData);
   }, [props.isDialogVisible])
 
-  const MatchingCriteriaPreview = () => {
-    return (
-      <div className={styles.matchingCriteriaPreview}>
-        Matching criteria preview will be shown here.
-      </div>
-    )
-  }
-
-
 
   const dismissBtnStyle: CSSProperties = {
     height: '36px',
@@ -118,11 +109,10 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     <Dialog header={() => header({armCode: props.armCode as string})}
             footer={() => footer({saveMatchingCriteriaClicked: saveClickCallback})}
             visible={isDialogVisible}
-            style={{width: '960px', height: '800px'}}
+            style={{width: '960px', height: '710px'}}
             onHide={onDialogHide}>
       <div className={styles.mainContainer}>
         <MatchingMenuAndForm />
-        <MatchingCriteriaPreview/>
       </div>
     </Dialog>
   )
