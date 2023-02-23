@@ -3,6 +3,28 @@
 @import "primeicons/primeicons.css";
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css");
 
+.p-tabview .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.p-tabview .p-tabview-nav li .p-tabview-nav-link {
+  padding: 6px 12px;
+}
+
+.p-tabview-title {
+  font-family: 'SF Mono', monospace;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.p-tabview .p-tabview-nav .p-tabview-ink-bar {
+  background-color: black;
+}
+
 .p-tree {
   padding: 0;
   border: 0;

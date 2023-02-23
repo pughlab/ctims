@@ -2,7 +2,9 @@ import {WidgetProps} from "@rjsf/utils";
 import React, {CSSProperties} from "react";
 import {Panel} from "primereact/panel";
 import {Ripple} from "primereact/ripple";
+import { TabView, TabPanel } from 'primereact/tabview';
 import {useSelector} from "react-redux";
+import {stringify} from 'yaml'
 
 const headerTemplate = (options: any, props: { title: string, }) => {
   const {title} = props;
@@ -62,7 +64,6 @@ const CtimsMatchingCriteriaWidget = (props: WidgetProps) => {
 
   const previewStyle: CSSProperties = {
     height: '300px',
-    border: '1px solid #d9d9d9',
   }
 
   const headerTemplateOptions = {
@@ -72,6 +73,15 @@ const CtimsMatchingCriteriaWidget = (props: WidgetProps) => {
   const preStyle: CSSProperties = {
     height: '100%',
     overflowY: 'scroll',
+    backgroundColor: 'white',
+    color: 'rgba(0, 0, 0, 0.6)',
+    border: 'none',
+    padding: '0',
+    fontFamily: 'SF Mono, monospace',
+    fontWeight: 400,
+    fontSize: '14px',
+    lineHeight: '20px',
+    fontStyle: 'normal',
   }
 
   const addItemContainerStyle: React.CSSProperties = {
@@ -107,14 +117,30 @@ const CtimsMatchingCriteriaWidget = (props: WidgetProps) => {
     color: "#2E72D2",
   }
 
+  const tabViewStyle: React.CSSProperties = {
+    border: '1px solid #E4E4E4',
+    borderRadius: '4px',
+  }
+
   return (
       <div style={containerStyle}>
         <Panel headerTemplate={(props) => headerTemplate(props, headerTemplateOptions)} toggleable>
-          <div style={previewStyle}>
-            <pre style={preStyle}>{JSON.stringify(formContext.match, null, 2)}</pre>
+          <div style={tabViewStyle}>
+            <TabView>
+              <TabPanel header="YAML">
+                <div style={previewStyle}>
+                  <pre style={preStyle}>{stringify(formContext.match, null, 2)}</pre>
+                </div>
+              </TabPanel>
+              <TabPanel header="JSON">
+                <div style={previewStyle}>
+                  <pre style={preStyle}>{JSON.stringify(formContext.match, null, 2)}</pre>
+                </div>
+              </TabPanel>
+            </TabView>
           </div>
         </Panel>
-        <div style={addItemContainerStyle} onClick={btnClick}>
+        <div style={addItemContainerStyle} onClick={(e) => btnClick(e, formContext, formContext.arm_code, id)}>
           <i className="pi pi-pencil" style={circleStyle}></i>
           <div style={titleStyle}>Edit matching criteria</div>
           <i className="bi bi-caret-down-fill" style={caretStyle}></i>
