@@ -1,6 +1,8 @@
 'use client'
 
 import Login from "../components/Login";
+import {Ui} from "@ctims-mono-repo/ui";
+import React from "react";
 
 export function Index() {
   /*
@@ -10,6 +12,7 @@ export function Index() {
    */
   return (
       <Login/>
+  // <Ui></Ui>
   );
 }
 

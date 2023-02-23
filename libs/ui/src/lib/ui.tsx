@@ -1,5 +1,4 @@
 import './ui.module.scss';
-// import {schema, uiSchema} from "./custom-rjsf-templates/generatedSchema";
 import {CSSProperties, useEffect, useRef, useState} from "react";
 import CtimsFormComponentMemo from './components/CtimsFormComponent';
 import CtimsMatchDialog from './components/CtimsMatchDialog';

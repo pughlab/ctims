@@ -3,11 +3,28 @@
 @import "primeicons/primeicons.css";
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css");
 
-/*.p-button.p-button-text.p-button-plain {*/
-/*  color: #2E72D2;*/
-/*  width: 118px;*/
-/*  height: 36px;*/
-/*}*/
+.p-tabview .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.p-tabview .p-tabview-nav li .p-tabview-nav-link {
+  padding: 6px 12px;
+}
+
+.p-tabview-title {
+  font-family: 'SF Mono', monospace;
+  letter-spacing: 0.05rem;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.p-tabview .p-tabview-nav .p-tabview-ink-bar {
+  background-color: black;
+}
 
 .p-tree {
   padding: 0;
@@ -55,6 +72,14 @@
   border: 0;
 }
 
+.ctimsGrayPanel .p-panel-content {
+  background-color: rgba(0, 0, 0, 0.02);
+  box-shadow: none;
+  border-left: 1px solid #E4E4E4;
+  border-right: 1px solid #E4E4E4;
+  border-bottom: 1px solid #E4E4E4;
+}
+
 .ctimsPanelHeaderTop {
   display: flex;
   justify-content: space-between;
@@ -64,6 +89,46 @@
   font-weight: 700;
   height: 56px;
   border: 0;
+  color: #343a40;
+  border-top-right-radius: 6px;
+  border-top-left-radius: 6px;
+  padding: 0.75rem 1.25rem
+}
+
+.ctimsPanelHeaderTopArm {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid #E4E4E4;
+  font-weight: 700;
+  height: 56px;
+  color: #343a40;
+  border-top-right-radius: 6px;
+  border-top-left-radius: 6px;
+  padding: 0.75rem 1.25rem
+}
+
+.ctimsPanelHeaderTopArmOther {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid #E4E4E4;
+  font-weight: 700;
+  height: 56px;
+  color: #343a40;
+  padding: 0.75rem 1.25rem
+}
+
+.ctimsPanelHeaderMatching {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid #E4E4E4;
+  font-weight: 700;
+  height: 56px;
   color: #343a40;
   border-top-right-radius: 6px;
   border-top-left-radius: 6px;
@@ -81,6 +146,10 @@
   border: 0;
   color: #343a40;
   padding: 0.75rem 1.25rem
+}
+
+.grayAddIemContainer {
+  background: rgba(0, 0, 0, 0.02);
 }
 
 .p-inputtext {

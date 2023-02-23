@@ -2,6 +2,10 @@ import TreeNode from "primereact/treenode";
 import {EComponentType} from "./EComponentType";
 import { v4 as uuidv4 } from 'uuid';
 
+export const stringContains = (str: string, search: string) => {
+  return str.toLowerCase().indexOf(search.toLowerCase()) !== -1;
+}
+
 export const findArrayContainingKeyInsideATree = (tree: TreeNode, key: string): TreeNode | null => {
   let result = null;
   const traverse = (tree: TreeNode, key: string) => {
@@ -188,5 +192,8 @@ export const convertCtimsFormatToTreeNodeArray = (output: any): TreeNode[] => {
 }
 
 export const isObjectEmpty = (obj: any) => {
-  return Object.keys(obj).length === 0 && obj.constructor === Object;
+  if (obj) {
+    return Object.keys(obj).length === 0 && obj.constructor === Object;
+  }
+  return true;
 }

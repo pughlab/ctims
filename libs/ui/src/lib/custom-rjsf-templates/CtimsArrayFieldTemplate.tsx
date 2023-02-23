@@ -1,5 +1,6 @@
 import {ArrayFieldTemplateItemType, ArrayFieldTemplateProps, getTemplate, getUiOptions} from "@rjsf/utils";
-import React from 'react'
+import React, {CSSProperties} from 'react'
+import {stringContains} from "../components/helpers";
 
 const CtimsArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
     const {
@@ -47,6 +48,21 @@ const CtimsArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
         boxShadow: '0px 1px 4px rgba(0, 0, 0, 0.25)',
     }
 
+    const addItemContainerStyleGray: React.CSSProperties = {
+      display: "flex",
+      flexDirection: "row",
+      cursor: "pointer",
+      height: '56px',
+      lineHeight: '56px',
+      backgroundColor: 'rgba(0, 0, 0, 0.02)',
+      borderBottomLeftRadius: '8px',
+      borderBottomRightRadius: '8px',
+      borderLeft: '1px solid #E4E4E4',
+      borderRight: '1px solid #E4E4E4',
+      borderBottom: '1px solid #E4E4E4',
+      borderTop: '1px solid #E4E4E4',
+    }
+
     const titleStyle: React.CSSProperties = {
         color: "#2E72D2",
         fontFamily: "Inter, sans-serif",
@@ -78,13 +94,26 @@ const CtimsArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
         return newChildren
     };
 
-    const arrayStyle: React.CSSProperties = {
-        // width: '1000px'
+    const arrayStyle: CSSProperties = {
+    }
+
+    if (stringContains(title.toLowerCase(), 'dose')) {
+      arrayStyle.marginTop = '24px';
     }
 
     const caretStyle: React.CSSProperties = {
         marginLeft: '6px',
         color: "#2E72D2",
+    }
+
+    const addStyle = () => {
+      let result;
+      if (stringContains(title.toLowerCase(), 'dose') || stringContains(title.toLowerCase(), 'arm')) {
+        result = addItemContainerStyleGray;
+      } else {
+        result = addItemContainerStyle;
+      }
+      return result;
     }
 
     return (
@@ -100,7 +129,7 @@ const CtimsArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
             {/*    />*/}
             {/*)}*/}
 
-            <div key={`array-item-list-${idSchema.$id}`} id={`array-item-list-${idSchema.$id}`}>
+            <div key={`array-item-list-${idSchema.$id}`} id={`array-item-list-${idSchema.$id}`} style={arrayStyle}>
                 {items && items.map((item: ArrayFieldTemplateItemType, index) => {
                     // deep clone item without stringifying and parsing
                     const { key, ...itemProps } = item;
@@ -111,7 +140,7 @@ const CtimsArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
                     )})}
 
                 {canAdd && (
-                    <div style={addItemContainerStyle} onClick={onAddClick}>
+                    <div style={addStyle()} onClick={onAddClick}>
                         <i className="pi pi-plus-circle" style={circleStyle}></i>
                         <div style={titleStyle}>Add {title}</div>
                         <i className="bi bi-caret-down-fill" style={caretStyle}></i>
