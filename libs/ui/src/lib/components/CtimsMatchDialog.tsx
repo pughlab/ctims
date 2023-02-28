@@ -6,7 +6,7 @@ import MatchingMenuAndForm from "./MatchingMenuAndForm";
 import {OverlayPanel} from "primereact/overlaypanel";
 import {useSelector} from "react-redux";
 import dynamic from 'next/dynamic';
-import {store} from "../../../../../apps/web/store/store";
+import {RootState, store} from "../../../../../apps/web/store/store";
 const BrowserReactJsonView = dynamic(() => import('react-json-view'), {
   ssr: false,
 });
@@ -19,7 +19,7 @@ interface CtimsMatchDialogProps {
 }
 
 const CtmlModelPreview = () => {
-  const ctmlModel = useSelector((state: any) => state.modalActions.ctmlDialogModel);
+  const ctmlModel = useSelector((state: RootState) => state.modalActions.ctmlDialogModel);
   return (
     <div>
       {/*<BrowserReactJsonView src={ctmlModel} displayObjectSize={false} displayDataTypes={false} />*/}
@@ -29,7 +29,7 @@ const CtmlModelPreview = () => {
 }
 
 const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
-  const [isDialogVisible, setIsDialogVisible] = useState(props.isDialogVisible);
+  const [isDialogVisible, setIsDialogVisible] = useState<boolean>(props.isDialogVisible);
   let {formData} = props;
 
   const op = useRef<OverlayPanel>(null);
