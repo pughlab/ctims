@@ -25,7 +25,7 @@ import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/struc
 import {useDispatch} from "react-redux";
 import { v4 as uuidv4 } from 'uuid';
 import {IKeyToViewModel, setMatchViewModel} from "../../../../../apps/web/store/slices/matchViewModelSlice";
-import {store} from "../../../../../apps/web/store/store";
+import {RootState, store} from "../../../../../apps/web/store/store";
 
 
 interface ILeftMenuComponentProps {
@@ -42,10 +42,10 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   const [selectedKeys, setSelectedKeys] = useState<any>(null);
   const [expandedKeys, setExpandedKeys] = useState({0: true});
 
-  const newNodeValue: IAddCriteria = useSelector((state: any) => state.modalActions.addCriteria);
-  const nodeKeyToBeDeleted: IDeleteCriteria = useSelector((state: any) => state.modalActions.deleteCriteria);
-  const operatorChanged: IOperatorChange = useSelector((state: any) => state.modalActions.operatorChange);
-  const formChangedCounter: number = useSelector((state: any) => state.modalActions.formChangeCounter);
+  const newNodeValue: IAddCriteria = useSelector((state: RootState) => state.modalActions.addCriteria);
+  const nodeKeyToBeDeleted: IDeleteCriteria = useSelector((state: RootState) => state.modalActions.deleteCriteria);
+  const operatorChanged: IOperatorChange = useSelector((state: RootState) => state.modalActions.operatorChange);
+  const formChangedCounter: number = useSelector((state: RootState) => state.modalActions.formChangeCounter);
 
   const dispatch = useDispatch();
 
@@ -342,16 +342,14 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
   return (
     <>
-      {/*<Menu model={menuItems} ref={menu} popup id="criteria_popup_menu"/>*/}
         <div className={styles.matchingCriteriaMenuContainer}>
           <div className={styles.matchingCriteriaTextContainer}>
             <div className={styles.matchingCriteriaText}>Matching Criteria</div>
-            {/*<i className="pi pi-plus-circle" onClick={(e) => {*/}
-            {/*  menuClick(e);*/}
-            {/*}}></i>*/}
 
           </div>
           <Tree value={rootNodes}
+                className="ctims-tree"
+                contentClassName="ctims-tree-content"
                 nodeTemplate={nodeTemplate}
                 expandedKeys={expandedKeys}
                 selectionKeys={selectedKeys}
