@@ -15,6 +15,8 @@ import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/struc
 
 const containerStyle: CSSProperties = {
   width: '100%',
+  marginLeft: '336px',
+  marginTop: '60px',
 }
 
 

@@ -1,0 +1,29 @@
+.ctims-nav {
+  top: 120px;
+  left: 90px;
+  position: fixed;
+}
+
+.ctims-nav > ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.ctims-nav > ul > li {
+  margin-right: 20px;
+  display: block;
+}
+
+.menu-link {
+  display: inline-block;
+  padding: 10px;
+  border-left: 2px solid #ccc;
+  color: #333;
+  text-decoration: none;
+}
+
+.menu-link.active {
+  border-right: 2px solid blue;
+  border-left: none;
+}
