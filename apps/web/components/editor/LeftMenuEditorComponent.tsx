@@ -9,25 +9,25 @@ const LeftMenuEditorComponent = () => {
   };
 
   const links = [
-    { to: '/', label: 'Clinical Metadata' },
-    { to: '/about', label: 'Drug List' },
-    { to: '/services', label: 'Management Group List' },
-    { to: '/contact', label: 'Site List' },
-    { to: '/contact', label: 'Sponsor List' },
-    { to: '/contact', label: 'Staff List' },
-    { to: '/contact', label: 'Treatment List' },
+    { to: '#clinical-metadata', label: 'Clinical Metadata' },
+    { to: '#drug-list', label: 'Drug List' },
+    { to: '#management-group-list', label: 'Management Group List' },
+    { to: '#site-list', label: 'Site List' },
+    { to: '#sponsor-list', label: 'Sponsor List' },
+    { to: '#staff-list', label: 'Staff List' },
+    { to: '#treatment-list', label: 'Treatment List' },
   ];
 
   return (
     <nav className={styles['ctims-nav']}>
       <ul>
-        {links.map((link) => (
+        {links.map((link, index) => (
           <li key={link.to}>
             <a
               href={link.to}
               onClick={() => handleLinkClick(link.to)}
               className={`${styles['menu-link']} ${
-                activeLink === link.to ? 'active' : ''
+                activeLink === link.to ? `${styles.active}` : ''
               }`}
             >
               {link.label}
