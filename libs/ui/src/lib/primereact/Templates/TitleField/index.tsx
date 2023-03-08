@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {TitleFieldProps} from "@rjsf/utils";
 
 const TitleField = ({
@@ -9,7 +9,29 @@ const TitleField = ({
                         schema,
                         uiSchema
                     }: TitleFieldProps) => {
-    // console.log(title)
+  //   console.log(uiSchema)
+  //
+  // const [isElementOnTop, setIsElementOnTop] = useState(false);
+  // const elementRef = useRef<any>(null);
+  //
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const element = elementRef.current;
+  //
+  //     if (element) {
+  //       const elementRect = element.getBoundingClientRect();
+  //       const isElementOnTop = elementRect.top <= 0;
+  //       setIsElementOnTop(isElementOnTop);
+  //       console.log('isElementOnTop', isElementOnTop)
+  //     }
+  //   };
+  //
+  //   window.addEventListener('scroll', handleScroll);
+  //   return () => {
+  //     window.removeEventListener('scroll', handleScroll);
+  //   };
+  // }, []);
+
 
     const style: React.CSSProperties = {
         fontFamily: 'Inter, sans-serif',

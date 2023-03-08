@@ -33,6 +33,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
     "type": "object",
     "properties": {
       "clinicalMetadata": {
+        "required": ["status"],
         "type": "object",
         "properties": {
           "nct_id": {
