@@ -63,6 +63,7 @@ export const Ui = (props: UiProps) => {
     dispatch(resetFormChangeCounter())
     dispatch(resetActiveArmId())
     const formDataClone = structuredClone(formRef.current.state.formData)
+    console.log('formRef state', formRef.current.state)
     dispatch(setCtmlModel(formDataClone))
   }
 

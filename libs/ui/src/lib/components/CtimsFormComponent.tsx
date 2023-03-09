@@ -287,7 +287,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                             "level_code": {"type": "string", "title": 'Level Code'},
                             "level_description": {"type": "string", "title": 'Level Description'},
                             "level_internal_id": {"type": "integer", "title": 'Level Internal Id'},
-                            "level_suspended": {"type": "string", "title": 'Level Suspended'},
+                            "level_suspended": {"type": "string", "title": "This level is suspended"},
                           }
                         }
                       },
@@ -621,6 +621,9 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
               "dose_level": {
                "items": {
                   "ui:ObjectFieldTemplate": CtimsItemObjectFieldTemplate,
+                 "level_suspended": {
+                    "ui:widget": CtimsCheckboxWidget
+                 }
                }
               }
             }
@@ -635,6 +638,10 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
     console.log(e);
   };
 
+  const onError = (e: any) => {
+    console.log(e);
+  }
+
   return (
     <div style={containerStyle}>
       <Form ref={ref} schema={schema as JSONSchema7}
@@ -642,10 +649,12 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
               ArrayFieldItemTemplate: CtimsArrayFieldItemTemplate,
               ArrayFieldTemplate: CtimsArrayFieldTemplate,
             }}
+            liveValidate
             onChange={(data) => {
               // onChangeTest(data)
               props.onRjsfFormChange(data)
             }} // @ts-ignore
+            onError={(data) => {onError(data)}}
             uiSchema={uiSchema}
             widgets={widgets}
             onSubmit={(data) => {
