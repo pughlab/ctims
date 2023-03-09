@@ -3,7 +3,6 @@ import {RjsfGridFieldTemplate} from "../custom-rjsf-templates/RjsfGridFieldTempl
 import CtimsObjectFieldTemplate from "../custom-rjsf-templates/CtimsObjectFieldTemplate";
 import CtimsItemObjectFieldTemplate from "../custom-rjsf-templates/CtimsItemObjectFieldTemplate";
 import CtimsArrayFieldSingleTemplate from "../custom-rjsf-templates/CtimsArrayFieldSingleTemplate";
-import CtimsButtonWidget from "../custom-rjsf-templates/CtimsButtonWidget";
 import {JSONSchema7} from "json-schema";
 import CtimsArrayFieldItemTemplate from "../custom-rjsf-templates/CtimsArrayFieldItemTemplate";
 import CtimsArrayFieldTemplate from "../custom-rjsf-templates/CtimsArrayFieldTemplate";
@@ -32,13 +31,42 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
   const schema = {
     "type": "object",
     "properties": {
-      "clinicalMetadata": {
-        "required": ["status"],
+      "trialInformation": {
+        "required": [
+          "trial_id",
+          "nickname",
+          "principal_investigator",
+          "ctml_status",
+          "long_title",
+          "short_title",
+          "phase",
+          "disease_status",
+          "prior_treatment_requirements",
+          "protocol_no",
+          "nct_purpose"
+        ],
         "type": "object",
         "properties": {
-          "nct_id": {
+          "trial_id": {
             "type": "string",
-            "title": "NCT ID"
+            "title": "Trial ID"
+          },
+          "nickname": {
+            "type": "string",
+            "title": "Nickname"
+          },
+          "principal_investigator": {
+            "type": "string",
+            "title": "Principal Investigator"
+          },
+          "ctml_status": {
+            "type": "string",
+            "title": "Ctml Status",
+            "enum": [
+              "Draft",
+              "In Review",
+              "Complete"
+            ]
           },
           "long_title": {
             "type": "string",
@@ -48,28 +76,34 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             "type": "string",
             "title": "Short Title"
           },
-          "age": {
-            "type": "string",
-            "title": "Age"
-          },
-          "nct_purpose": {
-            "type": "string",
-            "title": "NCT Purpose"
-          },
           "phase": {
             "type": "string",
-            "title": "Phase"
+            "title": "Phase",
+            "enum": [
+              "I",
+              "II",
+              "III",
+              "IV"
+            ],
+          },
+          "disease_status": {
+            "type": "string",
+            "title": "Disease Status"
+          },
+          "prior_treatment_requirements": {
+            "type": "string",
+            "title": "Prior Treatment Requirements"
           },
           "protocol_no": {
             "type": "string",
             "title": "Protocol Number"
           },
-          "status": {
+          "nct_purpose": {
             "type": "string",
-            "title": "Status"
+            "title": "NCT Purpose"
           }
         },
-        "title": "Clinical Metadata"
+        "title": "Trial Information"
       },
       "drugList": {
         "type": "object",
@@ -283,7 +317,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
     },
     "ui:layout": [
       {
-        "clinicalMetadata": {
+        "trialInformation": {
           "span": 24
         }
       },
@@ -318,12 +352,27 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
         }
       }
     ],
-    "clinicalMetadata": {
+    "trialInformation": {
       "ui:ObjectFieldTemplate": RjsfGridFieldTemplate,
       "ui:spacing": 16,
       "ui:layout": [
         {
-          "nct_id": {
+          "trial_id": {
+            "span": 24
+          }
+        },
+        {
+          "nickname": {
+            "span": 24
+          }
+        },
+        {
+          "principal_investigator": {
+            "span": 24
+          }
+        },
+        {
+          "ctml_status": {
             "span": 24
           }
         },
@@ -338,17 +387,17 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
           }
         },
         {
-          "age": {
-            "span": 24
-          }
-        },
-        {
-          "nct_purpose": {
-            "span": 24
-          }
-        },
-        {
           "phase": {
+            "span": 24
+          }
+        },
+        {
+          "disease_status": {
+            "span": 24
+          }
+        },
+        {
+          "prior_treatment_requirements": {
             "span": 24
           }
         },
@@ -358,7 +407,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
           }
         },
         {
-          "status": {
+          "nct_purpose": {
             "span": 24
           }
         }

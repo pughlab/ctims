@@ -1,17 +1,16 @@
 import {WidgetProps} from "@rjsf/utils";
-import React, {useEffect, useState} from "react";
+import React from "react";
 import cn from "clsx";
 import {InputText} from "primereact/inputtext";
 
 const containerStyle: React.CSSProperties = {
   display: 'flex',
   flexDirection: "column",
-  // marginTop: '20px',
-  // marginBottom: '30px'
 }
 
-const containerHiddenStyle: React.CSSProperties = {
-  display: 'none',
+const labelContainerStyle: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: "row",
 }
 
 const labelStyle: React.CSSProperties = {
@@ -20,7 +19,16 @@ const labelStyle: React.CSSProperties = {
   fontSize: "14px",
   marginBottom: '7px',
   marginTop: '7px',
+}
 
+const optionalLabelStyle: React.CSSProperties = {
+  fontFamily: "Inter, sans-serif",
+  fontWeight: 400,
+  fontSize: "14px",
+  marginBottom: '7px',
+  marginTop: '7px',
+  marginLeft: 'auto',
+  color: 'rgba(0, 0, 0, 0.6)'
 }
 
 const CtimsInput = (props: WidgetProps) => {
@@ -43,20 +51,6 @@ const CtimsInput = (props: WidgetProps) => {
         rawErrors = [],
     } = props;
 
-    const [isHidden, setIsHidden] = useState(false);
-
-  const uiOptions = uiSchema?.['ui:options']
-
-
-  useEffect(() => {
-    if (uiOptions) {
-      if (uiOptions['dialog']) {
-        console.log('uiOptions dialog', uiOptions['dialog'])
-        setIsHidden(true)
-      }
-    }
-  }, [])
-
     const _onChange = ({
                            target: { value },
                        }: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,10 +68,14 @@ const CtimsInput = (props: WidgetProps) => {
 
 
     return (
-        <div style={isHidden ? containerHiddenStyle : containerStyle}>
+        <div style={containerStyle}>
+          <div style={labelContainerStyle}>
             {labelValue && (
-                <span style={labelStyle}>{labelValue}</span>
+              <span style={labelStyle}>{labelValue}</span>
             )}
+            {!required && ( <span style={optionalLabelStyle}>Optional</span> )}
+          </div>
+
           {/*{required ? 'required' : 'not required'}*/}
             <InputText
                 id={id}
