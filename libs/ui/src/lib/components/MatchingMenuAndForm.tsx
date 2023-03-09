@@ -235,7 +235,23 @@ const MatchingMenuAndForm = (props: any) => {
 
     const genomicFormSchema = {
           'definitions': {
-            'variant_category': {
+            "variant_category": {
+              "enumNames": [
+                "Mutation",
+                "CNV",
+                "SV",
+                "WT",
+                "Signature"
+              ],
+              "enum": [
+                "MUTATION",
+                "CNV",
+                "SV",
+                "WT",
+                "SIGNATURE"
+              ]
+            },
+            'variant_classification': {
               "enumNames": [
                 "Missense Mutation",
                 "Missense and Splice Region",
@@ -383,13 +399,13 @@ const MatchingMenuAndForm = (props: any) => {
             }
           },
           'type': 'object',
-          'required': ['hugo_symbol', 'variant_category'],
+          'required': ['hugo_symbol', "variant_category"],
           'properties': {
             'hugo_symbol': {
               'type': 'string',
               'title': 'Hugo Symbol',
             },
-            'variant_category': {
+            "variant_category": {
               "$ref": "#/definitions/variant_category",
               'title': 'Variant Category',
             },
@@ -398,7 +414,7 @@ const MatchingMenuAndForm = (props: any) => {
               'title': 'Protein Change',
             },
             'variant_classification': {
-              'type': 'string',
+              "$ref": "#/definitions/variant_classification",
               'title': 'Variant Classification',
             },
             'cnv_call': {

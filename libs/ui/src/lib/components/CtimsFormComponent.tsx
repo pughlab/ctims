@@ -14,6 +14,7 @@ import {RegistryWidgetsType} from "@rjsf/utils";
 import CtimsInput from "../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../custom-rjsf-templates/CtimsDropdown";
 import CtimsMatchingCriteriaWidget from "../custom-rjsf-templates/CtimsMatchingCriteriaWidget";
+import CtimsCheckboxWidget from "../custom-rjsf-templates/CtimsCheckbox";
 
 const Form = withTheme(PrimeTheme)
 
@@ -134,18 +135,18 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
               "type": "object",
               "required": ["management_group_name"],
               "properties": {
+                "management_group_name": {
+                  "type": "string",
+                  "title": "Management Group Name"
+                },
                 "is_primary": {
                   "type": "string",
                   "enum": [
                     "Y",
                     "N"
                   ],
-                  "title": "Is Primary"
+                  "title": "This is a primary management group"
                 },
-                "management_group_name": {
-                  "type": "string",
-                  "title": "Management Group Name"
-                }
               }
             },
             "title": "Management Group"
@@ -162,22 +163,6 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
               "type": "object",
               "required": ["site_name", "site_status"],
               "properties": {
-                "coordinating_center": {
-                  "type": "string",
-                  "enum": [
-                    "Y",
-                    "N"
-                  ],
-                  "title": "Coordinating Center"
-                },
-                "uses_cancer_center_irb": {
-                  "type": "string",
-                  "enum": [
-                    "Y",
-                    "N"
-                  ],
-                  "title": "User Cancer Center IRB"
-                },
                 "site_name": {
                   "type": "string",
                   "title": "Site Name"
@@ -185,7 +170,23 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                 "site_status": {
                   "type": "string",
                   "title": "Site Status"
-                }
+                },
+                "coordinating_center": {
+                  "type": "string",
+                  "enum": [
+                    "Y",
+                    "N"
+                  ],
+                  "title": "This site is a coordinating center."
+                },
+                "uses_cancer_center_irb": {
+                  "type": "string",
+                  "enum": [
+                    "Y",
+                    "N"
+                  ],
+                  "title": "This site uses cancer center IRB."
+                },
               }
             },
             "title": "Site"
@@ -200,19 +201,20 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             "type": "array",
             "items": {
               "type": "object",
+              "required": ["sponsor_name"],
               "properties": {
+                "sponsor_name": {
+                  "type": "string",
+                  "title": "Sponsor Name"
+                },
                 "is_principal_sponsor": {
                   "type": "string",
                   "enum": [
                     "Y",
                     "N"
                   ],
-                  "title": "Is Principal Sponsor"
+                  "title": "This sponsor is a principal sponsor."
                 },
-                "sponsor_name": {
-                  "type": "string",
-                  "title": "Sponsor Name"
-                }
               }
             },
             "title": "Sponsor"
@@ -227,6 +229,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             "type": "array",
             "items": {
               "type": "object",
+              "required": ["first_name", "last_name", "email", "institution_name", "staff_role"],
               "properties": {
                 "first_name": {
                   "type": "string",
@@ -256,14 +259,6 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
         },
         "title": "Staff List"
       },
-      "prior_treatment_requirements": {
-        "type": "array",
-        "title": "Prior treatment requirements",
-        "items": {
-          "type": "string",
-          'title': 'Prior treatment requirements'
-        }
-      },
       "treatment_list": {
         "type": "object",
         "properties": {
@@ -276,29 +271,30 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                   "type": "array",
                   "items": {
                     "type": "object",
+                    "required": ["arm_code", "arm_description", "arm_internal_id"],
                     "properties": {
-                      "arm_code": {"type": "string", title: 'Arm Code'},
-                      "arm_description": {"type": "string", title: 'Arm Description'},
-                      "arm_internal_id": {"type": "integer", title: 'Arm Internal Id'},
-                      "arm_suspended": {"type": "string", title: 'Arm Suspended'},
+                      "arm_code": {"type": "string", "title": 'Arm Code'},
+                      "arm_description": {"type": "string", "title": 'Arm Description'},
+                      "arm_internal_id": {"type": "integer", "title": 'Arm Internal Id'},
+                      "arm_suspended": {"type": "string", "title": 'Arm is suspended'},
                       "dose_level": {
                         "type": "array",
-                        title: 'Dose Level',
+                        "title": 'Dose Level',
                         "items": {
                           "type": "object",
+                          "required": ["level_code", "level_description", "level_internal_id"],
                           "properties": {
-                            "level_code": {"type": "string", title: 'Level Code'},
-                            "level_description": {"type": "string", title: 'Level Description'},
-                            "level_internal_id": {"type": "integer", title: 'Level Internal Id'},
-                            "level_suspended": {"type": "string", title: 'Level Suspended'},
+                            "level_code": {"type": "string", "title": 'Level Code'},
+                            "level_description": {"type": "string", "title": 'Level Description'},
+                            "level_internal_id": {"type": "integer", "title": 'Level Internal Id'},
+                            "level_suspended": {"type": "string", "title": 'Level Suspended'},
                           }
                         }
                       },
                       "match": {
-                        type: 'object',
-                        title: '',
-                        properties: {
-                          // fields in the form
+                        "type": 'object',
+                        "title": '',
+                        "properties": {
                           "matchingCriteriaWidget": {type: 'string', title: 'Matching Criteria Widget'},
                         }
                       }
@@ -463,6 +459,9 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
         "items": {
           "ui:ObjectFieldTemplate": CtimsItemObjectFieldTemplate,
           "ui:spacing": 16,
+          "is_primary": {
+            "ui:widget": CtimsCheckboxWidget
+          },
           "ui:layout": [
             {
               "is_primary": {
@@ -514,7 +513,13 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                 "span": 12
               }
             }
-          ]
+          ],
+          "coordinating_center": {
+            "ui:widget": CtimsCheckboxWidget
+          },
+          "uses_cancer_center_irb": {
+            "ui:widget": CtimsCheckboxWidget
+          }
         }
       }
     },
@@ -541,7 +546,10 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                 "span": 12
               }
             }
-          ]
+          ],
+          "is_principal_sponsor": {
+            "ui:widget": CtimsCheckboxWidget
+          }
         }
       }
     },
@@ -598,6 +606,9 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
           "arm": {
             "items": {
               "ui:ObjectFieldTemplate": CtimsItemObjectFieldTemplate,
+              "arm_suspended": {
+                "ui:widget": CtimsCheckboxWidget
+              },
               "match": {
                 matchingCriteriaWidget: {
                   "ui:widget": CtimsMatchingCriteriaWidget,
