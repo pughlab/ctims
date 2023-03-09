@@ -112,6 +112,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             "type": "array",
             "items": {
               "type": "object",
+              "required": ["drug_name"],
               "properties": {
                 "drug_name": {
                   "type": "string",
@@ -131,6 +132,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             "type": "array",
             "items": {
               "type": "object",
+              "required": ["management_group_name"],
               "properties": {
                 "is_primary": {
                   "type": "string",
@@ -158,6 +160,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             "type": "array",
             "items": {
               "type": "object",
+              "required": ["site_name", "site_status"],
               "properties": {
                 "coordinating_center": {
                   "type": "string",

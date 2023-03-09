@@ -76,7 +76,6 @@ const CtimsInput = (props: WidgetProps) => {
             {!required && ( <span style={optionalLabelStyle}>Optional</span> )}
           </div>
 
-          {/*{required ? 'required' : 'not required'}*/}
             <InputText
                 id={id}
                 placeholder={placeholder}

@@ -85,8 +85,6 @@ const CtimsDropdown = (props: WidgetProps) => {
   const containerStyle: React.CSSProperties = {
     display: 'flex',
     flexDirection: "column",
-    // marginTop: '20px',
-    // marginBottom: '30px'
   }
 
   const labelStyle: React.CSSProperties = {
@@ -98,11 +96,29 @@ const CtimsDropdown = (props: WidgetProps) => {
 
   }
 
+  const labelContainerStyle: React.CSSProperties = {
+    display: 'flex',
+    flexDirection: "row",
+  }
+
+  const optionalLabelStyle: React.CSSProperties = {
+    fontFamily: "Inter, sans-serif",
+    fontWeight: 400,
+    fontSize: "14px",
+    marginBottom: '7px',
+    marginTop: '7px',
+    marginLeft: 'auto',
+    color: 'rgba(0, 0, 0, 0.6)'
+  }
+
   return (
     <div style={containerStyle}>
-      {labelValue && (
-        <span style={labelStyle}>{labelValue}</span>
-      )}
+      <div style={labelContainerStyle}>
+        {labelValue && (
+          <span style={labelStyle}>{labelValue}</span>
+        )}
+        {!required && ( <span style={optionalLabelStyle}>Optional</span> )}
+      </div>
       {multiple ? (
         <MultiSelect
           id={id}
