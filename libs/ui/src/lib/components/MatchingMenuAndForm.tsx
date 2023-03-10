@@ -199,8 +199,9 @@ const MatchingMenuAndForm = (props: any) => {
     }
 
     const onOperatorChange = (code: string) => {
+      // or/and
       const codeLowerCase = code.toLowerCase();
-      dispatch(operatorChange({operator: codeLowerCase, nodeKey: node.key as string}));
+      dispatch(operatorChange({operator: codeLowerCase, nodeKey: node.key as string, location: 'form'}));
     }
 
     return (
@@ -468,7 +469,7 @@ const MatchingMenuAndForm = (props: any) => {
 
     const onOperatorChange = (code: string) => {
       const codeLowerCase = code.toLowerCase();
-      dispatch(operatorChange({operator: codeLowerCase, nodeKey: node.key as string}));
+      dispatch(operatorChange({operator: codeLowerCase, nodeKey: node.key as string, location: 'form'}));
     }
 
     return (

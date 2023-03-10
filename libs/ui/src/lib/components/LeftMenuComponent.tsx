@@ -22,7 +22,7 @@ import {
   deleteNode,
   IAddCriteria,
   IDeleteCriteria,
-  IOperatorChange,
+  IOperatorChange, operatorChange,
   setCtmlDialogModel
 } from "../../../../../apps/web/store/slices/modalActionsSlice";
 import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
@@ -126,15 +126,31 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
   // when the operator is changed we update the label of the node (AND/OR)
   useEffect(() => {
+    const state = store.getState();
     if (operatorChanged && operatorChanged.nodeKey && operatorChanged.operator && rootNodes.length > 0) {
-      const {nodeKey, operator} = operatorChanged;
-      const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
-      // operator to lower case and capitalize first letter
-      const newOperator = operator.toLowerCase().charAt(0).toUpperCase() + operator.toLowerCase().slice(1);
-      if (parentNode) {
-        parentNode.label = newOperator;
+      const {nodeKey, operator, location} = operatorChanged;
+      if (location === 'form') {
+        const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
+        // operator to lower case and capitalize first letter
+        const newOperator = operator.toLowerCase().charAt(0).toUpperCase() + operator.toLowerCase().slice(1);
+        if (parentNode) {
+          parentNode.label = newOperator;
+        }
+        updateReduxViewModelAndCtmlModel(rootNodes, state);
+        setRootNodes([...rootNodes]);
       }
-      setRootNodes([...rootNodes]);
+
+      if (location === 'tree') {
+        const foundNode = findObjectByKeyInTree(rootNodes[0], nodeKey as string);
+        // operator to lower case and capitalize first letter
+        const newOperator = operator.toLowerCase().charAt(0).toUpperCase() + operator.toLowerCase().slice(1);
+        if (foundNode) {
+          foundNode.label = newOperator;
+        }
+        updateReduxViewModelAndCtmlModel(rootNodes, state);
+        setRootNodes([...rootNodes]);
+      }
+
     }
   }, [operatorChanged]);
 
@@ -161,25 +177,6 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       }
     }
   }, [rootNodesProp]);
-
-
-  // Unused because we removed little plus sign next to matching criteria text
-  const menuItems = [
-    {
-      label: 'Clinical',
-      command: () => {
-        const rootNodes = buildRootNodes('And', 'Clinical');
-        setRootNodesState(rootNodes);
-      }
-    },
-    {
-      label: 'Genomic',
-      command: () => {
-        const rootNodes = buildRootNodes('And', 'Genomic');
-        setRootNodesState(rootNodes);
-      }
-    }
-  ];
 
   const addCriteria = (nodeKey: string, type: string) => {
     if (nodeKey) {
@@ -233,18 +230,13 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     tieredMenu.current.show(e);
   }
 
-  const menuClick = (e: any) => {
-    // @ts-ignore
-    menu.current.show(e);
-  }
-
   const nodeTemplate = (node: TreeNode) => {
 
     const [isMouseOverNode, setIsMouseOverNode] = useState(false);
 
     const tieredMenuModel = [
       {
-        label: 'Add criteria to the same list',
+        label: 'Add criteria to same group',
         icon: 'pi pi-plus-circle',
         items: [
           {
@@ -261,6 +253,17 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           }
         ]
 
+      },
+      {
+        label: 'Switch group operator',
+        icon: 'pi pi-arrow-right-arrow-left',
+        command: () => {
+          if (selectedNode.label === 'And') {
+            dispatch(operatorChange({nodeKey: selectedNode.key, operator: 'Or', location: 'tree'}));
+          } else {
+            dispatch(operatorChange({nodeKey: selectedNode.key, operator: 'And', location: 'tree'}));
+          }
+        }
       },
       {
         label: 'Delete',
