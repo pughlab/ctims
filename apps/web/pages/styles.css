@@ -3,6 +3,18 @@
 @import "primeicons/primeicons.css";
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css");
 
+.caret-down-filled {
+  background-image: url("/assets/caret-down-filled.svg");
+  width: 16px;
+  height: 16px;
+}
+
+.caret-right-filled {
+  background-image: url("/assets/caret-right-filled.svg");
+  width: 16px;
+  height: 16px;
+}
+
 .clinical-icon {
   background-image: url("/assets/clinical-icon-16px.svg");
 }
@@ -13,7 +25,7 @@
 }
 
 .in-tree {
-  width: 18px;
+  width: 19px;
   height: 17px;
 }
 

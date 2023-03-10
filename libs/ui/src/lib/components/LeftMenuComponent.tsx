@@ -1,5 +1,5 @@
 import styles from "./LeftMenuComponent.module.scss";
-import {Tree, TreeEventNodeParams} from "primereact/tree";
+import {Tree, TreeEventNodeParams, TreeTogglerTemplateOptions} from "primereact/tree";
 import React, {memo, useEffect, useRef, useState} from "react";
 import TreeNode from "primereact/treenode";
 import {Button} from "primereact/button";
@@ -29,6 +29,7 @@ import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/struc
 import {v4 as uuidv4} from 'uuid';
 import {IKeyToViewModel, setMatchViewModel} from "../../../../../apps/web/store/slices/matchViewModelSlice";
 import {RootState, store} from "../../../../../apps/web/store/store";
+import {classNames} from "primereact/utils";
 
 
 interface ILeftMenuComponentProps {
@@ -327,6 +328,16 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     return null;
   }
 
+  const togglerTemplate = (node: any, defaultContentOptions: TreeTogglerTemplateOptions) => {
+    const expanded = defaultContentOptions.expanded;
+    const iconClassName = classNames('p-tree-toggler-icon pi pi-fw', { 'caret-right-filled': !expanded, 'caret-down-filled': expanded });
+    return (
+      <button type="button" className="p-tree-toggler p-link" tabIndex={-1} onClick={defaultContentOptions.onClick}>
+        <span className={iconClassName} aria-hidden="true"></span>
+      </button>
+    )
+  }
+
   const onNodeSelect = (node: TreeEventNodeParams) => {
     console.log('onNodeSelect', node)
     // console.log('selectedKeys', selectedKeys);
@@ -352,6 +363,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
                 className="ctims-tree"
                 contentClassName="ctims-tree-content"
                 nodeTemplate={nodeTemplate}
+                togglerTemplate={togglerTemplate}
                 expandedKeys={expandedKeys}
                 selectionKeys={selectedKeys}
                 selectionMode="single"
