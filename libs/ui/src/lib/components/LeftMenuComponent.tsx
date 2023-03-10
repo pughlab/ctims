@@ -240,13 +240,15 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
             label: 'Clinical',
             command: () => {
               addCriteriaToSameList(selectedNode.key as string, 'Clinical');
-            }
+            },
+            icon: 'clinical-icon'
           },
           {
             label: 'Genomic',
             command: () => {
               addCriteriaToSameList(selectedNode.key as string, 'Genomic');
-            }
+            },
+            icon: 'genomic-icon'
           }
         ]
 

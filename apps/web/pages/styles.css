@@ -3,6 +3,18 @@
 @import "primeicons/primeicons.css";
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css");
 
+.clinical-icon {
+  background-image: url("/assets/clinical-icon-16px.svg");
+  width: 16px;
+  height: 16px;
+}
+
+.genomic-icon {
+  background-image: url("/assets/genomic-icon-16px.svg");
+  width: 16px;
+  height: 16px;
+}
+
 .p-tabview .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus {
   outline: none !important;
   box-shadow: none !important;
