@@ -206,13 +206,13 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     }
   }
 
-  const addSubGroup = (nodeKey: string) => {
+  const addSubGroup = (nodeKey: string, label: string) => {
     if (nodeKey) {
       const parentNode = findObjectByKeyInTree(rootNodes[0], nodeKey as string);
       if (parentNode) {
         const newNode = {
           key: uuidv4(),
-          label: 'And',
+          label,
           data: {},
           children: []
         };
@@ -275,7 +275,18 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       {
         label: 'Add criteria subgroup',
         icon: 'pi pi-clone',
-        command: () => { addSubGroup(selectedNode.key) }
+        items: [
+          {
+            label: 'And (if all criteria are met)',
+            icon: 'and-icon',
+            command: () => { addSubGroup(selectedNode.key, 'And') }
+          },
+          {
+            label: 'Or (if any criteria is met)',
+            icon: 'or-icon',
+            command: () => { addSubGroup(selectedNode.key, 'Or') }
+          }
+        ],
       }
     ]
 

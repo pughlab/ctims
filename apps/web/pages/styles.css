@@ -15,6 +15,18 @@
   height: 16px;
 }
 
+.and-icon {
+  background-image: url("/assets/and-icon-16px.svg");
+  width: 16px;
+  height: 16px;
+}
+
+.or-icon {
+  background-image: url("/assets/or-icon-16px.svg");
+  width: 16px;
+  height: 16px;
+}
+
 .p-tabview .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus {
   outline: none !important;
   box-shadow: none !important;
