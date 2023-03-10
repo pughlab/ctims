@@ -182,6 +182,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         const newNode = {
           key: uuidv4(),
           label: type,
+          icon: type === 'Clinical' ? 'clinical-icon in-tree' : 'genomic-icon in-tree',
           data: {type: type === 'Clinical' ? EComponentType.ClinicalForm : EComponentType.GenomicForm},
         }
         parentNode.children!.push(newNode);
@@ -198,6 +199,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         const newNode = {
           key: uuidv4(),
           label: type,
+          icon: type === 'Clinical' ? 'clinical-icon in-tree' : 'genomic-icon in-tree',
           data: {type: type === 'Clinical' ? EComponentType.ClinicalForm : EComponentType.GenomicForm},
         }
         parentNode.children!.push(newNode);
@@ -213,6 +215,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         const newNode = {
           key: uuidv4(),
           label,
+          icon: label === 'And' ? 'and-icon' : 'or-icon',
           data: {},
           children: []
         };
@@ -241,14 +244,14 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
             command: () => {
               addCriteriaToSameList(selectedNode.key as string, 'Clinical');
             },
-            icon: 'clinical-icon'
+            icon: 'clinical-icon in-menu'
           },
           {
             label: 'Genomic',
             command: () => {
               addCriteriaToSameList(selectedNode.key as string, 'Genomic');
             },
-            icon: 'genomic-icon'
+            icon: 'genomic-icon in-menu'
           }
         ]
 

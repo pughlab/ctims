@@ -5,15 +5,22 @@
 
 .clinical-icon {
   background-image: url("/assets/clinical-icon-16px.svg");
+}
+
+.in-menu {
   width: 16px;
   height: 16px;
 }
 
+.in-tree {
+  width: 18px;
+  height: 17px;
+}
+
 .genomic-icon {
   background-image: url("/assets/genomic-icon-16px.svg");
-  width: 16px;
-  height: 16px;
 }
+
 
 .and-icon {
   background-image: url("/assets/and-icon-16px.svg");
@@ -57,13 +64,17 @@
 .ctims-tree  {
   padding: 0 !important;
   border: 0 !important;
-  margin-left: 9px;
+}
+
+.ctims-tree .p-tree-container .p-treenode {
+  padding: 0 !important;
 }
 
 .ctims-tree .p-tree-container .p-treenode .p-treenode-content {
-  padding: 0 !important;
+  padding-left: 23px !important;
   border: 0 !important;
-  height: 16px !important;
+  height: 24px !important;
+  border-radius: 0px !important;
 }
 
 .ctims-tree .p-tree-container .p-treenode .p-treenode-content:focus {
@@ -81,6 +92,14 @@
 
 .ctims-tree .p-tree-container .p-treenode .p-treenode-content .p-tree-toggler {
   margin: 0 !important;
+}
+
+.ctims-tree .p-tree-container .p-treenode .p-treenode-content .p-tree-toggler:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+.ctims-tree .p-tree-container .p-treenode .p-treenode-content .p-tree-toggler:enabled:hover {
+  background: none !important;
 }
 
 .p-dialog .p-dialog-content {

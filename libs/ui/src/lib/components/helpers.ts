@@ -61,6 +61,7 @@ export const buildEmptyGroup = (label: string): TreeNode[] => {
     {
       key: '0',
       label: label, // AND/OR
+      icon: label.toLowerCase() === 'and' ? 'and-icon' : 'or-icon',
       data: {},
       children: []
     }
@@ -172,16 +173,16 @@ export const convertCtimsFormatToTreeNodeArray = (output: any, isParent = true):
     let current: any = {};
     switch (Object.keys(item)[0]) {
       case "and":
-        current = { key: parentKey, label: "And", data: { and: [] }, children: [] };
+        current = { key: parentKey, label: "And", data: { and: [] }, children: [], icon: 'and-icon' };
         break;
       case "or":
-        current = { key: uuidv4(), label: "Or", data: {}, children: [] };
+        current = { key: uuidv4(), label: "Or", data: {}, children: [], icon: 'or-icon' };
         break;
       case "clinical":
-        current = { key: uuidv4(), label: "Clinical", data: { type: 1, formData: item.clinical } };
+        current = { key: uuidv4(), label: "Clinical", data: { type: 1, formData: item.clinical }, icon: 'clinical-icon in-tree' };
         break;
       case "genomic":
-        current = { key: uuidv4(), label: "Genomic", data: { type: 2, formData: item.genomic } };
+        current = { key: uuidv4(), label: "Genomic", data: { type: 2, formData: item.genomic }, icon: 'genomic-icon in-tree' };
         break;
     }
     if (item[Object.keys(item)[0]].length > 0) {
