@@ -139,18 +139,12 @@ const MatchingMenuAndForm = (props: any) => {
   const [isEmpty, setIsEmpty] = useState(true);
   const [buildRootNodeParams, setBuildRootNodeParams] = useState<IRootNode>({rootLabel: '', firstChildLabel: ''});
 
-  const menu = useRef(null);
-
-  const menuClick = (e: any) => {
-    // @ts-ignore
-    menu.current.show(e);
-  }
-
-  const AddCriteriaButton = () => {
+  const AddCriteriaButton = (props: {addCriteriaGroupClicked: () => void}) => {
+    const {addCriteriaGroupClicked} = props;
     return (
-      <div className={styles.addCriteriaBtn} onClick={(e) => {menuClick(e)}}>
+      <div className={styles.addCriteriaBtn} onClick={addCriteriaGroupClicked}>
         <i className="pi pi-plus-circle"></i>
-        <span>Add criteria</span>
+        <span>Add criteria group</span>
       </div>
     )
   }
@@ -495,26 +489,17 @@ const MatchingMenuAndForm = (props: any) => {
     )
   }
 
-  const EmptyForm = () => {
+  const EmptyForm = (props: {addCriteriaGroupClicked: () => void}) => {
+    const {addCriteriaGroupClicked} = props;
     return (
       <div className={styles.matchingCriteriaFormContainerEmpty}>
         <div className={styles.matchingCriteriaFormContainerEmptyText}>
           Matching criteria inputs will be shown here.
         </div>
-        <AddCriteriaButton />
+        <AddCriteriaButton addCriteriaGroupClicked={addCriteriaGroupClicked} />
       </div>
     )
   }
-
-  const menuItems = [
-    {
-      label: 'Empty Group',
-      command: () => {
-        setIsEmpty(false);
-        setBuildRootNodeParams({rootLabel: 'And', firstChildLabel: 'Empty Group'})
-      }
-    },
-  ];
 
   let ComponentToRender: FunctionComponent<IFormProps>;
   switch (componentType.type) {
@@ -533,13 +518,17 @@ const MatchingMenuAndForm = (props: any) => {
     setComponentType({type, node});
   }
 
+  const addCriteriaGroupClicked = () => {
+    setIsEmpty(false);
+    setBuildRootNodeParams({rootLabel: 'And', firstChildLabel: 'Empty Group'})
+  }
+
   return (
     <>
-      <Menu model={menuItems} ref={menu} popup id="criteria_popup_menu"/>
       <div className={styles.matchingMenuAndFormContainer}>
         <LeftMenuComponent onTreeNodeClick={treeNodeClicked} rootNodesProp={buildRootNodeParams} />
         <div className={styles.matchingCriteriaFormContainer}>
-          {isEmpty ? <EmptyForm /> : <ComponentToRender node={componentType.node}/>}
+          {isEmpty ? <EmptyForm addCriteriaGroupClicked={addCriteriaGroupClicked} /> : <ComponentToRender node={componentType.node}/>}
         </div>
       </div>
     </>

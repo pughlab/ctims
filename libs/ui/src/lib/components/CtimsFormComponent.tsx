@@ -649,7 +649,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
               ArrayFieldItemTemplate: CtimsArrayFieldItemTemplate,
               ArrayFieldTemplate: CtimsArrayFieldTemplate,
             }}
-            liveValidate
+            // liveValidate
             onChange={(data) => {
               // onChangeTest(data)
               props.onRjsfFormChange(data)
