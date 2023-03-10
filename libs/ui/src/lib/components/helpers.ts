@@ -165,13 +165,14 @@ export const convertTreeNodeArrayToCtimsFormat = (input: any[]): any => {
   return result;
 }
 
-export const convertCtimsFormatToTreeNodeArray = (output: any): TreeNode[] => {
+export const convertCtimsFormatToTreeNodeArray = (output: any, isParent = true): TreeNode[] => {
+  let parentKey = isParent ? "0" : uuidv4();
   let result: TreeNode[] = [];
   output.match.forEach((item: any) => {
     let current: any = {};
     switch (Object.keys(item)[0]) {
       case "and":
-        current = { key: "0", label: "And", data: { and: [] }, children: [] };
+        current = { key: parentKey, label: "And", data: { and: [] }, children: [] };
         break;
       case "or":
         current = { key: uuidv4(), label: "Or", data: {}, children: [] };
@@ -184,7 +185,7 @@ export const convertCtimsFormatToTreeNodeArray = (output: any): TreeNode[] => {
         break;
     }
     if (item[Object.keys(item)[0]].length > 0) {
-      current.children = [...current.children, ...convertCtimsFormatToTreeNodeArray({ match: item[Object.keys(item)[0]] })];
+      current.children = [...current.children, ...convertCtimsFormatToTreeNodeArray({ match: item[Object.keys(item)[0]] }, false)];
     }
     result.push(current);
   });

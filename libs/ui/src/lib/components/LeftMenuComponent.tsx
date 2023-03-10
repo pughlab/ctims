@@ -75,10 +75,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
   useEffect(() => {
     const state = store.getState();
-    const activeArmId: string = state.matchViewModelActions.activeArmId;
-    const storedViewModel: TreeNode[] = state.matchViewModelActions.viewModel[activeArmId];
     const currentCtmlMatchModel: any = state.matchViewModelActions.ctmlMatchModel;
-
 
     // formChangedCounter is used to determine if the dialog just opened or if the form was changed
     if (formChangedCounter === 0) {
@@ -315,6 +312,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   }
 
   const onNodeSelect = (node: TreeEventNodeParams) => {
+    console.log('onNodeSelect', node)
     // console.log('selectedKeys', selectedKeys);
     // console.log('expandedKeys', expandedKeys);
     setSelectedNode(node.node);
