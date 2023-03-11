@@ -11,7 +11,8 @@
     "build": "nx build",
     "test": "nx test",
     "build-web": "nx build web --verbose --development",
-    "build-all": "nx run-many --target=build --projects=api,web --parallel"
+    "build-all": "nx run-many --target=build --projects=api,web --parallel",
+    "cypress:dev": "nx e2e web-e2e --watch"
   },
   "private": true,
   "type": "commonjs",
