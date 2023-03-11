@@ -2,6 +2,8 @@ import { WidgetProps, asNumber, guessType } from "@rjsf/utils";
 import { Dropdown, DropdownChangeParams } from "primereact/dropdown";
 import React from "react";
 import { MultiSelect, MultiSelectChangeParams } from "primereact/multiselect";
+import styles from "./CtimsDropdown.module.css";
+import {Tooltip} from "primereact/tooltip";
 
 const nums = new Set(["number", "integer"]);
 
@@ -81,43 +83,19 @@ const CtimsDropdown = (props: WidgetProps) => {
     return (event as DropdownChangeParams).value;
   }
   const labelValue = label || schema.title;
-
-  const containerStyle: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: "column",
-  }
-
-  const labelStyle: React.CSSProperties = {
-    fontFamily: "Inter, sans-serif",
-    fontWeight: 400,
-    fontSize: "14px",
-    marginBottom: '7px',
-    marginTop: '7px',
-
-  }
-
-  const labelContainerStyle: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: "row",
-  }
-
-  const optionalLabelStyle: React.CSSProperties = {
-    fontFamily: "Inter, sans-serif",
-    fontWeight: 400,
-    fontSize: "14px",
-    marginBottom: '7px',
-    marginTop: '7px',
-    marginLeft: 'auto',
-    color: 'rgba(0, 0, 0, 0.6)'
-  }
+  const questionMarkStyle = `dropdown-target-icon ${styles['question-mark']} pi pi-question-circle .question-mark-target `;
 
   return (
-    <div style={containerStyle}>
-      <div style={labelContainerStyle}>
+    <div className={styles.container}>
+      <div className={styles['label-container']}>
         {labelValue && (
-          <span style={labelStyle}>{labelValue}</span>
+          <span className={styles.label}>{labelValue}</span>
         )}
-        {!required && ( <span style={optionalLabelStyle}>Optional</span> )}
+        <Tooltip target=".dropdown-target-icon" />
+        {schema.description && (
+          <i className={questionMarkStyle} data-pr-tooltip={schema.description} data-pr-position="top"></i>
+        )}
+        {!required && ( <span className={styles['optional-label']}>Optional</span> )}
       </div>
       {multiple ? (
         <MultiSelect

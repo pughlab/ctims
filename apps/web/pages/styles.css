@@ -46,6 +46,10 @@
   height: 16px;
 }
 
+.p-tooltip {
+  width: 300px !important;
+}
+
 .p-tabview .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus {
   outline: none !important;
   box-shadow: none !important;

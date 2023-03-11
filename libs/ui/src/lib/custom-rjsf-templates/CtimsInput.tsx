@@ -2,34 +2,8 @@ import {WidgetProps} from "@rjsf/utils";
 import React from "react";
 import cn from "clsx";
 import {InputText} from "primereact/inputtext";
-
-const containerStyle: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: "column",
-}
-
-const labelContainerStyle: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: "row",
-}
-
-const labelStyle: React.CSSProperties = {
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 400,
-  fontSize: "14px",
-  marginBottom: '7px',
-  marginTop: '7px',
-}
-
-const optionalLabelStyle: React.CSSProperties = {
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 400,
-  fontSize: "14px",
-  marginBottom: '7px',
-  marginTop: '7px',
-  marginLeft: 'auto',
-  color: 'rgba(0, 0, 0, 0.6)'
-}
+import { Tooltip } from 'primereact/tooltip';
+import styles from "./CtimsInput.module.css";
 
 const CtimsInput = (props: WidgetProps) => {
     let {
@@ -65,15 +39,19 @@ const CtimsInput = (props: WidgetProps) => {
     const inputType = (type || schema.type) === "string" ? "text" : `${type || schema.type}`
     const labelValue = uiSchema?.["ui:title"] || schema.title || label;
 
-
+    const questionMarkStyle = `input-target-icon ${styles['question-mark']} pi pi-question-circle .question-mark-target `;
 
     return (
-        <div style={containerStyle}>
-          <div style={labelContainerStyle}>
+        <div className={styles.container}>
+          <div className={styles['label-container']}>
             {labelValue && (
-              <span style={labelStyle}>{labelValue}</span>
+              <span className={styles.label}>{labelValue}</span>
             )}
-            {!required && ( <span style={optionalLabelStyle}>Optional</span> )}
+            <Tooltip target=".input-target-icon" />
+            {schema.description && (
+              <i className={questionMarkStyle} data-pr-tooltip={schema.description} data-pr-position="top"></i>
+            )}
+            {!required && ( <span className={styles['optional-label']}>Optional</span> )}
           </div>
 
             <InputText

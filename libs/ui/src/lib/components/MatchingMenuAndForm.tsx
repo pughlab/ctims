@@ -156,10 +156,10 @@ const MatchingMenuAndForm = (props: any) => {
     const dispatch = useDispatch();
 
     const clinicalFormSchema = {
-      'type': 'object',
-      'required': ['age_numerical', 'oncotree_primary_diagnosis'],
-      'properties': {
-        'age_numerical': {
+      "type": "object",
+      "required": ["age_numerical", "oncotree_primary_diagnosis"],
+      "properties": {
+        "age_numerical": {
           'type': 'string',
           'title': 'Age',
         },
@@ -172,16 +172,28 @@ const MatchingMenuAndForm = (props: any) => {
           'title': 'TMB',
         },
         'her2_status': {
-          'type': 'string',
+          "type": "string",
           'title': 'HER2 Status',
+          "enum": [
+            "Positive",
+            "Negative"
+          ]
         },
         'er_status': {
           'type': 'string',
           'title': 'ER Status',
+          "enum": [
+            "Positive",
+            "Negative"
+          ]
         },
         'pr_status': {
           'type': 'string',
           'title': 'PR Status',
+          "enum": [
+            "Positive",
+            "Negative"
+          ]
         }
       }
     }

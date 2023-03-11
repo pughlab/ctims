@@ -321,14 +321,13 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
               {btnToShow()}
               <TieredMenu model={tieredMenuModel} popup ref={tieredMenu} />
           </div>
-
         </>
       );
     }
     return null;
   }
 
-  const togglerTemplate = (node: any, defaultContentOptions: TreeTogglerTemplateOptions) => {
+  const togglerTemplate = (node: TreeNode, defaultContentOptions: TreeTogglerTemplateOptions) => {
     const expanded = defaultContentOptions.expanded;
     const iconClassName = classNames('p-tree-toggler-icon pi pi-fw', { 'caret-right-filled': !expanded, 'caret-down-filled': expanded });
     return (
