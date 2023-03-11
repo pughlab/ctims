@@ -9,7 +9,7 @@ export interface RootState {
   counter: CounterState,
   modalActions: TreeActionsState,
   matchViewModelActions: IMatchViewModelState,
-  ctmlModel: ICtmlModelSliceState,
+  fianlModelAndErrors: ICtmlModelSliceState,
 }
 
 export const store = configureStore<RootState>({
@@ -17,7 +17,7 @@ export const store = configureStore<RootState>({
     counter: counterReducer,
     modalActions: modalActionsReducer,
     matchViewModelActions: matchViewModelActionsReducer,
-    ctmlModel: ctmlModelReducer,
+    fianlModelAndErrors: ctmlModelReducer,
   }
 })
 

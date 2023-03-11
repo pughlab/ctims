@@ -15,6 +15,8 @@ import CtimsInput from "../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../custom-rjsf-templates/CtimsDropdown";
 import CtimsMatchingCriteriaWidget from "../custom-rjsf-templates/CtimsMatchingCriteriaWidget";
 import CtimsCheckboxWidget from "../custom-rjsf-templates/CtimsCheckbox";
+import CtimsFieldTemplate from "../custom-rjsf-templates/CtimsFieldTemplate";
+import CtimsErrorListTemplate from "../custom-rjsf-templates/CtimsErrorListTemplate";
 
 const Form = withTheme(PrimeTheme)
 
@@ -710,6 +712,8 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             templates={{
               ArrayFieldItemTemplate: CtimsArrayFieldItemTemplate,
               ArrayFieldTemplate: CtimsArrayFieldTemplate,
+              FieldTemplate: CtimsFieldTemplate,
+              ErrorListTemplate: CtimsErrorListTemplate,
             }}
             // liveValidate
             onChange={(data) => {
