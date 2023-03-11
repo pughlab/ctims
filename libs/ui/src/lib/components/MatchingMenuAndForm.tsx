@@ -170,6 +170,7 @@ const MatchingMenuAndForm = (props: any) => {
         'tmb': {
           'type': 'string',
           'title': 'TMB',
+          "description": "Tumor Mutational Burden/Megabase",
         },
         'her2_status': {
           "type": "string",
@@ -403,6 +404,18 @@ const MatchingMenuAndForm = (props: any) => {
                 "mmr_proficient",
                 "mmr_deficient",
               ]
+            },
+            "ms_status": {
+              "enumNames": [
+                "MSI-H",
+                "MSI-L",
+                "MSS"
+              ],
+              "enum": [
+                "msi_h",
+                "msi_l",
+                "mss",
+              ]
             }
           },
           'type': 'object',
@@ -411,58 +424,77 @@ const MatchingMenuAndForm = (props: any) => {
             'hugo_symbol': {
               'type': 'string',
               'title': 'Hugo Symbol',
+              "description": "Gene symbol as determined by https://www.genenames.org/",
             },
             "variant_category": {
               "$ref": "#/definitions/variant_category",
               'title': 'Variant Category',
+              "description": "Type of alteration",
             },
             'protein_change': {
               'type': 'string',
               'title': 'Protein Change',
+              "description": "Curate a specific protein change (must be in the correct format ex. p.T70M)",
             },
             'variant_classification': {
               "$ref": "#/definitions/variant_classification",
               'title': 'Variant Classification',
+              "description": "Curate a particular type of mutation",
             },
             'cnv_call': {
               'title': 'CNV Call',
               '$ref': '#/definitions/cnv_call',
+              "description": "Specify the type of copy number variation",
             },
             'fusion_partner_hugo_symbol': {
               'type': 'string',
               'title': 'Fusion Partner Hugo Symbol',
+              "description": "Curate the partner gene in a fusion",
             },
             'true_transcript_exon': {
               'type': 'string',
               'title': 'True Transcript Exon',
+              "description": "Curate mutations in a specific exon",
             },
             'wildtype': {
               'title': 'Wildtype',
               '$ref': '#/definitions/wildtype',
+              "description": "An indication of whether an eligibility criteria requires a gene to be wildtype.",
             },
             'pole_status': {
               'title': 'POLE Status',
               '$ref': '#/definitions/pole_status',
+              "description": "Curate for trials requiring a specific POLE signature status",
             },
             'uva_status': {
               'title': 'UVA Status',
               '$ref': '#/definitions/uva_status',
+              "description": "Curate for trials requiring a specific UVA signature status",
             },
             'tobacco_status': {
               'title': 'Tobacco Status',
               '$ref': '#/definitions/tobacco_status',
+              "description": "Curate for trials requiring a specific tobacco signature status",
             },
             'apobec_status': {
               'title': 'APOBEC Status',
               '$ref': '#/definitions/apobec_status',
+              "description": "Curate for trials requiring a specific APOBEC signature status",
             },
             'temozolomide_status': {
               'title': 'Temozolomide Status',
               '$ref': '#/definitions/temozolomide_status',
+              "description": "Curate for trials requiring a specific temozolomide signature status",
             },
             'mmr_status': {
               'title': 'MMR Status',
               '$ref': '#/definitions/mmr_status',
+              "description": "Curate a specific mismatch repair status",
+            },
+            'ms_status': {
+              'title': 'MS Status',
+              '$ref': '#/definitions/ms_status',
+              "description": "Curate a specific microsatellite stability status",
             }
           }
     };
