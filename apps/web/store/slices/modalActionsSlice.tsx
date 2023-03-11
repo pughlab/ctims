@@ -12,6 +12,8 @@ export interface IDeleteCriteria {
 export interface IOperatorChange {
   nodeKey: string;
   operator: string;
+  // where did the action originate from
+  location: 'form' | 'tree';
 }
 
 export interface IFormChange {
@@ -36,7 +38,8 @@ const initialState: TreeActionsState = {
   },
   operatorChange: {
     nodeKey: '',
-    operator: ''
+    operator: '',
+    location: 'form'
   },
   formChangeCounter: 0,
   ctmlDialogModel: null

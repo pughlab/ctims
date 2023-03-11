@@ -2,6 +2,8 @@ import { WidgetProps, asNumber, guessType } from "@rjsf/utils";
 import { Dropdown, DropdownChangeParams } from "primereact/dropdown";
 import React from "react";
 import { MultiSelect, MultiSelectChangeParams } from "primereact/multiselect";
+import styles from "./CtimsDropdown.module.css";
+import {Tooltip} from "primereact/tooltip";
 
 const nums = new Set(["number", "integer"]);
 
@@ -81,28 +83,20 @@ const CtimsDropdown = (props: WidgetProps) => {
     return (event as DropdownChangeParams).value;
   }
   const labelValue = label || schema.title;
-
-  const containerStyle: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: "column",
-    // marginTop: '20px',
-    // marginBottom: '30px'
-  }
-
-  const labelStyle: React.CSSProperties = {
-    fontFamily: "Inter, sans-serif",
-    fontWeight: 400,
-    fontSize: "14px",
-    marginBottom: '7px',
-    marginTop: '7px',
-
-  }
+  const questionMarkStyle = `dropdown-target-icon ${styles['question-mark']} pi pi-question-circle .question-mark-target `;
 
   return (
-    <div style={containerStyle}>
-      {labelValue && (
-        <span style={labelStyle}>{labelValue}</span>
-      )}
+    <div className={styles.container}>
+      <div className={styles['label-container']}>
+        {labelValue && (
+          <span className={styles.label}>{labelValue}</span>
+        )}
+        <Tooltip target=".dropdown-target-icon" />
+        {schema.description && (
+          <i className={questionMarkStyle} data-pr-tooltip={schema.description} data-pr-position="top"></i>
+        )}
+        {!required && ( <span className={styles['optional-label']}>Optional</span> )}
+      </div>
       {multiple ? (
         <MultiSelect
           id={id}

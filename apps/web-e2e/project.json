@@ -6,7 +6,6 @@
       "executor": "@nrwl/cypress:cypress",
       "options": {
         "cypressConfig": "apps/web-e2e/cypress.config.ts",
-        "devServerTarget": "web:serve",
         "testingType": "e2e"
       },
       "configurations": {

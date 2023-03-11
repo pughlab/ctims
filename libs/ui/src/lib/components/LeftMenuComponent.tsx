@@ -1,31 +1,35 @@
 import styles from "./LeftMenuComponent.module.scss";
-import {Tree, TreeEventNodeParams} from "primereact/tree";
+import {Tree, TreeEventNodeParams, TreeTogglerTemplateOptions} from "primereact/tree";
 import React, {memo, useEffect, useRef, useState} from "react";
 import TreeNode from "primereact/treenode";
 import {Button} from "primereact/button";
 import {TieredMenu} from "primereact/tieredmenu";
 import {
   buildEmptyGroup,
-  buildRootNodes, convertCtimsFormatToTreeNodeArray, convertTreeNodeArrayToCtimsFormat,
+  buildRootNodes,
+  convertCtimsFormatToTreeNodeArray,
+  convertTreeNodeArrayToCtimsFormat,
   deleteNodeFromChildrenArrayByKey,
-  findArrayContainingKeyInsideATree, findObjectByKeyInTree, isObjectEmpty,
-  makePropertiesWritable
+  findArrayContainingKeyInsideATree,
+  findObjectByKeyInTree,
+  isObjectEmpty
 } from "./helpers";
-import {Menu} from "primereact/menu";
 import * as jsonpath from "jsonpath";
 import {EComponentType} from "./EComponentType";
 import {IRootNode} from "./MatchingMenuAndForm";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {
+  deleteNode,
   IAddCriteria,
   IDeleteCriteria,
-  IOperatorChange, setCtmlDialogModel
+  IOperatorChange, operatorChange,
+  setCtmlDialogModel
 } from "../../../../../apps/web/store/slices/modalActionsSlice";
 import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
-import {useDispatch} from "react-redux";
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 import {IKeyToViewModel, setMatchViewModel} from "../../../../../apps/web/store/slices/matchViewModelSlice";
 import {RootState, store} from "../../../../../apps/web/store/store";
+import {classNames} from "primereact/utils";
 
 
 interface ILeftMenuComponentProps {
@@ -49,10 +53,6 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   console.log('rootNodes state changed ', convertTreeNodeArrayToCtimsFormat(rootNodes));
-  // }, [rootNodes]);
-
   const setRootNodesState = (newRootNodes: TreeNode[]) => {
     setRootNodes(newRootNodes);
     const firstSelectedKey = newRootNodes[0].children![0].key;
@@ -64,44 +64,37 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     }
   }
 
+  const updateReduxViewModelAndCtmlModel = (newRootNodes: TreeNode[], state: RootState) => {
+    const activeArmId: string = state.matchViewModelActions.activeArmId;
+    const viewModel: IKeyToViewModel = {};
+    viewModel[activeArmId] = structuredClone(newRootNodes);
+    dispatch(setMatchViewModel(viewModel))
+    // convert view model (rootNodes) to ctims format
+    const ctimsFormat = convertTreeNodeArrayToCtimsFormat(newRootNodes);
+    dispatch(setCtmlDialogModel(ctimsFormat));
+  }
+
   useEffect(() => {
     const state = store.getState();
-    const activeArmId: string = state.matchViewModelActions.activeArmId;
-    const storedViewModel: TreeNode[] = state.matchViewModelActions.viewModel[activeArmId];
     const currentCtmlMatchModel: any = state.matchViewModelActions.ctmlMatchModel;
-
 
     // formChangedCounter is used to determine if the dialog just opened or if the form was changed
     if (formChangedCounter === 0) {
-      // console.log('current ctml match model ', currentCtmlMatchModel);
-      // check if there is a view model stored in the redux store for the clicked arm id
-      // if (storedViewModel) {
-      //   // clone the view model from the redux store
-      //   const storedViewModelClone: TreeNode[] = structuredClone(storedViewModel);
-      //   // make the properties writable so that we can add new properties to the nodes and modify form data
-      //   makePropertiesWritable(storedViewModelClone[0]);
-      //   setRootNodesState(storedViewModelClone);
-      //   console.log('stored view model ', storedViewModelClone);
-      // }
+      // if the form was not changed, we check if there is a view model in the redux store
       if (!isObjectEmpty(currentCtmlMatchModel.match)) {
 
         // console.log('currentCtmlMatchModel.match', currentCtmlMatchModel.match)
-        const newViewModel = convertCtimsFormatToTreeNodeArray({match: currentCtmlMatchModel.match});
-        setRootNodesState(newViewModel)
-        console.log('new view model ', newViewModel);
+        if (rootNodes.length === 0) {
+          const newViewModel = convertCtimsFormatToTreeNodeArray({match: currentCtmlMatchModel.match});
+          setRootNodesState(newViewModel)
+        }
       }
     }
 
     // if the form was changed, update the redux store with the new view model and ctims format
     if (formChangedCounter > 0) {
       console.log('form changed in left menu component');
-      const viewModel: IKeyToViewModel = {};
-      // we have to make a clone of the root nodes because if we don't clone the object writability will be lost
-      viewModel[activeArmId] = structuredClone(rootNodes);
-      dispatch(setMatchViewModel(viewModel))
-      // convert view model (rootNodes) to ctims format
-      const ctimsFormat = convertTreeNodeArrayToCtimsFormat(rootNodes);
-      dispatch(setCtmlDialogModel(ctimsFormat));
+      updateReduxViewModelAndCtmlModel(rootNodes, state);
     }
   }, [formChangedCounter]);
 
@@ -119,23 +112,43 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     if (nodeKeyToBeDeleted.nodeKey) {
       const newRootNodes = structuredClone(rootNodes);
       deleteNodeFromChildrenArrayByKey(newRootNodes[0], nodeKeyToBeDeleted.nodeKey);
-      setRootNodes(newRootNodes);
+      setRootNodesState(newRootNodes)
       // after deleting a node we set the component to none
       onTreeNodeClick(EComponentType.None, newRootNodes[0]);
+      const state = store.getState();
+      updateReduxViewModelAndCtmlModel(newRootNodes, state);
+
+      dispatch(deleteNode({nodeKey: ''}));
     }
   }, [nodeKeyToBeDeleted]);
 
   // when the operator is changed we update the label of the node (AND/OR)
   useEffect(() => {
+    const state = store.getState();
     if (operatorChanged && operatorChanged.nodeKey && operatorChanged.operator && rootNodes.length > 0) {
-      const {nodeKey, operator} = operatorChanged;
-      const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
-      // operator to lower case and capitalize first letter
-      const newOperator = operator.toLowerCase().charAt(0).toUpperCase() + operator.toLowerCase().slice(1);
-      if (parentNode) {
-        parentNode.label = newOperator;
+      const {nodeKey, operator, location} = operatorChanged;
+      if (location === 'form') {
+        const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
+        // operator to lower case and capitalize first letter
+        const newOperator = operator.toLowerCase().charAt(0).toUpperCase() + operator.toLowerCase().slice(1);
+        if (parentNode) {
+          parentNode.label = newOperator;
+        }
+        updateReduxViewModelAndCtmlModel(rootNodes, state);
+        setRootNodes([...rootNodes]);
       }
-      setRootNodes([...rootNodes]);
+
+      if (location === 'tree') {
+        const foundNode = findObjectByKeyInTree(rootNodes[0], nodeKey as string);
+        // operator to lower case and capitalize first letter
+        const newOperator = operator.toLowerCase().charAt(0).toUpperCase() + operator.toLowerCase().slice(1);
+        if (foundNode) {
+          foundNode.label = newOperator;
+        }
+        updateReduxViewModelAndCtmlModel(rootNodes, state);
+        setRootNodes([...rootNodes]);
+      }
+
     }
   }, [operatorChanged]);
 
@@ -163,25 +176,6 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     }
   }, [rootNodesProp]);
 
-
-  // Unused because we removed little plus sign next to matching criteria text
-  const menuItems = [
-    {
-      label: 'Clinical',
-      command: () => {
-        const rootNodes = buildRootNodes('And', 'Clinical');
-        setRootNodesState(rootNodes);
-      }
-    },
-    {
-      label: 'Genomic',
-      command: () => {
-        const rootNodes = buildRootNodes('And', 'Genomic');
-        setRootNodesState(rootNodes);
-      }
-    }
-  ];
-
   const addCriteria = (nodeKey: string, type: string) => {
     if (nodeKey) {
       const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
@@ -189,6 +183,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         const newNode = {
           key: uuidv4(),
           label: type,
+          icon: type === 'Clinical' ? 'clinical-icon in-tree' : 'genomic-icon in-tree',
           data: {type: type === 'Clinical' ? EComponentType.ClinicalForm : EComponentType.GenomicForm},
         }
         parentNode.children!.push(newNode);
@@ -205,6 +200,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         const newNode = {
           key: uuidv4(),
           label: type,
+          icon: type === 'Clinical' ? 'clinical-icon in-tree' : 'genomic-icon in-tree',
           data: {type: type === 'Clinical' ? EComponentType.ClinicalForm : EComponentType.GenomicForm},
         }
         parentNode.children!.push(newNode);
@@ -213,13 +209,14 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     }
   }
 
-  const addSubGroup = (nodeKey: string) => {
+  const addSubGroup = (nodeKey: string, label: string) => {
     if (nodeKey) {
       const parentNode = findObjectByKeyInTree(rootNodes[0], nodeKey as string);
       if (parentNode) {
         const newNode = {
           key: uuidv4(),
-          label: 'And',
+          label,
+          icon: label === 'And' ? 'and-icon' : 'or-icon',
           data: {},
           children: []
         };
@@ -234,34 +231,42 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     tieredMenu.current.show(e);
   }
 
-  const menuClick = (e: any) => {
-    // @ts-ignore
-    menu.current.show(e);
-  }
-
   const nodeTemplate = (node: TreeNode) => {
 
     const [isMouseOverNode, setIsMouseOverNode] = useState(false);
 
     const tieredMenuModel = [
       {
-        label: 'Add criteria to the same list',
+        label: 'Add criteria to same group',
         icon: 'pi pi-plus-circle',
         items: [
           {
             label: 'Clinical',
             command: () => {
               addCriteriaToSameList(selectedNode.key as string, 'Clinical');
-            }
+            },
+            icon: 'clinical-icon in-menu'
           },
           {
             label: 'Genomic',
             command: () => {
               addCriteriaToSameList(selectedNode.key as string, 'Genomic');
-            }
+            },
+            icon: 'genomic-icon in-menu'
           }
         ]
 
+      },
+      {
+        label: 'Switch group operator',
+        icon: 'pi pi-arrow-right-arrow-left',
+        command: () => {
+          if (selectedNode.label === 'And') {
+            dispatch(operatorChange({nodeKey: selectedNode.key, operator: 'Or', location: 'tree'}));
+          } else {
+            dispatch(operatorChange({nodeKey: selectedNode.key, operator: 'And', location: 'tree'}));
+          }
+        }
       },
       {
         label: 'Delete',
@@ -274,22 +279,18 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       {
         label: 'Add criteria subgroup',
         icon: 'pi pi-clone',
-        command: () => { addSubGroup(selectedNode.key) }
-        // items: [
-        //   {
-        //     label: 'Clinical',
-        //     command: () => {
-        //       addCriteriaSubList(node.key as string, 'Clinical');
-        //     }
-        //   },
-        //   {
-        //     label: 'Genomic',
-        //     command: () => {
-        //       addCriteriaSubList(node.key as string, 'Genomic');
-        //
-        //     }
-        //   },
-        // ]
+        items: [
+          {
+            label: 'And (if all criteria are met)',
+            icon: 'and-icon',
+            command: () => { addSubGroup(selectedNode.key, 'And') }
+          },
+          {
+            label: 'Or (if any criteria is met)',
+            icon: 'or-icon',
+            command: () => { addSubGroup(selectedNode.key, 'Or') }
+          }
+        ],
       }
     ]
 
@@ -320,14 +321,24 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
               {btnToShow()}
               <TieredMenu model={tieredMenuModel} popup ref={tieredMenu} />
           </div>
-
         </>
       );
     }
     return null;
   }
 
+  const togglerTemplate = (node: TreeNode, defaultContentOptions: TreeTogglerTemplateOptions) => {
+    const expanded = defaultContentOptions.expanded;
+    const iconClassName = classNames('p-tree-toggler-icon pi pi-fw', { 'caret-right-filled': !expanded, 'caret-down-filled': expanded });
+    return (
+      <button type="button" className="p-tree-toggler p-link" tabIndex={-1} onClick={defaultContentOptions.onClick}>
+        <span className={iconClassName} aria-hidden="true"></span>
+      </button>
+    )
+  }
+
   const onNodeSelect = (node: TreeEventNodeParams) => {
+    console.log('onNodeSelect', node)
     // console.log('selectedKeys', selectedKeys);
     // console.log('expandedKeys', expandedKeys);
     setSelectedNode(node.node);
@@ -351,6 +362,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
                 className="ctims-tree"
                 contentClassName="ctims-tree-content"
                 nodeTemplate={nodeTemplate}
+                togglerTemplate={togglerTemplate}
                 expandedKeys={expandedKeys}
                 selectionKeys={selectedKeys}
                 selectionMode="single"
@@ -362,7 +374,6 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     )
 
 }, (prevProps, nextProps) => {
-  // return prevProps.rootNodesProp === nextProps.rootNodesProp;
   return false;
 });
 export default LeftMenuComponent;

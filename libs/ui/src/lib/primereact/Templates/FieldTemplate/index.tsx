@@ -18,11 +18,11 @@ const FieldTemplate = ({
   return (
     <div>
       {children}
-      {displayLabel && rawDescription && (
-        <div className={cn("text-sm", rawErrors.length > 0 ? "text-color-danger" : "text-color-muted")}>
-          {rawDescription}
-        </div>
-      )}
+      {/*{displayLabel && rawDescription && (*/}
+      {/*  <div className={cn("text-sm", rawErrors.length > 0 ? "text-color-danger" : "text-color-muted")}>*/}
+      {/*    {rawDescription}*/}
+      {/*  </div>*/}
+      {/*)}*/}
       {rawErrors.length > 0 && (
         <ul className="error-detail">
           {rawErrors.map((error: string) => (

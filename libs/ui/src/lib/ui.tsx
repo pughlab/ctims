@@ -15,6 +15,8 @@ import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/struc
 
 const containerStyle: CSSProperties = {
   width: '100%',
+  marginLeft: '336px',
+  marginTop: '60px',
 }
 
 
@@ -61,6 +63,7 @@ export const Ui = (props: UiProps) => {
     dispatch(resetFormChangeCounter())
     dispatch(resetActiveArmId())
     const formDataClone = structuredClone(formRef.current.state.formData)
+    console.log('formRef state', formRef.current.state)
     dispatch(setCtmlModel(formDataClone))
   }
 

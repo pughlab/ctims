@@ -1,11 +1,10 @@
 import EditorTopBar from "../../../components/editor/EditorTopBar";
 import {Ui} from "@ctims-mono-repo/ui";
 
-import React, {useEffect, useState} from "react";
+import React from "react";
+import LeftMenuEditorComponent from "../../../components/editor/LeftMenuEditorComponent";
 
 const EditorCreateCtml = () => {
-
-  const [nodes, setNodes] = useState(null);
 
   const containerStyle: React.CSSProperties = {
     display: 'flex',
@@ -15,26 +14,15 @@ const EditorCreateCtml = () => {
     paddingTop: '20px',
   }
 
-  useEffect(() => {
-    const nodes = [
-      {
-        label: 'Trial information',
-      },
-      {
-        label: 'Clinical Metadata',
-      },
-      {
-        label: 'Drug List',
-      }
-    ];
-    setNodes(nodes);
-  }, []);
+
 
   return (
     <>
       <EditorTopBar />
+
       <div style={containerStyle}>
         {/*<Tree value={nodes} />*/}
+        <LeftMenuEditorComponent />
         <Ui></Ui>
       </div>
 

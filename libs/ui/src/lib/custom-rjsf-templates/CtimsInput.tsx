@@ -1,30 +1,12 @@
 import {WidgetProps} from "@rjsf/utils";
-import React, {useEffect, useState} from "react";
+import React from "react";
 import cn from "clsx";
 import {InputText} from "primereact/inputtext";
-
-const containerStyle: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: "column",
-  // marginTop: '20px',
-  // marginBottom: '30px'
-}
-
-const containerHiddenStyle: React.CSSProperties = {
-  display: 'none',
-}
-
-const labelStyle: React.CSSProperties = {
-  fontFamily: "Inter, sans-serif",
-  fontWeight: 400,
-  fontSize: "14px",
-  marginBottom: '7px',
-  marginTop: '7px',
-
-}
+import { Tooltip } from 'primereact/tooltip';
+import styles from "./CtimsInput.module.css";
 
 const CtimsInput = (props: WidgetProps) => {
-    const {
+    let {
         id,
         placeholder,
         required,
@@ -43,24 +25,10 @@ const CtimsInput = (props: WidgetProps) => {
         rawErrors = [],
     } = props;
 
-    const [isHidden, setIsHidden] = useState(false);
-
-  const uiOptions = uiSchema?.['ui:options']
-
-
-  useEffect(() => {
-    if (uiOptions) {
-      if (uiOptions['dialog']) {
-        console.log('uiOptions dialog', uiOptions['dialog'])
-        setIsHidden(true)
-      }
-    }
-  }, [])
-
     const _onChange = ({
                            target: { value },
                        }: React.ChangeEvent<HTMLInputElement>) => {
-    // console.log('CtimsInput onChange', props)
+    console.log('CtimsInput onChange', props)
       return onChange(value === "" ? options.emptyValue : value)
     };
     const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
@@ -71,13 +39,21 @@ const CtimsInput = (props: WidgetProps) => {
     const inputType = (type || schema.type) === "string" ? "text" : `${type || schema.type}`
     const labelValue = uiSchema?.["ui:title"] || schema.title || label;
 
-
+    const questionMarkStyle = `input-target-icon ${styles['question-mark']} pi pi-question-circle .question-mark-target `;
 
     return (
-        <div style={isHidden ? containerHiddenStyle : containerStyle}>
+        <div className={styles.container}>
+          <div className={styles['label-container']}>
             {labelValue && (
-                <span style={labelStyle}>{labelValue}</span>
+              <span className={styles.label}>{labelValue}</span>
             )}
+            <Tooltip target=".input-target-icon" />
+            {schema.description && (
+              <i className={questionMarkStyle} data-pr-tooltip={schema.description} data-pr-position="top"></i>
+            )}
+            {!required && ( <span className={styles['optional-label']}>Optional</span> )}
+          </div>
+
             <InputText
                 id={id}
                 placeholder={placeholder}

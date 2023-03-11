@@ -3,6 +3,53 @@
 @import "primeicons/primeicons.css";
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css");
 
+.caret-down-filled {
+  background-image: url("/assets/caret-down-filled.svg");
+  width: 16px;
+  height: 16px;
+}
+
+.caret-right-filled {
+  background-image: url("/assets/caret-right-filled.svg");
+  width: 16px;
+  height: 16px;
+}
+
+.clinical-icon {
+  background-image: url("/assets/clinical-icon-16px.svg");
+}
+
+.in-menu {
+  width: 16px;
+  height: 16px;
+}
+
+.in-tree {
+  width: 19px;
+  height: 17px;
+}
+
+.genomic-icon {
+  background-image: url("/assets/genomic-icon-16px.svg");
+}
+
+
+.and-icon {
+  background-image: url("/assets/and-icon-16px.svg");
+  width: 16px;
+  height: 16px;
+}
+
+.or-icon {
+  background-image: url("/assets/or-icon-16px.svg");
+  width: 16px;
+  height: 16px;
+}
+
+.p-tooltip {
+  width: 300px !important;
+}
+
 .p-tabview .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus {
   outline: none !important;
   box-shadow: none !important;
@@ -26,16 +73,24 @@
   background-color: black !important;
 }
 
+.p-tieredmenu {
+  width: 17.5rem !important;
+}
+
 .ctims-tree  {
   padding: 0 !important;
   border: 0 !important;
-  margin-left: 9px;
+}
+
+.ctims-tree .p-tree-container .p-treenode {
+  padding: 0 !important;
 }
 
 .ctims-tree .p-tree-container .p-treenode .p-treenode-content {
-  padding: 0 !important;
+  padding-left: 23px !important;
   border: 0 !important;
-  height: 16px !important;
+  height: 24px !important;
+  border-radius: 0px !important;
 }
 
 .ctims-tree .p-tree-container .p-treenode .p-treenode-content:focus {
@@ -53,6 +108,14 @@
 
 .ctims-tree .p-tree-container .p-treenode .p-treenode-content .p-tree-toggler {
   margin: 0 !important;
+}
+
+.ctims-tree .p-tree-container .p-treenode .p-treenode-content .p-tree-toggler:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+.ctims-tree .p-tree-container .p-treenode .p-treenode-content .p-tree-toggler:enabled:hover {
+  background: none !important;
 }
 
 .p-dialog .p-dialog-content {

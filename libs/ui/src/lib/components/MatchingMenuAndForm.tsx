@@ -139,18 +139,12 @@ const MatchingMenuAndForm = (props: any) => {
   const [isEmpty, setIsEmpty] = useState(true);
   const [buildRootNodeParams, setBuildRootNodeParams] = useState<IRootNode>({rootLabel: '', firstChildLabel: ''});
 
-  const menu = useRef(null);
-
-  const menuClick = (e: any) => {
-    // @ts-ignore
-    menu.current.show(e);
-  }
-
-  const AddCriteriaButton = () => {
+  const AddCriteriaButton = (props: {addCriteriaGroupClicked: () => void}) => {
+    const {addCriteriaGroupClicked} = props;
     return (
-      <div className={styles.addCriteriaBtn} onClick={(e) => {menuClick(e)}}>
+      <div className={styles.addCriteriaBtn} onClick={addCriteriaGroupClicked}>
         <i className="pi pi-plus-circle"></i>
-        <span>Add criteria</span>
+        <span>Add criteria group</span>
       </div>
     )
   }
@@ -162,10 +156,10 @@ const MatchingMenuAndForm = (props: any) => {
     const dispatch = useDispatch();
 
     const clinicalFormSchema = {
-      'type': 'object',
-      'required': ['age_numerical', 'oncotree_primary_diagnosis'],
-      'properties': {
-        'age_numerical': {
+      "type": "object",
+      "required": ["age_numerical", "oncotree_primary_diagnosis"],
+      "properties": {
+        "age_numerical": {
           'type': 'string',
           'title': 'Age',
         },
@@ -176,18 +170,31 @@ const MatchingMenuAndForm = (props: any) => {
         'tmb': {
           'type': 'string',
           'title': 'TMB',
+          "description": "Tumor Mutational Burden/Megabase",
         },
         'her2_status': {
-          'type': 'string',
+          "type": "string",
           'title': 'HER2 Status',
+          "enum": [
+            "Positive",
+            "Negative"
+          ]
         },
         'er_status': {
           'type': 'string',
           'title': 'ER Status',
+          "enum": [
+            "Positive",
+            "Negative"
+          ]
         },
         'pr_status': {
           'type': 'string',
           'title': 'PR Status',
+          "enum": [
+            "Positive",
+            "Negative"
+          ]
         }
       }
     }
@@ -205,8 +212,9 @@ const MatchingMenuAndForm = (props: any) => {
     }
 
     const onOperatorChange = (code: string) => {
+      // or/and
       const codeLowerCase = code.toLowerCase();
-      dispatch(operatorChange({operator: codeLowerCase, nodeKey: node.key as string}));
+      dispatch(operatorChange({operator: codeLowerCase, nodeKey: node.key as string, location: 'form'}));
     }
 
     return (
@@ -235,7 +243,23 @@ const MatchingMenuAndForm = (props: any) => {
 
     const genomicFormSchema = {
           'definitions': {
-            'variant_category': {
+            "variant_category": {
+              "enumNames": [
+                "Mutation",
+                "CNV",
+                "SV",
+                "WT",
+                "Signature"
+              ],
+              "enum": [
+                "MUTATION",
+                "CNV",
+                "SV",
+                "WT",
+                "SIGNATURE"
+              ]
+            },
+            'variant_classification': {
               "enumNames": [
                 "Missense Mutation",
                 "Missense and Splice Region",
@@ -380,66 +404,97 @@ const MatchingMenuAndForm = (props: any) => {
                 "mmr_proficient",
                 "mmr_deficient",
               ]
+            },
+            "ms_status": {
+              "enumNames": [
+                "MSI-H",
+                "MSI-L",
+                "MSS"
+              ],
+              "enum": [
+                "msi_h",
+                "msi_l",
+                "mss",
+              ]
             }
           },
           'type': 'object',
-          'required': ['hugo_symbol', 'variant_category'],
+          'required': ['hugo_symbol', "variant_category"],
           'properties': {
             'hugo_symbol': {
               'type': 'string',
               'title': 'Hugo Symbol',
+              "description": "Gene symbol as determined by https://www.genenames.org/",
             },
-            'variant_category': {
+            "variant_category": {
               "$ref": "#/definitions/variant_category",
               'title': 'Variant Category',
+              "description": "Type of alteration",
             },
             'protein_change': {
               'type': 'string',
               'title': 'Protein Change',
+              "description": "Curate a specific protein change (must be in the correct format ex. p.T70M)",
             },
             'variant_classification': {
-              'type': 'string',
+              "$ref": "#/definitions/variant_classification",
               'title': 'Variant Classification',
+              "description": "Curate a particular type of mutation",
             },
             'cnv_call': {
               'title': 'CNV Call',
               '$ref': '#/definitions/cnv_call',
+              "description": "Specify the type of copy number variation",
             },
             'fusion_partner_hugo_symbol': {
               'type': 'string',
               'title': 'Fusion Partner Hugo Symbol',
+              "description": "Curate the partner gene in a fusion",
             },
             'true_transcript_exon': {
               'type': 'string',
               'title': 'True Transcript Exon',
+              "description": "Curate mutations in a specific exon",
             },
             'wildtype': {
               'title': 'Wildtype',
               '$ref': '#/definitions/wildtype',
+              "description": "An indication of whether an eligibility criteria requires a gene to be wildtype.",
             },
             'pole_status': {
               'title': 'POLE Status',
               '$ref': '#/definitions/pole_status',
+              "description": "Curate for trials requiring a specific POLE signature status",
             },
             'uva_status': {
               'title': 'UVA Status',
               '$ref': '#/definitions/uva_status',
+              "description": "Curate for trials requiring a specific UVA signature status",
             },
             'tobacco_status': {
               'title': 'Tobacco Status',
               '$ref': '#/definitions/tobacco_status',
+              "description": "Curate for trials requiring a specific tobacco signature status",
             },
             'apobec_status': {
               'title': 'APOBEC Status',
               '$ref': '#/definitions/apobec_status',
+              "description": "Curate for trials requiring a specific APOBEC signature status",
             },
             'temozolomide_status': {
               'title': 'Temozolomide Status',
               '$ref': '#/definitions/temozolomide_status',
+              "description": "Curate for trials requiring a specific temozolomide signature status",
             },
             'mmr_status': {
               'title': 'MMR Status',
               '$ref': '#/definitions/mmr_status',
+              "description": "Curate a specific mismatch repair status",
+            },
+            'ms_status': {
+              'title': 'MS Status',
+              '$ref': '#/definitions/ms_status',
+              "description": "Curate a specific microsatellite stability status",
             }
           }
     };
@@ -458,7 +513,7 @@ const MatchingMenuAndForm = (props: any) => {
 
     const onOperatorChange = (code: string) => {
       const codeLowerCase = code.toLowerCase();
-      dispatch(operatorChange({operator: codeLowerCase, nodeKey: node.key as string}));
+      dispatch(operatorChange({operator: codeLowerCase, nodeKey: node.key as string, location: 'form'}));
     }
 
     return (
@@ -479,26 +534,17 @@ const MatchingMenuAndForm = (props: any) => {
     )
   }
 
-  const EmptyForm = () => {
+  const EmptyForm = (props: {addCriteriaGroupClicked: () => void}) => {
+    const {addCriteriaGroupClicked} = props;
     return (
       <div className={styles.matchingCriteriaFormContainerEmpty}>
         <div className={styles.matchingCriteriaFormContainerEmptyText}>
           Matching criteria inputs will be shown here.
         </div>
-        <AddCriteriaButton />
+        <AddCriteriaButton addCriteriaGroupClicked={addCriteriaGroupClicked} />
       </div>
     )
   }
-
-  const menuItems = [
-    {
-      label: 'Empty Group',
-      command: () => {
-        setIsEmpty(false);
-        setBuildRootNodeParams({rootLabel: 'And', firstChildLabel: 'Empty Group'})
-      }
-    },
-  ];
 
   let ComponentToRender: FunctionComponent<IFormProps>;
   switch (componentType.type) {
@@ -517,13 +563,17 @@ const MatchingMenuAndForm = (props: any) => {
     setComponentType({type, node});
   }
 
+  const addCriteriaGroupClicked = () => {
+    setIsEmpty(false);
+    setBuildRootNodeParams({rootLabel: 'And', firstChildLabel: 'Empty Group'})
+  }
+
   return (
     <>
-      <Menu model={menuItems} ref={menu} popup id="criteria_popup_menu"/>
       <div className={styles.matchingMenuAndFormContainer}>
         <LeftMenuComponent onTreeNodeClick={treeNodeClicked} rootNodesProp={buildRootNodeParams} />
         <div className={styles.matchingCriteriaFormContainer}>
-          {isEmpty ? <EmptyForm /> : <ComponentToRender node={componentType.node}/>}
+          {isEmpty ? <EmptyForm addCriteriaGroupClicked={addCriteriaGroupClicked} /> : <ComponentToRender node={componentType.node}/>}
         </div>
       </div>
     </>

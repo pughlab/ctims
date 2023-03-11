@@ -3,7 +3,6 @@ import {RjsfGridFieldTemplate} from "../custom-rjsf-templates/RjsfGridFieldTempl
 import CtimsObjectFieldTemplate from "../custom-rjsf-templates/CtimsObjectFieldTemplate";
 import CtimsItemObjectFieldTemplate from "../custom-rjsf-templates/CtimsItemObjectFieldTemplate";
 import CtimsArrayFieldSingleTemplate from "../custom-rjsf-templates/CtimsArrayFieldSingleTemplate";
-import CtimsButtonWidget from "../custom-rjsf-templates/CtimsButtonWidget";
 import {JSONSchema7} from "json-schema";
 import CtimsArrayFieldItemTemplate from "../custom-rjsf-templates/CtimsArrayFieldItemTemplate";
 import CtimsArrayFieldTemplate from "../custom-rjsf-templates/CtimsArrayFieldTemplate";
@@ -15,6 +14,7 @@ import {RegistryWidgetsType} from "@rjsf/utils";
 import CtimsInput from "../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../custom-rjsf-templates/CtimsDropdown";
 import CtimsMatchingCriteriaWidget from "../custom-rjsf-templates/CtimsMatchingCriteriaWidget";
+import CtimsCheckboxWidget from "../custom-rjsf-templates/CtimsCheckbox";
 
 const Form = withTheme(PrimeTheme)
 
@@ -32,43 +32,90 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
   const schema = {
     "type": "object",
     "properties": {
-      "clinicalMetadata": {
+      "trialInformation": {
+        "required": [
+          "trial_id",
+          "nickname",
+          "principal_investigator",
+          "ctml_status",
+          "long_title",
+          "short_title",
+          "phase",
+          "disease_status",
+          "prior_treatment_requirements",
+          "protocol_no",
+          "nct_purpose"
+        ],
         "type": "object",
         "properties": {
-          "nct_id": {
+          "trial_id": {
             "type": "string",
-            "title": "NCT ID"
+            "title": "Trial ID",
+            "description": "The unique identifier for the study"
+          },
+          "nickname": {
+            "type": "string",
+            "title": "Nickname",
+            "description": "A unique nickname to easily identify study"
+          },
+          "principal_investigator": {
+            "type": "string",
+            "title": "Principal Investigator",
+            "description": "Enter details of the overall principal investigator"
+          },
+          "ctml_status": {
+            "type": "string",
+            "title": "Ctml Status",
+            "description": "Categorize the status of your CTML",
+            "enum": [
+              "Draft",
+              "In Review",
+              "Complete"
+            ]
           },
           "long_title": {
             "type": "string",
-            "title": "Long Title"
+            "title": "Long Title",
+            "description": "The official title of the trial"
           },
           "short_title": {
             "type": "string",
-            "title": "Short Title"
-          },
-          "age": {
-            "type": "string",
-            "title": "Age"
-          },
-          "nct_purpose": {
-            "type": "string",
-            "title": "NCT Purpose"
+            "title": "Short Title",
+            "description": "A short title for the trial"
           },
           "phase": {
             "type": "string",
-            "title": "Phase"
+            "title": "Phase",
+            "description": "Phase/stage of the clinical trial studying a drug or biological product",
+            "enum": [
+              "I",
+              "II",
+              "III",
+              "IV"
+            ],
+          },
+          "disease_status": {
+            "type": "string",
+            "title": "Disease Status",
+            "description": "A list of conditions or diseases",
+          },
+          "prior_treatment_requirements": {
+            "type": "string",
+            "title": "Prior Treatment Requirements",
+            "description": "The Inclusion Criteria of the study",
           },
           "protocol_no": {
             "type": "string",
-            "title": "Protocol Number"
+            "title": "Protocol Number",
+            "description": "Protocol number associated with the trial; Unique identifier for the study other than the NCT_ID"
           },
-          "status": {
+          "nct_purpose": {
             "type": "string",
-            "title": "Status"
+            "title": "NCT Purpose",
+            "description": "The National Clinical Trial (NCT) purpose. The purpose of the clinical trial"
           }
         },
-        "title": "Clinical Metadata"
+        "title": "Trial Information"
       },
       "drugList": {
         "type": "object",
@@ -77,10 +124,12 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             "type": "array",
             "items": {
               "type": "object",
+              "required": ["drug_name"],
               "properties": {
                 "drug_name": {
                   "type": "string",
-                  "title": "Drug Name"
+                  "title": "Drug Name",
+                  "description": "A list of drug names in the trial. If there is a drug combination that are to be taken at the same time, include together. Example: Nivolumab plus Ipilimumab"
                 }
               }
             },
@@ -96,19 +145,22 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             "type": "array",
             "items": {
               "type": "object",
+              "required": ["management_group_name"],
               "properties": {
+                "management_group_name": {
+                  "type": "string",
+                  "title": "Management Group Name",
+                  "description": "The hospital/clinic conducting the trial (study site(s)) in Canada. Please input the full name of the hospital/clinic site. If there is more than one site, please list each hospital/site"
+                },
                 "is_primary": {
                   "type": "string",
                   "enum": [
                     "Y",
                     "N"
                   ],
-                  "title": "Is Primary"
+                  "title": "This is a primary management group",
+                  "description": "Y/N"
                 },
-                "management_group_name": {
-                  "type": "string",
-                  "title": "Management Group Name"
-                }
               }
             },
             "title": "Management Group"
@@ -123,14 +175,26 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             "type": "array",
             "items": {
               "type": "object",
+              "required": ["site_name", "site_status"],
               "properties": {
+                "site_name": {
+                  "type": "string",
+                  "title": "Site Name",
+                  "description": "The hospital/clinic managing this trial. Please input the full name of the hospital/clinic site."
+                },
+                "site_status": {
+                  "type": "string",
+                  "title": "Site Status",
+                  "description": "Trial accrual status",
+                },
                 "coordinating_center": {
                   "type": "string",
                   "enum": [
                     "Y",
                     "N"
                   ],
-                  "title": "Coordinating Center"
+                  "title": "This site is a coordinating center.",
+                  "description": "Y/N"
                 },
                 "uses_cancer_center_irb": {
                   "type": "string",
@@ -138,16 +202,9 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                     "Y",
                     "N"
                   ],
-                  "title": "User Cancer Center IRB"
+                  "title": "This site uses cancer center IRB.",
+                  "description": "Y/N"
                 },
-                "site_name": {
-                  "type": "string",
-                  "title": "Site Name"
-                },
-                "site_status": {
-                  "type": "string",
-                  "title": "Site Status"
-                }
               }
             },
             "title": "Site"
@@ -162,19 +219,22 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             "type": "array",
             "items": {
               "type": "object",
+              "required": ["sponsor_name"],
               "properties": {
+                "sponsor_name": {
+                  "type": "string",
+                  "title": "Sponsor Name",
+                  "description": "The name of the sponsor and/or collaborators."
+                },
                 "is_principal_sponsor": {
                   "type": "string",
                   "enum": [
                     "Y",
                     "N"
                   ],
-                  "title": "Is Principal Sponsor"
+                  "title": "This sponsor is a principal sponsor.",
+                  "description": "Y/N"
                 },
-                "sponsor_name": {
-                  "type": "string",
-                  "title": "Sponsor Name"
-                }
               }
             },
             "title": "Sponsor"
@@ -189,26 +249,37 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             "type": "array",
             "items": {
               "type": "object",
+              "required": ["first_name", "last_name", "email", "institution_name", "staff_role", "status"],
               "properties": {
                 "first_name": {
                   "type": "string",
-                  "title": "First Name"
+                  "title": "First Name",
+                  "description": "The first name of the overall principal investigator"
                 },
                 "last_name": {
                   "type": "string",
-                  "title": "Last Name"
+                  "title": "Last Name",
+                  "description": "The last name of the overall principal investigator"
                 },
                 "email": {
                   "type": "string",
-                  "title": "Email"
+                  "title": "Email",
+                  "description": "The email address of the overall principal investigator"
                 },
                 "institution_name": {
                   "type": "string",
-                  "title": "Institution Name"
+                  "title": "Institution Name",
+                  "description": "The institute the overall principal investigator is a part of"
                 },
                 "staff_role": {
                   "type": "string",
-                  "title": "Staff Role"
+                  "title": "Staff Role",
+                  "description": "The role of the this listed staff"
+                },
+                "status": {
+                  "type": "string",
+                  "title": "Status",
+                  "description": "Status of the trial"
                 }
               },
               'title': 'Protocol Staff'
@@ -217,14 +288,6 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
           }
         },
         "title": "Staff List"
-      },
-      "prior_treatment_requirements": {
-        "type": "array",
-        "title": "Prior treatment requirements",
-        "items": {
-          "type": "string",
-          'title': 'Prior treatment requirements'
-        }
       },
       "treatment_list": {
         "type": "object",
@@ -238,29 +301,62 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                   "type": "array",
                   "items": {
                     "type": "object",
+                    "required": ["arm_code", "arm_description", "arm_internal_id"],
                     "properties": {
-                      "arm_code": {"type": "string", title: 'Arm Code'},
-                      "arm_description": {"type": "string", title: 'Arm Description'},
-                      "arm_internal_id": {"type": "integer", title: 'Arm Internal Id'},
-                      "arm_suspended": {"type": "string", title: 'Arm Suspended'},
+                      "arm_code": {
+                        "type": "string",
+                        "title": "Arm Code",
+                        "description": "A group/subgroup of participants in a trial that receives a specific treatment"
+                      },
+                      "arm_description": {
+                        "type": "string",
+                        "title": "Arm Description",
+                        "description": "A description of an individual trial arm"
+                      },
+                      "arm_internal_id": {
+                        "type": "integer",
+                        "title": 'Arm Internal Id',
+                        "description": "Internal ID of arm"
+                      },
+                      "arm_suspended": {
+                        "type": "string",
+                        "title": "Arm is suspended",
+                        "description": "Y/N"
+                      },
                       "dose_level": {
                         "type": "array",
-                        title: 'Dose Level',
+                        "title": 'Dose Level',
                         "items": {
                           "type": "object",
+                          "required": ["level_code", "level_description", "level_internal_id"],
                           "properties": {
-                            "level_code": {"type": "string", title: 'Level Code'},
-                            "level_description": {"type": "string", title: 'Level Description'},
-                            "level_internal_id": {"type": "integer", title: 'Level Internal Id'},
-                            "level_suspended": {"type": "string", title: 'Level Suspended'},
+                            "level_code": {
+                              "type": "string",
+                              "title": "Level Code",
+                              "description": "Dose level code; the drug name"
+                            },
+                            "level_description": {
+                              "type": "string",
+                              "title": "Level Description",
+                              "description": "Dose level description. The dosage details and frequency of administration"
+                            },
+                            "level_internal_id": {
+                              "type": "integer",
+                              "title": "Level Internal Id",
+                              "description": "Internal dose ID"
+                            },
+                            "level_suspended": {
+                              "type": "string",
+                              "title": "This level is suspended",
+                              "description": "Y/N"
+                            },
                           }
                         }
                       },
                       "match": {
-                        type: 'object',
-                        title: '',
-                        properties: {
-                          // fields in the form
+                        "type": 'object',
+                        "title": '',
+                        "properties": {
                           "matchingCriteriaWidget": {type: 'string', title: 'Matching Criteria Widget'},
                         }
                       }
@@ -282,7 +378,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
     },
     "ui:layout": [
       {
-        "clinicalMetadata": {
+        "trialInformation": {
           "span": 24
         }
       },
@@ -317,12 +413,27 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
         }
       }
     ],
-    "clinicalMetadata": {
+    "trialInformation": {
       "ui:ObjectFieldTemplate": RjsfGridFieldTemplate,
       "ui:spacing": 16,
       "ui:layout": [
         {
-          "nct_id": {
+          "trial_id": {
+            "span": 24
+          }
+        },
+        {
+          "nickname": {
+            "span": 24
+          }
+        },
+        {
+          "principal_investigator": {
+            "span": 24
+          }
+        },
+        {
+          "ctml_status": {
             "span": 24
           }
         },
@@ -337,17 +448,17 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
           }
         },
         {
-          "age": {
-            "span": 24
-          }
-        },
-        {
-          "nct_purpose": {
-            "span": 24
-          }
-        },
-        {
           "phase": {
+            "span": 24
+          }
+        },
+        {
+          "disease_status": {
+            "span": 24
+          }
+        },
+        {
+          "prior_treatment_requirements": {
             "span": 24
           }
         },
@@ -357,7 +468,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
           }
         },
         {
-          "status": {
+          "nct_purpose": {
             "span": 24
           }
         }
@@ -410,6 +521,9 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
         "items": {
           "ui:ObjectFieldTemplate": CtimsItemObjectFieldTemplate,
           "ui:spacing": 16,
+          "is_primary": {
+            "ui:widget": CtimsCheckboxWidget
+          },
           "ui:layout": [
             {
               "is_primary": {
@@ -461,7 +575,13 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                 "span": 12
               }
             }
-          ]
+          ],
+          "coordinating_center": {
+            "ui:widget": CtimsCheckboxWidget
+          },
+          "uses_cancer_center_irb": {
+            "ui:widget": CtimsCheckboxWidget
+          }
         }
       }
     },
@@ -488,7 +608,10 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                 "span": 12
               }
             }
-          ]
+          ],
+          "is_principal_sponsor": {
+            "ui:widget": CtimsCheckboxWidget
+          }
         }
       }
     },
@@ -545,6 +668,9 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
           "arm": {
             "items": {
               "ui:ObjectFieldTemplate": CtimsItemObjectFieldTemplate,
+              "arm_suspended": {
+                "ui:widget": CtimsCheckboxWidget
+              },
               "match": {
                 matchingCriteriaWidget: {
                   "ui:widget": CtimsMatchingCriteriaWidget,
@@ -557,6 +683,9 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
               "dose_level": {
                "items": {
                   "ui:ObjectFieldTemplate": CtimsItemObjectFieldTemplate,
+                 "level_suspended": {
+                    "ui:widget": CtimsCheckboxWidget
+                 }
                }
               }
             }
@@ -571,6 +700,10 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
     console.log(e);
   };
 
+  const onError = (e: any) => {
+    console.log(e);
+  }
+
   return (
     <div style={containerStyle}>
       <Form ref={ref} schema={schema as JSONSchema7}
@@ -578,10 +711,12 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
               ArrayFieldItemTemplate: CtimsArrayFieldItemTemplate,
               ArrayFieldTemplate: CtimsArrayFieldTemplate,
             }}
+            // liveValidate
             onChange={(data) => {
               // onChangeTest(data)
               props.onRjsfFormChange(data)
             }} // @ts-ignore
+            onError={(data) => {onError(data)}}
             uiSchema={uiSchema}
             widgets={widgets}
             onSubmit={(data) => {
