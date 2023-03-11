@@ -2,7 +2,7 @@ import cn from "clsx";
 import React from "react";
 import { FieldTemplateProps } from "@rjsf/utils";
 
-export const CtimsFieldTemplate = (props: FieldTemplateProps) => {
+const CtimsFieldTemplate = (props: FieldTemplateProps) => {
   const {
     id,
     hidden,

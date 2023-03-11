@@ -3,9 +3,13 @@ import {useRouter} from "next/router";
 import { Button } from 'primereact/button';
 import {store} from "../../store/store";
 import {ValidationData} from "@rjsf/utils";
+import {useState} from "react";
+import ExportCtmlDialog from "./ExportCtmlDialog";
 
 
 const EditorTopBar = () => {
+
+  const [isDialogVisible, setIsDialogVisible] = useState<boolean>(false);
 
   const router = useRouter();
 
@@ -19,8 +23,8 @@ const EditorTopBar = () => {
     const ctmlModel = state.fianlModelAndErrors.ctmlModel;
     const formErrors: ValidationData<any> = state.fianlModelAndErrors.errorSchema;
     const ctmlModelString = JSON.stringify(ctmlModel, null, 2);
-
-    console.log(formErrors);
+    setIsDialogVisible(true);
+    // console.log(formErrors);
 
     // const blob = new Blob([ctmlModelString], {type: 'application/json'});
     // const url = URL.createObjectURL(blob);
@@ -33,7 +37,20 @@ const EditorTopBar = () => {
     // document.body.removeChild(link);
   }
 
+  const getValidationErrors = () => {
+    const state = store.getState();
+    const formErrors: ValidationData<any> = state.fianlModelAndErrors.errorSchema;
+    return formErrors;
+  }
+
   return (
+    <>
+      <ExportCtmlDialog
+        isDialogVisible={isDialogVisible}
+        exportCtmlClicked={onExportClick}
+        validationErrors={getValidationErrors()}
+        onDialogHide={() => setIsDialogVisible(false)}
+      />
     <div className={styles.topBar}>
       <div className={styles.logoContainer}>
         <img src={'/assets/ctims-logo.svg'} alt={'logo'} className={styles.logo}/>
@@ -55,6 +72,7 @@ const EditorTopBar = () => {
 
       </div>
     </div>
+    </>
   )
 }
 export default EditorTopBar;

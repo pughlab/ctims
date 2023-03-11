@@ -1,6 +1,6 @@
 import {ErrorListProps} from "@rjsf/utils";
 
-export const CtimsErrorListTemplate = (props: ErrorListProps) => {
+const CtimsErrorListTemplate = (props: ErrorListProps) => {
   return (
     <></>
   )
