@@ -1,5 +1,5 @@
 import {WidgetProps} from "@rjsf/utils";
-import React, {CSSProperties} from "react";
+import React from "react";
 import {Panel} from "primereact/panel";
 import {Ripple} from "primereact/ripple";
 import { TabView, TabPanel } from 'primereact/tabview';
@@ -7,6 +7,7 @@ import {useSelector} from "react-redux";
 import {stringify} from 'yaml'
 import {isObjectEmpty} from "../components/helpers";
 import {RootState} from "../../../../../apps/web/store/store";
+import styles from './CtimsMatchingCriteriaWidget.module.scss';
 
 const headerTemplate = (options: any, props: { title: string, }) => {
   const {title} = props;
@@ -17,12 +18,6 @@ const headerTemplate = (options: any, props: { title: string, }) => {
 
   const titleStyle: React.CSSProperties = {
     textTransform: 'uppercase',
-  }
-
-  const trashIconStyle: React.CSSProperties = {
-    color: 'red',
-    cursor: 'pointer',
-    marginRight: '13px',
   }
 
   return (
@@ -52,60 +47,16 @@ const CtimsMatchingCriteriaWidget = (props: WidgetProps) => {
     uiSchema,
   } = props;
 
+  console.log('CtimsMatchingCriteriaWidget', props)
+
   // Will trigger re-render when the ctmlModel changes and thus will display the preview
   // The dispatch is called from ui.tsx in onDialogHideCallback
   const ctmlModel: any = useSelector((state: RootState) => state.finalModelAndErrors.ctmlModel);
 
   const btnClick = uiSchema!['onClick'];
 
-  const containerStyle: CSSProperties = {
-    width: '100%',
-    marginLeft: 'auto',
-    marginTop: '16px',
-  }
-
-  const previewStyle: CSSProperties = {
-    height: '300px',
-  }
-
   const headerTemplateOptions = {
     title: 'Matching Criteria',
-  }
-
-  const preStyle: CSSProperties = {
-    height: '100%',
-    overflowY: 'scroll',
-    backgroundColor: 'white',
-    color: 'rgba(0, 0, 0, 0.6)',
-    border: 'none',
-    padding: '0',
-    fontFamily: 'SF Mono, monospace',
-    fontWeight: 400,
-    fontSize: '14px',
-    lineHeight: '20px',
-    fontStyle: 'normal',
-  }
-
-  const addItemContainerStyle: React.CSSProperties = {
-    display: "flex",
-    flexDirection: "row",
-    cursor: "pointer",
-    height: '56px',
-    lineHeight: '56px',
-    backgroundColor: 'rgba(0, 0, 0, 0.02)',
-    borderBottomLeftRadius: '8px',
-    borderBottomRightRadius: '8px',
-    borderLeft: '1px solid #E4E4E4',
-    borderRight: '1px solid #E4E4E4',
-    borderBottom: '1px solid #E4E4E4',
-  }
-
-  const titleStyle: React.CSSProperties = {
-    color: "#2E72D2",
-    fontFamily: "Inter, sans-serif",
-    fontWeight: 600,
-    fontSize: "14px",
-    marginLeft: '4px',
   }
 
   const circleStyle: React.CSSProperties = {
@@ -124,34 +75,34 @@ const CtimsMatchingCriteriaWidget = (props: WidgetProps) => {
     borderRadius: '4px',
   }
 
-  const yamlString = stringify(formContext.match, null, 2);
-  const jsonString = JSON.stringify(formContext.match, null, 2);
+  const yamlString = stringify(formContext.formData.match, null, 2);
+  const jsonString = JSON.stringify(formContext.formData.match, null, 2);
 
   return (
-      <div style={containerStyle}>
+      <div className={styles.container}>
         <Panel headerTemplate={(props) => headerTemplate(props, headerTemplateOptions)} toggleable>
           <div style={tabViewStyle}>
             <TabView>
               <TabPanel header="YAML">
-                <div style={previewStyle}>
-                  {isObjectEmpty(formContext.match) ?
-                    null: <pre style={preStyle}>{yamlString}</pre>
+                <div className={styles.preview}>
+                  {isObjectEmpty(formContext.formData.match) ?
+                    null: <pre className={styles['pre-tag']}>{yamlString}</pre>
                   }
                 </div>
               </TabPanel>
               <TabPanel header="JSON">
-                <div style={previewStyle}>
-                  {isObjectEmpty(formContext.match) ?
-                    null: <pre style={preStyle}>{jsonString}</pre>
+                <div className={styles.preview}>
+                  {isObjectEmpty(formContext.formData.match) ?
+                    null: <pre className={styles['pre-tag']}>{jsonString}</pre>
                   }
                 </div>
               </TabPanel>
             </TabView>
           </div>
         </Panel>
-        <div style={addItemContainerStyle} onClick={(e) => btnClick(e, formContext, formContext.arm_code, id)}>
+        <div className={styles['edit-matching-criteria-container']} onClick={(e) => btnClick(e, formContext, id)}>
           <i className="pi pi-pencil" style={circleStyle}></i>
-          <div style={titleStyle}>Edit matching criteria</div>
+          <div className={styles['edit-matching-criteria-title']}>Edit matching criteria</div>
           <i className="bi bi-caret-down-fill" style={caretStyle}></i>
         </div>
       </div>

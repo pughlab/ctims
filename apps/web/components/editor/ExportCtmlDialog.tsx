@@ -14,6 +14,7 @@ interface ExportCtmlDialogProps {
 
 const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
   const [isDialogVisible, setIsDialogVisible] = useState<boolean>(props.isDialogVisible);
+  const [validationData] = useState<ValidationData<any>>(props.validationErrors);
   const [format, setFormat] = useState<string>('JSON');
 
   useEffect(() => {

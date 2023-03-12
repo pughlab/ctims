@@ -1,6 +1,6 @@
 import {getTemplate, getUiOptions, ObjectFieldTemplatePropertyType, ObjectFieldTemplateProps} from "@rjsf/utils";
 import React from "react";
-import {stringContains} from "../components/helpers";
+import {isObjectEmpty, stringContains} from "../components/helpers";
 
 const CtimsItemObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
     const {
@@ -55,8 +55,9 @@ const CtimsItemObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
     }
 
     // This magic line allows two-way communication between the main form and the dialog
-    registry.formContext = formData
-
+    if (!isObjectEmpty(formData) && stringContains(idSchema.$id, 'root')) {
+        formContext.formData = formData
+    }
     return (
         <>
             <div style={containerStyle}>

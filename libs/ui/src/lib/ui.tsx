@@ -39,13 +39,14 @@ export const Ui = (props: UiProps) => {
     console.log('My component was re-rendered');
   });
 
-  const handleSpecialClick = (formD: any, armCode: string, id: string) => {
-    console.log('handleSpecialClick formData: ', formD);
-    console.log('handleSpecialClick armCode: ', armCode);
+  const handleSpecialClick = (formD: any, id: string) => {
+    const formData = formD.formData
+    console.log('handleSpecialClick formData: ', formD.formData);
+    console.log('handleSpecialClick armCode: ', formData.arm_code);
     console.log('handleSpecialClick id: ', id);
-    setArmCode(armCode)
-    setFormData(formD)
-    dispatch(setCtmlMatchModel(structuredClone(formD)))
+    setArmCode(formData.arm_code)
+    setFormData(formData)
+    dispatch(setCtmlMatchModel(structuredClone(formData)))
     dispatch(setActiveArmId(id))
     setIsOpen(true);
   }

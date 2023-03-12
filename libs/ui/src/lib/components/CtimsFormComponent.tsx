@@ -143,7 +143,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
       "management_group_list": {
         "type": "object",
         "properties": {
-          "managementGroup": {
+          "management_group": {
             "type": "array",
             "items": {
               "type": "object",
@@ -511,15 +511,15 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
       "ui:spacing": 16,
       "ui:layout": [
         {
-          "managementGroup": {
+          "management_group": {
             "span": 24
           },
           "ui:order": [
-            "managementGroup"
+            "management_group"
           ]
         }
       ],
-      "managementGroup": {
+      "management_group": {
         "items": {
           "ui:ObjectFieldTemplate": CtimsItemObjectFieldTemplate,
           "ui:spacing": 16,
@@ -676,9 +676,9 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
               "match": {
                 matchingCriteriaWidget: {
                   "ui:widget": CtimsMatchingCriteriaWidget,
-                  onClick: (e: any, formData: any, armCode: string, id: string) => {
+                  onClick: (e: any, formData: any, id: string) => {
                     e.preventDefault();
-                    props.onSpecialButtonClick(formData, armCode, id);
+                    props.onSpecialButtonClick(formData, id);
                   },
                 },
               },
@@ -706,6 +706,49 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
     console.log(e);
   }
 
+  const initialFormData = {
+    "trialInformation": {},
+    "drugList": {
+      "drug": [
+        {}
+      ]
+    },
+    "management_group_list": {
+      "management_group": [
+        {}
+      ]
+    },
+    "site_list": {
+      "site": [
+        {}
+      ]
+    },
+    "sponsor_list": {
+      "sponsor": [
+        {}
+      ]
+    },
+    "staff_list": {
+      "protocol_staff": [
+        {}
+      ]
+    },
+    "treatment_list": {
+      "step": [
+        {
+          "arm": [
+            {
+              "dose_level": [
+                {}
+              ],
+              "match": {}
+            }
+          ]
+        }
+      ]
+    }
+  }
+
   return (
     <div style={containerStyle}>
       <Form ref={ref} schema={schema as JSONSchema7}
@@ -721,6 +764,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
               props.onRjsfFormChange(data)
             }} // @ts-ignore
             onError={(data) => {onError(data)}}
+            formData={initialFormData}
             uiSchema={uiSchema}
             widgets={widgets}
             onSubmit={(data) => {

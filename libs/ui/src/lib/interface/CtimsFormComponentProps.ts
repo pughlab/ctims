@@ -1,4 +1,4 @@
 export interface CtimsFormComponentProps {
-  onSpecialButtonClick: (formData: any, armCode: string, id: string) => void;
+  onSpecialButtonClick: (formData: any, id: string) => void;
   onRjsfFormChange: (data: any) => void;
 }

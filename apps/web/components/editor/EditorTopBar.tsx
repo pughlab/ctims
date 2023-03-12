@@ -23,18 +23,18 @@ const EditorTopBar = () => {
     const ctmlModel = state.finalModelAndErrors.ctmlModel;
     const formErrors: ValidationData<any> = state.finalModelAndErrors.errorSchema;
     const ctmlModelString = JSON.stringify(ctmlModel, null, 2);
-    setIsDialogVisible(true);
+    // setIsDialogVisible(true);
     // console.log(formErrors);
 
-    // const blob = new Blob([ctmlModelString], {type: 'application/json'});
-    // const url = URL.createObjectURL(blob);
-    // const link = document.createElement('a');
-    // link.setAttribute('href', url);
-    // link.setAttribute('download', 'ctml-model.json');
-    // link.style.display = 'none';
-    // document.body.appendChild(link);
-    // link.click();
-    // document.body.removeChild(link);
+    const blob = new Blob([ctmlModelString], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'ctml-model.json');
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   const getValidationErrors = () => {
