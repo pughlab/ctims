@@ -47,8 +47,6 @@ const CtimsMatchingCriteriaWidget = (props: WidgetProps) => {
     uiSchema,
   } = props;
 
-  console.log('CtimsMatchingCriteriaWidget', props)
-
   // Will trigger re-render when the ctmlModel changes and thus will display the preview
   // The dispatch is called from ui.tsx in onDialogHideCallback
   const ctmlModel: any = useSelector((state: RootState) => state.finalModelAndErrors.ctmlModel);

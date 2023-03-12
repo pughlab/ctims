@@ -2,14 +2,16 @@ import styles from './EditorTopBar.module.scss';
 import {useRouter} from "next/router";
 import { Button } from 'primereact/button';
 import {store} from "../../store/store";
-import {ValidationData} from "@rjsf/utils";
+import {RJSFValidationError, ValidationData} from "@rjsf/utils";
 import {useState} from "react";
 import ExportCtmlDialog from "./ExportCtmlDialog";
+import {extractErrors} from "../../../../libs/ui/src/lib/components/helpers";
 
 
 const EditorTopBar = () => {
 
   const [isDialogVisible, setIsDialogVisible] = useState<boolean>(false);
+  const [errorViewModel, setErrorViewModel] = useState<string[]>([]);
 
   const router = useRouter();
 
@@ -23,18 +25,21 @@ const EditorTopBar = () => {
     const ctmlModel = state.finalModelAndErrors.ctmlModel;
     const formErrors: ValidationData<any> = state.finalModelAndErrors.errorSchema;
     const ctmlModelString = JSON.stringify(ctmlModel, null, 2);
-    // setIsDialogVisible(true);
-    // console.log(formErrors);
+    const errorSchema: RJSFValidationError[] = formErrors.errors;
+    const viewModelErrors = extractErrors(errorSchema);
+    setErrorViewModel(viewModelErrors)
+    setIsDialogVisible(true);
+    console.log('onExportClick', formErrors);
 
-    const blob = new Blob([ctmlModelString], {type: 'application/json'});
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'ctml-model.json');
-    link.style.display = 'none';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // const blob = new Blob([ctmlModelString], {type: 'application/json'});
+    // const url = URL.createObjectURL(blob);
+    // const link = document.createElement('a');
+    // link.setAttribute('href', url);
+    // link.setAttribute('download', 'ctml-model.json');
+    // link.style.display = 'none';
+    // document.body.appendChild(link);
+    // link.click();
+    // document.body.removeChild(link);
   }
 
   const getValidationErrors = () => {
@@ -48,7 +53,7 @@ const EditorTopBar = () => {
       <ExportCtmlDialog
         isDialogVisible={isDialogVisible}
         exportCtmlClicked={onExportClick}
-        validationErrors={getValidationErrors()}
+        validationErrors={errorViewModel}
         onDialogHide={() => setIsDialogVisible(false)}
       />
     <div className={styles.topBar}>

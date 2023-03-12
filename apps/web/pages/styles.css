@@ -46,6 +46,13 @@
   height: 16px;
 }
 
+.p-inline-message {
+  align-items: flex-start !important;
+  flex-direction: column !important;
+  color: black !important;
+  width: 95% !important;
+}
+
 .p-tooltip {
   width: 300px !important;
 }

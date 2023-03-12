@@ -6,11 +6,11 @@ import CtimsArrayFieldSingleTemplate from "../custom-rjsf-templates/CtimsArrayFi
 import {JSONSchema7} from "json-schema";
 import CtimsArrayFieldItemTemplate from "../custom-rjsf-templates/CtimsArrayFieldItemTemplate";
 import CtimsArrayFieldTemplate from "../custom-rjsf-templates/CtimsArrayFieldTemplate";
-import localValidator from "@rjsf/validator-ajv8";
+import localValidator, {customizeValidator} from "@rjsf/validator-ajv8";
 import {CSSProperties, ForwardedRef, forwardRef, memo} from "react";
 import {withTheme} from "@rjsf/core";
 import {Theme as PrimeTheme} from "../primereact";
-import {RegistryWidgetsType} from "@rjsf/utils";
+import {ErrorSchema, RegistryWidgetsType, RJSFValidationError} from "@rjsf/utils";
 import CtimsInput from "../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../custom-rjsf-templates/CtimsDropdown";
 import CtimsMatchingCriteriaWidget from "../custom-rjsf-templates/CtimsMatchingCriteriaWidget";
@@ -28,6 +28,12 @@ const widgets: RegistryWidgetsType = {
 const containerStyle: CSSProperties = {
   width: '100%',
 }
+
+const ajvOptionsOverrides = {
+  verbose: true,
+};
+
+export const ctims_validator = customizeValidator({ ajvOptionsOverrides });
 
 const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: ForwardedRef<any>) => {
 
@@ -118,6 +124,18 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
           }
         },
         "title": "Trial Information"
+      },
+      "age_group": {
+        "type": "object",
+        "required": ["age"],
+        "properties": {
+          "age": {
+            "type": "string",
+            "title": "Age Group",
+            "description": "The age group the study is focused on",
+          }
+        },
+        "title": "Age"
       },
       "drugList": {
         "type": "object",
@@ -385,6 +403,11 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
         }
       },
       {
+        "age_group": {
+          "span": 24
+        }
+      },
+      {
         "drugList": {
           "span": 24
         }
@@ -471,6 +494,17 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
         },
         {
           "nct_purpose": {
+            "span": 24
+          }
+        }
+      ]
+    },
+    "age_group": {
+      "ui:ObjectFieldTemplate": RjsfGridFieldTemplate,
+      "ui:spacing": 16,
+      "ui:layout": [
+        {
+          "age": {
             "span": 24
           }
         }
@@ -702,8 +736,8 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
     console.log(e);
   };
 
-  const onError = (e: any) => {
-    console.log(e);
+  const onError = (e: RJSFValidationError) => {
+    console.log('onError', e);
   }
 
   const initialFormData = {
