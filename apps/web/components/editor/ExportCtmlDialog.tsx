@@ -3,33 +3,13 @@ import {Dialog} from "primereact/dialog";
 import {Button} from "primereact/button";
 import {ValidationData} from "@rjsf/utils";
 import { RadioButton } from 'primereact/radiobutton'
+import styles from './ExportCtmlDialog.module.scss';
 
 interface ExportCtmlDialogProps {
   isDialogVisible: boolean;
   exportCtmlClicked: () => void;
   validationErrors: ValidationData<any>;
   onDialogHide: () => void;
-}
-
-const dismissBtnStyle: CSSProperties = {
-  height: '36px',
-  fontFamily: "'Inter', sans-serif",
-  fontStyle: 'normal',
-  fontWeight: '600',
-  fontSize: '14px',
-  lineHeight: '16px',
-  color: '#2E72D2'
-}
-
-const saveBtnStyle: CSSProperties = {
-  marginLeft: '8px',
-  backgroundColor: '#2E72D2',
-  fontFamily: "'Inter', sans-serif",
-  fontStyle: 'normal',
-  fontWeight: '600',
-  fontSize: '14px',
-  lineHeight: '16px',
-  height: '36px'
 }
 
 const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
@@ -46,10 +26,12 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
 
   const footer = (props: {exportCtmlClicked: () => void}) => {
     const {exportCtmlClicked} = props;
+    const cancelBtn = `p-button-text ${styles['cancel-btn']}`
+    const exportBtn = `${styles['export-btn']}`
     return (
       <div>
-        <Button label="Save Matching Criteria" onClick={exportCtmlClicked} style={saveBtnStyle} />
-        <Button label="Dismiss" onClick={onDialogHide} style={dismissBtnStyle} />
+        <Button label="Cancel" className={cancelBtn} onClick={onDialogHide} />
+        <Button label="Export CTML" onClick={exportCtmlClicked} className={exportBtn} />
       </div>
     )
   }
@@ -58,17 +40,24 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
     <Dialog header="Export CTML"
             footer={() => footer({exportCtmlClicked: props.exportCtmlClicked})}
             visible={isDialogVisible}
-            style={{width: '960px', minHeight: '300px'}}
+            style={{width: '700px', minHeight: '200px'}}
             onHide={onDialogHide}>
       <div style={{marginLeft: '30px'}}>
         <h2>Export As</h2>
         <div className="field-radiobutton">
           <RadioButton inputId="json" name="json" value="JSON" onChange={(e) => setFormat(e.value)} checked={format === 'JSON'} />
-          <label htmlFor="city1">Chicago</label>
+          <label htmlFor="json" className={styles['radio-btn']}>JSON</label>
         </div>
         <div className="field-radiobutton">
-          <RadioButton inputId="yaml" name="json" value="YAML" onChange={(e) => setFormat(e.value)} checked={format === 'YAML'} />
-          <label htmlFor="city2">Los Angeles</label>
+          <RadioButton
+            inputId="yaml"
+            name="json"
+            value="YAML"
+            onChange={(e) => setFormat(e.value)}
+            checked={format === 'YAML'}
+            style={{marginTop: '8px'}}
+          />
+          <label htmlFor="yaml" className={styles['radio-btn']}>YAML</label>
         </div>
       </div>
     </Dialog>

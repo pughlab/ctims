@@ -6,6 +6,7 @@ import { TabView, TabPanel } from 'primereact/tabview';
 import {useSelector} from "react-redux";
 import {stringify} from 'yaml'
 import {isObjectEmpty} from "../components/helpers";
+import {RootState} from "../../../../../apps/web/store/store";
 
 const headerTemplate = (options: any, props: { title: string, }) => {
   const {title} = props;
@@ -53,7 +54,7 @@ const CtimsMatchingCriteriaWidget = (props: WidgetProps) => {
 
   // Will trigger re-render when the ctmlModel changes and thus will display the preview
   // The dispatch is called from ui.tsx in onDialogHideCallback
-  const ctmlModel: any = useSelector((state: any) => state.ctmlModel.ctmlModel);
+  const ctmlModel: any = useSelector((state: RootState) => state.finalModelAndErrors.ctmlModel);
 
   const btnClick = uiSchema!['onClick'];
 

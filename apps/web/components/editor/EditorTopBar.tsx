@@ -20,8 +20,8 @@ const EditorTopBar = () => {
 
   const onExportClick = () => {
     const state = store.getState();
-    const ctmlModel = state.fianlModelAndErrors.ctmlModel;
-    const formErrors: ValidationData<any> = state.fianlModelAndErrors.errorSchema;
+    const ctmlModel = state.finalModelAndErrors.ctmlModel;
+    const formErrors: ValidationData<any> = state.finalModelAndErrors.errorSchema;
     const ctmlModelString = JSON.stringify(ctmlModel, null, 2);
     setIsDialogVisible(true);
     // console.log(formErrors);
@@ -39,7 +39,7 @@ const EditorTopBar = () => {
 
   const getValidationErrors = () => {
     const state = store.getState();
-    const formErrors: ValidationData<any> = state.fianlModelAndErrors.errorSchema;
+    const formErrors: ValidationData<any> = state.finalModelAndErrors.errorSchema;
     return formErrors;
   }
 
