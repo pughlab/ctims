@@ -73,8 +73,8 @@ const CtimsMatchingCriteriaWidget = (props: WidgetProps) => {
     borderRadius: '4px',
   }
 
-  const yamlString = stringify(formContext.formData.match, null, 2);
-  const jsonString = JSON.stringify(formContext.formData.match, null, 2);
+  const yamlString = stringify(formContext.formData?.match, null, 2);
+  const jsonString = JSON.stringify(formContext.formData?.match, null, 2);
 
   return (
       <div className={styles.container}>
@@ -83,14 +83,14 @@ const CtimsMatchingCriteriaWidget = (props: WidgetProps) => {
             <TabView>
               <TabPanel header="YAML">
                 <div className={styles.preview}>
-                  {isObjectEmpty(formContext.formData.match) ?
+                  {isObjectEmpty(formContext.formData?.match) ?
                     null: <pre className={styles['pre-tag']}>{yamlString}</pre>
                   }
                 </div>
               </TabPanel>
               <TabPanel header="JSON">
                 <div className={styles.preview}>
-                  {isObjectEmpty(formContext.formData.match) ?
+                  {isObjectEmpty(formContext.formData?.match) ?
                     null: <pre className={styles['pre-tag']}>{jsonString}</pre>
                   }
                 </div>

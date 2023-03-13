@@ -767,20 +767,20 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
         {}
       ]
     },
-    "treatment_list": {
-      "step": [
-        {
-          "arm": [
-            {
-              "dose_level": [
-                {}
-              ],
-              "match": {}
-            }
-          ]
-        }
-      ]
-    }
+    // "treatment_list": {
+    //   "step": [
+    //     {
+    //       "arm": [
+    //         {
+    //           "dose_level": [
+    //             {}
+    //           ],
+    //           "match": {}
+    //         }
+    //       ]
+    //     }
+    //   ]
+    // }
   }
 
   return (
