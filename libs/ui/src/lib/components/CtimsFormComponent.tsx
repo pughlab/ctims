@@ -50,8 +50,8 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
           "long_title",
           "short_title",
           "phase",
-          "disease_status",
-          "prior_treatment_requirements",
+          // "disease_status",
+          // "prior_treatment_requirements",
           "protocol_no",
           "nct_purpose"
         ],
@@ -103,16 +103,16 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
               "IV"
             ],
           },
-          "disease_status": {
-            "type": "string",
-            "title": "Disease Status",
-            "description": "A list of conditions or diseases",
-          },
-          "prior_treatment_requirements": {
-            "type": "string",
-            "title": "Prior Treatment Requirements",
-            "description": "The Inclusion Criteria of the study",
-          },
+          // "disease_status": {
+          //   "type": "string",
+          //   "title": "Disease Status",
+          //   "description": "A list of conditions or diseases",
+          // },
+          // "prior_treatment_requirements": {
+          //   "type": "string",
+          //   "title": "Prior Treatment Requirements",
+          //   "description": "The Inclusion Criteria of the study",
+          // },
           "protocol_no": {
             "type": "string",
             "title": "Protocol Number",
@@ -433,11 +433,11 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
           "span": 24
         }
       },
-      {
-        "prior_treatment_requirements": {
-          "span": 24
-        }
-      }
+      // {
+      //   "prior_treatment_requirements": {
+      //     "span": 24
+      //   }
+      // }
     ],
     "trialInformation": {
       "ui:ObjectFieldTemplate": RjsfGridFieldTemplate,
@@ -478,16 +478,16 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             "span": 24
           }
         },
-        {
-          "disease_status": {
-            "span": 24
-          }
-        },
-        {
-          "prior_treatment_requirements": {
-            "span": 24
-          }
-        },
+        // {
+        //   "disease_status": {
+        //     "span": 24
+        //   }
+        // },
+        // {
+        //   "prior_treatment_requirements": {
+        //     "span": 24
+        //   }
+        // },
         {
           "protocol_no": {
             "span": 24
@@ -694,9 +694,9 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
         }
       }
     },
-    "prior_treatment_requirements": {
-      "ui:ArrayFieldTemplate": CtimsArrayFieldSingleTemplate,
-    },
+    // "prior_treatment_requirements": {
+    //   "ui:ArrayFieldTemplate": CtimsArrayFieldSingleTemplate,
+    // },
     "treatment_list": {
       "ui:ObjectFieldTemplate": CtimsObjectFieldTemplate,
       "step": {
