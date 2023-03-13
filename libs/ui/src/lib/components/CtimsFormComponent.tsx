@@ -17,6 +17,7 @@ import CtimsMatchingCriteriaWidget from "../custom-rjsf-templates/CtimsMatchingC
 import CtimsCheckboxWidget from "../custom-rjsf-templates/CtimsCheckbox";
 import CtimsFieldTemplate from "../custom-rjsf-templates/CtimsFieldTemplate";
 import CtimsErrorListTemplate from "../custom-rjsf-templates/CtimsErrorListTemplate";
+import DoseLevelObjectFieldTemplate from "../custom-rjsf-templates/DoseLevelObjectFieldTemplate";
 
 const Form = withTheme(PrimeTheme)
 
@@ -718,7 +719,8 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
               },
               "dose_level": {
                "items": {
-                  "ui:ObjectFieldTemplate": CtimsItemObjectFieldTemplate,
+                  "ui:ObjectFieldTemplate": DoseLevelObjectFieldTemplate,
+                 "key": "dose_level",
                  "level_suspended": {
                     "ui:widget": CtimsCheckboxWidget
                  }
