@@ -4,22 +4,35 @@ import {Button} from "primereact/button";
 import { RadioButton } from 'primereact/radiobutton'
 import styles from './ExportCtmlDialog.module.scss';
 import {Message} from "primereact/message";
+import {useSelector} from "react-redux";
+import {RootState} from "../../store/store";
+import {ValidationData} from "@rjsf/utils";
+import {extractErrors, isObjectEmpty} from "../../../../libs/ui/src/lib/components/helpers";
 
 interface ExportCtmlDialogProps {
   isDialogVisible: boolean;
   exportCtmlClicked: () => void;
-  validationErrors: string[];
   onDialogHide: () => void;
 }
 
 const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
   const [isDialogVisible, setIsDialogVisible] = useState<boolean>(props.isDialogVisible);
-  const [errors] = useState<string[]>(props.validationErrors);
+  const [errors, setErrors] = useState<string[]>([]);
   const [format, setFormat] = useState<string>('JSON');
+
+  const errorSchema: ValidationData<any> = useSelector((state: RootState) => state.finalModelAndErrors.errorSchema);
 
   useEffect(() => {
     setIsDialogVisible(props.isDialogVisible);
   }, [props.isDialogVisible])
+
+  useEffect(() => {
+    if (!isObjectEmpty(errorSchema)) {
+      const viewModelErrors = extractErrors(errorSchema.errors);
+      setErrors(viewModelErrors)
+    }
+
+  }, [errorSchema])
 
   const onDialogHide = () => {
     props.onDialogHide();

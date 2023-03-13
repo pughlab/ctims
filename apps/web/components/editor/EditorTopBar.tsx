@@ -11,7 +11,6 @@ import {extractErrors} from "../../../../libs/ui/src/lib/components/helpers";
 const EditorTopBar = () => {
 
   const [isDialogVisible, setIsDialogVisible] = useState<boolean>(false);
-  const [errorViewModel, setErrorViewModel] = useState<string[]>([]);
 
   const router = useRouter();
 
@@ -25,9 +24,7 @@ const EditorTopBar = () => {
     const ctmlModel = state.finalModelAndErrors.ctmlModel;
     const formErrors: ValidationData<any> = state.finalModelAndErrors.errorSchema;
     const ctmlModelString = JSON.stringify(ctmlModel, null, 2);
-    const errorSchema: RJSFValidationError[] = formErrors.errors;
-    const viewModelErrors = extractErrors(errorSchema);
-    setErrorViewModel(viewModelErrors)
+    // setErrorViewModel(viewModelErrors)
     setIsDialogVisible(true);
     console.log('onExportClick', formErrors);
 
@@ -53,7 +50,6 @@ const EditorTopBar = () => {
       <ExportCtmlDialog
         isDialogVisible={isDialogVisible}
         exportCtmlClicked={onExportClick}
-        validationErrors={errorViewModel}
         onDialogHide={() => setIsDialogVisible(false)}
       />
     <div className={styles.topBar}>
