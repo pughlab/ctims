@@ -767,20 +767,25 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
         {}
       ]
     },
-    // "treatment_list": {
-    //   "step": [
-    //     {
-    //       "arm": [
-    //         {
-    //           "dose_level": [
-    //             {}
-    //           ],
-    //           "match": {}
-    //         }
-    //       ]
-    //     }
-    //   ]
-    // }
+    "treatment_list": {
+      "step": [
+        {
+          // if I add dose_level[{}], the form does not work properly
+          "arm": [{
+            "match": {},
+          }]
+          // "arm": [
+          //   {
+          //     "arm_code": "Group 1",
+          //     "dose_level": [
+          //       {}
+          //     ],
+          //     "match": {}
+          //   }
+          // ]
+        }
+      ]
+    }
   }
 
   return (
@@ -798,7 +803,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
               props.onRjsfFormChange(data)
             }} // @ts-ignore
             onError={(data) => {onError(data)}}
-            formData={initialFormData}
+            // formData={initialFormData}
             uiSchema={uiSchema}
             widgets={widgets}
             onSubmit={(data) => {

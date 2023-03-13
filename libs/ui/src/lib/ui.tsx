@@ -40,7 +40,7 @@ export const Ui = (props: UiProps) => {
   });
 
   const handleSpecialClick = (formD: any, id: string) => {
-    const formData = formD.formData
+    const formData = formD
     console.log('handleSpecialClick formData: ', formD.formData);
     console.log('handleSpecialClick armCode: ', formData.arm_code);
     console.log('handleSpecialClick id: ', id);

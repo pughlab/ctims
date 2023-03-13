@@ -6,7 +6,7 @@ import styles from './ExportCtmlDialog.module.scss';
 import {Message} from "primereact/message";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/store";
-import {ValidationData} from "@rjsf/utils";
+import {RJSFValidationError, ValidationData} from "@rjsf/utils";
 import {extractErrors, isObjectEmpty} from "../../../../libs/ui/src/lib/components/helpers";
 import {stringify} from 'yaml'
 import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
@@ -38,12 +38,13 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
   }, [props.isDialogVisible])
 
   useEffect(() => {
-    console.log('errors', errorSchema);
+    let errorObjList: RJSFValidationError[] = errorSchema.errors;
+    const filteredErrorObjList = errorObjList.filter((errorObj: RJSFValidationError) => {
+      return errorObj.message !== 'must be object';
+    })
     if (!isObjectEmpty(errorSchema)) {
-      const viewModelErrors = extractErrors(errorSchema.errors);
+      const viewModelErrors = extractErrors(filteredErrorObjList);
       setErrors(viewModelErrors)
-    } else if (errorSchema.errors.length === 1 && errorSchema.errors[0].message === 'must be object') {
-      setErrors([]);
     }
     else {
       setErrors([]);
