@@ -8,6 +8,8 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import {ValidationData} from "@rjsf/utils";
 import {extractErrors, isObjectEmpty} from "../../../../libs/ui/src/lib/components/helpers";
+import {stringify} from 'yaml'
+import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
 
 interface ExportCtmlDialogProps {
   isDialogVisible: boolean;
@@ -19,8 +21,17 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
   const [isDialogVisible, setIsDialogVisible] = useState<boolean>(props.isDialogVisible);
   const [errors, setErrors] = useState<string[]>([]);
   const [format, setFormat] = useState<string>('JSON');
+  const [exportButtonDisabled, setExportButtonDisabled] = useState<boolean>(true);
 
   const errorSchema: ValidationData<any> = useSelector((state: RootState) => state.finalModelAndErrors.errorSchema);
+  const ctmlModel = useSelector((state: RootState) => state.finalModelAndErrors.ctmlModel);
+
+  useEffect(() => {
+    if(ctmlModel === null) {
+    console.log('ctmlModel', ctmlModel);
+      setExportButtonDisabled(true);
+    }
+  }, [ctmlModel])
 
   useEffect(() => {
     setIsDialogVisible(props.isDialogVisible);
@@ -30,9 +41,23 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
     if (!isObjectEmpty(errorSchema)) {
       const viewModelErrors = extractErrors(errorSchema.errors);
       setErrors(viewModelErrors)
+    } else {
+      setErrors([]);
     }
 
   }, [errorSchema])
+
+  useEffect(() => {
+    if (errors.length > 0) {
+      setExportButtonDisabled(true);
+    }
+    if (errors.length === 0) {
+      if (ctmlModel !== null) {
+        setExportButtonDisabled(false);
+      }
+    }
+
+  }, [errors])
 
   const onDialogHide = () => {
     props.onDialogHide();
@@ -47,7 +72,7 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
         <Button label="Cancel" className={cancelBtn} onClick={onDialogHide} />
         <Button
           label="Export CTML"
-          disabled={errors.length > 0}
+          disabled={false}
           onClick={exportCtmlClicked}
           className={exportBtn}
         />
@@ -70,14 +95,46 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
     )
   }
 
+
+  const doExport = () => {
+
+    const move = () => {
+      let ctmlModelCopy;
+      const age_group = ctmlModel.age_group;
+      const trialInformation = ctmlModel.trialInformation;
+      ctmlModelCopy = {...ctmlModel, ...trialInformation, ...age_group};
+      delete ctmlModelCopy.age_group;
+      delete ctmlModelCopy.trialInformation;
+      return ctmlModelCopy;
+    }
+
+    const ctmlModelCopy = move();
+
+    let ctmlModelString = JSON.stringify(ctmlModelCopy, null, 2);
+    let fileName = 'ctml-model.json';
+    if (format === 'YAML') {
+      ctmlModelString = stringify(ctmlModel);
+      fileName = 'ctml-model.yaml';
+    }
+    const blob = new Blob([ctmlModelString], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', fileName);
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
   return (
     <Dialog header="Export CTML"
-            footer={() => footer({exportCtmlClicked: props.exportCtmlClicked})}
+            footer={() => footer({exportCtmlClicked: doExport})}
             visible={isDialogVisible}
             style={{width: '700px', minHeight: '200px'}}
             onHide={onDialogHide}>
       <div>
-        <Message
+        {errors.length > 0 && (<Message
           severity="error"
           style={{
             whiteSpace: "pre-line",
@@ -85,7 +142,8 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
             marginBottom: '10px'
           }}
           content={errorContent}
-        />
+        />)}
+
       </div>
       <div style={{marginLeft: '30px'}}>
         <h2>Export As</h2>

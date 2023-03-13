@@ -334,7 +334,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                         "description": "A description of an individual trial arm"
                       },
                       "arm_internal_id": {
-                        "type": "integer",
+                        "type": "string",
                         "title": 'Arm Internal Id',
                         "description": "Internal ID of arm"
                       },
@@ -361,7 +361,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                               "description": "Dose level description. The dosage details and frequency of administration"
                             },
                             "level_internal_id": {
-                              "type": "integer",
+                              "type": "string",
                               "title": "Level Internal Id",
                               "description": "Internal dose ID"
                             },

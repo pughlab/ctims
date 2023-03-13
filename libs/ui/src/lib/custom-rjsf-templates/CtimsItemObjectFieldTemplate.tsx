@@ -55,7 +55,8 @@ const CtimsItemObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
     }
 
     // This magic line allows two-way communication between the main form and the dialog
-    if (!isObjectEmpty(formData) && stringContains(idSchema.$id, 'root')) {
+    if (!isObjectEmpty(formData) && (idSchema.$id === 'root_treatment_list_step_0_arm_0')) {
+        console.log('CtimsItemObjectFieldTemplate: magic line', props)
         formContext.formData = formData
     }
     return (
