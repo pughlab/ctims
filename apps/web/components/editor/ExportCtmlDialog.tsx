@@ -38,16 +38,21 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
   }, [props.isDialogVisible])
 
   useEffect(() => {
+    console.log('errors', errorSchema);
     if (!isObjectEmpty(errorSchema)) {
       const viewModelErrors = extractErrors(errorSchema.errors);
       setErrors(viewModelErrors)
-    } else {
+    } else if (errorSchema.errors.length === 1 && errorSchema.errors[0].message === 'must be object') {
+      setErrors([]);
+    }
+    else {
       setErrors([]);
     }
 
   }, [errorSchema])
 
   useEffect(() => {
+
     if (errors.length > 0) {
       setExportButtonDisabled(true);
     }
@@ -72,7 +77,7 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
         <Button label="Cancel" className={cancelBtn} onClick={onDialogHide} />
         <Button
           label="Export CTML"
-          disabled={false}
+          disabled={exportButtonDisabled}
           onClick={exportCtmlClicked}
           className={exportBtn}
         />
