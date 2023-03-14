@@ -2,10 +2,9 @@ import styles from './EditorTopBar.module.scss';
 import {useRouter} from "next/router";
 import { Button } from 'primereact/button';
 import {store} from "../../store/store";
-import {RJSFValidationError, ValidationData} from "@rjsf/utils";
+import {ValidationData} from "@rjsf/utils";
 import {useState} from "react";
 import ExportCtmlDialog from "./ExportCtmlDialog";
-import {extractErrors} from "../../../../libs/ui/src/lib/components/helpers";
 
 
 const EditorTopBar = () => {
