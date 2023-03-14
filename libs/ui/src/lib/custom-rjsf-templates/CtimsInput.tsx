@@ -61,7 +61,8 @@ const CtimsInput = (props: WidgetProps) => {
                 required={required}
                 disabled={disabled}
                 readOnly={readonly}
-                className={cn("w-full", rawErrors.length > 0 ? "p-invalid" : "")}
+                // className={cn("w-full", rawErrors.length > 0 ? "p-invalid" : "")}
+                className={cn("w-full")}
                 list={schema.examples ? `examples_${id}` : undefined}
                 type={inputType}
                 value={value || value === 0 ? value : ""}

@@ -231,6 +231,18 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     tieredMenu.current.show(e);
   }
 
+  const deleteNodeClicked = (nodeKey: string) => {
+    if (nodeKey) {
+      const newRootNodes = structuredClone(rootNodes);
+      deleteNodeFromChildrenArrayByKey(newRootNodes[0], nodeKey);
+      setRootNodes(newRootNodes);
+      // after deleting a node we set the component to none
+      onTreeNodeClick(EComponentType.None, newRootNodes[0]);
+      const state = store.getState();
+      updateReduxViewModelAndCtmlModel(newRootNodes, state);
+    }
+  }
+
   const nodeTemplate = (node: TreeNode) => {
 
     const [isMouseOverNode, setIsMouseOverNode] = useState(false);
@@ -271,7 +283,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       {
         label: 'Delete',
         icon: 'pi pi-trash',
-        command: () => { console.log('delete node selectedNode ', selectedNode) }
+        command: () => { deleteNodeClicked(selectedNode.key) }
       },
       {
         separator:true
