@@ -106,6 +106,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
 
   return (
     <Dialog header={() => header({armCode: props.armCode as string})}
+            blockScroll
             footer={() => footer({saveMatchingCriteriaClicked: saveClickCallback})}
             visible={isDialogVisible}
             style={{width: '960px', height: '710px'}}
