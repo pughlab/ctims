@@ -126,9 +126,7 @@ export const getAddCriteriaToSubGroup = () => cy.get('.p-tieredmenu>ul>li:nth-ch
 export const getMenuItemClinicalGenomic = () => cy.get('.p-tieredmenu>ul>li:nth-child(1)>ul>li') //2 elements
 
 //Clinical at child(3) and genomic at child(4)
-// export const getMenuItemAnd = () => cy.get('.p-tieredmenu>ul>li:nth-child(5)>ul>li:nth-child(1)')
-export const getMenuItemAnd = () => cy.get('.p-tieredmenu>ul>li:nth-child(5)')
-
+  export const getMenuItemAnd = () => cy.get('.p-tieredmenu>ul>li:nth-child(5)>ul>li:nth-child(1)')
 export const getMenuItemOr = () => cy.get('.p-submenu-list>li:nth-child(2)>a')
 
 //Operator
