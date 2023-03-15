@@ -197,6 +197,7 @@ describe('CTIMS Trial Editor', () => {
       //.next().trigger('mouseover').click()
       //cy.get('.p-menuitem-active > .p-submenu-list > :nth-child(1) > .p-menuitem-link').click()
       //cy.wait(1000)
+      getMenuItemAnd().trigger('mouseover').click({force: true})
       // getMenuItemAnd().trigger('mouseover').click({force: true})
       getMenuItemAnd().invoke('addClass', 'p-menuitem-active').click({force: true})
     })
