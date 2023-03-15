@@ -14,8 +14,11 @@ const cypressJsonConfig: EndToEndConfigOptions = {
   supportFile: 'src/support/e2e.ts',
 };
 export default defineConfig({
-  viewportWidth: 1920,
-  viewportHeight: 1080,
+ // viewportWidth: 1920,
+  //viewportHeight: 1080,
+  "env": {
+     "baseUrl": "http://localhost:4200/",
+   },
   e2e: {
     ...nxE2EPreset(__dirname),
     ...cypressJsonConfig,
