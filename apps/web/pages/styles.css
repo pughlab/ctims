@@ -55,6 +55,11 @@
 
 .p-tooltip {
   width: 300px !important;
+  box-shadow: none !important;
+}
+
+.p-tooltip .p-tooltip-text {
+  box-shadow: none !important;
 }
 
 .p-tabview .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus {
