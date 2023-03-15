@@ -7,8 +7,6 @@ export const trialEditorHeader = () => cy.get('.EditorTopBar_title__kDE8R')
 
 //TrialEditor Buttons (Discard, Export, Save)
 export const trialEditorHeaderButtons = () => cy.get('.EditorTopBar_menuBtnGroup__dBNyO>button') //3 elements
-export const trialEditorRadioButtons = () => cy.get('.field-radiobutton>.p-radiobutton') //json and yamlradio buttons
-export const trialEditorExportCtml = () => cy.get('.p-dialog-footer>div>button') //2 buttons Cancel and Export CTML
 
 //LeftPanel Trial Editor
 export const trialEditorLeftPanelList = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li') //8 elements
@@ -30,18 +28,14 @@ const selectCtmlStatus = () => cy.get('[aria-label="Draft"]').click();
 
 //Dropdown for Phase
 export const getClickPhase = () => cy.get('#root_trialInformation_phase')
-export const getPhaseDropdownList = () => cy.get('.p-dropdown-items-wrapper>ul>li') //list all the 4 phases
-//default drop down for Trial Editor page
-export const getDefaultTrialEditorDropDown = () => cy.get('.p-dropdown-item')
+export const getPhaseDropdownList = () => cy.get('.p-dropdown-items-wrapper>ul>li') //list all the 4 phases, select
+// according
+// to requirements
 
 export const selectDraftCtmlStatus = () => {
   clickCtmlStatusDropdown();
   selectCtmlStatus();
 }
-
-//status
-export const getTrialInformationStatus = () => cy.get('#root_trialInformation_status')
-
 //default icon list
 export const getAllPanelHeaderTop = () => cy.get('.ctimsPanelHeaderTop') //contains 6 header starts with "Drug1"
 //default plus icon in drug list-1, management group list-1, site list-1, sponsor list-1, staff list-1, treatment list-3
@@ -62,26 +56,22 @@ export const getCheckBoxLevelIsSuspended = () => cy.get('#object-field-template-
 export const getAgeGroup = () => cy.get('#root_age_group_age')
 
 //Drug List
-export const getDrugName = () => cy.get('#root_drug_list_drug_0_drug_name')
+export const getDrugName = () => cy.get('#root_drugList_drug_0_drug_name')
 
 //Management Group List
 export const getManagementGroupName = () => cy.get('#root_management_group_list_management_group_0_management_group_name')
-export const getPrimaryManagementGroup = () => cy.get('#root_management_group_list_management_group_0_is_primary')
 
 //Site List
 export const getSiteName = () => cy.get('#root_site_list_site_0_site_name')
 export const getSiteStatus = () => cy.get('#root_site_list_site_0_site_status')
-export const getCoordinatingCenter = () => cy.get('#root_site_list_site_0_coordinating_center')
-export const getCancerCenterIRB = () => cy.get('#root_site_list_site_0_uses_cancer_center_irb')
 
 //Sponsor List
 export const getSponsorName = () => cy.get('#root_sponsor_list_sponsor_0_sponsor_name')
-export const getPrincipalSponsor = () => cy.get('#root_sponsor_list_sponsor_0_is_principal_sponsor')
 
 //Staff List
 export const getProtocolStaffFirstName = () => cy.get('#root_staff_list_protocol_staff_0_first_name')
 export const getProtocolStaffLastName = () => cy.get('#root_staff_list_protocol_staff_0_last_name')
-export const getProtocolStaffEmail = () => cy.get('#root_staff_list_protocol_staff_0_email_address')
+export const getProtocolStaffEmail = () => cy.get('#root_staff_list_protocol_staff_0_email')
 export const getProtocolStaffInstitutionalName = () => cy.get('#root_staff_list_protocol_staff_0_institution_name')
 export const getProtocolStaffRole = () => cy.get('#root_staff_list_protocol_staff_0_staff_role')
 export const getProtocolStaffStatus = () => cy.get('#root_staff_list_protocol_staff_0_status')
@@ -92,15 +82,10 @@ export const getProtocolStaffStatus = () => cy.get('#root_staff_list_protocol_st
 export const getArmCode = () => cy.get('#root_treatment_list_step_0_arm_0_arm_code')
 export const getArmDescription = () => cy.get('#root_treatment_list_step_0_arm_0_arm_description')
 export const getArmInternalId = () => cy.get('#root_treatment_list_step_0_arm_0_arm_internal_id')
-export const getArmSuspended = () => cy.get('#root_treatment_list_step_0_arm_0_arm_suspended')
 //DOSE_LEVEL 1
 export const getLevelCode = () => cy.get('#root_treatment_list_step_0_arm_0_dose_level_0_level_code')
 export const getLevelDescription = () => cy.get('#root_treatment_list_step_0_arm_0_dose_level_0_level_description')
 export const getLevelInternalId = () => cy.get('#root_treatment_list_step_0_arm_0_dose_level_0_level_internal_id')
-export const getLevelSuspended = () => cy.get('#root_treatment_list_step_0_arm_0_dose_level_0_level_suspended')
-
-//Matching Criteria Table View Content has"YAML" and "JSON"
-export const getMatchingCriteriaTableHeader = () => cy.get('.p-tabview-title')
 
 //Edit Matching Criteria
 export const getEditMatchingCriteria = () => cy.get('.CtimsMatchingCriteriaWidget_edit-matching-criteria-title__qEaKg')
@@ -108,7 +93,7 @@ export const getEditMatchingCriteria = () => cy.get('.CtimsMatchingCriteriaWidge
 //******************* Match Modal Criteria ********************************************************//
 
 //Footer Buttons("Discard", "Save matching criteria")
-export const getMatchModalFooterButtons = () => cy.get('.p-dialog-footer>div>button') //2 elements
+export const getFooterButtons = () => cy.get('.p-dialog-footer>div>button') //2 elements
 
 //Match Criteria Default Text
 export const getDefaultTextMatchingCriteria = () => cy.get('.MatchingMenuAndForm_matchingCriteriaFormContainerEmptyText__6I4Dm')
@@ -139,12 +124,10 @@ export const getAddCriteriaToSubGroup = () => cy.get('.p-tieredmenu>ul>li:nth-ch
 
 //Clinical at child(1) and genomic at child(2)
 export const getMenuItemClinicalGenomic = () => cy.get('.p-tieredmenu>ul>li:nth-child(1)>ul>li') //2 elements
-export const getMenuItemClinical = () => cy.get('.p-menuitem-link>.clinical-icon') //2 elements
-export const getMenuItemGenomic = () => cy.get('.p-menuitem-link>.genomic-icon') //2 elements
 
 //Clinical at child(3) and genomic at child(4)
-export const getMenuItemAnd = () => cy.get('.p-menuitem-active > .p-submenu-list > :nth-child(1) > .p-menuitem-link')
-export const getMenuItemOr = () => cy.get('.p-menuitem-active > .p-submenu-list > :nth-child(2) > .p-menuitem-link')
+  export const getMenuItemAnd = () => cy.get('.p-tieredmenu>ul>li:nth-child(5)>ul>li:nth-child(1)')
+export const getMenuItemOr = () => cy.get('.p-submenu-list>li:nth-child(2)>a')
 
 //Operator
 export const getOperator = () => cy.get('.p-inputwrapper-filled') //do a click action
@@ -207,26 +190,6 @@ export const getGenomicDropDown = () => cy.get('.p-dropdown-panel>div>ul>li')
 
 
 //******************* Clinical ********************************************************//
-
-//Age
-export const getClinicalAge = () => cy.get('#root_age_numerical')
-
-//Oncotree Primary Diagnosis
-export const getClinicalOncotreePrimaryDiagnosis = () => cy.get('#root_oncotree_primary_diagnosis')
-
-//TMB
-export const getClinicalTMB = () => cy.get('#root_tmb')
-
-//HER2 Status
-export const getClinicalHER2Status = () => cy.get('#root_her2_status')
-
-//ER Status
-export const getClinicalERStatus = () => cy.get('#root_er_status')
-
-//PR Status
-export const getClinicalPRStatus = () => cy.get('#root_pr_status')
-
-
 
 
 
