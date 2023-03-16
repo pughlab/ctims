@@ -36,6 +36,10 @@ export const selectDraftCtmlStatus = () => {
   clickCtmlStatusDropdown();
   selectCtmlStatus();
 }
+
+//status
+export const getTrialInformationStatus = () => cy.get('#root_trialInformation_status')
+
 //default icon list
 export const getAllPanelHeaderTop = () => cy.get('.ctimsPanelHeaderTop') //contains 6 header starts with "Drug1"
 //default plus icon in drug list-1, management group list-1, site list-1, sponsor list-1, staff list-1, treatment list-3
@@ -124,12 +128,12 @@ export const getAddCriteriaToSubGroup = () => cy.get('.p-tieredmenu>ul>li:nth-ch
 
 //Clinical at child(1) and genomic at child(2)
 export const getMenuItemClinicalGenomic = () => cy.get('.p-tieredmenu>ul>li:nth-child(1)>ul>li') //2 elements
+export const getMenuItemClinical = () => cy.get('.p-menuitem-link>.clinical-icon') //2 elements
+export const getMenuItemGenomic = () => cy.get('.p-menuitem-link>.genomic-icon') //2 elements
 
 //Clinical at child(3) and genomic at child(4)
-// export const getMenuItemAnd = () => cy.get('.p-tieredmenu>ul>li:nth-child(5)>ul>li:nth-child(1)')
-export const getMenuItemAnd = () => cy.get('.p-tieredmenu>ul>li:nth-child(5)')
-
-export const getMenuItemOr = () => cy.get('.p-submenu-list>li:nth-child(2)>a')
+export const getMenuItemAnd = () => cy.get('.p-menuitem-active > .p-submenu-list > :nth-child(1) > .p-menuitem-link')
+export const getMenuItemOr = () => cy.get('.p-menuitem-active > .p-submenu-list > :nth-child(2) > .p-menuitem-link')
 
 //Operator
 export const getOperator = () => cy.get('.p-inputwrapper-filled') //do a click action
@@ -192,6 +196,26 @@ export const getGenomicDropDown = () => cy.get('.p-dropdown-panel>div>ul>li')
 
 
 //******************* Clinical ********************************************************//
+
+//Age
+export const getClinicalAge = () => cy.get('#root_age_numerical')
+
+//Oncotree Primary Diagnosis
+export const getClinicalOncotreePrimaryDiagnosis = () => cy.get('#root_oncotree_primary_diagnosis')
+
+//TMB
+export const getClinicalTMB = () => cy.get('#root_tmb')
+
+//HER2 Status
+export const getClinicalHER2Status = () => cy.get('#root_her2_status')
+
+//ER Status
+export const getClinicalERStatus = () => cy.get('#root_er_status')
+
+//PR Status
+export const getClinicalPRStatus = () => cy.get('#root_pr_status')
+
+
 
 
 
