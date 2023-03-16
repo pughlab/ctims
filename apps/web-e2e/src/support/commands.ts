@@ -26,8 +26,7 @@ import {
   getCheckBoxPrincipalSponsor,
   getClickPhase,
   getCtmlStatusDropdownList,
-  getClinicalAge,
-  getClinicalDropdown,
+  getClinicalAge, getClinicalDropdown,
   getClinicalERStatus,
   getClinicalHER2Status,
   getClinicalOncotreePrimaryDiagnosis,
@@ -69,36 +68,42 @@ import {
   getTruncateButton,
   getVariantCategory,
   selectDraftCtmlStatus,
-  trialEditorLeftPanelList,
-  getTrialInformationStatus,
-  getMenuItemGenomic,
-  getPrimaryManagementGroup,
-  getDefaultTrialEditorDropDown,
-  getCoordinatingCenter,
-  getCancerCenterIRB,
-  getPrincipalSponsor,
-  getArmSuspended,
-  getLevelSuspended
+  trialEditorLeftPanelList, getTrialInformationStatus, getMenuItemGenomic
 } from './app.po';
 import {NCT04293094_testData} from "../fixtures/NCT04293094_testData";
-//require('cypress-delete-downloads-folder').addCustomCommand();
+
+// eslint-disable-next-line @typescript-eslint/no-namespace
+declare namespace Cypress {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  interface Chainable<Subject> {
+    login(email: string, password: string): void;
+    trialInformation(nctId: string, nickName: string, principalInvestigator: string,ctmlStatus: string,longTitle: string, shortTitle: string, phase: string, ProtocolNumber: string, protocolPurpose: string, status: string): Chainable<Subject>;
+    age(ageGroup: string): Chainable<Subject>
+    drugList(drugName: string): Chainable<Subject>
+    managementGroupList(managementGroupName: string, isPrimary: string): Chainable<Subject>
+    siteList(siteName: string, siteStatus: string, coordinatingCenter: string, cancerCenterIRB: string): Chainable<Subject>
+    sponsorList(sponsorName: string, principalSponsor: string): Chainable<Subject>
+    staffList(firstName: string, lastName: string, email: string, institutionName: string, staffRole: string): Chainable<Subject>
+    arm(armCode: any,armDescription: string, armInternalID: any, armSuspended: string): Chainable<Subject>
+    doseLevel(levelCode: string, levelDescription: string,levelInternalId: string, levelSuspended: string): Chainable<Subject>
+    clickClinical(): Chainable<Subject>
+    clickGenomic(): Chainable<Subject>
+    clickAnd(): Chainable<Subject>
+    clickOr(): Chainable<Subject>
+    clickParentNode(indexNum: Number): Chainable<Subject>
+    clickChildToggleArrowButton(indexNumber: Number): Chainable<Subject>
+  }
+}
 //
 // -- This is a parent command --
+// @ts-ignore
 Cypress.Commands.add('login', (email, password) => {
   console.log('Custom command example: Login', email, password);
 });
-
-Cypress.Commands.add('trialInformation', (nctId: string,
-                                          nickName: string,
-                                          principalInvestigator: string,
-                                          ctmlStatus: string,
-                                          longTitle: string,
-                                          shortTitle: string,
-                                          phase: string,
-                                          ProtocolNumber: string,
-                                          protocolPurpose: string,
-                                          status: string) => {
+// @ts-ignore
+Cypress.Commands.add('trialInformation', (nctId,nickName,principalInvestigator,ctmlStatus,longTitle,shortTitle,phase,ProtocolNumber,protocolPurpose,status) => {
   trialEditorLeftPanelList().eq(0).should('contain','Trial Information').click()
+  // @ts-ignore
   getTrialId().clear().type(nctId);
   getTrialNickname().clear().type(nickName);
   getPrincipalInvestigator().clear().type(principalInvestigator);
@@ -115,44 +120,35 @@ Cypress.Commands.add('trialInformation', (nctId: string,
   getNCTPurpose().clear().type(protocolPurpose)
   getTrialInformationStatus().type(status)
 });
-
-Cypress.Commands.add('age',(ageGroup: string) => {
+// @ts-ignore
+Cypress.Commands.add('age',(ageGroup) => {
   trialEditorLeftPanelList().eq(1).should('contain','Age').click()
+  // @ts-ignore
    getAgeGroup().type(ageGroup);
 })
-
-Cypress.Commands.add('drugList',(drugName: string) => {
+// @ts-ignore
+Cypress.Commands.add('drugList',(drugName) => {
   trialEditorLeftPanelList().eq(2).should('contain','Drug List').click()
+  // @ts-ignore
   getDrugName().type(drugName)
 })
-
-Cypress.Commands.add('managementGroupList',(managementGroupName: string, isPrimary: string) => {
+// @ts-ignore
+Cypress.Commands.add('managementGroupList',(managementGroupName,isPrimary) => {
   trialEditorLeftPanelList().eq(3).should('contain','Management Group List').click()
+  // @ts-ignore
   getManagementGroupName().type(managementGroupName)
-  getPrimaryManagementGroup().click()
-  getDefaultTrialEditorDropDown().contains(isPrimary).click()
-  getPrimaryManagementGroup().should('contain',isPrimary)
-  /*if(isPrimary === 'Y') {
+  if(isPrimary === 'Y') {
     getCheckBoxPrimaryManagementGroup().click().should('have.class','p-checkbox-checked') //This is a primary
   } else {
     getCheckBoxPrimaryManagementGroup().should('have.class','p-checkbox') //This is a primary management group
-  }*/
-})
-
-Cypress.Commands.add('siteList',(siteName,
-                                 siteStatus,
-                                 coordinatingCenter,
-                                 cancerCenterIRB) => {
+  }})
+// @ts-ignore
+Cypress.Commands.add('siteList',(siteName,siteStatus,coordinatingCenter,cancerCenterIRB) => {
   trialEditorLeftPanelList().eq(4).should('contain', 'Site List').click()
+  // @ts-ignore
   getSiteName().type(siteName)
   getSiteStatus().type(siteStatus)
-  getCoordinatingCenter().click()
-  getDefaultTrialEditorDropDown().contains(coordinatingCenter).click()
-  getCoordinatingCenter().should('contain',coordinatingCenter)
-  getCancerCenterIRB().click()
-  getDefaultTrialEditorDropDown().contains(cancerCenterIRB).click()
-  getCancerCenterIRB().should('contain',cancerCenterIRB)
- /* if (coordinatingCenter === 'Y') {
+  if (coordinatingCenter === 'Y') {
     getCheckBoxCoordinateCenter().click().should('have.class', 'p-checkbox-checked') //This site is a coordinating center.
   } else {
     getCheckBoxCoordinateCenter().eq(1).should('have.class', 'p-checkbox')
@@ -161,28 +157,24 @@ Cypress.Commands.add('siteList',(siteName,
     getCheckBoxCancerCenterIRB().click().should('have.class', 'p-checkbox-checked') //This site uses cancer center IRB.
   } else {
     getCheckBoxCancerCenterIRB().should('have.class', 'p-checkbox')
-  }*/
+  }
 })
-
-Cypress.Commands.add('sponsorList',(sponsorName: string,principalSponsor: string) => {
+// @ts-ignore
+Cypress.Commands.add('sponsorList',(sponsorName,principalSponsor) => {
   trialEditorLeftPanelList().eq(5).should('contain', 'Sponsor List').click()
+  // @ts-ignore
   getSponsorName().type(sponsorName)
-  getPrincipalSponsor().click()
-  getDefaultTrialEditorDropDown().contains(principalSponsor).click()
-  getPrincipalSponsor().should('contain',principalSponsor)
-  /*if (principalSponsor === 'Y') {
+  if (principalSponsor === 'Y') {
     getCheckBoxPrincipalSponsor().click().should('have.class', 'p-checkbox-checked') //This sponsor is a principal sponsor.
   } else {
     getCheckBoxPrincipalSponsor().should('have.class', 'p-checkbox')
-  }*/
+  }
 })
 
-Cypress.Commands.add('staffList',(firstName,
-                                  lastName,
-                                  email,
-                                  institutionName,
-                                  staffRole) => {
+// @ts-ignore
+Cypress.Commands.add('staffList',(firstName,lastName,email,institutionName,staffRole) => {
   trialEditorLeftPanelList().eq(6).should('contain','Staff List').click()
+  // @ts-ignore
   getProtocolStaffFirstName().type(firstName)
   getProtocolStaffLastName().type(lastName)
   getProtocolStaffEmail().type(email)
@@ -191,72 +183,64 @@ Cypress.Commands.add('staffList',(firstName,
   //status not given in json data
   //getProtocolStaffStatus().type(NCT04293094_testData.staff_list.protocol_staff[0].status)
 })
-
+// @ts-ignore
 Cypress.Commands.add('arm',(armCode,armDescription,armInternalID,armSuspended) => {
   getArmCode().type(String(armCode))
   getArmDescription().type(armDescription)
   getArmInternalId().type(String(armInternalID))
-  getArmSuspended().click()
-  getDefaultTrialEditorDropDown().contains(armSuspended).click()
-  getArmSuspended().should('contain',armSuspended)
-  /*const arm_suspended = armSuspended
+  const arm_suspended = armSuspended
   if(arm_suspended === 'Y') {
     getCheckBoxArmIsSuspended().click().should('have.class','p-checkbox-checked')
   } else if (arm_suspended === 'N'){
     getCheckBoxArmIsSuspended().should('have.class','p-checkbox')
-  }*/
+  }
 })
-
+// @ts-ignore
 Cypress.Commands.add('doseLevel',(levelCode,levelDescription,levelInternalId,levelSuspended) => {
+  // @ts-ignore
   getLevelCode().type(levelCode)
   getLevelDescription().type(levelDescription)
   getLevelInternalId().type(String(levelInternalId))
-  getLevelSuspended().click()
-  getDefaultTrialEditorDropDown().contains(levelSuspended).click()
-  getLevelSuspended().should('contain',levelSuspended)
- /* const level_suspended = levelSuspended
+  const level_suspended = levelSuspended
   if( level_suspended === 'Y') {
     getCheckBoxLevelIsSuspended().click().should('have.class','p-checkbox-checked')
   }
   else if(level_suspended === 'N') {
     getCheckBoxLevelIsSuspended().should('have.class','p-checkbox')
-  }*/
+  }
 })
-
+// @ts-ignore
 Cypress.Commands.add('clickClinical',() => {
   getAddCriteriaToSameGroup().trigger('mouseover').invoke('addClass', 'p-menuitem-active')
   getMenuItemClinical().click()
 })
-
+// @ts-ignore
 Cypress.Commands.add('clickGenomic',() => {
   getAddCriteriaToSameGroup().trigger('mouseover').invoke('addClass', 'p-menuitem-active')
   getMenuItemGenomic().click()
 })
-Cypress.Commands.add('clickParentAnd',() => {
-  getLeftMenuComponent().find('span').should('contain','And')
-  getLeftMenuComponent().trigger('mouseover').invoke('addClass', 'p-menuitem-active').click()
-  getTruncateButton().should('be.visible').click()
-})
-Cypress.Commands.add('clickParentNode',(indexNum: number) => {
+// @ts-ignore
+Cypress.Commands.add('clickParentNode',(indexNum) => {
+  // @ts-ignore
   getLeftMenuComponent().find('span').should('contain','And').eq(indexNum)
+  // @ts-ignore
   getLeftMenuComponent().eq(indexNum).trigger('mouseover').invoke('addClass', 'p-menuitem-active').click()
   getTruncateButton().should('be.visible').click()
 })
-
+// @ts-ignore
 Cypress.Commands.add('clickAnd',() => {
   getAddCriteriaToSubGroup().invoke('addClass', 'p-menuitem-active')
   getMenuItemAnd().click()
 })
-
+// @ts-ignore
 Cypress.Commands.add('clickOr',() => {
   getAddCriteriaToSubGroup().invoke('addClass', 'p-menuitem-active')
   getMenuItemOr().click()
 })
-
-Cypress.Commands.add('clickChildToggleArrowButton',(indexNumber) => {
-  cy.get(`.p-tree-container>li>ul>li:nth-child(${indexNumber})>div>button`).click()
+// @ts-ignore
+Cypress.Commands.add('clickChildToggleArrowButton',(indexNumer) => {
+  cy.get(`.p-tree-container>li>ul>li:nth-child(${indexNumer})>div>button`).click()
 })
-
 //
 // -- This is a child command --
 // Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })
