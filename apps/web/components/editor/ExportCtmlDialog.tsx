@@ -9,7 +9,6 @@ import {RootState} from "../../store/store";
 import {RJSFValidationError, ValidationData} from "@rjsf/utils";
 import {extractErrors, isObjectEmpty} from "../../../../libs/ui/src/lib/components/helpers";
 import {stringify} from 'yaml'
-import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
 
 interface ExportCtmlDialogProps {
   isDialogVisible: boolean;
@@ -111,6 +110,8 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
       ctmlModelCopy = {...ctmlModel, ...trialInformation, ...age_group};
       delete ctmlModelCopy.age_group;
       delete ctmlModelCopy.trialInformation;
+      delete ctmlModelCopy.ctml_status;
+      delete ctmlModelCopy.nickname;
       return ctmlModelCopy;
     }
 

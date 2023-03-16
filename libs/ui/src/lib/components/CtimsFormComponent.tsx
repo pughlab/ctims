@@ -2,7 +2,6 @@ import {CtimsFormComponentProps} from "../interface/CtimsFormComponentProps";
 import {RjsfGridFieldTemplate} from "../custom-rjsf-templates/RjsfGridFieldTemplate";
 import CtimsObjectFieldTemplate from "../custom-rjsf-templates/CtimsObjectFieldTemplate";
 import CtimsItemObjectFieldTemplate from "../custom-rjsf-templates/CtimsItemObjectFieldTemplate";
-import CtimsArrayFieldSingleTemplate from "../custom-rjsf-templates/CtimsArrayFieldSingleTemplate";
 import {JSONSchema7} from "json-schema";
 import CtimsArrayFieldItemTemplate from "../custom-rjsf-templates/CtimsArrayFieldItemTemplate";
 import CtimsArrayFieldTemplate from "../custom-rjsf-templates/CtimsArrayFieldTemplate";
@@ -10,7 +9,7 @@ import localValidator, {customizeValidator} from "@rjsf/validator-ajv8";
 import {CSSProperties, ForwardedRef, forwardRef, memo} from "react";
 import {withTheme} from "@rjsf/core";
 import {Theme as PrimeTheme} from "../primereact";
-import {ErrorSchema, RegistryWidgetsType, RJSFValidationError} from "@rjsf/utils";
+import {RegistryWidgetsType, RJSFValidationError} from "@rjsf/utils";
 import CtimsInput from "../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../custom-rjsf-templates/CtimsDropdown";
 import CtimsMatchingCriteriaWidget from "../custom-rjsf-templates/CtimsMatchingCriteriaWidget";
@@ -44,16 +43,17 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
       "trialInformation": {
         "required": [
           "trial_id",
-          "nickname",
-          "principal_investigator",
-          "ctml_status",
+          // "nickname",
+          // "principal_investigator",
+          // "ctml_status",
           "long_title",
           "short_title",
           "phase",
           // "disease_status",
           // "prior_treatment_requirements",
           "protocol_no",
-          "nct_purpose"
+          "nct_purpose",
+          "status"
         ],
         "type": "object",
         "properties": {
@@ -122,6 +122,11 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             "type": "string",
             "title": "NCT Purpose",
             "description": "The National Clinical Trial (NCT) purpose. The purpose of the clinical trial"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "Status of the trial"
           }
         },
         "title": "Trial Information"
@@ -270,7 +275,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             "type": "array",
             "items": {
               "type": "object",
-              "required": ["first_name", "last_name", "email", "institution_name", "staff_role", "status"],
+              "required": ["first_name", "last_name", "email", "institution_name", "staff_role"],
               "properties": {
                 "first_name": {
                   "type": "string",
@@ -297,11 +302,6 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                   "title": "Staff Role",
                   "description": "The role of the this listed staff"
                 },
-                "status": {
-                  "type": "string",
-                  "title": "Status",
-                  "description": "Status of the trial"
-                }
               },
               'title': 'Protocol Staff'
             },
@@ -495,6 +495,11 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
         },
         {
           "nct_purpose": {
+            "span": 24
+          }
+        },
+        {
+          "status": {
             "span": 24
           }
         }
