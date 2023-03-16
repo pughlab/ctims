@@ -10,6 +10,7 @@ const LeftMenuEditorComponent = () => {
 
   const links = [
     { to: '#trial-information', label: 'Trial Information' },
+    { to: '#age', label: 'Age' },
     { to: '#drug-list', label: 'Drug List' },
     { to: '#management-group-list', label: 'Management Group List' },
     { to: '#site-list', label: 'Site List' },

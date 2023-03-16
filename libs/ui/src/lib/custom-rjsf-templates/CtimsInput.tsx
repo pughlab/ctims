@@ -28,7 +28,7 @@ const CtimsInput = (props: WidgetProps) => {
     const _onChange = ({
                            target: { value },
                        }: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('CtimsInput onChange', props)
+      console.log('registry', props.registry)
       return onChange(value === "" ? options.emptyValue : value)
     };
     const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
@@ -61,7 +61,8 @@ const CtimsInput = (props: WidgetProps) => {
                 required={required}
                 disabled={disabled}
                 readOnly={readonly}
-                className={cn("w-full", rawErrors.length > 0 ? "p-invalid" : "")}
+                // className={cn("w-full", rawErrors.length > 0 ? "p-invalid" : "")}
+                className={cn("w-full")}
                 list={schema.examples ? `examples_${id}` : undefined}
                 type={inputType}
                 value={value || value === 0 ? value : ""}

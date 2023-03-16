@@ -9,8 +9,10 @@ import {
   setActiveArmId,
   setCtmlMatchModel
 } from "../../../../apps/web/store/slices/matchViewModelSlice";
-import {setCtmlModel} from "../../../../apps/web/store/slices/ctmlModelSlice";
+import {setCtmlModel, setErrorSchema} from "../../../../apps/web/store/slices/ctmlModelSlice";
 import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
+import Form from "@rjsf/core";
+import {ValidationData} from "@rjsf/utils";
 
 
 const containerStyle: CSSProperties = {
@@ -37,13 +39,14 @@ export const Ui = (props: UiProps) => {
     console.log('My component was re-rendered');
   });
 
-  const handleSpecialClick = (formD: any, armCode: string, id: string) => {
-    console.log('handleSpecialClick formData: ', formD);
-    console.log('handleSpecialClick armCode: ', armCode);
+  const handleSpecialClick = (formD: any, id: string) => {
+    const formData = formD
+    console.log('handleSpecialClick formData: ', formD.formData);
+    console.log('handleSpecialClick armCode: ', formData.arm_code);
     console.log('handleSpecialClick id: ', id);
-    setArmCode(armCode)
-    setFormData(formD)
-    dispatch(setCtmlMatchModel(structuredClone(formD)))
+    setArmCode(formData.arm_code)
+    setFormData(formData)
+    dispatch(setCtmlMatchModel(structuredClone(formData)))
     dispatch(setActiveArmId(id))
     setIsOpen(true);
   }
@@ -53,7 +56,13 @@ export const Ui = (props: UiProps) => {
   }
 
   const onFormChange = (data: any) => {
-    console.log('onChange event', data)
+    if (formRef && formRef.current) {
+      const form: Form = formRef.current;
+      form.validateForm();
+      const errorDetails: ValidationData<any> = form.validate(data.formData);
+      dispatch(setErrorSchema(errorDetails));
+    }
+
     const formDataClone = structuredClone(data.formData)
     dispatch(setCtmlModel(formDataClone))
   }

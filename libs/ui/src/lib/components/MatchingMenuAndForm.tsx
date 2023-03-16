@@ -1,7 +1,6 @@
 import styles from './MatchingMenuAndForm.module.scss';
 import {EComponentType} from "./EComponentType";
-import React, {CSSProperties, FunctionComponent, memo, useRef, useState} from "react";
-import {Menu} from "primereact/menu";
+import React, {CSSProperties, FunctionComponent, useState} from "react";
 import LeftMenuComponent from "./LeftMenuComponent";
 import {RegistryWidgetsType} from "@rjsf/utils";
 import CtimsInput from "../custom-rjsf-templates/CtimsInput";
@@ -15,7 +14,14 @@ import {Theme as PrimeTheme} from "../primereact";
 import TreeNode from "primereact/treenode";
 import CtimsMatchDialogObjectFieldTemplate from "../custom-rjsf-templates/CtimsMatchDialogObjectFieldTemplate";
 import {useDispatch} from "react-redux";
-import {addAdjacentNode, deleteNode, operatorChange, formChange} from "../../../../../apps/web/store/slices/modalActionsSlice";
+import {
+  addAdjacentNode,
+  deleteNode,
+  formChange,
+  operatorChange
+} from "../../../../../apps/web/store/slices/modalActionsSlice";
+import CtimsFieldTemplate from "../custom-rjsf-templates/CtimsFieldTemplate";
+import CtimsErrorListTemplate from "../custom-rjsf-templates/CtimsErrorListTemplate";
 
 const Form = withTheme(PrimeTheme)
 
@@ -52,6 +58,11 @@ const formContainerStyle: CSSProperties = {
   flexDirection: 'column',
   height: '100%',
   overflowY: 'scroll'
+}
+
+const formTemplates = {
+  FieldTemplate: CtimsFieldTemplate,
+  ErrorListTemplate: CtimsErrorListTemplate,
 }
 
 const OperatorDropdown = (props: IOperatorDropdownProps) => {
@@ -225,6 +236,7 @@ const MatchingMenuAndForm = (props: any) => {
         </div>
         <div>
           <Form schema={clinicalFormSchema as JSONSchema7}
+                templates={formTemplates}
                 formData={node.data.formData}
                 uiSchema={clinicalUiSchema}
                 widgets={widgets}
@@ -524,6 +536,7 @@ const MatchingMenuAndForm = (props: any) => {
         </div>
         <div>
           <Form schema={genomicFormSchema as JSONSchema7}
+                templates={formTemplates}
                 formData={node.data.formData}
                 uiSchema={genomicUiSchema}
                 widgets={widgets}

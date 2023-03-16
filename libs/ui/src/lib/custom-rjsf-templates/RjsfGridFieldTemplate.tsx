@@ -21,8 +21,6 @@ export const RjsfGridFieldTemplate = (props: ObjectFieldTemplateProps) => {
     schema
   } = props
 
-  const r: Registry = registry
-
   const uiOptions = getUiOptions(uiSchema);
   const TitleFieldTemplate = getTemplate<"TitleFieldTemplate">(
       "TitleFieldTemplate",
@@ -71,8 +69,16 @@ export const RjsfGridFieldTemplate = (props: ObjectFieldTemplateProps) => {
     padding: '20px'
   }
 
+  const hrStyle: React.CSSProperties = {
+    marginBottom: '20px',
+    marginTop: '20px',
+    border: '1px solid #e0e0e0',
+    backgroundColor: '#e0e0e0',
+  }
 
   return (
+    <>
+      {(title === 'Age') && (<hr style={hrStyle}/>)}
       <div style={containerStyle}>
         <div style={titleDescriptionStyle}>
           {(schema.title) && (
@@ -140,6 +146,6 @@ export const RjsfGridFieldTemplate = (props: ObjectFieldTemplateProps) => {
           })}
         </div>
       </div>
-    //
+    </>
   )
 }

@@ -46,8 +46,20 @@
   height: 16px;
 }
 
+.p-inline-message {
+  align-items: flex-start !important;
+  flex-direction: column !important;
+  color: black !important;
+  width: 95% !important;
+}
+
 .p-tooltip {
   width: 300px !important;
+  box-shadow: none !important;
+}
+
+.p-tooltip .p-tooltip-text {
+  box-shadow: none !important;
 }
 
 .p-tabview .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus {

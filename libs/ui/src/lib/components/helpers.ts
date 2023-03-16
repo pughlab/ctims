@@ -1,6 +1,11 @@
 import TreeNode from "primereact/treenode";
 import {EComponentType} from "./EComponentType";
 import { v4 as uuidv4 } from 'uuid';
+import {ErrorSchema, RJSFValidationError} from "@rjsf/utils";
+
+interface JsonObject {
+  [key: string]: any;
+}
 
 export const stringContains = (str: string, search: string) => {
   return str.toLowerCase().indexOf(search.toLowerCase()) !== -1;
@@ -198,4 +203,39 @@ export const isObjectEmpty = (obj: any) => {
     return Object.keys(obj).length === 0 && obj.constructor === Object;
   }
   return true;
+}
+
+export const extractErrors = (errors: RJSFValidationError[]): string[] => {
+  const keyToStringDict: any = {
+    trialInformation: 'Trial information',
+    drugList: 'Drug list',
+    management_group_list: 'Management group list',
+    site_list: 'Site list',
+    sponsor_list: 'Sponsor list',
+    staff_list: 'Staff list',
+    treatment_list: 'Treatment list',
+    age_group: 'Age group'
+  }
+
+  const groupedObjects: { [key: string]: RJSFValidationError[] } = errors.reduce((acc: any, obj) => {
+    const propertyMatch = obj.property?.match(/\.(.*?)\./);
+    if (propertyMatch) {
+      const property = propertyMatch[1];
+      if (acc[property]) {
+        acc[property].push(obj);
+      } else {
+        acc[property] = [obj];
+      }
+    }
+    return acc;
+  }, {});
+
+  const errorStrings: string[] = [];
+  for (let key in groupedObjects) {
+    const errorLength = groupedObjects[key].length;
+    const groupString = keyToStringDict[key];
+    errorStrings.push(`${groupString} has ${errorLength} missing field${errorLength === 1 ? '' : 's'}`);
+  }
+
+  return errorStrings;
 }

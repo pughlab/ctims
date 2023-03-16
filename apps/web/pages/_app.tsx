@@ -10,7 +10,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
   return (
     <Layout>
       <Head>
-        <title>Welcome to web!</title>
+        <title>CTIMS</title>
       </Head>
       <main className="app">
         <Provider store={store}>

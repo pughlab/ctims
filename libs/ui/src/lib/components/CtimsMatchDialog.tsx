@@ -32,11 +32,8 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   const [isDialogVisible, setIsDialogVisible] = useState<boolean>(props.isDialogVisible);
   let {formData} = props;
 
-  const op = useRef<OverlayPanel>(null);
-
   useEffect(() => {
     setIsDialogVisible(props.isDialogVisible);
-    console.log('CtimsMatchDialog useEffect', formData);
   }, [props.isDialogVisible])
 
 
@@ -61,26 +58,13 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     height: '36px'
   }
 
-  const footer = (props: {saveMatchingCriteriaClicked: () => void}) => {
-    const {saveMatchingCriteriaClicked} = props;
+  const footer = (props: {saveMatchingCriteriaClicked: () => void, discardClicked: () => void}) => {
+    const {saveMatchingCriteriaClicked, discardClicked} = props;
 
-    const handleSubmit = (e: any) => {
-      console.log('clicked submit', formData);
-      // formData.match = {sup: 'sup'}
-      op.current?.toggle(e)
-    }
     return (
       <div style={{marginTop: '10px'}}>
-        <Button style={dismissBtnStyle} label="Discard" className="p-button-text" onClick={handleSubmit} />
+        <Button style={dismissBtnStyle} label="Discard" className="p-button-text" onClick={discardClicked} />
         <Button style={saveBtnStyle} label="Save matching criteria" onClick={saveMatchingCriteriaClicked} />
-        {/*<OverlayPanel*/}
-        {/*  ref={op}*/}
-        {/*  showCloseIcon*/}
-        {/*  id="overlay_panel"*/}
-        {/*  style={{ width: "750px" }}*/}
-        {/*>*/}
-        {/*  <CtmlModelPreview />*/}
-        {/*</OverlayPanel>*/}
       </div>
     )
   }
@@ -107,7 +91,8 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
 
   return (
     <Dialog header={() => header({armCode: props.armCode as string})}
-            footer={() => footer({saveMatchingCriteriaClicked: saveClickCallback})}
+            blockScroll
+            footer={() => footer({saveMatchingCriteriaClicked: saveClickCallback, discardClicked: onDialogHide})}
             visible={isDialogVisible}
             style={{width: '960px', height: '710px'}}
             onHide={onDialogHide}>
