@@ -8,7 +8,7 @@ ARG NODE_ENV
 ## base
 WORKDIR /app
 COPY ./package.json ./yarn.* ./
-RUN yarn install
+RUN yarn install --pure-lockfile
 
 ENV PORT=3000
 EXPOSE ${PORT}
@@ -25,6 +25,7 @@ RUN npx nx run-many --target=build --all
 FROM build as deploy
 WORKDIR /var/www/html
 COPY --from=build /app/dist/apps/web .
+RUN sh -c 'echo "[]" > /var/www/html/.next/server/next-font-manifest.json'
 
 RUN yarn install --production
 
