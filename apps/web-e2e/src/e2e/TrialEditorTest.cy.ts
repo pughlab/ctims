@@ -93,19 +93,16 @@ describe('CTIMS Trial Editor', () => {
       NCT04293094_testData.management_group_list.management_group[0].is_primary)
 */
     //Site List has 2-Text field and 2-checkbox
-    // @ts-ignore
     cy.siteList(NCT04293094_testData.site_list.site[0].site_name,
       NCT04293094_testData.site_list.site[0].site_status,
       NCT04293094_testData.site_list.site[0].coordinating_center,
       NCT04293094_testData.site_list.site[0].uses_cancer_center_irb)
 
     //Sponsor List
-    // @ts-ignore
     cy.sponsorList(NCT04293094_testData.sponsor_list.sponsor[0].sponsor_name,
       NCT04293094_testData.sponsor_list.sponsor[0].is_principal_sponsor)
 
     //Staff List
-    // @ts-ignore
     cy.staffList(NCT04293094_testData.staff_list.protocol_staff[0].first_name,
       NCT04293094_testData.staff_list.protocol_staff[0].last_name,
       NCT04293094_testData.staff_list.protocol_staff[0].email_address,
@@ -113,17 +110,15 @@ describe('CTIMS Trial Editor', () => {
       NCT04293094_testData.staff_list.protocol_staff[0].staff_role)
 
     //Arm code
-    // @ts-ignore
     cy.arm(NCT04293094_testData.treatment_list.step[0].arm[0].arm_code,
       NCT04293094_testData.treatment_list.step[0].arm[0].arm_description,
       NCT04293094_testData.treatment_list.step[0].arm[0].arm_internal_id,
       NCT04293094_testData.treatment_list.step[0].arm[0].arm_suspended)
 
     //Level code
-    // @ts-ignore
     cy.doseLevel(NCT04293094_testData.treatment_list.step[0].arm[0].dose_level[0].level_code,
       NCT04293094_testData.treatment_list.step[0].arm[0].dose_level[0].level_description,
-      NCT04293094_testData.treatment_list.step[0].arm[0].dose_level[0].level_internal_id,
+      NCT04293094_testData.treatment_list.step[0].arm[0].dose_level[0].level_internal_id.toString(),
       NCT04293094_testData.treatment_list.step[0].arm[0].dose_level[0].level_suspended)
     //click Match criteria
     getEditMatchingCriteria().click()
@@ -146,10 +141,8 @@ describe('CTIMS Trial Editor', () => {
     getMenuItemClinicalGenomic().eq(1).should('contain','Genomic').click()
     //Now Genomic subtree is created, click on the sub tree "Genomic" at index 1
     getLeftMenuComponent().eq(1).click()
-    // @ts-ignore
     getHugoSymbol().type(NCT04293094_testData.treatment_list.step[0].arm[0].match[0].or[0].genomic.hugo_symbol)
     getVariantCategory().click() //has dropdown
-    // @ts-ignore //included this sine "or" is not recognized
     const variant_category = NCT04293094_testData.treatment_list.step[0].arm[0].match[0].or[0].genomic.variant_category
    cy.log(variant_category)
     if(variant_category === 'Mutation') {
@@ -192,9 +185,7 @@ describe('CTIMS Trial Editor', () => {
     //click the 3rd child component Clinical
     getLeftMenuComponent().eq(3).click()
     //Enter Age and OncoTree input value
-    // @ts-ignore
     getClinicalAge().type(NCT04293094_testData.treatment_list.step[0].arm[0].match[0].or[1].and[0].clinical.age_numerical)
-    // @ts-ignore
     getClinicalOncotreePrimaryDiagnosis().type(NCT04293094_testData.treatment_list.step[0].arm[0].match[0].or[1].and[0].clinical.oncotree_primary_diagnosis)
 
     //Second Add
@@ -220,9 +211,7 @@ describe('CTIMS Trial Editor', () => {
       ' > .p-tree-toggler').click()
     //click clinical item to add data
     getLeftMenuComponent().eq(6).click()
-    // @ts-ignore
     getClinicalAge().type(NCT04293094_testData.treatment_list.step[0].arm[0].match[1].and[0].or[0].clinical.age_numerical)
-     // @ts-ignore
     getClinicalOncotreePrimaryDiagnosis().type(NCT04293094_testData.treatment_list.step[0].arm[0].match[1].and[0].or[0].clinical.oncotree_primary_diagnosis)
     // @ts-ignore
    /* let her2_status = NCT04293094_testData.treatment_list.step[0].arm[0].match[1].and[0].or[0].her2_status
