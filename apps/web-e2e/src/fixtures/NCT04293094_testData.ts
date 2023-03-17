@@ -1,4 +1,6 @@
-export const NCT04293094_testData = {
+import {Ctml} from "../support/interfaces/CtmlInterfaces";
+
+export const NCT04293094_testData: Ctml = {
     "age": "Adult",
     "drug_list": {
       "drug": [
