@@ -72,38 +72,23 @@ import {
 } from './app.po';
 import {NCT04293094_testData} from "../fixtures/NCT04293094_testData";
 
-// eslint-disable-next-line @typescript-eslint/no-namespace
-declare namespace Cypress {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface Chainable<Subject> {
-    login(email: string, password: string): void;
-    trialInformation(nctId: string, nickName: string, principalInvestigator: string,ctmlStatus: string,longTitle: string, shortTitle: string, phase: string, ProtocolNumber: string, protocolPurpose: string, status: string): Chainable<Subject>;
-    age(ageGroup: string): Chainable<Subject>
-    drugList(drugName: string): Chainable<Subject>
-    managementGroupList(managementGroupName: string, isPrimary: string): Chainable<Subject>
-    siteList(siteName: string, siteStatus: string, coordinatingCenter: string, cancerCenterIRB: string): Chainable<Subject>
-    sponsorList(sponsorName: string, principalSponsor: string): Chainable<Subject>
-    staffList(firstName: string, lastName: string, email: string, institutionName: string, staffRole: string): Chainable<Subject>
-    arm(armCode: any,armDescription: string, armInternalID: any, armSuspended: string): Chainable<Subject>
-    doseLevel(levelCode: string, levelDescription: string,levelInternalId: string, levelSuspended: string): Chainable<Subject>
-    clickClinical(): Chainable<Subject>
-    clickGenomic(): Chainable<Subject>
-    clickAnd(): Chainable<Subject>
-    clickOr(): Chainable<Subject>
-    clickParentNode(indexNum: Number): Chainable<Subject>
-    clickChildToggleArrowButton(indexNumber: Number): Chainable<Subject>
-  }
-}
 //
 // -- This is a parent command --
-// @ts-ignore
 Cypress.Commands.add('login', (email, password) => {
   console.log('Custom command example: Login', email, password);
 });
-// @ts-ignore
-Cypress.Commands.add('trialInformation', (nctId,nickName,principalInvestigator,ctmlStatus,longTitle,shortTitle,phase,ProtocolNumber,protocolPurpose,status) => {
+
+Cypress.Commands.add('trialInformation', (nctId: string,
+                                          nickName: string,
+                                          principalInvestigator: string,
+                                          ctmlStatus: string,
+                                          longTitle: string,
+                                          shortTitle: string,
+                                          phase: string,
+                                          ProtocolNumber: string,
+                                          protocolPurpose: string,
+                                          status: string) => {
   trialEditorLeftPanelList().eq(0).should('contain','Trial Information').click()
-  // @ts-ignore
   getTrialId().clear().type(nctId);
   getTrialNickname().clear().type(nickName);
   getPrincipalInvestigator().clear().type(principalInvestigator);
@@ -120,32 +105,31 @@ Cypress.Commands.add('trialInformation', (nctId,nickName,principalInvestigator,c
   getNCTPurpose().clear().type(protocolPurpose)
   getTrialInformationStatus().type(status)
 });
-// @ts-ignore
-Cypress.Commands.add('age',(ageGroup) => {
+
+Cypress.Commands.add('age',(ageGroup: string) => {
   trialEditorLeftPanelList().eq(1).should('contain','Age').click()
-  // @ts-ignore
    getAgeGroup().type(ageGroup);
 })
-// @ts-ignore
-Cypress.Commands.add('drugList',(drugName) => {
+
+Cypress.Commands.add('drugList',(drugName: string) => {
   trialEditorLeftPanelList().eq(2).should('contain','Drug List').click()
-  // @ts-ignore
   getDrugName().type(drugName)
 })
-// @ts-ignore
-Cypress.Commands.add('managementGroupList',(managementGroupName,isPrimary) => {
+
+Cypress.Commands.add('managementGroupList',(managementGroupName: string, isPrimary: string) => {
   trialEditorLeftPanelList().eq(3).should('contain','Management Group List').click()
-  // @ts-ignore
   getManagementGroupName().type(managementGroupName)
   if(isPrimary === 'Y') {
     getCheckBoxPrimaryManagementGroup().click().should('have.class','p-checkbox-checked') //This is a primary
   } else {
     getCheckBoxPrimaryManagementGroup().should('have.class','p-checkbox') //This is a primary management group
   }})
-// @ts-ignore
-Cypress.Commands.add('siteList',(siteName,siteStatus,coordinatingCenter,cancerCenterIRB) => {
+
+Cypress.Commands.add('siteList',(siteName,
+                                 siteStatus,
+                                 coordinatingCenter,
+                                 cancerCenterIRB) => {
   trialEditorLeftPanelList().eq(4).should('contain', 'Site List').click()
-  // @ts-ignore
   getSiteName().type(siteName)
   getSiteStatus().type(siteStatus)
   if (coordinatingCenter === 'Y') {
@@ -159,10 +143,9 @@ Cypress.Commands.add('siteList',(siteName,siteStatus,coordinatingCenter,cancerCe
     getCheckBoxCancerCenterIRB().should('have.class', 'p-checkbox')
   }
 })
-// @ts-ignore
-Cypress.Commands.add('sponsorList',(sponsorName,principalSponsor) => {
+
+Cypress.Commands.add('sponsorList',(sponsorName: string,principalSponsor: string) => {
   trialEditorLeftPanelList().eq(5).should('contain', 'Sponsor List').click()
-  // @ts-ignore
   getSponsorName().type(sponsorName)
   if (principalSponsor === 'Y') {
     getCheckBoxPrincipalSponsor().click().should('have.class', 'p-checkbox-checked') //This sponsor is a principal sponsor.
@@ -171,10 +154,12 @@ Cypress.Commands.add('sponsorList',(sponsorName,principalSponsor) => {
   }
 })
 
-// @ts-ignore
-Cypress.Commands.add('staffList',(firstName,lastName,email,institutionName,staffRole) => {
+Cypress.Commands.add('staffList',(firstName,
+                                  lastName,
+                                  email,
+                                  institutionName,
+                                  staffRole) => {
   trialEditorLeftPanelList().eq(6).should('contain','Staff List').click()
-  // @ts-ignore
   getProtocolStaffFirstName().type(firstName)
   getProtocolStaffLastName().type(lastName)
   getProtocolStaffEmail().type(email)
@@ -183,7 +168,7 @@ Cypress.Commands.add('staffList',(firstName,lastName,email,institutionName,staff
   //status not given in json data
   //getProtocolStaffStatus().type(NCT04293094_testData.staff_list.protocol_staff[0].status)
 })
-// @ts-ignore
+
 Cypress.Commands.add('arm',(armCode,armDescription,armInternalID,armSuspended) => {
   getArmCode().type(String(armCode))
   getArmDescription().type(armDescription)
@@ -195,9 +180,8 @@ Cypress.Commands.add('arm',(armCode,armDescription,armInternalID,armSuspended) =
     getCheckBoxArmIsSuspended().should('have.class','p-checkbox')
   }
 })
-// @ts-ignore
+
 Cypress.Commands.add('doseLevel',(levelCode,levelDescription,levelInternalId,levelSuspended) => {
-  // @ts-ignore
   getLevelCode().type(levelCode)
   getLevelDescription().type(levelDescription)
   getLevelInternalId().type(String(levelInternalId))
@@ -209,35 +193,33 @@ Cypress.Commands.add('doseLevel',(levelCode,levelDescription,levelInternalId,lev
     getCheckBoxLevelIsSuspended().should('have.class','p-checkbox')
   }
 })
-// @ts-ignore
+
 Cypress.Commands.add('clickClinical',() => {
   getAddCriteriaToSameGroup().trigger('mouseover').invoke('addClass', 'p-menuitem-active')
   getMenuItemClinical().click()
 })
-// @ts-ignore
+
 Cypress.Commands.add('clickGenomic',() => {
   getAddCriteriaToSameGroup().trigger('mouseover').invoke('addClass', 'p-menuitem-active')
   getMenuItemGenomic().click()
 })
-// @ts-ignore
-Cypress.Commands.add('clickParentNode',(indexNum) => {
-  // @ts-ignore
+
+Cypress.Commands.add('clickParentNode',(indexNum: number) => {
   getLeftMenuComponent().find('span').should('contain','And').eq(indexNum)
-  // @ts-ignore
   getLeftMenuComponent().eq(indexNum).trigger('mouseover').invoke('addClass', 'p-menuitem-active').click()
   getTruncateButton().should('be.visible').click()
 })
-// @ts-ignore
+
 Cypress.Commands.add('clickAnd',() => {
   getAddCriteriaToSubGroup().invoke('addClass', 'p-menuitem-active')
   getMenuItemAnd().click()
 })
-// @ts-ignore
+
 Cypress.Commands.add('clickOr',() => {
   getAddCriteriaToSubGroup().invoke('addClass', 'p-menuitem-active')
   getMenuItemOr().click()
 })
-// @ts-ignore
+
 Cypress.Commands.add('clickChildToggleArrowButton',(indexNumer) => {
   cy.get(`.p-tree-container>li>ul>li:nth-child(${indexNumer})>div>button`).click()
 })
