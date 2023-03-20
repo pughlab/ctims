@@ -16,7 +16,9 @@ declare namespace Cypress {
     clickGenomic(): Chainable<Subject>
     clickAnd(): Chainable<Subject>
     clickOr(): Chainable<Subject>
+    clickParentAnd(): Chainable<Subject>
     clickParentNode(indexNum: Number): Chainable<Subject>
     clickChildToggleArrowButton(indexNumber: Number): Chainable<Subject>
+    deleteDownloadsFolderBeforeAll(): void
   }
 }
