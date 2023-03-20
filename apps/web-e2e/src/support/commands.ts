@@ -71,7 +71,7 @@ import {
   trialEditorLeftPanelList, getTrialInformationStatus, getMenuItemGenomic
 } from './app.po';
 import {NCT04293094_testData} from "../fixtures/NCT04293094_testData";
-
+//require('cypress-delete-downloads-folder').addCustomCommand();
 //
 // -- This is a parent command --
 Cypress.Commands.add('login', (email, password) => {
@@ -203,7 +203,11 @@ Cypress.Commands.add('clickGenomic',() => {
   getAddCriteriaToSameGroup().trigger('mouseover').invoke('addClass', 'p-menuitem-active')
   getMenuItemGenomic().click()
 })
-
+Cypress.Commands.add('clickParentAnd',() => {
+  getLeftMenuComponent().find('span').should('contain','And')
+  getLeftMenuComponent().trigger('mouseover').invoke('addClass', 'p-menuitem-active').click()
+  getTruncateButton().should('be.visible').click()
+})
 Cypress.Commands.add('clickParentNode',(indexNum: number) => {
   getLeftMenuComponent().find('span').should('contain','And').eq(indexNum)
   getLeftMenuComponent().eq(indexNum).trigger('mouseover').invoke('addClass', 'p-menuitem-active').click()
@@ -220,9 +224,10 @@ Cypress.Commands.add('clickOr',() => {
   getMenuItemOr().click()
 })
 
-Cypress.Commands.add('clickChildToggleArrowButton',(indexNumer) => {
-  cy.get(`.p-tree-container>li>ul>li:nth-child(${indexNumer})>div>button`).click()
+Cypress.Commands.add('clickChildToggleArrowButton',(indexNumber) => {
+  cy.get(`.p-tree-container>li>ul>li:nth-child(${indexNumber})>div>button`).click()
 })
+
 //
 // -- This is a child command --
 // Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })

@@ -31,7 +31,7 @@ import {
   getLevelDescription,
   getLevelInternalId,
   getLongTitle,
-  getManagementGroupName,
+  getManagementGroupName, getMatchingCriteriaTableHeader, getMatchModalFooterButtons,
   getMenuItemAnd,
   getMenuItemClinical,
   getMenuItemClinicalGenomic,
@@ -39,7 +39,7 @@ import {
   getNCTPurpose,
   getPhaseDropdownList,
   getPlusIcon,
-  getPrincipalInvestigator,
+  getPrincipalInvestigator, getProteinChange,
   getProtocolNumber,
   getProtocolStaffEmail,
   getProtocolStaffFirstName,
@@ -55,16 +55,16 @@ import {
   getTrialId,
   getTrialNickname,
   getTruncateButton,
-  getVariantCategory,
-  selectDraftCtmlStatus,
+  getVariantCategory, getVariantClassification,
+  selectDraftCtmlStatus, trialEditorExportCtml, trialEditorHeaderButtons,
   trialEditorLeftPanelList
 } from '../support/app.po';
-import {NCT04293094_testData} from "../fixtures/NCT04293094_testData";
 import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib";
+const { deleteDownloadsFolderBeforeAll } = require('cypress-delete-downloads-folder');
 
 describe('CTIMS Trial Editor', () => {
   beforeEach(() => cy.visit('/'));
-
+  deleteDownloadsFolderBeforeAll()
   it('should Validate the Trial Editor Page', () => {
     cy.title().should('contain','CTIMS')
     trialEditorLeftPanelList().should('have.length','8')
@@ -117,13 +117,17 @@ describe('CTIMS Trial Editor', () => {
       NCT02503722_Osimertinib.treatment_list.step[0].arm[0].dose_level[0].level_description,
       NCT02503722_Osimertinib.treatment_list.step[0].arm[0].dose_level[0].level_internal_id.toString(),
       NCT02503722_Osimertinib.treatment_list.step[0].arm[0].dose_level[0].level_suspended)
+
+    //Click on Plus Icon to add another Dose Level
     //click Match criteria
     getEditMatchingCriteria().click()
 
     getDefaultTextMatchingCriteria().should('contain','Matching criteria inputs will be shown here.')
     getAddCriteriaGroup().click()
+    //cy.clickParentAnd()
     cy.clickParentNode(0)
-    getTruncateButton().should('be.visible').click()
+   // cy.wait(1000)
+    //getTruncateButton().should('be.visible').click()
     getAddCriteriaList().should('contain','Add criteria to same group')
       .and('contain','Switch group operator')
       .and('contain','Delete')
@@ -135,10 +139,44 @@ describe('CTIMS Trial Editor', () => {
     getClinicalOncotreePrimaryDiagnosis().type(NCT02503722_Osimertinib.treatment_list.step[0].arm[0].match[0].and[0].clinical.oncotree_primary_diagnosis)
     cy.clickParentNode(0)
     cy.clickOr()
-    cy.clickParentNode(2)
+    cy.clickParentNode(2)//click on Parent "Or" to create 1st genomic child
     cy.clickGenomic()
     cy.clickChildToggleArrowButton(2)
-    cy.clickParentNode(3) //
+    getLeftMenuComponent().eq(3).click()
+    getHugoSymbol().type(NCT02503722_Osimertinib.treatment_list.step[0].arm[0].match[0].and[1].or[0].genomic.hugo_symbol)
+    getProteinChange().type(NCT02503722_Osimertinib.treatment_list.step[0].arm[0].match[0].and[1].or[0].genomic.protein_change)
+    //Dropdown
+    getVariantCategory().click()
+      getGenomicDropDown().contains(NCT02503722_Osimertinib.treatment_list.step[0].arm[0].match[0].and[1].or[0].genomic.variant_category).click()
+    //Dropdown
+    getVariantClassification().click()
+      getGenomicDropDown().contains(NCT02503722_Osimertinib.treatment_list.step[0].arm[0].match[0].and[1].or[0].genomic.variant_classification.replace(/_/g, " ")).click()
+    cy.clickParentNode(2) //click on Parent "Or" to create 2nd genomic child
+    cy.clickGenomic() //create a Genomic child in "Or"
+    //click on the 2nd child Genomic to enter values
+    getLeftMenuComponent().eq(4).click()
+    getHugoSymbol().type(NCT02503722_Osimertinib.treatment_list.step[0].arm[0].match[0].and[1].or[1].genomic.hugo_symbol)
+    getProteinChange().type(NCT02503722_Osimertinib.treatment_list.step[0].arm[0].match[0].and[1].or[1].genomic.protein_change)
+    //Dropdown
+    getVariantCategory().click()
+      getGenomicDropDown().contains(NCT02503722_Osimertinib.treatment_list.step[0].arm[0].match[0].and[1].or[1].genomic.variant_category).click()
+    getMatchModalFooterButtons().eq(1).should('be.enabled').contains('Save matching criteria').click()
+    getMatchingCriteriaTableHeader().contains('JSON').click()
+   // let jsonMatchCriteria =
+      cy.get('.CtimsMatchingCriteriaWidget_pre-tag__gyYSW').invoke("text").then((text) => {
+        const jsonArray = JSON.parse(text);
+        const jsonMatchCriteria = JSON.stringify(jsonArray)
+        cy.log(jsonMatchCriteria);
 
+        //test data Match criteria Values
+        let jsonVal = NCT02503722_Osimertinib.treatment_list.step[0].arm[0].match
+        const testDataMatchingCriteria = JSON.stringify(jsonVal)
+        cy.log(testDataMatchingCriteria)
+        //expect(jsonMatchCriteria).to.deep.equal(testDataMatchingCriteria)
+        trialEditorHeaderButtons().eq(1).click()
+        trialEditorExportCtml().eq(1).click()
+      })
   });
 });
+
+

@@ -1,6 +1,8 @@
 import { defineConfig } from 'cypress';
 import { nxE2EPreset } from '@nrwl/cypress/plugins/cypress-preset';
 import EndToEndConfigOptions = Cypress.EndToEndConfigOptions;
+const { removeDirectory } = require('cypress-delete-downloads-folder');
+const {verifyDownloadTasks} = require('cy-verify-downloads')
 
 const cypressJsonConfig: EndToEndConfigOptions = {
   fileServerFolder: '.',
@@ -12,6 +14,10 @@ const cypressJsonConfig: EndToEndConfigOptions = {
   chromeWebSecurity: false,
   specPattern: 'src/e2e/**/*.cy.{js,jsx,ts,tsx}',
   supportFile: 'src/support/e2e.ts',
+  setupNodeEvents(on,config) {
+    on('task', verifyDownloadTasks)
+    on('task', { removeDirectory })
+  }
 };
 export default defineConfig({
   viewportWidth: 1920,
@@ -19,6 +25,10 @@ export default defineConfig({
   "env": {
      "baseUrl": "http://localhost:4200/",
    },
+  /*setupNodeEvents(on, config) {
+    on('task', verifyDownloadTasks)
+    on('task', { removeDirectory })
+  },*/
   e2e: {
     ...nxE2EPreset(__dirname),
     ...cypressJsonConfig,
