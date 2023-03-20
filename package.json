@@ -105,7 +105,6 @@
     "ts-jest": "27.0.5",
     "typescript": "~4.5.2",
     "cypress-delete-downloads-folder": "^0.0.2",
-    "cy-verify-downloads": "^0.1.11",
-    "sha256-file": "^1.0.0"
+    "cy-verify-downloads": "^0.1.11"
   }
 }
