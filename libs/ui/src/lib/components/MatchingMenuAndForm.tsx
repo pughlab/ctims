@@ -264,11 +264,11 @@ const MatchingMenuAndForm = (props: any) => {
                 "Signature"
               ],
               "enum": [
-                "MUTATION",
+                "Mutation",
                 "CNV",
                 "SV",
                 "WT",
-                "SIGNATURE"
+                "Signature"
               ]
             },
             'variant_classification': {
