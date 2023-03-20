@@ -341,6 +341,10 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                       },
                       "arm_suspended": {
                         "type": "string",
+                        "enum": [
+                          "Y",
+                          "N"
+                        ],
                         "title": "Arm is suspended",
                         "description": "Y/N"
                       },
@@ -368,6 +372,10 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                             },
                             "level_suspended": {
                               "type": "string",
+                              "enum": [
+                                "Y",
+                                "N"
+                              ],
                               "title": "This level is suspended",
                               "description": "Y/N"
                             },
@@ -564,7 +572,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
           "ui:ObjectFieldTemplate": CtimsItemObjectFieldTemplate,
           "ui:spacing": 16,
           "is_primary": {
-            "ui:widget": CtimsCheckboxWidget
+            "ui:widget": CtimsDropdown
           },
           "ui:layout": [
             {
@@ -619,10 +627,10 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             }
           ],
           "coordinating_center": {
-            "ui:widget": CtimsCheckboxWidget
+            "ui:widget": CtimsDropdown
           },
           "uses_cancer_center_irb": {
-            "ui:widget": CtimsCheckboxWidget
+            "ui:widget": CtimsDropdown
           }
         }
       }
@@ -652,7 +660,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             }
           ],
           "is_principal_sponsor": {
-            "ui:widget": CtimsCheckboxWidget
+            "ui:widget": CtimsDropdown
           }
         }
       }
@@ -711,7 +719,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             "items": {
               "ui:ObjectFieldTemplate": CtimsItemObjectFieldTemplate,
               "arm_suspended": {
-                "ui:widget": CtimsCheckboxWidget
+                "ui:widget": CtimsDropdown
               },
               "match": {
                 matchingCriteriaWidget: {
@@ -727,7 +735,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                   "ui:ObjectFieldTemplate": DoseLevelObjectFieldTemplate,
                  "key": "dose_level",
                  "level_suspended": {
-                    "ui:widget": CtimsCheckboxWidget
+                    "ui:widget": CtimsDropdown
                  }
                }
               }
