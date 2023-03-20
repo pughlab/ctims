@@ -16,6 +16,7 @@ export interface Ctml {
   staff_list:                   StaffList;
   status:                       string;
   treatment_list:               TreatmentList;
+  deleteDownloadsFolderBeforeAll: any
 }
 
 export interface DrugList {
