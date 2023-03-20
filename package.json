@@ -91,6 +91,8 @@
     "react-test-renderer": "17.0.2",
     "sass": "1.43.2",
     "ts-jest": "27.0.5",
-    "typescript": "~4.5.2"
+    "typescript": "~4.5.2",
+    "cypress-delete-downloads-folder": "^0.0.2",
+    "cy-verify-downloads": "^0.1.11"
   }
 }

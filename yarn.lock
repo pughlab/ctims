@@ -4874,6 +4874,16 @@ csstype@^3.0.2:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.1.tgz#841b532c45c758ee546a11d5bd7b7b473c8c30b9"
   integrity sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==
 
+cy-verify-downloads@^0.1.11:
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/cy-verify-downloads/-/cy-verify-downloads-0.1.13.tgz#ae1f3bb8e22ca5e12f5c39adced5bde4ec260b0c"
+  integrity sha512-+nM/APfZhWgArT05wrU2shtmlF5Fr3ik6lagKdcV3Cs809NAXpnfmN27vo2I3I3cY09OLXxiLQqSjsD6+fMSqA==
+
+cypress-delete-downloads-folder@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/cypress-delete-downloads-folder/-/cypress-delete-downloads-folder-0.0.2.tgz#5831b6be31e45333450d4ce6b17cdf3d3a0de1f7"
+  integrity sha512-fqkN+Qyble5Y080FhfHs4P2Vm7aV2Ez9AidYzxhX5EUnE1AJOJghAs1n8KCVdZ0WG8YJM2bg+MA55e7ISpsd2w==
+
 cypress@^11.2.0:
   version "11.2.0"
   resolved "https://registry.yarnpkg.com/cypress/-/cypress-11.2.0.tgz#63edef8c387b687066c5493f6f0ad7b9ced4b2b7"
