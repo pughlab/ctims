@@ -67,7 +67,6 @@ describe('CTIMS Trial Editor', () => {
   it('should Validate the Trial Editor Page', () => {
     cy.title().should('contain','CTIMS')
     trialEditorLeftPanelList().should('have.length','8')
-    // @ts-ignore
    /* cy.trialInformation(NCT04293094_testData.nct_id,
       "My Trial",
       "John Doe",
@@ -80,15 +79,12 @@ describe('CTIMS Trial Editor', () => {
       NCT04293094_testData.status)
 
     //Age
-    // @ts-ignore
     cy.age(NCT04293094_testData.age)
 
     //Drug List
-    // @ts-ignore
     cy.drugList(NCT04293094_testData.drug_list.drug[0].drug_name)
 
     //Management Group List has 1-text field and 1-Checkbox
-    // @ts-ignore
     cy.managementGroupList(NCT04293094_testData.management_group_list.management_group[0].management_group_name,
       NCT04293094_testData.management_group_list.management_group[0].is_primary)
 */
