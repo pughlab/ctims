@@ -7,6 +7,7 @@ export const trialEditorHeader = () => cy.get('.EditorTopBar_title__kDE8R')
 
 //TrialEditor Buttons (Discard, Export, Save)
 export const trialEditorHeaderButtons = () => cy.get('.EditorTopBar_menuBtnGroup__dBNyO>button') //3 elements
+export const trialEditorExportCtml = () => cy.get('.p-dialog-footer>div>button') //2 buttons Cancel and Export CTML
 
 //LeftPanel Trial Editor
 export const trialEditorLeftPanelList = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li') //8 elements
@@ -91,13 +92,16 @@ export const getLevelCode = () => cy.get('#root_treatment_list_step_0_arm_0_dose
 export const getLevelDescription = () => cy.get('#root_treatment_list_step_0_arm_0_dose_level_0_level_description')
 export const getLevelInternalId = () => cy.get('#root_treatment_list_step_0_arm_0_dose_level_0_level_internal_id')
 
+//Matching Criteria Table View Content has"YAML" and "JSON"
+export const getMatchingCriteriaTableHeader = () => cy.get('.p-tabview-title')
+
 //Edit Matching Criteria
 export const getEditMatchingCriteria = () => cy.get('.CtimsMatchingCriteriaWidget_edit-matching-criteria-title__qEaKg')
 
 //******************* Match Modal Criteria ********************************************************//
 
 //Footer Buttons("Discard", "Save matching criteria")
-export const getFooterButtons = () => cy.get('.p-dialog-footer>div>button') //2 elements
+export const getMatchModalFooterButtons = () => cy.get('.p-dialog-footer>div>button') //2 elements
 
 //Match Criteria Default Text
 export const getDefaultTextMatchingCriteria = () => cy.get('.MatchingMenuAndForm_matchingCriteriaFormContainerEmptyText__6I4Dm')
