@@ -57,12 +57,18 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
   const setRootNodesState = (newRootNodes: TreeNode[]) => {
     setRootNodes(newRootNodes);
-    const firstSelectedKey = newRootNodes[0].children![0].key;
-    setSelectedKeys(firstSelectedKey)
-    const r = jsonpath.query(newRootNodes, `$..[?(@.key=="${firstSelectedKey}")]`);
-    if(r.length > 0) {
-      setSelectedNode(r[0]);
-      onTreeNodeClick(r[0].data.type, r[0]);
+    if (newRootNodes[0].children && newRootNodes[0].children.length > 0) {
+      const firstSelectedKey = newRootNodes[0].children![0].key;
+      setSelectedKeys(firstSelectedKey)
+      const r = jsonpath.query(newRootNodes, `$..[?(@.key=="${firstSelectedKey}")]`);
+      if(r.length > 0) {
+        setSelectedNode(r[0]);
+        onTreeNodeClick(r[0].data.type, r[0]);
+      }
+    } else {
+      // setSelectedKeys(null)
+      // setSelectedNode(null);
+      onTreeNodeClick(EComponentType.None, newRootNodes[0]);
     }
   }
 

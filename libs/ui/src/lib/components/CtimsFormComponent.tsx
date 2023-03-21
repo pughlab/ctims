@@ -299,7 +299,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                 "staff_role": {
                   "type": "string",
                   "title": "Staff Role",
-                  "description": "The role of the this listed staff"
+                  "description": "The role of the listed staff"
                 },
               },
               'title': 'Protocol Staff'

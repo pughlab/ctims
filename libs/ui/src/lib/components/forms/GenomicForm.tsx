@@ -3,7 +3,12 @@ import Form, {withTheme} from "@rjsf/core";
 import {RegistryWidgetsType, ValidationData} from "@rjsf/utils";
 import {useDispatch} from "react-redux";
 import CtimsMatchDialogObjectFieldTemplate from "../../custom-rjsf-templates/CtimsMatchDialogObjectFieldTemplate";
-import {formChange, operatorChange} from "../../../../../../apps/web/store/slices/modalActionsSlice";
+import {
+  deleteMatchDialogError,
+  formChange,
+  operatorChange,
+  setMatchDialogErrors
+} from "../../../../../../apps/web/store/slices/modalActionsSlice";
 import {OperatorDropdown} from "./OperatorDropdown";
 import {TitleContainer} from "./TitleContainer";
 import {JSONSchema7} from "json-schema";
@@ -36,6 +41,7 @@ const formContainerStyle: CSSProperties = {
 
 export const GenomicForm = (props: IFormProps) => {
   const {node} = props
+  const nk = node.key as string;
   console.log('GenomicForm node: ', node)
 
   const genomicFormRef = useRef<any>(null);
@@ -317,9 +323,12 @@ export const GenomicForm = (props: IFormProps) => {
     console.log('onFormChange errorDetails: ', errorDetails);
     if (errorDetails?.errors.length > 0) {
       node.data.formValid = false;
+      const payload = {[nk]: true};
+      dispatch(setMatchDialogErrors(payload));
     }
     if (errorDetails?.errors.length === 0) {
       node.data.formValid = true;
+      dispatch(deleteMatchDialogError(nk));
     }
     node.data.formData = data.formData;
     dispatch(formChange());
