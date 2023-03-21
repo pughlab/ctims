@@ -16,12 +16,8 @@ const TitleField = ({
         fontSize: '16px',
     }
 
-    const stringToDash = (str: string) => {
-        return str.split(' ').join('-').toLowerCase();
-    }
-
     return (
-        <div style={style} id={stringToDash(title)}>
+        <div style={style}>
             <span>{(uiSchema && uiSchema["ui:title"]) || title}</span>
         </div>
     );
