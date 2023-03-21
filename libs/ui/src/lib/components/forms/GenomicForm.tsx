@@ -41,15 +41,8 @@ export const GenomicForm = (props: IFormProps) => {
   const genomicFormRef = useRef<any>(null);
 
   useEffect(() => {
-    if (genomicFormRef) {
-      const form: Form = genomicFormRef.current;
-      const errorDetails: ValidationData<any> = form?.validate({});
-      if (errorDetails?.errors.length > 0) {
-        node.data.formValid = false;
-      }
-      console.log('genomicFormRef.current: ', errorDetails);
-    }
-  }, [genomicFormRef]);
+    node.data.formValid = false;
+  }, [node]);
 
   const dispatch = useDispatch()
 

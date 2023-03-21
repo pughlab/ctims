@@ -1,5 +1,8 @@
 import {useDispatch} from "react-redux";
-import {addAdjacentNode, deleteNode} from "../../../../../../apps/web/store/slices/modalActionsSlice";
+import {
+  addAdjacentNode,
+  deleteNode,
+} from "../../../../../../apps/web/store/slices/modalActionsSlice";
 import styles from "../MatchingMenuAndForm.module.scss";
 import {Button} from "primereact/button";
 import React from "react";
@@ -20,7 +23,6 @@ export const TitleContainer = (props: ITitleContainerProps) => {
   }
 
   const onDeleteCriteria = () => {
-    console.log('onDeleteCriteria');
     dispatch(deleteNode({nodeKey: node.key as string}));
   }
 

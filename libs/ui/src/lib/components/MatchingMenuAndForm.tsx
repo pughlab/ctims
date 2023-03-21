@@ -7,8 +7,6 @@ import {Theme as PrimeTheme} from "../primereact";
 import TreeNode from "primereact/treenode";
 import {ClinicalForm} from "./forms/ClinicalForm";
 import {GenomicForm} from "./forms/GenomicForm";
-import {RootState} from "../../../../../apps/web/store/store";
-import {useSelector} from "react-redux";
 
 
 const RjsfForm = withTheme(PrimeTheme)
@@ -32,8 +30,6 @@ const MatchingMenuAndForm = (props: any) => {
   const [componentType, setComponentType] = useState<IComponentType>({type: EComponentType.None, node: {}});
   const [isEmpty, setIsEmpty] = useState(true);
   const [buildRootNodeParams, setBuildRootNodeParams] = useState<IRootNode>({rootLabel: '', firstChildLabel: ''});
-
-  // const matchDialogErrors = useSelector((state: RootState) => state.modalActions.matchDialogErrors);
 
   const AddCriteriaButton = (props: {addCriteriaGroupClicked: () => void}) => {
     const {addCriteriaGroupClicked} = props;

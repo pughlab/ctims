@@ -48,8 +48,6 @@ export const ClinicalForm = (props: IFormProps) => {
 
   useEffect(() => {
     node.data.formValid = false;
-    const payload = {[nk]: true};
-    dispatch(setMatchDialogErrors(payload));
   }, [node]);
 
   const dispatch = useDispatch();
