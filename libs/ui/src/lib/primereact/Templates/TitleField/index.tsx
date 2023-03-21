@@ -9,29 +9,6 @@ const TitleField = ({
                         schema,
                         uiSchema
                     }: TitleFieldProps) => {
-  //   console.log(uiSchema)
-  //
-  // const [isElementOnTop, setIsElementOnTop] = useState(false);
-  // const elementRef = useRef<any>(null);
-  //
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     const element = elementRef.current;
-  //
-  //     if (element) {
-  //       const elementRect = element.getBoundingClientRect();
-  //       const isElementOnTop = elementRect.top <= 0;
-  //       setIsElementOnTop(isElementOnTop);
-  //       console.log('isElementOnTop', isElementOnTop)
-  //     }
-  //   };
-  //
-  //   window.addEventListener('scroll', handleScroll);
-  //   return () => {
-  //     window.removeEventListener('scroll', handleScroll);
-  //   };
-  // }, []);
-
 
     const style: React.CSSProperties = {
         fontFamily: 'Inter, sans-serif',
@@ -39,12 +16,8 @@ const TitleField = ({
         fontSize: '16px',
     }
 
-    const stringToDash = (str: string) => {
-        return str.split(' ').join('-').toLowerCase();
-    }
-
     return (
-        <div style={style} id={stringToDash(title)}>
+        <div style={style}>
             <span>{(uiSchema && uiSchema["ui:title"]) || title}</span>
         </div>
     );
