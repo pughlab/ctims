@@ -16,8 +16,9 @@ export interface IOperatorChange {
   location: 'form' | 'tree';
 }
 
-export interface IFormChange {
-  counter: number;
+export interface IMatchDialogErrors {
+  // where key is uuid of the node (node key)
+  [key: string]: boolean;
 }
 
 export interface TreeActionsState {
@@ -26,6 +27,7 @@ export interface TreeActionsState {
   operatorChange: IOperatorChange;
   formChangeCounter: number;
   ctmlDialogModel: any;
+  matchDialogErrors: IMatchDialogErrors;
 }
 
 const initialState: TreeActionsState = {
@@ -42,7 +44,8 @@ const initialState: TreeActionsState = {
     location: 'form'
   },
   formChangeCounter: 0,
-  ctmlDialogModel: null
+  ctmlDialogModel: null,
+  matchDialogErrors: {}
 };
 
 export const modalActionsSlice = createSlice({
@@ -66,9 +69,24 @@ export const modalActionsSlice = createSlice({
     },
     setCtmlDialogModel: (state, action: PayloadAction<any>) => {
       state.ctmlDialogModel = action.payload;
+    },
+    setMatchDialogErrors: (state, action: PayloadAction<IMatchDialogErrors>) => {
+      state.matchDialogErrors = {...state.matchDialogErrors, ...action.payload};
+    },
+    deleteMatchDialogError: (state, action: PayloadAction<string>) => {
+      delete state.matchDialogErrors[action.payload];
     }
   }
 });
 
-export const { addAdjacentNode, deleteNode, operatorChange, formChange, setCtmlDialogModel, resetFormChangeCounter } = modalActionsSlice.actions;
+export const {
+  addAdjacentNode,
+  deleteNode,
+  operatorChange,
+  formChange,
+  setCtmlDialogModel,
+  resetFormChangeCounter,
+  setMatchDialogErrors,
+  deleteMatchDialogError
+} = modalActionsSlice.actions;
 export default modalActionsSlice.reducer;

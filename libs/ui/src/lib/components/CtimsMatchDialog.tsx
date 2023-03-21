@@ -3,7 +3,6 @@ import React, {CSSProperties, useEffect, useRef, useState} from "react";
 import {Dialog} from "primereact/dialog";
 import {Button} from "primereact/button";
 import MatchingMenuAndForm from "./MatchingMenuAndForm";
-import {OverlayPanel} from "primereact/overlaypanel";
 import {useSelector} from "react-redux";
 import dynamic from 'next/dynamic';
 import {RootState, store} from "../../../../../apps/web/store/store";
@@ -30,6 +29,9 @@ const CtmlModelPreview = () => {
 
 const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   const [isDialogVisible, setIsDialogVisible] = useState<boolean>(props.isDialogVisible);
+
+  const matchDialogErrors = useSelector((state: RootState) => state.modalActions.matchDialogErrors);
+
   let {formData} = props;
 
   useEffect(() => {
@@ -64,7 +66,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     return (
       <div style={{marginTop: '10px'}}>
         <Button style={dismissBtnStyle} label="Discard" className="p-button-text" onClick={discardClicked} />
-        <Button style={saveBtnStyle} label="Save matching criteria" onClick={saveMatchingCriteriaClicked} />
+        <Button style={saveBtnStyle} disabled={Object.keys(matchDialogErrors).length > 0} label="Save matching criteria" onClick={saveMatchingCriteriaClicked} />
       </div>
     )
   }

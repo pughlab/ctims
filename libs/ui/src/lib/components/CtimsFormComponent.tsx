@@ -13,7 +13,6 @@ import {RegistryWidgetsType, RJSFValidationError} from "@rjsf/utils";
 import CtimsInput from "../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../custom-rjsf-templates/CtimsDropdown";
 import CtimsMatchingCriteriaWidget from "../custom-rjsf-templates/CtimsMatchingCriteriaWidget";
-import CtimsCheckboxWidget from "../custom-rjsf-templates/CtimsCheckbox";
 import CtimsFieldTemplate from "../custom-rjsf-templates/CtimsFieldTemplate";
 import CtimsErrorListTemplate from "../custom-rjsf-templates/CtimsErrorListTemplate";
 import DoseLevelObjectFieldTemplate from "../custom-rjsf-templates/DoseLevelObjectFieldTemplate";
@@ -143,7 +142,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
         },
         "title": "Age"
       },
-      "drugList": {
+      "drug_list": {
         "type": "object",
         "properties": {
           "drug": {
@@ -275,7 +274,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             "type": "array",
             "items": {
               "type": "object",
-              "required": ["first_name", "last_name", "email", "institution_name", "staff_role"],
+              "required": ["first_name", "last_name", "email_address", "institution_name", "staff_role"],
               "properties": {
                 "first_name": {
                   "type": "string",
@@ -287,7 +286,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                   "title": "Last Name",
                   "description": "The last name of the overall principal investigator"
                 },
-                "email": {
+                "email_address": {
                   "type": "string",
                   "title": "Email",
                   "description": "The email address of the overall principal investigator"
@@ -300,7 +299,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                 "staff_role": {
                   "type": "string",
                   "title": "Staff Role",
-                  "description": "The role of the this listed staff"
+                  "description": "The role of the listed staff"
                 },
               },
               'title': 'Protocol Staff'
@@ -417,7 +416,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
         }
       },
       {
-        "drugList": {
+        "drug_list": {
           "span": 24
         }
       },
@@ -524,7 +523,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
         }
       ]
     },
-    "drugList": {
+    "drug_list": {
       "ui:ObjectFieldTemplate": CtimsObjectFieldTemplate,
       "ui:spacing": 16,
       "ui:layout": [
@@ -689,7 +688,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
               }
             },
             {
-              "email": {
+              "email_address": {
                 "span": 24
               }
             },
@@ -757,7 +756,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
 
   const initialFormData = {
     "trialInformation": {},
-    "drugList": {
+    "drug_list": {
       "drug": [
         {}
       ]

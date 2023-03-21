@@ -19,11 +19,12 @@ import {EComponentType} from "./EComponentType";
 import {IRootNode} from "./MatchingMenuAndForm";
 import {useDispatch, useSelector} from "react-redux";
 import {
+  deleteMatchDialogError,
   deleteNode,
   IAddCriteria,
   IDeleteCriteria,
   IOperatorChange, operatorChange,
-  setCtmlDialogModel
+  setCtmlDialogModel, setMatchDialogErrors
 } from "../../../../../apps/web/store/slices/modalActionsSlice";
 import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
 import {v4 as uuidv4} from 'uuid';
@@ -50,17 +51,24 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   const nodeKeyToBeDeleted: IDeleteCriteria = useSelector((state: RootState) => state.modalActions.deleteCriteria);
   const operatorChanged: IOperatorChange = useSelector((state: RootState) => state.modalActions.operatorChange);
   const formChangedCounter: number = useSelector((state: RootState) => state.modalActions.formChangeCounter);
+  const matchDialogErrors = useSelector((state: RootState) => state.modalActions.matchDialogErrors);
 
   const dispatch = useDispatch();
 
   const setRootNodesState = (newRootNodes: TreeNode[]) => {
     setRootNodes(newRootNodes);
-    const firstSelectedKey = newRootNodes[0].children![0].key;
-    setSelectedKeys(firstSelectedKey)
-    const r = jsonpath.query(newRootNodes, `$..[?(@.key=="${firstSelectedKey}")]`);
-    if(r.length > 0) {
-      setSelectedNode(r[0]);
-      onTreeNodeClick(r[0].data.type, r[0]);
+    if (newRootNodes[0].children && newRootNodes[0].children.length > 0) {
+      const firstSelectedKey = newRootNodes[0].children![0].key;
+      setSelectedKeys(firstSelectedKey)
+      const r = jsonpath.query(newRootNodes, `$..[?(@.key=="${firstSelectedKey}")]`);
+      if(r.length > 0) {
+        setSelectedNode(r[0]);
+        onTreeNodeClick(r[0].data.type, r[0]);
+      }
+    } else {
+      // setSelectedKeys(null)
+      // setSelectedNode(null);
+      onTreeNodeClick(EComponentType.None, newRootNodes[0]);
     }
   }
 
@@ -118,6 +126,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       const state = store.getState();
       updateReduxViewModelAndCtmlModel(newRootNodes, state);
 
+      dispatch(deleteMatchDialogError(nodeKeyToBeDeleted.nodeKey))
       dispatch(deleteNode({nodeKey: ''}));
     }
   }, [nodeKeyToBeDeleted]);
@@ -180,12 +189,15 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     if (nodeKey) {
       const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
       if (parentNode) {
+        const key = uuidv4();
         const newNode = {
-          key: uuidv4(),
+          key,
           label: type,
           icon: type === 'Clinical' ? 'clinical-icon in-tree' : 'genomic-icon in-tree',
           data: {type: type === 'Clinical' ? EComponentType.ClinicalForm : EComponentType.GenomicForm},
         }
+        const payload = {[key]: true};
+        dispatch(setMatchDialogErrors(payload))
         parentNode.children!.push(newNode);
       }
       setRootNodes([...rootNodes]);
@@ -197,12 +209,15 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       const parentNode = findObjectByKeyInTree(rootNodes[0], nodeKey as string);
       if (parentNode) {
         // get last element from the children
+        const key = uuidv4();
         const newNode = {
-          key: uuidv4(),
+          key,
           label: type,
           icon: type === 'Clinical' ? 'clinical-icon in-tree' : 'genomic-icon in-tree',
           data: {type: type === 'Clinical' ? EComponentType.ClinicalForm : EComponentType.GenomicForm},
         }
+        const payload = {[key]: true};
+        dispatch(setMatchDialogErrors(payload))
         parentNode.children!.push(newNode);
       }
       setRootNodes([...rootNodes]);
@@ -321,13 +336,22 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       }
 
       let label = <b>{node.label}</b>;
+
+      const style: React.CSSProperties = {
+        width: '80%',
+      }
+
+      if (matchDialogErrors[node.key as string]) {
+        style['color'] = 'red';
+      }
+
       return (
         <>
           <div className={styles.treeNodeContainer}
             onMouseOver={() => setIsMouseOverNode(true)}
             onMouseOut={() => setIsMouseOverNode(false)}
           >
-              <span className="p-treenode-label" style={{width: '80%'}}>
+              <span className="p-treenode-label" style={style}>
                 {label}
               </span>
               {btnToShow()}
