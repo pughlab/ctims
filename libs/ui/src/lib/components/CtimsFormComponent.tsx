@@ -142,7 +142,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
         },
         "title": "Age"
       },
-      "drugList": {
+      "drug_list": {
         "type": "object",
         "properties": {
           "drug": {
@@ -274,7 +274,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             "type": "array",
             "items": {
               "type": "object",
-              "required": ["first_name", "last_name", "email", "institution_name", "staff_role"],
+              "required": ["first_name", "last_name", "email_address", "institution_name", "staff_role"],
               "properties": {
                 "first_name": {
                   "type": "string",
@@ -286,7 +286,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                   "title": "Last Name",
                   "description": "The last name of the overall principal investigator"
                 },
-                "email": {
+                "email_address": {
                   "type": "string",
                   "title": "Email",
                   "description": "The email address of the overall principal investigator"
@@ -416,7 +416,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
         }
       },
       {
-        "drugList": {
+        "drug_list": {
           "span": 24
         }
       },
@@ -523,7 +523,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
         }
       ]
     },
-    "drugList": {
+    "drug_list": {
       "ui:ObjectFieldTemplate": CtimsObjectFieldTemplate,
       "ui:spacing": 16,
       "ui:layout": [
@@ -688,7 +688,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
               }
             },
             {
-              "email": {
+              "email_address": {
                 "span": 24
               }
             },
@@ -756,7 +756,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
 
   const initialFormData = {
     "trialInformation": {},
-    "drugList": {
+    "drug_list": {
       "drug": [
         {}
       ]
