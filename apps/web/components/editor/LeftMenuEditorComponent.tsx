@@ -1,8 +1,24 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from './LeftMenuEditorComponent.module.scss';
+import {useScrollspy} from "./useScrollSpy";
 
 const LeftMenuEditorComponent = () => {
   const [activeLink, setActiveLink] = useState('');
+  const ids = [
+    'trial-information',
+    'age',
+    'drug-list',
+    'management-group-list',
+    'site-list',
+    'sponsor-list',
+    'staff-list',
+    'treatment-list',
+  ];
+  const activeId = useScrollspy(ids, 76);
+
+  useEffect(() => {
+    setActiveLink(`#${activeId}`);
+  }, [activeId]);
 
   const handleLinkClick = (link) => {
     setActiveLink(link);
@@ -29,7 +45,8 @@ const LeftMenuEditorComponent = () => {
               onClick={() => handleLinkClick(link.to)}
               className={`${styles['menu-link']} ${
                 activeLink === link.to ? `${styles.active}` : ''
-              }`}
+              }`
+            }
             >
               {link.label}
             </a>
