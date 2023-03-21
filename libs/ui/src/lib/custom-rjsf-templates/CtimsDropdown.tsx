@@ -125,6 +125,7 @@ const CtimsDropdown = (props: WidgetProps) => {
         <Dropdown
           id={id}
           value={typeof value === "undefined" ? emptyValue : value}
+          appendTo={'self'}
           options={optionsList}
           required={required}
           disabled={disabled}
