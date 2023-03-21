@@ -13,7 +13,6 @@ import {RegistryWidgetsType, RJSFValidationError} from "@rjsf/utils";
 import CtimsInput from "../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../custom-rjsf-templates/CtimsDropdown";
 import CtimsMatchingCriteriaWidget from "../custom-rjsf-templates/CtimsMatchingCriteriaWidget";
-import CtimsCheckboxWidget from "../custom-rjsf-templates/CtimsCheckbox";
 import CtimsFieldTemplate from "../custom-rjsf-templates/CtimsFieldTemplate";
 import CtimsErrorListTemplate from "../custom-rjsf-templates/CtimsErrorListTemplate";
 import DoseLevelObjectFieldTemplate from "../custom-rjsf-templates/DoseLevelObjectFieldTemplate";
