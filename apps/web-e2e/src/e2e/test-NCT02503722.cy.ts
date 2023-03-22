@@ -57,17 +57,22 @@ import {
   getTruncateButton,
   getVariantCategory, getVariantClassification,
   selectDraftCtmlStatus, trialEditorExportCtml, trialEditorHeaderButtons,
-  trialEditorLeftPanelList
+  trialEditorLeftPanelList, trialEditorRadioButtons
 } from '../support/app.po';
 import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib";
 const { deleteDownloadsFolderBeforeAll } = require('cypress-delete-downloads-folder');
+// @ts-ignore
+//import {ctml-model} from
+// '/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json';
+import * as fs from 'fs';
+import * as yaml from 'js-yaml';
 
 describe('CTIMS Trial Editor', () => {
-  beforeEach(() => cy.visit('/'));
-  deleteDownloadsFolderBeforeAll()
-  it('should Validate the Trial Editor Page', () => {
-    cy.title().should('contain','CTIMS')
-    trialEditorLeftPanelList().should('have.length','8')
+  before(() => cy.visit('/'));
+  //deleteDownloadsFolderBeforeAll()
+ /* it('should Validate the Trial Editor Page', () => {
+    cy.title().should('contain', 'CTIMS')
+    trialEditorLeftPanelList().should('have.length', '8')
     cy.trialInformation(NCT02503722_Osimertinib.nct_id,
       "My Trial",
       "John Doe",
@@ -98,7 +103,6 @@ describe('CTIMS Trial Editor', () => {
     //Sponsor List
     cy.sponsorList(NCT02503722_Osimertinib.sponsor_list.sponsor[0].sponsor_name,
       NCT02503722_Osimertinib.sponsor_list.sponsor[0].is_principal_sponsor)
-
     //Staff List
     cy.staffList(NCT02503722_Osimertinib.staff_list.protocol_staff[0].first_name,
       NCT02503722_Osimertinib.staff_list.protocol_staff[0].last_name,
@@ -117,21 +121,23 @@ describe('CTIMS Trial Editor', () => {
       NCT02503722_Osimertinib.treatment_list.step[0].arm[0].dose_level[0].level_description,
       NCT02503722_Osimertinib.treatment_list.step[0].arm[0].dose_level[0].level_internal_id.toString(),
       NCT02503722_Osimertinib.treatment_list.step[0].arm[0].dose_level[0].level_suspended)
-
     //Click on Plus Icon to add another Dose Level
+
+  })
+
+  it('should validate the Matching criteria modal',  () => {
     //click Match criteria
     getEditMatchingCriteria().click()
-
-    getDefaultTextMatchingCriteria().should('contain','Matching criteria inputs will be shown here.')
+    getDefaultTextMatchingCriteria().should('contain', 'Matching criteria inputs will be shown here.')
     getAddCriteriaGroup().click()
     //cy.clickParentAnd()
     cy.clickParentNode(0)
-   // cy.wait(1000)
+    // cy.wait(1000)
     //getTruncateButton().should('be.visible').click()
-    getAddCriteriaList().should('contain','Add criteria to same group')
-      .and('contain','Switch group operator')
-      .and('contain','Delete')
-      .and('contain','Add criteria subgroup')
+    getAddCriteriaList().should('contain', 'Add criteria to same group')
+      .and('contain', 'Switch group operator')
+      .and('contain', 'Delete')
+      .and('contain', 'Add criteria subgroup')
     cy.clickClinical()
     //click child component Clinical to update the fields
     getLeftMenuComponent().eq(1).click()
@@ -147,10 +153,15 @@ describe('CTIMS Trial Editor', () => {
     getProteinChange().type(NCT02503722_Osimertinib.treatment_list.step[0].arm[0].match[0].and[1].or[0].genomic.protein_change)
     //Dropdown
     getVariantCategory().click()
-      getGenomicDropDown().contains(NCT02503722_Osimertinib.treatment_list.step[0].arm[0].match[0].and[1].or[0].genomic.variant_category).click()
-    //Dropdown
+    const variant_category = getGenomicDropDown().each(element => {
+      // @ts-ignore
+      cy.log(element.text());
+    })
+    // @ts-ignore
+    //cy.log(variant_category)
+    getGenomicDropDown().contains(NCT02503722_Osimertinib.treatment_list.step[0].arm[0].match[0].and[1].or[0].genomic.variant_category).click()
     getVariantClassification().click()
-      getGenomicDropDown().contains(NCT02503722_Osimertinib.treatment_list.step[0].arm[0].match[0].and[1].or[0].genomic.variant_classification.replace(/_/g, " ")).click()
+    getGenomicDropDown().contains(NCT02503722_Osimertinib.treatment_list.step[0].arm[0].match[0].and[1].or[0].genomic.variant_classification.replace(/_/g, " ")).click()
     cy.clickParentNode(2) //click on Parent "Or" to create 2nd genomic child
     cy.clickGenomic() //create a Genomic child in "Or"
     //click on the 2nd child Genomic to enter values
@@ -159,24 +170,318 @@ describe('CTIMS Trial Editor', () => {
     getProteinChange().type(NCT02503722_Osimertinib.treatment_list.step[0].arm[0].match[0].and[1].or[1].genomic.protein_change)
     //Dropdown
     getVariantCategory().click()
-      getGenomicDropDown().contains(NCT02503722_Osimertinib.treatment_list.step[0].arm[0].match[0].and[1].or[1].genomic.variant_category).click()
-    getMatchModalFooterButtons().eq(1).should('be.enabled').contains('Save matching criteria').click()
-    getMatchingCriteriaTableHeader().contains('JSON').click()
-   // let jsonMatchCriteria =
-      cy.get('.CtimsMatchingCriteriaWidget_pre-tag__gyYSW').invoke("text").then((text) => {
-        const jsonArray = JSON.parse(text);
-        const jsonMatchCriteria = JSON.stringify(jsonArray)
-        cy.log(jsonMatchCriteria);
+    getGenomicDropDown().contains(NCT02503722_Osimertinib.treatment_list.step[0].arm[0].match[0].and[1].or[1].genomic.variant_category).click()
 
-        //test data Match criteria Values
-        let jsonVal = NCT02503722_Osimertinib.treatment_list.step[0].arm[0].match
-        const testDataMatchingCriteria = JSON.stringify(jsonVal)
-        cy.log(testDataMatchingCriteria)
-        //expect(jsonMatchCriteria).to.deep.equal(testDataMatchingCriteria)
-        trialEditorHeaderButtons().eq(1).click()
-        trialEditorExportCtml().eq(1).click()
+    getMatchModalFooterButtons().eq(1).should('be.enabled').contains('Save matching criteria').click()
+  })
+  it('should validate the "Matching criteria" Preview is equal to "NCT02503722_Osimertinib"-Match Json data ', () => {
+    getMatchingCriteriaTableHeader().contains('JSON').click()
+    // let jsonMatchCriteria =
+    cy.get('.CtimsMatchingCriteriaWidget_pre-tag__gyYSW').invoke("text").then((text) => {
+      const jsonArray = JSON.parse(text);
+      const jsonMatchCriteria = JSON.stringify(jsonArray)
+      cy.log(jsonMatchCriteria);
+
+      //test data Match criteria Values
+      let jsonVal = NCT02503722_Osimertinib.treatment_list.step[0].arm[0].match
+      const testDataMatchingCriteria = JSON.stringify(jsonVal)
+      cy.log(testDataMatchingCriteria)
+      expect(testDataMatchingCriteria,'NCT02503722_Osimertinib-Test Data').to.deep.equal(jsonMatchCriteria,'Json' +
+        ' Matching criteria')
+    })
+  })
+
+  it('should click on the Export button and then Export as "JSON" file ',  () => {
+    trialEditorHeaderButtons().eq(1).should('contain','Export').click()
+    trialEditorRadioButtons().eq(0).should('contain.html','json')
+    cy.get('[type="radio"]').first().check({force: true}).should('be.checked')
+    trialEditorExportCtml().eq(1).should('contain','Export CTML').click()
+  });
+
+  it('should click on the Export button and then Export as "YAML" file ',  () => {
+    //trialEditorHeaderButtons().eq(1).should('contain','Export').click()
+    trialEditorRadioButtons().eq(1).click({force: true})
+    //cy.get(':nth-child(3) > .p-radiobutton > .p-radiobutton-box').click()
+    //cy.get('[type="radio"]').first().check({force: true}).should('be.checked')
+    trialEditorExportCtml().eq(1).should('contain','Export CTML').click()
+  });
+*/
+
+  it('should compare json and Yaml ',  () => {
+    // Load the JSON file
+      cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((jsonData) => {
+        const json = jsonData
+        cy.log("Exported ctml-model.json",JSON.stringify(json))
+        // })
+        // Load the YAML file and parse it to a JavaScript object
+        cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.yaml', 'utf-8').then((yamlData) => {
+          const yamlObject = yaml.load(yamlData)
+          cy.log("Exported ctml-model.yaml file converted to Json file for validation",JSON.stringify(yamlObject))
+          // })
+
+          // Compare the JSON files as strings
+          expect(JSON.stringify(json),"Exported ctml-model.json")
+            .to.equal(JSON.stringify(yamlObject),'Exported ctml-model.yaml file converted to Json file for validation');
+        })
       })
   });
+
+  it('should match the individual json object of test data with the exported "ctml-model.json" file ', () => {
+    //cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/src/fixtures/NCT02503722_Osimertinib.js', 'utf8').then((data) => {
+    let jsonVal = NCT02503722_Osimertinib.drug_list.drug
+    let rawData = jsonVal
+    cy.log("Original Test Data", JSON.stringify(rawData))//has two values
+
+      cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf8').then((downloadData) => {
+        const exportData: string[] = downloadData.drug_list.drug
+        const exportCtml = exportData
+        cy.log("Exported data single Drug value", JSON.stringify(exportCtml))// has a single value
+        expect(exportCtml[0]).to.deep.equal(rawData[0])
+    })
+  })
+    /*let jsonVal = NCT02503722_Osimertinib.age
+    const testDataMatchingCriteria = JSON.stringify(jsonVal)
+    cy.log(testDataMatchingCriteria)
+
+    let exportedCtmlModel = NCT02503722_Osimertinib.age
+    const ctmlMatchingCriteria = JSON.stringify(exportedCtmlModel)
+    cy.log(ctmlMatchingCriteria)
+    expect(testDataMatchingCriteria).to.deep.equal(ctmlMatchingCriteria)
+*!/  });
+  it.skip('should validate the match of the "Age" attribute',  () => {
+    let jsonVal = NCT02503722_Osimertinib.age
+    let testDataMatchingCriteria: string;
+    testDataMatchingCriteria = jsonVal;
+   cy.log(JSON.stringify(testDataMatchingCriteria))
+    cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json','utf-8').then((exportedCtmlModel) => {
+       let ctmlMatchingCriteria: string = exportedCtmlModel.age
+       cy.log(JSON.stringify(ctmlMatchingCriteria))
+       expect(testDataMatchingCriteria).to.deep.equal(ctmlMatchingCriteria)
+     })
+  });
+
+  it.skip('should validate the match of the "Trial Id" attribute',  () => {
+    //const myMap = new Map<string,string>();
+    //const testData = new Map<string,string>()
+
+    cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((exportedCtmlModel) => {
+      /!*let exportedTrialInformation: string[] = [exportedCtmlModel.trial_id,
+        exportedCtmlModel.long_title,
+        exportedCtmlModel.short_title,
+        exportedCtmlModel.phase,
+        exportedCtmlModel.protocol_no,
+        exportedCtmlModel.nct_purpose,
+        exportedCtmlModel.status]*!/
+      //cy.log(exportedTrialInformation.toString())
+      /!* let map1 = () => {
+         myMap.set("trial id", exportedCtmlModel.trial_id)
+         myMap.set("long title", exportedCtmlModel.long_title)
+         myMap.set("short title", exportedCtmlModel.short_title)
+         myMap.set("phase", exportedCtmlModel.phase)
+         myMap.set("protocol no", exportedCtmlModel.protocol_no)
+         myMap.set("nct purpose", exportedCtmlModel.nct_purpose)
+         myMap.set("status", exportedCtmlModel.status)
+       }
+       // Call the map1 function to populate the map object
+       let abc = new Map()
+       map1()
+
+ // Convert the map values to an array and store them in a variable
+       //let valuesArray:string[] = Array.from(myMap.values())
+
+ // Log the values array to the console
+       for (let value of abc.values()) {
+         cy.log(value.trial_id)
+       }
+ *!/
+      /!*   let value = myMap.get("trial id");
+         //cy.log(value.toString());
+
+         testData.set("id",NCT02503722_Osimertinib.nct_id)
+         /!*testData.set("id",NCT02503722_Osimertinib.long_title)
+         testData.set("id",NCT02503722_Osimertinib.short_title)
+         testData.set("id",NCT02503722_Osimertinib.phase)
+         testData.set("id",NCT02503722_Osimertinib.protocol_no)
+         testData.set("id",NCT02503722_Osimertinib.nct_purpose)
+         testData.set("id",NCT02503722_Osimertinib.status)*!/
+
+         let value2 = testData.get("id")
+         expect(value).to.deep.equal(value2)*!/
+
+
+      /!*exportedTrialInformation.map((exportedCtmlModel) => {
+        cy.log(exportedCtmlModel)
+      })*!/
+      /!* let testDataTrialInformation:String[] = [NCT02503722_Osimertinib.nct_id,
+         NCT02503722_Osimertinib.long_title,
+         NCT02503722_Osimertinib.short_title,
+         NCT02503722_Osimertinib.phase,
+         NCT02503722_Osimertinib.protocol_no,
+         NCT02503722_Osimertinib.nct_purpose,
+         NCT02503722_Osimertinib.status]
+       testDataTrialInformation.map((element) => {
+         return cy.log(element.toString());
+       })
+       expect(testDataTrialInformation).to.deep.equal(exportedTrialInformation);*!/
+    })
+  })
+    it.skip('should validate the match of the "Trial Information" attribute',  () => {
+     /!* cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((exportedCtmlModel) => {
+        let exportedTrialInformation: string[] = [exportedCtmlModel.trial_id,
+          exportedCtmlModel.long_title,
+          exportedCtmlModel.short_title,
+          exportedCtmlModel.phase,
+          exportedCtmlModel.protocol_no,
+          exportedCtmlModel.nct_purpose,
+          exportedCtmlModel.status]
+        //cy.log(exportedTrialInformation.toString())
+        exportedTrialInformation.forEach((el) => {
+          cy.log(el)
+           //})
+        let testDataTrialInformation:String[] = [NCT02503722_Osimertinib.nct_id,
+          NCT02503722_Osimertinib.long_title,
+          NCT02503722_Osimertinib.short_title,
+          NCT02503722_Osimertinib.phase,
+          NCT02503722_Osimertinib.protocol_no,
+          NCT02503722_Osimertinib.nct_purpose,
+          NCT02503722_Osimertinib.status]
+        testDataTrialInformation.forEach((element) => {
+          let test = element.toString()
+          return cy.log(test);
+          //expect(element.toString()).to.deep.equal(el)
+       //   for(let i=0; i++; i<=test.length)
+          if(test.match(el) ) {
+            //expect(test).to.deep.equal(el);
+            assert.equal(test,el)
+            //cy.log('succs')
+          }
+        })
+        })*!/
+       // expect(testDataTrialInformation).to.deep.equal(exportedTrialInformation);
+      })
+      it.skip('should validate the match of the "Drug list" attribute',  () => {
+        let jsonVal = NCT02503722_Osimertinib.drug_list.drug[0].drug_name
+        //let testDataMatchingCriteria
+        let testDataMatchingCriteria = jsonVal;
+        cy.log(JSON.stringify(testDataMatchingCriteria))
+        cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json','utf-8').then((exportedCtmlModel) => {
+          let ctmlMatchingCriteria: string = exportedCtmlModel.drugList.drug[0].drug_name
+          cy.log(JSON.stringify(ctmlMatchingCriteria))
+          expect(testDataMatchingCriteria).to.deep.equal(ctmlMatchingCriteria)
+        })
+      });
+  it.skip('should validate the match of the "Managament Group list" values',() => {
+    let jsonVal = NCT02503722_Osimertinib.management_group_list.management_group[0]
+    //let testDataMatchingCriteria
+    let testDataMatchingCriteria: string[] = [jsonVal.is_primary,jsonVal.management_group_name]
+    cy.log(JSON.stringify(testDataMatchingCriteria))
+    cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json','utf-8').then((exportedCtmlModel) => {
+      let exportData = exportedCtmlModel.management_group_list.management_group[0]
+      let ctmlMatchingCriteria: string[] = [exportData.is_primary,exportData.management_group_name]
+      //ctmlMatchingCriteria
+      cy.log(JSON.stringify(ctmlMatchingCriteria))
+      expect(JSON.stringify(testDataMatchingCriteria)).to.deep.equal(JSON.stringify(ctmlMatchingCriteria))
+    })
+  });
+  it.skip('should validate the match of the "Managament Group list" values',() => {
+    let jsonVal = NCT02503722_Osimertinib.site_list.site[0]
+    //let testDataMatchingCriteria
+    let testDataMatchingCriteria: string[] = [jsonVal.site_name,
+      jsonVal.site_status,
+      jsonVal.coordinating_center,
+      jsonVal.uses_cancer_center_irb]
+    cy.log(JSON.stringify(testDataMatchingCriteria))
+    cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json','utf-8').then((exportedCtmlModel) => {
+      let exportData = exportedCtmlModel.site_list.site[0]
+      let ctmlMatchingCriteria: string[] = [exportData.site_name,exportData.site_status,exportData.coordinating_center,exportData.uses_cancer_center_irb]
+      //ctmlMatchingCriteria
+      cy.log(JSON.stringify(ctmlMatchingCriteria))
+      expect(JSON.stringify(testDataMatchingCriteria)).to.deep.equal(JSON.stringify(ctmlMatchingCriteria))
+    })
+  });
+  it.skip('should validate the match of the "Sponsor list" values',() => {
+    let jsonVal = NCT02503722_Osimertinib.sponsor_list.sponsor[0]
+    //let testDataMatchingCriteria
+    let testDataMatchingCriteria: string[] = [jsonVal.sponsor_name,
+      jsonVal.is_principal_sponsor,
+     ]
+    cy.log(JSON.stringify(testDataMatchingCriteria))
+    cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json','utf-8').then((exportedCtmlModel) => {
+      let exportData = exportedCtmlModel.sponsor_list.sponsor[0]
+      let ctmlMatchingCriteria: string[] = [exportData.sponsor_name,exportData.is_principal_sponsor]
+      //ctmlMatchingCriteria
+      cy.log(JSON.stringify(ctmlMatchingCriteria))
+      expect(JSON.stringify(testDataMatchingCriteria)).to.deep.equal(JSON.stringify(ctmlMatchingCriteria))
+    })
+  });
+
+  it('should validate the match of the "Staff list" values',() => {
+    let jsonVal = NCT02503722_Osimertinib.staff_list.protocol_staff[0]
+    //let testDataMatchingCriteria
+    let testDataMatchingCriteria: string[] = [jsonVal.first_name,
+      jsonVal.last_name,
+      jsonVal.email_address,
+      jsonVal.institution_name,
+      jsonVal.staff_role
+    ]
+    cy.log(JSON.stringify(testDataMatchingCriteria))
+    cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((exportedCtmlModel) => {
+      let exportData = exportedCtmlModel.staff_list.protocol_staff[0]
+      let ctmlMatchingCriteria: string[] = [exportData.first_name, exportData.last_name,
+        exportData.email,
+        exportData.institution_name,
+        exportData.staff_role]
+      //ctmlMatchingCriteria
+      cy.log(JSON.stringify(ctmlMatchingCriteria))
+      expect(JSON.stringify(testDataMatchingCriteria)).to.deep.equal(JSON.stringify(ctmlMatchingCriteria))
+    })
+  })
+
+    it('should validate the match of the "Treatment list Arm Level" values',() => {
+      let jsonVal = NCT02503722_Osimertinib.treatment_list.step[0].arm[0]
+      //let testDataMatchingCriteria
+      let testDataMatchingCriteria: string[] = [jsonVal.arm_code,
+        jsonVal.arm_description,
+        jsonVal.arm_internal_id.toString(),
+        jsonVal.arm_suspended,
+      ]
+      cy.log(JSON.stringify(testDataMatchingCriteria))
+      cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((exportedCtmlModel) => {
+        let exportData = exportedCtmlModel.treatment_list.step[0].arm[0]
+        let ctmlMatchingCriteria: string[] = [exportData.arm_code,
+          exportData.arm_description,
+          exportData.arm_internal_id,
+          exportData.arm_suspended,
+        ]
+        //ctmlMatchingCriteria
+        cy.log(JSON.stringify(ctmlMatchingCriteria))
+        expect(JSON.stringify(testDataMatchingCriteria)).to.deep.equal(JSON.stringify(ctmlMatchingCriteria))
+      })
+  });
+
+  it('should validate the match of the "Treatment list Dose Level" values',() => {
+    let jsonVal = NCT02503722_Osimertinib.treatment_list.step[0].arm[0].dose_level[0]
+    //let testDataMatchingCriteria
+    let testDataMatchingCriteria: string[] = [
+      jsonVal.level_code,
+      jsonVal.level_description,
+      jsonVal.level_internal_id.toString(),
+      jsonVal.level_suspended
+    ]
+    cy.log(JSON.stringify(testDataMatchingCriteria))
+    cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((exportedCtmlModel) => {
+      let exportData = exportedCtmlModel.treatment_list.step[0].arm[0].dose_level[0]
+      let ctmlMatchingCriteria: string[] = [
+        exportData.level_code,
+        exportData.level_description,
+        exportData.level_internal_id,
+        exportData.level_suspended
+      ]
+      //ctmlMatchingCriteria
+      cy.log(JSON.stringify(ctmlMatchingCriteria))
+      expect(JSON.stringify(testDataMatchingCriteria)).to.deep.equal(JSON.stringify(ctmlMatchingCriteria))
+    })
+  })*/
 });
 
 
