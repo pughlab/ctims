@@ -3,9 +3,10 @@ import React, {CSSProperties, useEffect, useRef, useState} from "react";
 import {Dialog} from "primereact/dialog";
 import {Button} from "primereact/button";
 import MatchingMenuAndForm from "./MatchingMenuAndForm";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import dynamic from 'next/dynamic';
 import {RootState, store} from "../../../../../apps/web/store/store";
+import {resetMatchDialogErrors} from "../../../../../apps/web/store/slices/modalActionsSlice";
 const BrowserReactJsonView = dynamic(() => import('react-json-view'), {
   ssr: false,
 });
@@ -29,6 +30,8 @@ const CtmlModelPreview = () => {
 
 const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   const [isDialogVisible, setIsDialogVisible] = useState<boolean>(props.isDialogVisible);
+
+  const dispatch = useDispatch();
 
   const matchDialogErrors = useSelector((state: RootState) => state.modalActions.matchDialogErrors);
 
@@ -80,6 +83,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   }
 
   const onDialogHide = () => {
+    dispatch(resetMatchDialogErrors());
     props.onDialogHide();
   }
 

@@ -75,6 +75,9 @@ export const modalActionsSlice = createSlice({
     },
     deleteMatchDialogError: (state, action: PayloadAction<string>) => {
       delete state.matchDialogErrors[action.payload];
+    },
+    resetMatchDialogErrors: (state) => {
+      state.matchDialogErrors = {};
     }
   }
 });
@@ -87,6 +90,7 @@ export const {
   setCtmlDialogModel,
   resetFormChangeCounter,
   setMatchDialogErrors,
-  deleteMatchDialogError
+  deleteMatchDialogError,
+  resetMatchDialogErrors
 } = modalActionsSlice.actions;
 export default modalActionsSlice.reducer;
