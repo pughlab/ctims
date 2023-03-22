@@ -7,6 +7,7 @@ export const trialEditorHeader = () => cy.get('.EditorTopBar_title__kDE8R')
 
 //TrialEditor Buttons (Discard, Export, Save)
 export const trialEditorHeaderButtons = () => cy.get('.EditorTopBar_menuBtnGroup__dBNyO>button') //3 elements
+export const trialEditorRadioButtons = () => cy.get('.field-radiobutton>.p-radiobutton') //json and yamlradio buttons
 export const trialEditorExportCtml = () => cy.get('.p-dialog-footer>div>button') //2 buttons Cancel and Export CTML
 
 //LeftPanel Trial Editor
@@ -29,9 +30,9 @@ const selectCtmlStatus = () => cy.get('[aria-label="Draft"]').click();
 
 //Dropdown for Phase
 export const getClickPhase = () => cy.get('#root_trialInformation_phase')
-export const getPhaseDropdownList = () => cy.get('.p-dropdown-items-wrapper>ul>li') //list all the 4 phases, select
-// according
-// to requirements
+export const getPhaseDropdownList = () => cy.get('.p-dropdown-items-wrapper>ul>li') //list all the 4 phases
+//default drop down for Trial Editor page
+export const getDefaultTrialEditorDropDown = () => cy.get('.p-dropdown-item')
 
 export const selectDraftCtmlStatus = () => {
   clickCtmlStatusDropdown();
@@ -61,22 +62,26 @@ export const getCheckBoxLevelIsSuspended = () => cy.get('#object-field-template-
 export const getAgeGroup = () => cy.get('#root_age_group_age')
 
 //Drug List
-export const getDrugName = () => cy.get('#root_drugList_drug_0_drug_name')
+export const getDrugName = () => cy.get('#root_drug_list_drug_0_drug_name')
 
 //Management Group List
 export const getManagementGroupName = () => cy.get('#root_management_group_list_management_group_0_management_group_name')
+export const getPrimaryManagementGroup = () => cy.get('#root_management_group_list_management_group_0_is_primary')
 
 //Site List
 export const getSiteName = () => cy.get('#root_site_list_site_0_site_name')
 export const getSiteStatus = () => cy.get('#root_site_list_site_0_site_status')
+export const getCoordinatingCenter = () => cy.get('#root_site_list_site_0_coordinating_center')
+export const getCancerCenterIRB = () => cy.get('#root_site_list_site_0_uses_cancer_center_irb')
 
 //Sponsor List
 export const getSponsorName = () => cy.get('#root_sponsor_list_sponsor_0_sponsor_name')
+export const getPrincipalSponsor = () => cy.get('#root_sponsor_list_sponsor_0_is_principal_sponsor')
 
 //Staff List
 export const getProtocolStaffFirstName = () => cy.get('#root_staff_list_protocol_staff_0_first_name')
 export const getProtocolStaffLastName = () => cy.get('#root_staff_list_protocol_staff_0_last_name')
-export const getProtocolStaffEmail = () => cy.get('#root_staff_list_protocol_staff_0_email')
+export const getProtocolStaffEmail = () => cy.get('#root_staff_list_protocol_staff_0_email_address')
 export const getProtocolStaffInstitutionalName = () => cy.get('#root_staff_list_protocol_staff_0_institution_name')
 export const getProtocolStaffRole = () => cy.get('#root_staff_list_protocol_staff_0_staff_role')
 export const getProtocolStaffStatus = () => cy.get('#root_staff_list_protocol_staff_0_status')
@@ -87,10 +92,12 @@ export const getProtocolStaffStatus = () => cy.get('#root_staff_list_protocol_st
 export const getArmCode = () => cy.get('#root_treatment_list_step_0_arm_0_arm_code')
 export const getArmDescription = () => cy.get('#root_treatment_list_step_0_arm_0_arm_description')
 export const getArmInternalId = () => cy.get('#root_treatment_list_step_0_arm_0_arm_internal_id')
+export const getArmSuspended = () => cy.get('#root_treatment_list_step_0_arm_0_arm_suspended')
 //DOSE_LEVEL 1
 export const getLevelCode = () => cy.get('#root_treatment_list_step_0_arm_0_dose_level_0_level_code')
 export const getLevelDescription = () => cy.get('#root_treatment_list_step_0_arm_0_dose_level_0_level_description')
 export const getLevelInternalId = () => cy.get('#root_treatment_list_step_0_arm_0_dose_level_0_level_internal_id')
+export const getLevelSuspended = () => cy.get('#root_treatment_list_step_0_arm_0_dose_level_0_level_suspended')
 
 //Matching Criteria Table View Content has"YAML" and "JSON"
 export const getMatchingCriteriaTableHeader = () => cy.get('.p-tabview-title')
