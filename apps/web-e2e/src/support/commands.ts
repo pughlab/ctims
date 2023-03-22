@@ -26,7 +26,8 @@ import {
   getCheckBoxPrincipalSponsor,
   getClickPhase,
   getCtmlStatusDropdownList,
-  getClinicalAge, getClinicalDropdown,
+  getClinicalAge,
+  getClinicalDropdown,
   getClinicalERStatus,
   getClinicalHER2Status,
   getClinicalOncotreePrimaryDiagnosis,
@@ -68,7 +69,16 @@ import {
   getTruncateButton,
   getVariantCategory,
   selectDraftCtmlStatus,
-  trialEditorLeftPanelList, getTrialInformationStatus, getMenuItemGenomic
+  trialEditorLeftPanelList,
+  getTrialInformationStatus,
+  getMenuItemGenomic,
+  getPrimaryManagementGroup,
+  getDefaultTrialEditorDropDown,
+  getCoordinatingCenter,
+  getCancerCenterIRB,
+  getPrincipalSponsor,
+  getArmSuspended,
+  getLevelSuspended
 } from './app.po';
 import {NCT04293094_testData} from "../fixtures/NCT04293094_testData";
 //require('cypress-delete-downloads-folder').addCustomCommand();
@@ -119,11 +129,15 @@ Cypress.Commands.add('drugList',(drugName: string) => {
 Cypress.Commands.add('managementGroupList',(managementGroupName: string, isPrimary: string) => {
   trialEditorLeftPanelList().eq(3).should('contain','Management Group List').click()
   getManagementGroupName().type(managementGroupName)
-  if(isPrimary === 'Y') {
+  getPrimaryManagementGroup().click()
+  getDefaultTrialEditorDropDown().contains(isPrimary).click()
+  getPrimaryManagementGroup().should('contain',isPrimary)
+  /*if(isPrimary === 'Y') {
     getCheckBoxPrimaryManagementGroup().click().should('have.class','p-checkbox-checked') //This is a primary
   } else {
     getCheckBoxPrimaryManagementGroup().should('have.class','p-checkbox') //This is a primary management group
-  }})
+  }*/
+})
 
 Cypress.Commands.add('siteList',(siteName,
                                  siteStatus,
@@ -132,7 +146,13 @@ Cypress.Commands.add('siteList',(siteName,
   trialEditorLeftPanelList().eq(4).should('contain', 'Site List').click()
   getSiteName().type(siteName)
   getSiteStatus().type(siteStatus)
-  if (coordinatingCenter === 'Y') {
+  getCoordinatingCenter().click()
+  getDefaultTrialEditorDropDown().contains(coordinatingCenter).click()
+  getCoordinatingCenter().should('contain',coordinatingCenter)
+  getCancerCenterIRB().click()
+  getDefaultTrialEditorDropDown().contains(cancerCenterIRB).click()
+  getCancerCenterIRB().should('contain',cancerCenterIRB)
+ /* if (coordinatingCenter === 'Y') {
     getCheckBoxCoordinateCenter().click().should('have.class', 'p-checkbox-checked') //This site is a coordinating center.
   } else {
     getCheckBoxCoordinateCenter().eq(1).should('have.class', 'p-checkbox')
@@ -141,17 +161,20 @@ Cypress.Commands.add('siteList',(siteName,
     getCheckBoxCancerCenterIRB().click().should('have.class', 'p-checkbox-checked') //This site uses cancer center IRB.
   } else {
     getCheckBoxCancerCenterIRB().should('have.class', 'p-checkbox')
-  }
+  }*/
 })
 
 Cypress.Commands.add('sponsorList',(sponsorName: string,principalSponsor: string) => {
   trialEditorLeftPanelList().eq(5).should('contain', 'Sponsor List').click()
   getSponsorName().type(sponsorName)
-  if (principalSponsor === 'Y') {
+  getPrincipalSponsor().click()
+  getDefaultTrialEditorDropDown().contains(principalSponsor).click()
+  getPrincipalSponsor().should('contain',principalSponsor)
+  /*if (principalSponsor === 'Y') {
     getCheckBoxPrincipalSponsor().click().should('have.class', 'p-checkbox-checked') //This sponsor is a principal sponsor.
   } else {
     getCheckBoxPrincipalSponsor().should('have.class', 'p-checkbox')
-  }
+  }*/
 })
 
 Cypress.Commands.add('staffList',(firstName,
@@ -173,25 +196,31 @@ Cypress.Commands.add('arm',(armCode,armDescription,armInternalID,armSuspended) =
   getArmCode().type(String(armCode))
   getArmDescription().type(armDescription)
   getArmInternalId().type(String(armInternalID))
-  const arm_suspended = armSuspended
+  getArmSuspended().click()
+  getDefaultTrialEditorDropDown().contains(armSuspended).click()
+  getArmSuspended().should('contain',armSuspended)
+  /*const arm_suspended = armSuspended
   if(arm_suspended === 'Y') {
     getCheckBoxArmIsSuspended().click().should('have.class','p-checkbox-checked')
   } else if (arm_suspended === 'N'){
     getCheckBoxArmIsSuspended().should('have.class','p-checkbox')
-  }
+  }*/
 })
 
 Cypress.Commands.add('doseLevel',(levelCode,levelDescription,levelInternalId,levelSuspended) => {
   getLevelCode().type(levelCode)
   getLevelDescription().type(levelDescription)
   getLevelInternalId().type(String(levelInternalId))
-  const level_suspended = levelSuspended
+  getLevelSuspended().click()
+  getDefaultTrialEditorDropDown().contains(levelSuspended).click()
+  getLevelSuspended().should('contain',levelSuspended)
+ /* const level_suspended = levelSuspended
   if( level_suspended === 'Y') {
     getCheckBoxLevelIsSuspended().click().should('have.class','p-checkbox-checked')
   }
   else if(level_suspended === 'N') {
     getCheckBoxLevelIsSuspended().should('have.class','p-checkbox')
-  }
+  }*/
 })
 
 Cypress.Commands.add('clickClinical',() => {
