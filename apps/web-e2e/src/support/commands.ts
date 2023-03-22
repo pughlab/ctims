@@ -80,6 +80,7 @@ import {
   getArmSuspended,
   getLevelSuspended
 } from './app.po';
+import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib";
 import {NCT04293094_testData} from "../fixtures/NCT04293094_testData";
 //require('cypress-delete-downloads-folder').addCustomCommand();
 //
@@ -255,6 +256,18 @@ Cypress.Commands.add('clickOr',() => {
 
 Cypress.Commands.add('clickChildToggleArrowButton',(indexNumber) => {
   cy.get(`.p-tree-container>li>ul>li:nth-child(${indexNumber})>div>button`).click()
+})
+
+Cypress.Commands.add('validateExportJsonAndTestData', (testDataValue) => {
+ // return (testDataValue) => {
+    let rawData: string[] = testDataValue
+    cy.log("Original Test Data", JSON.stringify(rawData)) //has all the array values
+   /* cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf8').then((downloadData) => {
+      let exportData: string[] = downloadData.drug_list.drug
+      //let exportData : string[] = exportValue.exportJsonValue
+      cy.log("Exported data single Drug value", JSON.stringify(exportData)) // has a single value
+      expect(exportData[0]).to.deep.equal(rawData[0])
+    })*/
 })
 
 //
