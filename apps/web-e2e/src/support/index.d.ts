@@ -20,5 +20,8 @@ declare namespace Cypress {
     clickParentNode(indexNum: Number): Chainable<Subject>
     clickChildToggleArrowButton(indexNumber: Number): Chainable<Subject>
     deleteDownloadsFolderBeforeAll(): void
+    //validateExportJsonAndTestData(testDataValue: string[],exportedJsonValue: string[])
+    validateExportJsonAndTestData(testDataValue: string[])
+
   }
 }
