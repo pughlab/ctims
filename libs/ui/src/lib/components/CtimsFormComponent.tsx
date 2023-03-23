@@ -17,6 +17,7 @@ import CtimsFieldTemplate from "../custom-rjsf-templates/CtimsFieldTemplate";
 import CtimsErrorListTemplate from "../custom-rjsf-templates/CtimsErrorListTemplate";
 import DoseLevelObjectFieldTemplate from "../custom-rjsf-templates/DoseLevelObjectFieldTemplate";
 import CtimsArrayFieldSingleTemplate from "../custom-rjsf-templates/CtimsArrayFieldSingleTemplate";
+import CtimsNumberInput from "../custom-rjsf-templates/CtimsNumberInput";
 
 const Form = withTheme(PrimeTheme)
 
@@ -388,7 +389,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                         "description": "A description of an individual trial arm"
                       },
                       "arm_internal_id": {
-                        "type": "string",
+                        "type": "integer",
                         "title": 'Arm Internal Id',
                         "description": "Internal ID of arm"
                       },
@@ -418,7 +419,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                               "description": "Dose level description. The dosage details and frequency of administration"
                             },
                             "level_internal_id": {
-                              "type": "string",
+                              "type": "integer",
                               "title": "Level Internal Id",
                               "description": "Internal dose ID"
                             },
@@ -767,6 +768,9 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
               "arm_suspended": {
                 "ui:widget": CtimsDropdown
               },
+              "arm_internal_id": {
+                "ui:widget": CtimsNumberInput,
+              },
               "match": {
                 matchingCriteriaWidget: {
                   "ui:widget": CtimsMatchingCriteriaWidget,
@@ -782,6 +786,9 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                  "key": "dose_level",
                  "level_suspended": {
                     "ui:widget": CtimsDropdown
+                 },
+                 "level_internal_id": {
+                    "ui:widget": CtimsNumberInput,
                  }
                }
               }
