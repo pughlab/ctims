@@ -7,8 +7,6 @@ import { IKeyToViewModel, setMatchViewModel } from '../../../../../apps/web/stor
 import { structuredClone } from 'next/dist/compiled/@edge-runtime/primitives/structured-clone';
 import { setCtmlDialogModel } from '../../../../../apps/web/store/slices/modalActionsSlice';
 
-
-
 export const useFormChangeCounter = (rootNodes: TreeNode[]) => {
   const formChangedCounter: number = useSelector((state: RootState) => state.modalActions.formChangeCounter);
   const [treeViewModel, setTreeViewModel] = useState<TreeNode[]>([]);
