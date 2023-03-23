@@ -209,25 +209,6 @@ describe('CTIMS Trial Editor', () => {
     })
   })
 
-    // Load the JSON file
-   /* cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((jsonData) => {
-      const json = jsonData
-      cy.log("Exported ctml-model.json",JSON.stringify(json))
-      // })
-      // Load the YAML file and parse it to a JavaScript object
-      cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.yaml', 'utf-8').then((yamlData) => {
-        const yamlObject = yaml.load(yamlData)
-        cy.log("Exported ctml-model.yaml file converted to Json file for validation",JSON.stringify(yamlObject))
-        // })
-
-        // Compare the JSON files as strings
-        expect(JSON.stringify(json),"Exported ctml-model.json")
-          .to.equal(JSON.stringify(yamlObject),'Exported ctml-model.yaml file converted to Json file for validation');
-      })
-    })*!/
-  });
-
-
   it.skip('should click on the Export button and then Export as "JSON" file ',  () => {
     trialEditorHeaderButtons().eq(1).should('contain','Export').click()
     trialEditorRadioButtons().eq(0).should('contain.html','json')
@@ -239,7 +220,6 @@ describe('CTIMS Trial Editor', () => {
     trialEditorRadioButtons().eq(1).click({force: true})
     trialEditorExportCtml().eq(1).should('contain','Export CTML').click()
   });
-
 
   it.skip('should compare json and Yaml ',  () => {
     // Load the JSON file
@@ -259,151 +239,6 @@ describe('CTIMS Trial Editor', () => {
         })
       })
   });
-*/
-  it.skip('should match the individual json object of test data with the exported "ctml-model.json" file ', () => {
-    // @ts-ignore
-    return cy.validateExportJsonAndTestData(NCT02503722_Osimertinib.drug_list.drug);
-    //cy.validateExportJsonAndTestData =() => NCT02503722_Osimertinib.drug_list.drug
-    /*let rawData = NCT02503722_Osimertinib.drug_list.drug
-    cy.log("Original Test Data", JSON.stringify(rawData))//has two values
-      cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf8').then((downloadData) => {
-        const exportData: string[] = downloadData.drug_list.drug
-        cy.log("Exported data single Drug value", JSON.stringify(exportData))// has a single value
-        expect(exportData[0]).to.deep.equal(rawData[0])
-    })*/
-    // })
-
-    /*it('should match the individual json object of test data with the exported "ctml-model.json" file ', () => {
-      let rawData = NCT02503722_Osimertinib.drug_list.drug
-      cy.log("Original Test Data", JSON.stringify(rawData))//has two values
-        cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf8').then((downloadData) => {
-          const exportData: string[] = downloadData.drug_list.drug
-          cy.log("Exported data single Drug value", JSON.stringify(exportData))// has a single value
-          expect(exportData[0]).to.deep.equal(rawData[0])
-      })
-    })
-
-      /*let jsonVal = NCT02503722_Osimertinib.age
-      const testDataMatchingCriteria = JSON.stringify(jsonVal)
-      cy.log(testDataMatchingCriteria)
-
-      let exportedCtmlModel = NCT02503722_Osimertinib.age
-      const ctmlMatchingCriteria = JSON.stringify(exportedCtmlModel)
-      cy.log(ctmlMatchingCriteria)
-      expect(testDataMatchingCriteria).to.deep.equal(ctmlMatchingCriteria)
-  *!/  });
-    it.skip('should validate the match of the "Age" attribute',  () => {
-      let jsonVal = NCT02503722_Osimertinib.age
-      let testDataMatchingCriteria: string;
-      testDataMatchingCriteria = jsonVal;
-     cy.log(JSON.stringify(testDataMatchingCriteria))
-      cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json','utf-8').then((exportedCtmlModel) => {
-         let ctmlMatchingCriteria: string = exportedCtmlModel.age
-         cy.log(JSON.stringify(ctmlMatchingCriteria))
-         expect(testDataMatchingCriteria).to.deep.equal(ctmlMatchingCriteria)
-       })
-    });
-
-    it.skip('should validate the match of the "Trial Id" attribute',  () => {
-      //const myMap = new Map<string,string>();
-      //const testData = new Map<string,string>()
-
-      cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((exportedCtmlModel) => {
-        /!*let exportedTrialInformation: string[] = [exportedCtmlModel.trial_id,
-          exportedCtmlModel.long_title,
-          exportedCtmlModel.short_title,
-          exportedCtmlModel.phase,
-          exportedCtmlModel.protocol_no,
-          exportedCtmlModel.nct_purpose,
-          exportedCtmlModel.status]*!/
-        //cy.log(exportedTrialInformation.toString())
-        /!* let map1 = () => {
-           myMap.set("trial id", exportedCtmlModel.trial_id)
-           myMap.set("long title", exportedCtmlModel.long_title)
-           myMap.set("short title", exportedCtmlModel.short_title)
-           myMap.set("phase", exportedCtmlModel.phase)
-           myMap.set("protocol no", exportedCtmlModel.protocol_no)
-           myMap.set("nct purpose", exportedCtmlModel.nct_purpose)
-           myMap.set("status", exportedCtmlModel.status)
-         }
-         // Call the map1 function to populate the map object
-         let abc = new Map()
-         map1()
-
-   // Convert the map values to an array and store them in a variable
-         //let valuesArray:string[] = Array.from(myMap.values())
-
-   // Log the values array to the console
-         for (let value of abc.values()) {
-           cy.log(value.trial_id)
-         }
-   *!/
-        /!*   let value = myMap.get("trial id");
-           //cy.log(value.toString());
-
-           testData.set("id",NCT02503722_Osimertinib.nct_id)
-           /!*testData.set("id",NCT02503722_Osimertinib.long_title)
-           testData.set("id",NCT02503722_Osimertinib.short_title)
-           testData.set("id",NCT02503722_Osimertinib.phase)
-           testData.set("id",NCT02503722_Osimertinib.protocol_no)
-           testData.set("id",NCT02503722_Osimertinib.nct_purpose)
-           testData.set("id",NCT02503722_Osimertinib.status)*!/
-
-           let value2 = testData.get("id")
-           expect(value).to.deep.equal(value2)*!/
-
-
-        /!*exportedTrialInformation.map((exportedCtmlModel) => {
-          cy.log(exportedCtmlModel)
-        })*!/
-        /!* let testDataTrialInformation:String[] = [NCT02503722_Osimertinib.nct_id,
-           NCT02503722_Osimertinib.long_title,
-           NCT02503722_Osimertinib.short_title,
-           NCT02503722_Osimertinib.phase,
-           NCT02503722_Osimertinib.protocol_no,
-           NCT02503722_Osimertinib.nct_purpose,
-           NCT02503722_Osimertinib.status]
-         testDataTrialInformation.map((element) => {
-           return cy.log(element.toString());
-         })
-         expect(testDataTrialInformation).to.deep.equal(exportedTrialInformation);*!/
-      })
-    })
-      it.skip('should validate the match of the "Trial Information" attribute',  () => {
-       /!* cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((exportedCtmlModel) => {
-          let exportedTrialInformation: string[] = [exportedCtmlModel.trial_id,
-            exportedCtmlModel.long_title,
-            exportedCtmlModel.short_title,
-            exportedCtmlModel.phase,
-            exportedCtmlModel.protocol_no,
-            exportedCtmlModel.nct_purpose,
-            exportedCtmlModel.status]
-          //cy.log(exportedTrialInformation.toString())
-          exportedTrialInformation.forEach((el) => {
-            cy.log(el)
-             //})
-          let testDataTrialInformation:String[] = [NCT02503722_Osimertinib.nct_id,
-            NCT02503722_Osimertinib.long_title,
-            NCT02503722_Osimertinib.short_title,
-            NCT02503722_Osimertinib.phase,
-            NCT02503722_Osimertinib.protocol_no,
-            NCT02503722_Osimertinib.nct_purpose,
-            NCT02503722_Osimertinib.status]
-          testDataTrialInformation.forEach((element) => {
-            let test = element.toString()
-            return cy.log(test);
-            //expect(element.toString()).to.deep.equal(el)
-         //   for(let i=0; i++; i<=test.length)
-            if(test.match(el) ) {
-              //expect(test).to.deep.equal(el);
-              assert.equal(test,el)
-              //cy.log('succs')
-            }
-          })
-          })*!/
-         // expect(testDataTrialInformation).to.deep.equal(exportedTrialInformation);
-        })*/
-  })
 
     it('should validate the match of the "Drug list" values',  () => {
       let rawData = NCT02503722_Osimertinib.drug_list.drug
@@ -413,16 +248,7 @@ describe('CTIMS Trial Editor', () => {
         cy.log("Exported data single Drug value", JSON.stringify(exportData))// has a single value
         expect(exportData[0]).to.deep.equal(rawData[0])
       })
-      /* let jsonVal = NCT02503722_Osimertinib.drug_list.drug[0].drug_name
-          //let testDataMatchingCriteria
-          let testDataMatchingCriteria = jsonVal;
-          cy.log(JSON.stringify(testDataMatchingCriteria))
-          cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json','utf-8').then((exportedCtmlModel) => {
-            let ctmlMatchingCriteria: string = exportedCtmlModel.drug_list.drug[0].drug_name
-            cy.log(JSON.stringify(ctmlMatchingCriteria))
-            expect(testDataMatchingCriteria).to.deep.equal(ctmlMatchingCriteria)
-          })*/
-        });
+    });
     it('should validate the match of the "Managament Group list" values',() => {
       let jsonVal = NCT02503722_Osimertinib.management_group_list
        cy.log(JSON.stringify(jsonVal))
@@ -431,17 +257,6 @@ describe('CTIMS Trial Editor', () => {
          cy.log(JSON.stringify(exportData))
          expect(JSON.stringify(jsonVal[0])).to.deep.equal(JSON.stringify(exportData[0]))
        })
-      /*let jsonVal = NCT02503722_Osimertinib.management_group_list.management_group[0]
-      //let testDataMatchingCriteria
-      let testDataMatchingCriteria: string[] = [jsonVal.is_primary,jsonVal.management_group_name]
-      cy.log(JSON.stringify(testDataMatchingCriteria))
-      cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json','utf-8').then((exportedCtmlModel) => {
-        let exportData = exportedCtmlModel.management_group_list.management_group[0]
-        let ctmlMatchingCriteria: string[] = [exportData.is_primary,exportData.management_group_name]
-        //ctmlMatchingCriteria
-        cy.log(JSON.stringify(ctmlMatchingCriteria))
-        expect(JSON.stringify(testDataMatchingCriteria)).to.deep.equal(JSON.stringify(ctmlMatchingCriteria))
-      })*/
     });
     it('should validate the match of the "Site Group list" values',() => {
       let jsonVal = NCT02503722_Osimertinib.site_list.site[0]
