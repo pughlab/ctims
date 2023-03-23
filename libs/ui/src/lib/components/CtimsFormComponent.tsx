@@ -16,6 +16,7 @@ import CtimsMatchingCriteriaWidget from "../custom-rjsf-templates/CtimsMatchingC
 import CtimsFieldTemplate from "../custom-rjsf-templates/CtimsFieldTemplate";
 import CtimsErrorListTemplate from "../custom-rjsf-templates/CtimsErrorListTemplate";
 import DoseLevelObjectFieldTemplate from "../custom-rjsf-templates/DoseLevelObjectFieldTemplate";
+import CtimsArrayFieldSingleTemplate from "../custom-rjsf-templates/CtimsArrayFieldSingleTemplate";
 
 const Form = withTheme(PrimeTheme)
 
@@ -38,18 +39,15 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
 
   const schema = {
     "type": "object",
+    "required": ["prior_treatment_requirements"],
     "properties": {
       "trialInformation": {
         "required": [
           "trial_id",
-          // "nickname",
-          // "principal_investigator",
-          // "ctml_status",
           "long_title",
           "short_title",
           "phase",
           // "disease_status",
-          // "prior_treatment_requirements",
           "protocol_no",
           "nct_purpose",
           "status"
@@ -107,11 +105,6 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
           //   "title": "Disease Status",
           //   "description": "A list of conditions or diseases",
           // },
-          // "prior_treatment_requirements": {
-          //   "type": "string",
-          //   "title": "Prior Treatment Requirements",
-          //   "description": "The Inclusion Criteria of the study",
-          // },
           "protocol_no": {
             "type": "string",
             "title": "Protocol Number",
@@ -129,6 +122,14 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
           }
         },
         "title": "Trial Information"
+      },
+      "prior_treatment_requirements": {
+        "type": "array",
+        "title": "Prior treatment requirements",
+        "items": {
+          "type": "string",
+          'title': 'Prior treatment requirements'
+        }
       },
       "age_group": {
         "type": "object",
@@ -411,6 +412,11 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
         }
       },
       {
+        "prior_treatment_requirements": {
+          "span": 24
+        }
+      },
+      {
         "age_group": {
           "span": 24
         }
@@ -440,11 +446,6 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
           "span": 24
         }
       },
-      // {
-      //   "prior_treatment_requirements": {
-      //     "span": 24
-      //   }
-      // }
     ],
     "trialInformation": {
       "ui:ObjectFieldTemplate": RjsfGridFieldTemplate,
@@ -490,11 +491,6 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
         //     "span": 24
         //   }
         // },
-        // {
-        //   "prior_treatment_requirements": {
-        //     "span": 24
-        //   }
-        // },
         {
           "protocol_no": {
             "span": 24
@@ -511,6 +507,9 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
           }
         }
       ]
+    },
+    "prior_treatment_requirements": {
+      "ui:ArrayFieldTemplate": CtimsArrayFieldSingleTemplate,
     },
     "age_group": {
       "ui:ObjectFieldTemplate": RjsfGridFieldTemplate,
@@ -706,9 +705,6 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
         }
       }
     },
-    // "prior_treatment_requirements": {
-    //   "ui:ArrayFieldTemplate": CtimsArrayFieldSingleTemplate,
-    // },
     "treatment_list": {
       "ui:ObjectFieldTemplate": CtimsObjectFieldTemplate,
       "step": {
@@ -756,6 +752,8 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
 
   const initialFormData = {
     "trialInformation": {},
+    "age_group": {},
+    "prior_treatment_requirements": [null],
     "drug_list": {
       "drug": [
         {}
