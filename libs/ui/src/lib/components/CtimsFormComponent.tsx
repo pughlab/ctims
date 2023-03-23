@@ -152,7 +152,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             "title": "Age Group",
             "enum": [
               "Adult",
-              "Other Adult",
+              "Older Adult",
               "Children"
             ],
             "description": "The age group the study is focused on",
