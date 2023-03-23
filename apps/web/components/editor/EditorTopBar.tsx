@@ -20,28 +20,9 @@ const EditorTopBar = () => {
 
   const onExportClick = () => {
     const state = store.getState();
-    const ctmlModel = state.finalModelAndErrors.ctmlModel;
     const formErrors: ValidationData<any> = state.finalModelAndErrors.errorSchema;
-    const ctmlModelString = JSON.stringify(ctmlModel, null, 2);
-    // setErrorViewModel(viewModelErrors)
     setIsDialogVisible(true);
     console.log('onExportClick', formErrors);
-
-    // const blob = new Blob([ctmlModelString], {type: 'application/json'});
-    // const url = URL.createObjectURL(blob);
-    // const link = document.createElement('a');
-    // link.setAttribute('href', url);
-    // link.setAttribute('download', 'ctml-model.json');
-    // link.style.display = 'none';
-    // document.body.appendChild(link);
-    // link.click();
-    // document.body.removeChild(link);
-  }
-
-  const getValidationErrors = () => {
-    const state = store.getState();
-    const formErrors: ValidationData<any> = state.finalModelAndErrors.errorSchema;
-    return formErrors;
   }
 
   return (
