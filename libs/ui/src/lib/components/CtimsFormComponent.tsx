@@ -209,8 +209,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                     "Y",
                     "N"
                   ],
-                  "title": "This is a primary management group",
-                  "description": "Y/N"
+                  "title": "This is a primary management group"
                 },
               }
             },
@@ -265,7 +264,6 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                     "N"
                   ],
                   "title": "This site is a coordinating center.",
-                  "description": "Y/N"
                 },
                 "uses_cancer_center_irb": {
                   "type": "string",
@@ -274,7 +272,6 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                     "N"
                   ],
                   "title": "This site uses cancer center IRB.",
-                  "description": "Y/N"
                 },
               }
             },
@@ -304,7 +301,6 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                     "N"
                   ],
                   "title": "This sponsor is a principal sponsor.",
-                  "description": "Y/N"
                 },
               }
             },
@@ -403,7 +399,6 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                           "N"
                         ],
                         "title": "Arm is suspended",
-                        "description": "Y/N"
                       },
                       "dose_level": {
                         "type": "array",
@@ -434,7 +429,6 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                                 "N"
                               ],
                               "title": "This level is suspended",
-                              "description": "Y/N"
                             },
                           }
                         }
