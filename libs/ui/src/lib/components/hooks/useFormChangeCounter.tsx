@@ -1,27 +1,15 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, store } from '../../../../../apps/web/store/store';
+import { RootState, store } from '../../../../../../apps/web/store/store';
 import { useEffect, useState } from 'react';
-import { convertCtimsFormatToTreeNodeArray, convertTreeNodeArrayToCtimsFormat, isObjectEmpty } from './helpers';
+import { convertCtimsFormatToTreeNodeArray, isObjectEmpty } from '../helpers';
 import TreeNode from 'primereact/treenode';
-import { IKeyToViewModel, setMatchViewModel } from '../../../../../apps/web/store/slices/matchViewModelSlice';
-import { structuredClone } from 'next/dist/compiled/@edge-runtime/primitives/structured-clone';
-import { setCtmlDialogModel } from '../../../../../apps/web/store/slices/modalActionsSlice';
+import { updateReduxViewModelAndCtmlModel } from './common';
 
 export const useFormChangeCounter = (rootNodes: TreeNode[]) => {
   const formChangedCounter: number = useSelector((state: RootState) => state.modalActions.formChangeCounter);
   const [treeViewModel, setTreeViewModel] = useState<TreeNode[]>([]);
 
   const dispatch = useDispatch();
-
-  const updateReduxViewModelAndCtmlModel = (newRootNodes: TreeNode[], state: RootState) => {
-    const activeArmId: string = state.matchViewModelActions.activeArmId;
-    const viewModel: IKeyToViewModel = {};
-    viewModel[activeArmId] = structuredClone(newRootNodes);
-    dispatch(setMatchViewModel(viewModel))
-    // convert view model (rootNodes) to ctims format
-    const ctimsFormat = convertTreeNodeArrayToCtimsFormat(newRootNodes);
-    dispatch(setCtmlDialogModel(ctimsFormat));
-  }
 
   useEffect(() => {
     const state = store.getState();
@@ -43,7 +31,7 @@ export const useFormChangeCounter = (rootNodes: TreeNode[]) => {
     // if the form was changed, update the redux store with the new view model and ctims format
     if (formChangedCounter > 0) {
       console.log('form changed in left menu component');
-      updateReduxViewModelAndCtmlModel(rootNodes, state);
+      updateReduxViewModelAndCtmlModel(rootNodes, state, dispatch);
     }
   }, [formChangedCounter]);
 
