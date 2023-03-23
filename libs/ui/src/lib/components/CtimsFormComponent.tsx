@@ -118,6 +118,17 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
           "status": {
             "type": "string",
             "title": "Status",
+            "enum": [
+              "Not yet recruiting",
+              "Recruiting",
+              "Enrolling by invitation",
+              "Active, not recruiting",
+              "Suspended",
+              "Terminated",
+              "Completed",
+              "Withdrawn",
+              "Unknown status"
+            ],
             "description": "Status of the trial"
           }
         },
@@ -138,6 +149,11 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
           "age": {
             "type": "string",
             "title": "Age Group",
+            "enum": [
+              "Adult",
+              "Other Adult",
+              "Children"
+            ],
             "description": "The age group the study is focused on",
           }
         },
@@ -176,6 +192,15 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                 "management_group_name": {
                   "type": "string",
                   "title": "Management Group Name",
+                  "enum": [
+                    "Princess Margaret Cancer Centre",
+                    "Cancer Centre of Southeastern Ontario at Kingston General Hospital",
+                    "London Health Sciences Centre",
+                    "The Ottawa Hospital Cancer Centre",
+                    "Juravinski Cancer Centre at Hamilton Health Sciences",
+                    "Odette Cancer Centre - Sunnybrook Health Sciences Centre",
+                    "Mount Sinai Hospital"
+                  ],
                   "description": "The hospital/clinic conducting the trial (study site(s)) in Canada. Please input the full name of the hospital/clinic site. If there is more than one site, please list each hospital/site"
                 },
                 "is_primary": {
@@ -206,11 +231,31 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                 "site_name": {
                   "type": "string",
                   "title": "Site Name",
+                  "enum": [
+                    "Princess Margaret Cancer Centre",
+                    "Cancer Centre of Southeastern Ontario at Kingston General Hospital",
+                    "London Health Sciences Centre",
+                    "The Ottawa Hospital Cancer Centre",
+                    "Juravinski Cancer Centre at Hamilton Health Sciences",
+                    "Odette Cancer Centre - Sunnybrook Health Sciences Centre",
+                    "Mount Sinai Hospital"
+                  ],
                   "description": "The hospital/clinic managing this trial. Please input the full name of the hospital/clinic site."
                 },
                 "site_status": {
                   "type": "string",
                   "title": "Site Status",
+                  "enum": [
+                    "Not yet recruiting",
+                    "Recruiting",
+                    "Enrolling by invitation",
+                    "Active, not recruiting",
+                    "Suspended",
+                    "Terminated",
+                    "Completed",
+                    "Withdrawn",
+                    "Unknown status"
+                  ],
                   "description": "Trial accrual status",
                 },
                 "coordinating_center": {
@@ -295,10 +340,22 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                 "institution_name": {
                   "type": "string",
                   "title": "Institution Name",
+                  "enum": [
+                    "Princess Margaret Cancer Centre",
+                    "Cancer Centre of Southeastern Ontario at Kingston General Hospital",
+                    "London Health Sciences Centre",
+                    "The Ottawa Hospital Cancer Centre",
+                    "Juravinski Cancer Centre at Hamilton Health Sciences",
+                    "Odette Cancer Centre - Sunnybrook Health Sciences Centre",
+                    "Mount Sinai Hospital"
+                  ],
                   "description": "The institute the overall principal investigator is a part of"
                 },
                 "staff_role": {
                   "type": "string",
+                  "enum": [
+                    "Overall Principal Investigator"
+                  ],
                   "title": "Staff Role",
                   "description": "The role of the listed staff"
                 },
