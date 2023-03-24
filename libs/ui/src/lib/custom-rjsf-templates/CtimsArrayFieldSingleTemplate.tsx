@@ -117,10 +117,14 @@ const CtimsArrayFieldSingleTemplate = (props: ArrayFieldTemplateProps) => {
     backgroundColor: '#e0e0e0',
   }
 
+  const stringToDash = (str: string) => {
+    return str.split(' ').join('-').toLowerCase();
+  }
+
   return (
     <>
       <hr style={hrStyle}/>
-      <div style={containerStyle}>
+      <div style={containerStyle} id={stringToDash(title)}>
         <div style={titleDescriptionStyle}>
           {(schema.title) && (
             <TitleFieldTemplate

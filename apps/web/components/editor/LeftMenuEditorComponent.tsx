@@ -6,6 +6,7 @@ const LeftMenuEditorComponent = () => {
   const [activeLink, setActiveLink] = useState('');
   const ids = [
     'trial-information',
+    'prior-treatment-requirements',
     'age',
     'drug-list',
     'management-group-list',
@@ -26,6 +27,7 @@ const LeftMenuEditorComponent = () => {
 
   const links = [
     { to: '#trial-information', label: 'Trial Information' },
+    { to: '#prior-treatment-requirements', label: 'Prior Treatment Requirements' },
     { to: '#age', label: 'Age' },
     { to: '#drug-list', label: 'Drug List' },
     { to: '#management-group-list', label: 'Management Group List' },
