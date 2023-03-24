@@ -67,7 +67,7 @@ import * as yaml from 'js-yaml';
 describe('CTIMS Trial Editor', () => {
   before(() => cy.visit('/'));
   //deleteDownloadsFolderBeforeAll()
-   /*it('should Validate the Trial Editor Page', () => {
+   it('should Validate the Trial Editor Page', () => {
      cy.title().should('contain', 'CTIMS')
      trialEditorLeftPanelList().should('have.length', '8')
      cy.trialInformation(NCT02503722_Osimertinib.nct_id,
@@ -120,7 +120,7 @@ describe('CTIMS Trial Editor', () => {
        NCT02503722_Osimertinib.treatment_list.step[0].arm[0].dose_level[0].level_suspended)
      //Click on Plus Icon to add another Dose Level
 
-   })*/
+   })
 
    it('should validate the Matching criteria modal', () => {
     //click Match criteria

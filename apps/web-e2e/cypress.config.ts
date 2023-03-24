@@ -6,18 +6,26 @@ const {verifyDownloadTasks} = require('cy-verify-downloads')
 const {fs} = require('fs')
 const path = require('path')
 const crypto = require('crypto')
+const allureWriter = require('@shelex/cypress-allure-plugin/writer');
+
 
 
 const cypressJsonConfig: EndToEndConfigOptions = {
   fileServerFolder: '.',
   baseUrl: 'http://localhost:4200/trials/create',
   fixturesFolder: './src/fixtures',
+  includeShadowDom: true,
+  experimentalStudio: true,
   video: true,
+  videoUploadOnPasses: true,
   videosFolder: '../../dist/cypress/apps/web-e2e/videos',
+  screenshotOnRunFailure: true,
   screenshotsFolder: '../../dist/cypress/apps/web-e2e/screenshots',
+  trashAssetsBeforeRuns: true,  //trash screenshot and video before every run
   chromeWebSecurity: false,
-  specPattern: 'src/e2e/**/*.cy.{js,jsx,ts,tsx}',
+  //specPattern: 'src/e2e/**/*.cy.{js,jsx,ts,tsx}',
   supportFile: 'src/support/e2e.ts',
+  specPattern: 'src/e2e/copy-test-NCT02503722.cy.ts',
   setupNodeEvents(on,config) {
     on('task', verifyDownloadTasks)
     on('task', { removeDirectory })
@@ -35,6 +43,8 @@ const cypressJsonConfig: EndToEndConfigOptions = {
         return result
       },
     })
+    allureWriter(on, config);
+    return config;
     /*on('task', {
       readTwoDirsAndGetFileNamesAndHashes(arg) {
         const {dir1, dir2} = arg
@@ -58,6 +68,7 @@ const cypressJsonConfig: EndToEndConfigOptions = {
       },
     })*/
   }
+
 };
 export default defineConfig({
   //viewportWidth: 1920,
