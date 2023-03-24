@@ -21,6 +21,8 @@ export const getLongTitle = () => cy.get('#root_trialInformation_long_title')
 export const getShortTitle = () => cy.get('#root_trialInformation_short_title')
 export const getProtocolNumber = () => cy.get('#root_trialInformation_protocol_no')
 export const getNCTPurpose = () => cy.get('#root_trialInformation_nct_purpose')
+export const getTrialInformationStatus = () => cy.get('#root_trialInformation_status')
+
 
 //Dropdown button for Ctml Status
 const clickCtmlStatusDropdown = () => cy.get('#root_trialInformation_ctml_status > .p-dropdown-trigger').click();
@@ -39,9 +41,6 @@ export const selectDraftCtmlStatus = () => {
   selectCtmlStatus();
 }
 
-//status
-export const getTrialInformationStatus = () => cy.get('#root_trialInformation_status')
-
 //default icon list
 export const getAllPanelHeaderTop = () => cy.get('.ctimsPanelHeaderTop') //contains 6 header starts with "Drug1"
 //default plus icon in drug list-1, management group list-1, site list-1, sponsor list-1, staff list-1, treatment list-3
@@ -57,6 +56,8 @@ export const getCheckBoxPrincipalSponsor = () => cy.get('#object-field-template-
 export const getCheckBoxArmIsSuspended = () => cy.get('#object-field-template-root_treatment_list_step_0_arm_0>div:nth-child(4)>div>div>.p-checkbox')
 export const getCheckBoxLevelIsSuspended = () => cy.get('#object-field-template-root_treatment_list_step_0_arm_0_dose_level_0>div:nth-child(4)>div>div>.p-checkbox')
 
+//Prior treatment requirements
+export const getPriorTreatmentRequirement = () => cy.get('#root_prior_treatment_requirements_0')
 
 //Age
 export const getAgeGroup = () => cy.get('#root_age_group_age')
