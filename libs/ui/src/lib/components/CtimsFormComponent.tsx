@@ -41,7 +41,6 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
 // Comment just to rebase tutorial 2
   const schema = {
     "type": "object",
-    "required": ["prior_treatment_requirements"],
     "properties": {
       "trialInformation": {
         "required": [
@@ -816,7 +815,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
   const initialFormData = {
     "trialInformation": {},
     "age_group": {},
-    "prior_treatment_requirements": [null],
+    // "prior_treatment_requirements": [null],
     "drug_list": {
       "drug": [
         {}
