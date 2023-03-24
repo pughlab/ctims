@@ -22,6 +22,6 @@ declare namespace Cypress {
     deleteDownloadsFolderBeforeAll(): void
     //validateExportJsonAndTestData(testDataValue: string[],exportedJsonValue: string[])
     validateExportJsonAndTestData(testDataValue: string[])
-
+    priorTreatmentRequirement(priorRequirement: string)
   }
 }

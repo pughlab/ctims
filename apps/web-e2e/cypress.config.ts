@@ -23,9 +23,9 @@ const cypressJsonConfig: EndToEndConfigOptions = {
   screenshotsFolder: '../../dist/cypress/apps/web-e2e/screenshots',
   trashAssetsBeforeRuns: true,  //trash screenshot and video before every run
   chromeWebSecurity: false,
-  //specPattern: 'src/e2e/**/*.cy.{js,jsx,ts,tsx}',
+  specPattern: 'src/e2e/**/*.cy.{js,jsx,ts,tsx}',
   supportFile: 'src/support/e2e.ts',
-  specPattern: 'src/e2e/copy-test-NCT02503722.cy.ts',
+  //specPattern: 'src/e2e/copy-test-NCT02503722.cy.ts',
   setupNodeEvents(on,config) {
     on('task', verifyDownloadTasks)
     on('task', { removeDirectory })
