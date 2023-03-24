@@ -18,6 +18,7 @@ import CtimsErrorListTemplate from "../custom-rjsf-templates/CtimsErrorListTempl
 import DoseLevelObjectFieldTemplate from "../custom-rjsf-templates/DoseLevelObjectFieldTemplate";
 import CtimsArrayFieldSingleTemplate from "../custom-rjsf-templates/CtimsArrayFieldSingleTemplate";
 import CtimsNumberInput from "../custom-rjsf-templates/CtimsNumberInput";
+import CtimsArmItemObjectFieldTemplate from "../custom-rjsf-templates/CtimsArimItemObjectFieldTemplate";
 
 const Form = withTheme(PrimeTheme)
 
@@ -768,7 +769,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
           "ui:ObjectFieldTemplate": CtimsItemObjectFieldTemplate,
           "arm": {
             "items": {
-              "ui:ObjectFieldTemplate": CtimsItemObjectFieldTemplate,
+              "ui:ObjectFieldTemplate": CtimsArmItemObjectFieldTemplate,
               "arm_suspended": {
                 "ui:widget": CtimsDropdown
               },
