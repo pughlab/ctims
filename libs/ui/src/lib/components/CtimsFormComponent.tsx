@@ -120,6 +120,8 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             "type": "string",
             "title": "Status",
             "enum": [
+              "Open to Accrual",
+              "Closed to Accrual",
               "Not yet recruiting",
               "Recruiting",
               "Enrolling by invitation",
@@ -246,6 +248,8 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                   "type": "string",
                   "title": "Site Status",
                   "enum": [
+                    "Open to Accrual",
+                    "Closed to Accrual",
                     "Not yet recruiting",
                     "Recruiting",
                     "Enrolling by invitation",
