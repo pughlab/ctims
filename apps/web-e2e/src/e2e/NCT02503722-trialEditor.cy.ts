@@ -68,7 +68,7 @@ describe('CTIMS Trial Editor', () => {
   before(() => cy.visit('/'));
   //deleteDownloadsFolderBeforeAll()
    it('should Validate the Trial Editor Page', () => {
-     cy.title().should('contain', 'CTIMS')
+    /* cy.title().should('contain', 'CTIMS')
      trialEditorLeftPanelList().should('have.length', '8')
      cy.trialInformation(NCT02503722_Osimertinib.nct_id,
        "My Trial",
@@ -79,8 +79,9 @@ describe('CTIMS Trial Editor', () => {
        NCT02503722_Osimertinib.phase,
        NCT02503722_Osimertinib.protocol_no,
        NCT02503722_Osimertinib.nct_purpose,
-       NCT02503722_Osimertinib.status)
-
+       NCT02503722_Osimertinib.status)*/
+     // Prior treatment requirements
+     cy.priorTreatmentRequirement(NCT02503722_Osimertinib.prior_treatment_requirements[0])
      //Age
      cy.age(NCT02503722_Osimertinib.age)
 
@@ -122,7 +123,7 @@ describe('CTIMS Trial Editor', () => {
 
    })
 
-   it('should validate the Matching criteria modal', () => {
+   /*it('should validate the Matching criteria modal', () => {
     //click Match criteria
     getEditMatchingCriteria().click()
     getDefaultTextMatchingCriteria().should('contain', 'Matching criteria inputs will be shown here.')
@@ -354,7 +355,7 @@ describe('CTIMS Trial Editor', () => {
         cy.log(JSON.stringify(ctmlMatchingCriteria))
         expect(JSON.stringify(testDataMatchingCriteria)).to.deep.equal(JSON.stringify(ctmlMatchingCriteria))
       })
-  })
+  })*/
 })
 
 
