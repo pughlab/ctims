@@ -78,7 +78,7 @@ import {
   getCancerCenterIRB,
   getPrincipalSponsor,
   getArmSuspended,
-  getLevelSuspended
+  getLevelSuspended, getPriorTreatmentRequirement
 } from './app.po';
 import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib";
 import {NCT04293094_testData} from "../fixtures/NCT04293094_testData";
@@ -114,8 +114,13 @@ Cypress.Commands.add('trialInformation', (nctId: string,
   getPhaseDropdownList().contains(phase).click()
   getProtocolNumber().clear().type(ProtocolNumber)
   getNCTPurpose().clear().type(protocolPurpose)
-  getTrialInformationStatus().type(status)
+  getTrialInformationStatus().click()
+  getDefaultTrialEditorDropDown().contains(status).click()
 });
+
+Cypress.Commands.add('priorTreatmentRequirement',(priorRequirement: string) => {
+  getPriorTreatmentRequirement().click().type(priorRequirement)
+})
 
 Cypress.Commands.add('age',(ageGroup: string) => {
   trialEditorLeftPanelList().eq(1).should('contain','Age').click()
@@ -129,7 +134,9 @@ Cypress.Commands.add('drugList',(drugName: string) => {
 
 Cypress.Commands.add('managementGroupList',(managementGroupName: string, isPrimary: string) => {
   trialEditorLeftPanelList().eq(3).should('contain','Management Group List').click()
-  getManagementGroupName().type(managementGroupName)
+  getManagementGroupName().click()
+  getDefaultTrialEditorDropDown().contains(managementGroupName).click()
+    //.type(managementGroupName)
   getPrimaryManagementGroup().click()
   getDefaultTrialEditorDropDown().contains(isPrimary).click()
   getPrimaryManagementGroup().should('contain',isPrimary)
@@ -145,8 +152,12 @@ Cypress.Commands.add('siteList',(siteName,
                                  coordinatingCenter,
                                  cancerCenterIRB) => {
   trialEditorLeftPanelList().eq(4).should('contain', 'Site List').click()
-  getSiteName().type(siteName)
-  getSiteStatus().type(siteStatus)
+  getSiteName().click()
+  getDefaultTrialEditorDropDown().contains(siteName).click()
+    //.type(siteName)
+  getSiteStatus().click()
+  getDefaultTrialEditorDropDown().contains(siteStatus).click()
+    //.type(siteStatus)
   getCoordinatingCenter().click()
   getDefaultTrialEditorDropDown().contains(coordinatingCenter).click()
   getCoordinatingCenter().should('contain',coordinatingCenter)
@@ -187,8 +198,12 @@ Cypress.Commands.add('staffList',(firstName,
   getProtocolStaffFirstName().type(firstName)
   getProtocolStaffLastName().type(lastName)
   getProtocolStaffEmail().type(email)
-  getProtocolStaffInstitutionalName().type(institutionName)
-  getProtocolStaffRole().type(staffRole)
+  getProtocolStaffInstitutionalName().click()
+  getDefaultTrialEditorDropDown().contains(institutionName).click()
+    //.type(institutionName)
+  getProtocolStaffRole().click()
+  getDefaultTrialEditorDropDown().contains(staffRole).click()
+    //.type(staffRole)
   //status not given in json data
   //getProtocolStaffStatus().type(NCT04293094_testData.staff_list.protocol_staff[0].status)
 })
