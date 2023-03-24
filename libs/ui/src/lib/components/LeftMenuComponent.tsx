@@ -1,6 +1,6 @@
 import styles from "./LeftMenuComponent.module.scss";
 import {Tree, TreeEventNodeParams, TreeTogglerTemplateOptions} from "primereact/tree";
-import React, {memo, useEffect, useRef, useState} from "react";
+import React, {memo, useContext, useEffect, useRef, useState} from "react";
 import TreeNode from "primereact/treenode";
 import {Button} from "primereact/button";
 import {TieredMenu} from "primereact/tieredmenu";
@@ -31,6 +31,7 @@ import {v4 as uuidv4} from 'uuid';
 import {IKeyToViewModel, setMatchViewModel} from "../../../../../apps/web/store/slices/matchViewModelSlice";
 import {RootState, store} from "../../../../../apps/web/store/store";
 import {classNames} from "primereact/utils";
+import {CtimsDialogContext, CtimsDialogContextType} from "./CtimsMatchDialog";
 
 
 interface ILeftMenuComponentProps {
@@ -41,6 +42,8 @@ interface ILeftMenuComponentProps {
 const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
   const {onTreeNodeClick, rootNodesProp} = props;
+
+  const {setSaveBtnState} = useContext(CtimsDialogContext) as CtimsDialogContextType;
 
   const [rootNodes, setRootNodes] = useState<TreeNode[]>([]);
   const [selectedNode, setSelectedNode] = useState<any>(null);
@@ -80,6 +83,9 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     // convert view model (rootNodes) to ctims format
     const ctimsFormat = convertTreeNodeArrayToCtimsFormat(newRootNodes);
     dispatch(setCtmlDialogModel(ctimsFormat));
+    if (newRootNodes[0].children && newRootNodes[0].children.length === 0) {
+      setSaveBtnState(true);
+    }
   }
 
   useEffect(() => {
@@ -90,12 +96,14 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     if (formChangedCounter === 0) {
       // if the form was not changed, we check if there is a view model in the redux store
       if (!isObjectEmpty(currentCtmlMatchModel.match)) {
-
+        setSaveBtnState(false);
         // console.log('currentCtmlMatchModel.match', currentCtmlMatchModel.match)
         if (rootNodes.length === 0) {
           const newViewModel = convertCtimsFormatToTreeNodeArray({match: currentCtmlMatchModel.match});
           setRootNodesState(newViewModel)
         }
+      } else {
+        setSaveBtnState(true);
       }
     }
 

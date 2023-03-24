@@ -1,4 +1,4 @@
-import React, {CSSProperties, useEffect, useRef} from "react";
+import React, {CSSProperties, useContext, useEffect, useRef} from "react";
 import {
   deleteMatchDialogError,
   formChange, operatorChange,
@@ -19,6 +19,7 @@ import CtimsFieldTemplate from "../../custom-rjsf-templates/CtimsFieldTemplate";
 import CtimsErrorListTemplate from "../../custom-rjsf-templates/CtimsErrorListTemplate";
 import CtimsInput from "../../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../../custom-rjsf-templates/CtimsDropdown";
+import {CtimsDialogContext, CtimsDialogContextType} from "../CtimsMatchDialog";
 
 const RjsfForm = withTheme(PrimeTheme)
 
@@ -43,6 +44,8 @@ export const ClinicalForm = (props: IFormProps) => {
   const {node} = props
   const nk = node.key as string;
   console.log('ClinicalForm node: ', node)
+
+  const {setSaveBtnState} = useContext(CtimsDialogContext) as CtimsDialogContextType;
 
   const clinicalFormRef = useRef<any>(null);
 
@@ -114,6 +117,7 @@ export const ClinicalForm = (props: IFormProps) => {
     if (errorDetails?.errors.length === 0) {
       node.data.formValid = true;
       dispatch(deleteMatchDialogError(nk));
+      setSaveBtnState(false)
     }
     console.log('onFormChange errorDetails: ', errorDetails);
     node.data.formData = data.formData;

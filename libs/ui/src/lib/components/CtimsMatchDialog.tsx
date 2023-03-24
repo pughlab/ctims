@@ -1,5 +1,5 @@
 import styles from './CtimsMatchDialog.module.scss';
-import React, {CSSProperties, useEffect, useRef, useState} from "react";
+import React, {createContext, CSSProperties, useEffect, useRef, useState} from "react";
 import {Dialog} from "primereact/dialog";
 import {Button} from "primereact/button";
 import MatchingMenuAndForm from "./MatchingMenuAndForm";
@@ -28,8 +28,15 @@ const CtmlModelPreview = () => {
   )
 }
 
+export interface CtimsDialogContextType {
+  setSaveBtnState: (state: boolean) => void;
+}
+
+export const CtimsDialogContext = createContext<CtimsDialogContextType | null>(null);
+
 const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   const [isDialogVisible, setIsDialogVisible] = useState<boolean>(props.isDialogVisible);
+  const [saveBtnDisabled, setSaveBtnDisabled] = useState<boolean>(true);
 
   const dispatch = useDispatch();
 
@@ -69,7 +76,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     return (
       <div style={{marginTop: '10px'}}>
         <Button style={dismissBtnStyle} label="Discard" className="p-button-text" onClick={discardClicked} />
-        <Button style={saveBtnStyle} disabled={Object.keys(matchDialogErrors).length > 0} label="Save matching criteria" onClick={saveMatchingCriteriaClicked} />
+        <Button style={saveBtnStyle} disabled={Object.keys(matchDialogErrors).length > 0 || saveBtnDisabled} label="Save matching criteria" onClick={saveMatchingCriteriaClicked} />
       </div>
     )
   }
@@ -95,6 +102,11 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     onDialogHide();
   }
 
+  const setSaveBtnState = (state: boolean) => {
+    console.log('setSaveBtnState', state);
+    setSaveBtnDisabled(state);
+  }
+
   return (
     <Dialog header={() => header({armCode: props.armCode as string})}
             blockScroll
@@ -103,7 +115,9 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
             style={{width: '960px', height: '710px'}}
             onHide={onDialogHide}>
       <div className={styles.mainContainer}>
-        <MatchingMenuAndForm />
+        <CtimsDialogContext.Provider value={{setSaveBtnState}}>
+          <MatchingMenuAndForm />
+        </CtimsDialogContext.Provider>
       </div>
     </Dialog>
   )
