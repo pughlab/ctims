@@ -68,7 +68,7 @@ describe('CTIMS Trial Editor', () => {
   before(() => cy.visit('/'));
   //deleteDownloadsFolderBeforeAll()
    it('should Validate the Trial Editor Page', () => {
-    /* cy.title().should('contain', 'CTIMS')
+     cy.title().should('contain', 'CTIMS')
      trialEditorLeftPanelList().should('have.length', '8')
      cy.trialInformation(NCT02503722_Osimertinib.nct_id,
        "My Trial",
@@ -79,7 +79,7 @@ describe('CTIMS Trial Editor', () => {
        NCT02503722_Osimertinib.phase,
        NCT02503722_Osimertinib.protocol_no,
        NCT02503722_Osimertinib.nct_purpose,
-       NCT02503722_Osimertinib.status)*/
+       NCT02503722_Osimertinib.status)
      // Prior treatment requirements
      cy.priorTreatmentRequirement(NCT02503722_Osimertinib.prior_treatment_requirements[0])
      //Age
