@@ -66,8 +66,8 @@ import * as yaml from 'js-yaml';
 
 describe('CTIMS Trial Editor', () => {
   before(() => cy.visit('/'));
- // deleteDownloadsFolderBeforeAll()
-  /*it('should Validate the Trial Editor Page', () => {
+  deleteDownloadsFolderBeforeAll()
+  it('should Validate the Trial Editor Page', () => {
     cy.title().should('contain', 'CTIMS')
     trialEditorLeftPanelList().should('have.length', '8')
     cy.trialInformation(NCT02503722_Osimertinib.nct_id,
@@ -235,7 +235,7 @@ describe('CTIMS Trial Editor', () => {
             .to.equal(JSON.stringify(yamlObject),'Exported ctml-model.yaml file converted to Json file for validation');
         })
       })
-  });*/
+  });
   it('should validate the match of the "Trial Information" values',  () => {
     cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((exportedCtmlModel) => {
       let exportedTrialInformation: string[] = [exportedCtmlModel.trial_id,
@@ -259,9 +259,9 @@ describe('CTIMS Trial Editor', () => {
     })
   });
 
-  it.skip('test',  () => {
+  /*it('test',  () => {
     cy.readCtmlModelFile().then((exportedTrialInformation) => {
-      let testDataTrialInformation = [
+      let testDataTrialInformation: string[] = [
         NCT02503722_Osimertinib.nct_id,
         NCT02503722_Osimertinib.long_title,
         NCT02503722_Osimertinib.short_title,
@@ -272,7 +272,7 @@ describe('CTIMS Trial Editor', () => {
       ]
       cy.compareArrays(exportedTrialInformation, testDataTrialInformation.toString()) //to convert into single array
     })
-  });
+  });*/
 
   it('should validate the match of the "Age" values',  () => {
     let rawData = NCT02503722_Osimertinib.age
