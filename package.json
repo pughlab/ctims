@@ -14,7 +14,16 @@
     "generate:build": "npx prisma generate --schema=./apps/api/prisma/schema.prisma && nx build api",
     "build-web": "nx build web --verbose --development",
     "build-all": "nx run-many --target=build --projects=api,web --parallel",
-    "cypress:dev": "nx e2e web-e2e --watch"
+    "cypress:dev": "nx e2e web-e2e --watch",
+
+    "firefox:dev": "nx e2e web-e2e --watch --browser firefox --headed",
+    "edge:dev": "nx e2e web-e2e --watch --browser edge --headed",
+    "cy:run": "nx e2e web-e2e allure=true",
+    "allurereport": "allure generate allure-results && allure open allure-report",
+    "allure:clean": "rm -R -f ./apps/web-e2e/allure-report && rm -R -f ./apps/web-e2e/allure-results  && mkdir ./apps/web-e2e/allure-results && mkdir ./apps/web-e2e/allure-report ",
+    "allureclear": "npm run allure:clean",
+    "allureposttest": "nx run e2e web-e2e allurereport",
+    "allure:test": "nx e2e web-e2e --watch cy:run && npm run allurereport"
   },
   "private": true,
   "type": "commonjs",
@@ -106,6 +115,8 @@
     "typescript": "~4.5.2",
     "cypress-delete-downloads-folder": "^0.0.2",
     "cy-verify-downloads": "^0.1.11",
-    "sha256-file": "^1.0.0"
+    "sha256-file": "^1.0.0",
+    "@shelex/cypress-allure-plugin": "^2.34.0",
+    "allure-commandline": "^2.18.1"
   }
 }
