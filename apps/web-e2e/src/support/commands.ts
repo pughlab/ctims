@@ -82,6 +82,8 @@ import {
 } from './app.po';
 import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib";
 import {NCT04293094_testData} from "../fixtures/NCT04293094_testData";
+//import { ctmlModel } from '../support/models/ctml-model';
+
 //require('cypress-delete-downloads-folder').addCustomCommand();
 //
 // -- This is a parent command --
@@ -284,7 +286,26 @@ Cypress.Commands.add('validateExportJsonAndTestData', (testDataValue) => {
       expect(exportData[0]).to.deep.equal(rawData[0])
     })*/
 })
-
+Cypress.Commands.add('readCtmlModelFile', () => {
+  return cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((exportedCtmlModel) => {
+    return [
+      exportedCtmlModel.trial_id,
+      exportedCtmlModel.long_title,
+      exportedCtmlModel.short_title,
+      exportedCtmlModel.phase,
+      exportedCtmlModel.protocol_no,
+      exportedCtmlModel.nct_purpose,
+      exportedCtmlModel.status
+    ]
+  })
+})
+Cypress.Commands.add('compareArrays', (actual, expected) => {
+  // @ts-ignore
+  actual.forEach((value, index) => {
+    const expectedValue = expected[index]
+    expect(value,"Actual").to.deep.equal(expectedValue,"Expected")
+  })
+})
 //
 // -- This is a child command --
 // Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })
