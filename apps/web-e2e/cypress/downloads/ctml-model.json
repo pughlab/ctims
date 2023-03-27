@@ -1,7 +1,4 @@
 {
-  "prior_treatment_requirements": [
-    "Patients with stage IV or recurrent/metastatic histologically or cytologically confirmed non-squamous NSCLC."
-  ],
   "drug_list": {
     "drug": [
       {
@@ -59,37 +56,7 @@
                 "level_suspended": "N"
               }
             ],
-            "match": [
-              {
-                "and": [
-                  {
-                    "clinical": {
-                      "age_numerical": ">=18",
-                      "oncotree_primary_diagnosis": "Non-Small Cell Lung Cancer"
-                    }
-                  },
-                  {
-                    "or": [
-                      {
-                        "genomic": {
-                          "hugo_symbol": "EGFR",
-                          "protein_change": "p.L858R",
-                          "variant_category": "Mutation",
-                          "variant_classification": "Missense_Mutation"
-                        }
-                      },
-                      {
-                        "genomic": {
-                          "hugo_symbol": "EGFR",
-                          "protein_change": "p.729_761del",
-                          "variant_category": "Mutation"
-                        }
-                      }
-                    ]
-                  }
-                ]
-              }
-            ],
+            "match": {},
             "arm_code": "Treatment (sapanisertib, osimertinib)",
             "arm_description": "Patients receive sapanisertib PO QD on days 1, 3, 5, 8, 10, 12, 15, 17, 19, 22, 24, and 26 (day 1 is omitted in cycle 1). Patients also receive osimertinib PO QD on days 1-28. Cycles repeat every 28 days in the absence of disease progression or unacceptable toxicity.",
             "arm_internal_id": 1,
