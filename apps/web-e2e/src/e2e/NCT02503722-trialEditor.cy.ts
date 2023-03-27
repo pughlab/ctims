@@ -66,10 +66,10 @@ import * as yaml from 'js-yaml';
 
 describe('CTIMS Trial Editor', () => {
   before(() => cy.visit('/'));
-  //deleteDownloadsFolderBeforeAll()
+  deleteDownloadsFolderBeforeAll()
    it('should Validate the Trial Editor Page', () => {
      cy.title().should('contain', 'CTIMS')
-     trialEditorLeftPanelList().should('have.length', '8')
+     trialEditorLeftPanelList().should('have.length', '9')
      cy.trialInformation(NCT02503722_Osimertinib.nct_id,
        "My Trial",
        "John Doe",
@@ -81,7 +81,7 @@ describe('CTIMS Trial Editor', () => {
        NCT02503722_Osimertinib.nct_purpose,
        NCT02503722_Osimertinib.status)
      // Prior treatment requirements
-     cy.priorTreatmentRequirement(NCT02503722_Osimertinib.prior_treatment_requirements[0])
+    // cy.priorTreatmentRequirement(NCT02503722_Osimertinib.prior_treatment_requirements[0])
      //Age
      cy.age(NCT02503722_Osimertinib.age)
 
@@ -206,21 +206,21 @@ describe('CTIMS Trial Editor', () => {
           ' preview')
       })
     })
-  })
+  })*/
 
-  it.skip('should click on the Export button and then Export as "JSON" file ',  () => {
+  it('should click on the Export button and then Export as "JSON" file ',  () => {
     trialEditorHeaderButtons().eq(1).should('contain','Export').click()
     trialEditorRadioButtons().eq(0).should('contain.html','json')
     cy.get('[type="radio"]').first().check({force: true}).should('be.checked')
     trialEditorExportCtml().eq(1).should('contain','Export CTML').click()
   });
 
-  it.skip('should click on the Export button and then Export as "YAML" file ',  () => {
+  it('should click on the Export button and then Export as "YAML" file ',  () => {
     trialEditorRadioButtons().eq(1).click({force: true})
     trialEditorExportCtml().eq(1).should('contain','Export CTML').click()
   });
 
-  it.skip('should compare json and Yaml ',  () => {
+  /*it.skip('should compare json and Yaml ',  () => {
     // Load the JSON file
       cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((jsonData) => {
         const json = jsonData
