@@ -121,21 +121,22 @@ Cypress.Commands.add('trialInformation', (nctId: string,
 });
 
 Cypress.Commands.add('priorTreatmentRequirement',(priorRequirement: string) => {
+  trialEditorLeftPanelList().eq(1).should('contain','Prior Treatment Requirements').click()
   getPriorTreatmentRequirement().click().type(priorRequirement)
 })
 
 Cypress.Commands.add('age',(ageGroup: string) => {
-  trialEditorLeftPanelList().eq(1).should('contain','Age').click()
+  trialEditorLeftPanelList().eq(2).should('contain','Age').click()
    getAgeGroup().type(ageGroup);
 })
 
 Cypress.Commands.add('drugList',(drugName: string) => {
-  trialEditorLeftPanelList().eq(2).should('contain','Drug List').click()
+  trialEditorLeftPanelList().eq(3).should('contain','Drug List').click()
   getDrugName().type(drugName)
 })
 
 Cypress.Commands.add('managementGroupList',(managementGroupName: string, isPrimary: string) => {
-  trialEditorLeftPanelList().eq(3).should('contain','Management Group List').click()
+  trialEditorLeftPanelList().eq(4).should('contain','Management Group List').click()
   getManagementGroupName().click()
   getDefaultTrialEditorDropDown().contains(managementGroupName).click()
     //.type(managementGroupName)
@@ -153,7 +154,7 @@ Cypress.Commands.add('siteList',(siteName,
                                  siteStatus,
                                  coordinatingCenter,
                                  cancerCenterIRB) => {
-  trialEditorLeftPanelList().eq(4).should('contain', 'Site List').click()
+  trialEditorLeftPanelList().eq(5).should('contain', 'Site List').click()
   getSiteName().click()
   getDefaultTrialEditorDropDown().contains(siteName).click()
     //.type(siteName)
@@ -179,7 +180,7 @@ Cypress.Commands.add('siteList',(siteName,
 })
 
 Cypress.Commands.add('sponsorList',(sponsorName: string,principalSponsor: string) => {
-  trialEditorLeftPanelList().eq(5).should('contain', 'Sponsor List').click()
+  trialEditorLeftPanelList().eq(6).should('contain', 'Sponsor List').click()
   getSponsorName().type(sponsorName)
   getPrincipalSponsor().click()
   getDefaultTrialEditorDropDown().contains(principalSponsor).click()
@@ -196,7 +197,7 @@ Cypress.Commands.add('staffList',(firstName,
                                   email,
                                   institutionName,
                                   staffRole) => {
-  trialEditorLeftPanelList().eq(6).should('contain','Staff List').click()
+  trialEditorLeftPanelList().eq(7).should('contain','Staff List').click()
   getProtocolStaffFirstName().type(firstName)
   getProtocolStaffLastName().type(lastName)
   getProtocolStaffEmail().type(email)

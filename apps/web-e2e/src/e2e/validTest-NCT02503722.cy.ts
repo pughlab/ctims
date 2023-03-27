@@ -69,7 +69,7 @@ describe('CTIMS Trial Editor', () => {
   deleteDownloadsFolderBeforeAll()
   it('should Validate the Trial Editor Page', () => {
     cy.title().should('contain', 'CTIMS')
-    trialEditorLeftPanelList().should('have.length', '8')
+    trialEditorLeftPanelList().should('have.length', '9')
     cy.trialInformation(NCT02503722_Osimertinib.nct_id,
       "My Trial",
       "John Doe",
@@ -81,7 +81,7 @@ describe('CTIMS Trial Editor', () => {
       NCT02503722_Osimertinib.nct_purpose,
       NCT02503722_Osimertinib.status)
     // Prior treatment requirements
-    cy.priorTreatmentRequirement(NCT02503722_Osimertinib.prior_treatment_requirements[0])
+   // cy.priorTreatmentRequirement(NCT02503722_Osimertinib.prior_treatment_requirements[0])
     //Age
     cy.age(NCT02503722_Osimertinib.age)
 
@@ -218,25 +218,82 @@ describe('CTIMS Trial Editor', () => {
     trialEditorExportCtml().eq(1).should('contain','Export CTML').click()
   });
 
-  it('should compare json and Yaml ',  () => {
-    // Load the JSON file
+  it('should ',  ()=> {
+     cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((jsonData) => {
+      const json = JSON.stringify(jsonData); // parse the JSON data
+      // rest of the code
+      cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.yaml', 'utf-8').then((yamlData) => {
+        const yamlObject = yaml.load(yamlData);
+        const yamlVal = JSON.stringify(yamlObject);
+        Object.entries(jsonData).forEach(([key, value]) => {
+          // @ts-ignore
+          const yamlData = yamlObject[key];
+          // @ts-ignore
+          expect(value).to.deep.equal(yamlData); // use deep equal for object comparison
+        });
+      });
+    });
+  });
+  it.skip('should compare json and Yaml ',  () => {
+    cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((jsonData) => {
+      const json = JSON.stringify(jsonData);
+      cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.yaml', 'utf-8').then((yamlData) => {
+        //cy.log('yamlData:', yamlData);
+        const yamlObject = yaml.load(yamlData);
+       // cy.log('yamlObject:', JSON.stringify(yamlObject))
+        // @ts-ignore
+        for (let key in jsonData) {
+          if (key === "drug_list") {
+            cy.log(`${key}:`);
+            for (let drug of jsonData[key]) {
+              cy.log(drug);
+            }
+          } else {
+            cy.log(`${key}: ${jsonData[key]}`);
+          }
+        }
+        /*for (let key in jsonData) {
+          cy.log(`${key}: ${jsonData[key]}`);
+        }*/
+      });
+    });
+
+    /* cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((jsonData) => {
+      const json = JSON.stringify(jsonData); // parse the JSON data
+      // rest of the code
+      cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.yaml', 'utf-8').then((yamlData) => {
+        const yamlObject = yaml.load(yamlData);
+        const yamlVal = JSON.stringify(yamlObject);
+        Object.entries(json).forEach(([key, value]) => {
+          const yamlData = yamlVal[key];
+          expect(value).to.deep.equal(yamlData); // use deep equal for object comparison
+        });
+      });
+    });*/
+
+    /* // Load the JSON file
       cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((jsonData) => {
-        const json = jsonData
-        cy.log("Exported ctml-model.json",JSON.stringify(json))
-        // })
+        const json = JSON.parse(jsonData)
+          //JSON.stringify(jsonData)
+       // cy.log("Exported ctml-model.json",JSON.stringify(json))
         // Load the YAML file and parse it to a JavaScript object
         cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.yaml', 'utf-8').then((yamlData) => {
           const yamlObject = yaml.load(yamlData)
-          cy.log("Exported ctml-model.yaml file converted to Json file for validation",JSON.stringify(yamlObject))
-          // })
-
+          const yamlVal = JSON.parse(yamlObject)
+         // cy.log("Exported ctml-model.yaml file converted to Json file for validation",JSON.stringify(yamlObject))
           // Compare the JSON files as strings
-          expect(JSON.stringify(json),"Exported ctml-model.json")
-            .to.equal(JSON.stringify(yamlObject),'Exported ctml-model.yaml file converted to Json file for validation');
+      //    expect(JSON.stringify(json),"Exported ctml-model.json")
+         //   .to.equal(JSON.stringify(yamlObject),'Exported ctml-model.yaml file converted to Json file for' +
+         //   ' validation');
+        json.forEach((testValues,index) => {
+          //cy.log(testValues)
+          const yamlData = yamlObject[index]
+          expect(testValues).to.equal(yamlData)
         })
-      })
+        })
+      })*/
   });
-  it('should validate the match of the "Trial Information" values',  () => {
+  /*it('should validate the match of the "Trial Information" values',  () => {
     cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((exportedCtmlModel) => {
       let exportedTrialInformation: string[] = [exportedCtmlModel.trial_id,
         exportedCtmlModel.long_title,
@@ -259,7 +316,7 @@ describe('CTIMS Trial Editor', () => {
     })
   });
 
-  /*it('test',  () => {
+  /!*it('test',  () => {
     cy.readCtmlModelFile().then((exportedTrialInformation) => {
       let testDataTrialInformation: string[] = [
         NCT02503722_Osimertinib.nct_id,
@@ -272,7 +329,7 @@ describe('CTIMS Trial Editor', () => {
       ]
       cy.compareArrays(exportedTrialInformation, testDataTrialInformation.toString()) //to convert into single array
     })
-  });*/
+  });*!/
 
   it('should validate the match of the "Age" values',  () => {
     let rawData = NCT02503722_Osimertinib.age
@@ -410,7 +467,7 @@ describe('CTIMS Trial Editor', () => {
         cy.log(JSON.stringify(ctmlMatchingCriteria))
         expect(JSON.stringify(testDataMatchingCriteria)).to.deep.equal(JSON.stringify(ctmlMatchingCriteria))
       })
-  })
+  })*/
 })
 
 

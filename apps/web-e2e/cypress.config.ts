@@ -22,7 +22,6 @@ const cypressJsonConfig: EndToEndConfigOptions = {
   screenshotOnRunFailure: true,
   screenshotsFolder: '../../dist/cypress/apps/web-e2e/screenshots',
   trashAssetsBeforeRuns: true,  //trash screenshot and video before every run
-  downloadsFolder: "apps/web-e2e/cypress/downloads",
   chromeWebSecurity: false,
   specPattern: 'src/e2e/**/*.cy.{js,jsx,ts,tsx}',
   supportFile: 'src/support/e2e.ts',
