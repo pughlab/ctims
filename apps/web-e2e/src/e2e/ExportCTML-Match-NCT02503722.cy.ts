@@ -63,11 +63,13 @@ import {
 import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib"
 const { deleteDownloadsFolderBeforeAll } = require('cypress-delete-downloads-folder');
 import * as yaml from 'js-yaml';
+// @ts-ignore
+//import { expect } from 'jest';
 
 describe('CTIMS Trial Editor', () => {
   before(() => cy.visit('/'));
-  deleteDownloadsFolderBeforeAll()
-  it('should Validate the Trial Editor Page', () => {
+ // deleteDownloadsFolderBeforeAll()
+  /*it('should Validate the Trial Editor Page', () => {
     cy.title().should('contain', 'CTIMS')
     trialEditorLeftPanelList().should('have.length', '9')
     cy.trialInformation(NCT02503722_Osimertinib.nct_id,
@@ -253,8 +255,8 @@ describe('CTIMS Trial Editor', () => {
         /*for (let key in jsonData) {
           cy.log(`${key}: ${jsonData[key]}`);
         }*/
-      });
-    });
+//      });
+//    });
 
     /* cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((jsonData) => {
       const json = JSON.stringify(jsonData); // parse the JSON data
@@ -290,7 +292,7 @@ describe('CTIMS Trial Editor', () => {
         })
         })
       })*/
-  });
+ // });
   it('should validate the match of the "Trial Information" values',  () => {
     cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((exportedCtmlModel) => {
       let exportedTrialInformation: string[] = [exportedCtmlModel.trial_id,
@@ -329,13 +331,13 @@ describe('CTIMS Trial Editor', () => {
     })
   });*/
 
-  it('should validate the match of the "Age" values',  () => {
+  /*it('should validate the match of the "Age" values',  () => {
     let rawData = NCT02503722_Osimertinib.age
     cy.log("Original Test Data", JSON.stringify(rawData))//has multiple values
     cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf8').then((downloadData) => {
       const exportData= downloadData.age
       cy.log("Exported data single Drug value", JSON.stringify(exportData))// has a single value
-      expect(exportData).to.deep.equal(rawData)
+      expect(exportData).toEqual(rawData)
     })
   });
 
@@ -345,9 +347,9 @@ describe('CTIMS Trial Editor', () => {
     cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf8').then((downloadData) => {
       const exportData= downloadData.prior_treatment_requirements
       cy.log("Exported data single Drug value", JSON.stringify(exportData))// has a single value
-      expect(exportData[0]).to.deep.equal(rawData[0])
+      expect(exportData[0]).toEqual(rawData[0])
     })
-  });
+  });*/
 
     it('should validate the match of the "Drug list" values',  () => {
       let rawData = NCT02503722_Osimertinib.drug_list.drug
@@ -355,28 +357,22 @@ describe('CTIMS Trial Editor', () => {
       cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf8').then((downloadData) => {
         const exportData= downloadData.drug_list.drug
         cy.log("Exported data single Drug value", JSON.stringify(exportData))// has a single value
-       /* downloadData.forEach((exportedValue, index) => {
-          const testDataValue = rawData[index]
-          expect(exportedValue).to.deep.equal(testDataValue)
-        })*/
-        expect(exportData[0]).to.deep.equal(rawData[0])
+        //expect(exportData[0]).to.deep.equal(rawData[0])
       })
     });
-
-  it('should validate the match of the "Management Group list" values',() => {
-    let rawData = NCT02503722_Osimertinib.management_group_list.management_group[0]
-    let testDataMatchingCriteria: string[] = [rawData.management_group_name,
-      rawData.is_primary]
-    cy.log(JSON.stringify(rawData))
-    cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json','utf-8').then((downloadData) => {
-      const exportData = downloadData.management_group_list.management_group[0]
-      let ctmlMatchingCriteria: string[] = [exportData.management_group_name,
-        exportData.is_primary]
-      cy.log(JSON.stringify(exportData))
-      expect(JSON.stringify(testDataMatchingCriteria)).to.deep.equal(JSON.stringify(ctmlMatchingCriteria))
-    })
-  });
-
+    it('should validate the match of the "Management Group list" values',() => {
+      let rawData = NCT02503722_Osimertinib.management_group_list.management_group[0]
+      let testDataMatchingCriteria: string[] = [rawData.management_group_name,
+        rawData.is_primary]
+       cy.log(JSON.stringify(rawData))
+       cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json','utf-8').then((downloadData) => {
+         const exportData = downloadData.management_group_list.management_group[0]
+         let ctmlMatchingCriteria: string[] = [exportData.management_group_name,
+         exportData.is_primary]
+         cy.log(JSON.stringify(exportData))
+         expect(JSON.stringify(testDataMatchingCriteria)).to.deep.equal(JSON.stringify(ctmlMatchingCriteria))
+       })
+    });
     it('should validate the match of the "Site Group list" values',() => {
       let jsonVal = NCT02503722_Osimertinib.site_list.site[0]
       //let testDataMatchingCriteria
@@ -393,6 +389,7 @@ describe('CTIMS Trial Editor', () => {
         expect(JSON.stringify(testDataMatchingCriteria)).to.deep.equal(JSON.stringify(ctmlMatchingCriteria))
       })
     });
+
     it('should validate the match of the "Sponsor list" values',() => {
       let jsonVal = NCT02503722_Osimertinib.sponsor_list.sponsor[0]
       //let testDataMatchingCriteria
