@@ -370,7 +370,11 @@ describe('CTIMS Trial Editor', () => {
          let ctmlMatchingCriteria: string[] = [exportData.management_group_name,
          exportData.is_primary]
          cy.log(JSON.stringify(exportData))
-         expect(JSON.stringify(testDataMatchingCriteria)).to.deep.equal(JSON.stringify(ctmlMatchingCriteria))
+         ctmlMatchingCriteria.forEach((exportedValue, index) => {
+           const testDataValue = testDataMatchingCriteria[index]
+           expect(exportedValue).to.deep.equal(testDataValue)
+         })
+        // expect(JSON.stringify(testDataMatchingCriteria)).to.deep.equal(JSON.stringify(ctmlMatchingCriteria))
        })
     });
     it('should validate the match of the "Site Group list" values',() => {
@@ -386,7 +390,11 @@ describe('CTIMS Trial Editor', () => {
         let ctmlMatchingCriteria: string[] = [exportData.site_name,exportData.site_status,exportData.coordinating_center,exportData.uses_cancer_center_irb]
         //ctmlMatchingCriteria
         cy.log(JSON.stringify(ctmlMatchingCriteria))
-        expect(JSON.stringify(testDataMatchingCriteria)).to.deep.equal(JSON.stringify(ctmlMatchingCriteria))
+        ctmlMatchingCriteria.forEach((exportedValue, index) => {
+          const testDataValue = testDataMatchingCriteria[index]
+          expect(exportedValue).to.deep.equal(testDataValue)
+        })
+       // expect(JSON.stringify(testDataMatchingCriteria)).to.deep.equal(JSON.stringify(ctmlMatchingCriteria))
       })
     });
 
@@ -402,7 +410,11 @@ describe('CTIMS Trial Editor', () => {
         let ctmlMatchingCriteria: string[] = [exportData.sponsor_name,exportData.is_principal_sponsor]
         //ctmlMatchingCriteria
         cy.log(JSON.stringify(ctmlMatchingCriteria))
-        expect(JSON.stringify(testDataMatchingCriteria)).to.deep.equal(JSON.stringify(ctmlMatchingCriteria))
+        ctmlMatchingCriteria.forEach((exportedValue, index) => {
+          const testDataValue = testDataMatchingCriteria[index]
+          expect(exportedValue).to.deep.equal(testDataValue)
+        })
+        //expect(JSON.stringify(testDataMatchingCriteria)).to.deep.equal(JSON.stringify(ctmlMatchingCriteria))
       })
     });
 
@@ -424,7 +436,11 @@ describe('CTIMS Trial Editor', () => {
           exportData.staff_role]
         //ctmlMatchingCriteria
         cy.log(JSON.stringify(ctmlMatchingCriteria))
-        expect(JSON.stringify(testDataMatchingCriteria)).to.deep.equal(JSON.stringify(ctmlMatchingCriteria))
+        ctmlMatchingCriteria.forEach((exportedValue, index) => {
+          const testDataValue = testDataMatchingCriteria[index]
+          expect(exportedValue).to.deep.equal(testDataValue)
+        })
+        //expect(JSON.stringify(testDataMatchingCriteria)).to.deep.equal(JSON.stringify(ctmlMatchingCriteria))
       })
     })
 
@@ -446,7 +462,11 @@ describe('CTIMS Trial Editor', () => {
           ]
           //ctmlMatchingCriteria
           cy.log(JSON.stringify(ctmlMatchingCriteria))
-          expect(JSON.stringify(testDataMatchingCriteria)).to.deep.equal(JSON.stringify(ctmlMatchingCriteria))
+          ctmlMatchingCriteria.forEach((exportedValue, index) => {
+            const testDataValue = testDataMatchingCriteria[index]
+            expect(exportedValue).to.deep.equal(testDataValue)
+          })
+         // expect(JSON.stringify(testDataMatchingCriteria)).to.deep.equal(JSON.stringify(ctmlMatchingCriteria))
         })
     });
 
@@ -470,7 +490,11 @@ describe('CTIMS Trial Editor', () => {
         ]
         //ctmlMatchingCriteria
         cy.log(JSON.stringify(ctmlMatchingCriteria))
-        expect(JSON.stringify(testDataMatchingCriteria)).to.deep.equal(JSON.stringify(ctmlMatchingCriteria))
+        ctmlMatchingCriteria.forEach((exportedValue, index) => {
+          const testDataValue = testDataMatchingCriteria[index]
+          expect(exportedValue).to.deep.equal(testDataValue)
+        })
+        //expect(JSON.stringify(testDataMatchingCriteria)).to.deep.equal(JSON.stringify(ctmlMatchingCriteria))
       })
   })
 })
