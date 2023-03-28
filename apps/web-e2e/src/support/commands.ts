@@ -212,6 +212,7 @@ Cypress.Commands.add('staffList',(firstName,
 })
 
 Cypress.Commands.add('arm',(armCode,armDescription,armInternalID,armSuspended) => {
+  trialEditorLeftPanelList().eq(8).should('contain','Treatment List').click()
   getArmCode().type(String(armCode))
   getArmDescription().type(armDescription)
   getArmInternalId().type(String(armInternalID))
