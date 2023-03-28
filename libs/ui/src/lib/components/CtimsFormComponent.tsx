@@ -6,7 +6,7 @@ import {JSONSchema7} from "json-schema";
 import CtimsArrayFieldItemTemplate from "../custom-rjsf-templates/CtimsArrayFieldItemTemplate";
 import CtimsArrayFieldTemplate from "../custom-rjsf-templates/CtimsArrayFieldTemplate";
 import localValidator, {customizeValidator} from "@rjsf/validator-ajv8";
-import {CSSProperties, ForwardedRef, forwardRef, memo} from "react";
+import {CSSProperties, ForwardedRef, forwardRef, memo, useEffect} from "react";
 import {withTheme} from "@rjsf/core";
 import {Theme as PrimeTheme} from "../primereact";
 import {RegistryWidgetsType, RJSFValidationError} from "@rjsf/utils";
@@ -19,6 +19,7 @@ import DoseLevelObjectFieldTemplate from "../custom-rjsf-templates/DoseLevelObje
 import CtimsArrayFieldSingleTemplate from "../custom-rjsf-templates/CtimsArrayFieldSingleTemplate";
 import CtimsNumberInput from "../custom-rjsf-templates/CtimsNumberInput";
 import CtimsArmItemObjectFieldTemplate from "../custom-rjsf-templates/CtimsArimItemObjectFieldTemplate";
+import CtimsSelectButton from "../custom-rjsf-templates/CtimsSelectButton";
 
 const Form = withTheme(PrimeTheme)
 
@@ -410,7 +411,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                         "title": 'Dose Level',
                         "items": {
                           "type": "object",
-                          "required": ["level_code", "level_description", "level_internal_id"],
+                          "required": ["level_code", "level_description", "level_internal_id", "level_suspended"],
                           "properties": {
                             "level_code": {
                               "type": "string",
@@ -626,7 +627,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
           "ui:ObjectFieldTemplate": CtimsItemObjectFieldTemplate,
           "ui:spacing": 16,
           "is_primary": {
-            "ui:widget": CtimsDropdown
+            "ui:widget": CtimsSelectButton
           },
           "ui:layout": [
             {
@@ -681,10 +682,10 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             }
           ],
           "coordinating_center": {
-            "ui:widget": CtimsDropdown
+            "ui:widget": CtimsSelectButton
           },
           "uses_cancer_center_irb": {
-            "ui:widget": CtimsDropdown
+            "ui:widget": CtimsSelectButton
           }
         }
       }
@@ -714,7 +715,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             }
           ],
           "is_principal_sponsor": {
-            "ui:widget": CtimsDropdown
+            "ui:widget": CtimsSelectButton
           }
         }
       }
@@ -770,7 +771,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             "items": {
               "ui:ObjectFieldTemplate": CtimsArmItemObjectFieldTemplate,
               "arm_suspended": {
-                "ui:widget": CtimsDropdown
+                "ui:widget": CtimsSelectButton
               },
               "arm_internal_id": {
                 "ui:widget": CtimsNumberInput,
@@ -789,7 +790,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                   "ui:ObjectFieldTemplate": DoseLevelObjectFieldTemplate,
                  "key": "dose_level",
                  "level_suspended": {
-                    "ui:widget": CtimsDropdown
+                    "ui:widget": CtimsSelectButton
                  },
                  "level_internal_id": {
                     "ui:widget": CtimsNumberInput,
