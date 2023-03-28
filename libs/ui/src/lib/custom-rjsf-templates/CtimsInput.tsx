@@ -1,5 +1,5 @@
 import {WidgetProps} from "@rjsf/utils";
-import React from "react";
+import React, {useEffect} from "react";
 import cn from "clsx";
 import {InputText} from "primereact/inputtext";
 import { Tooltip } from 'primereact/tooltip';
@@ -24,6 +24,12 @@ const CtimsInput = (props: WidgetProps) => {
         uiSchema,
         rawErrors = [],
     } = props;
+
+    useEffect(() => {
+      if (label === 'Trial ID') {
+       onChange('')
+      }
+    }, [])
 
     const _onChange = ({
                            target: { value },
