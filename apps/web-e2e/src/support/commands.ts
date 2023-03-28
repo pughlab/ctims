@@ -288,9 +288,11 @@ Cypress.Commands.add('validateExportJsonAndTestData', (testDataValue) => {
       expect(exportData[0]).to.deep.equal(rawData[0])
     })*/
 })
-Cypress.Commands.add('readCtmlModelFile', () => {
-  return cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((exportedCtmlModel) => {
-    return [
+/*Cypress.Commands.add('readCtmlModelFile', () => {
+  //return
+  // cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8')
+    //.then((exportedCtmlModel) => {
+   /!* return [
       exportedCtmlModel.trial_id,
       exportedCtmlModel.long_title,
       exportedCtmlModel.short_title,
@@ -298,12 +300,14 @@ Cypress.Commands.add('readCtmlModelFile', () => {
       exportedCtmlModel.protocol_no,
       exportedCtmlModel.nct_purpose,
       exportedCtmlModel.status
-    ]
-  })
-})
+    ]*!/
+  //})
+})*/
 Cypress.Commands.add('compareArrays', (actual, expected) => {
-  // @ts-ignore
-  actual.forEach((value, index) => {
+  /*cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((exportVal) =>{
+    return expected = exportVal
+  })*/
+ actual.forEach((value, index) => {
     const expectedValue = expected[index]
     expect(value,"Actual").to.deep.equal(expectedValue,"Expected")
   })

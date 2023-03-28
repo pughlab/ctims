@@ -23,7 +23,7 @@ declare namespace Cypress {
     //validateExportJsonAndTestData(testDataValue: string[],exportedJsonValue: string[])
     validateExportJsonAndTestData(testDataValue: string[])
     priorTreatmentRequirement(priorRequirement: string)
-    readCtmlModelFile()
-    compareArrays(actual:string, expected:string)
+    readCtmlModelFile(readValue: string[])
+    compareArrays(actual:string[], expected:string[])
   }
 }
