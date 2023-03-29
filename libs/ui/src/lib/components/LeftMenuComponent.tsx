@@ -333,7 +333,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       const btnToShow = () => {
         let show = false;
         // we only display the three dots menu over the node if the node is selected and the mouse is over the node and the node is not a leaf
-        if ((selectedNode as TreeNode).key === node.key && isMouseOverNode && (node.label === 'And' || node.label === 'Or')) {
+        if ((selectedNode as TreeNode).key === node.key && (node.label === 'And' || node.label === 'Or')) {
           show = true;
         }
         // show=true

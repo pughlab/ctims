@@ -4,28 +4,14 @@ import {Dialog} from "primereact/dialog";
 import {Button} from "primereact/button";
 import MatchingMenuAndForm from "./MatchingMenuAndForm";
 import {useDispatch, useSelector} from "react-redux";
-import dynamic from 'next/dynamic';
 import {RootState, store} from "../../../../../apps/web/store/store";
 import {resetMatchDialogErrors} from "../../../../../apps/web/store/slices/modalActionsSlice";
-const BrowserReactJsonView = dynamic(() => import('react-json-view'), {
-  ssr: false,
-});
 
 interface CtimsMatchDialogProps {
   isDialogVisible: boolean;
   onDialogHide: () => void;
   armCode?: string;
   formData?: any;
-}
-
-const CtmlModelPreview = () => {
-  const ctmlModel = useSelector((state: RootState) => state.modalActions.ctmlDialogModel);
-  return (
-    <div>
-      {/*<BrowserReactJsonView src={ctmlModel} displayObjectSize={false} displayDataTypes={false} />*/}
-      <pre>{JSON.stringify(ctmlModel, null, 2)}</pre>
-    </div>
-  )
 }
 
 export interface CtimsDialogContextType {
