@@ -13,9 +13,14 @@
   border-color: #2E72D2 !important;
 }
 
-.p-button .p-highlight {
-  background-color: #2E72D2 !important;
+.p-button .p-highlight:hover {
+  background: #2E72D2 !important;
   border-color: #2E72D2 !important;
+}
+
+.ctims-tree .p-tree-container .p-treenode .p-treenode-content.p-highlight {
+  background: #EEF2FF !important;
+  color: #4338CA !important;
 }
 
 .p-button:focus {
