@@ -78,7 +78,10 @@ import {
   getCancerCenterIRB,
   getPrincipalSponsor,
   getArmSuspended,
-  getLevelSuspended, getPriorTreatmentRequirement
+  getLevelSuspended,
+  getPriorTreatmentRequirement,
+  getPriorTreatmentRequirementPlusIcon,
+  getPriorTreatmentRequirementRegularExpression
 } from './app.po';
 import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib";
 import {NCT04293094_testData} from "../fixtures/NCT04293094_testData";
@@ -122,6 +125,7 @@ Cypress.Commands.add('trialInformation', (nctId: string,
 
 Cypress.Commands.add('priorTreatmentRequirement',(priorRequirement: string) => {
   trialEditorLeftPanelList().eq(1).should('contain','Prior Treatment Requirements').click()
+  getPriorTreatmentRequirementPlusIcon().click()
   getPriorTreatmentRequirement().click().type(priorRequirement)
 })
 
@@ -140,8 +144,7 @@ Cypress.Commands.add('managementGroupList',(managementGroupName: string, isPrima
   getManagementGroupName().click()
   getDefaultTrialEditorDropDown().contains(managementGroupName).click()
     //.type(managementGroupName)
-  getPrimaryManagementGroup().click()
-  getDefaultTrialEditorDropDown().contains(isPrimary).click()
+  getPrimaryManagementGroup().contains(isPrimary).click()
   getPrimaryManagementGroup().should('contain',isPrimary)
   /*if(isPrimary === 'Y') {
     getCheckBoxPrimaryManagementGroup().click().should('have.class','p-checkbox-checked') //This is a primary
@@ -161,11 +164,9 @@ Cypress.Commands.add('siteList',(siteName,
   getSiteStatus().click()
   getDefaultTrialEditorDropDown().contains(siteStatus).click()
     //.type(siteStatus)
-  getCoordinatingCenter().click()
-  getDefaultTrialEditorDropDown().contains(coordinatingCenter).click()
+  getCoordinatingCenter().contains(coordinatingCenter).click()
   getCoordinatingCenter().should('contain',coordinatingCenter)
-  getCancerCenterIRB().click()
-  getDefaultTrialEditorDropDown().contains(cancerCenterIRB).click()
+  getCancerCenterIRB().contains(cancerCenterIRB).click()
   getCancerCenterIRB().should('contain',cancerCenterIRB)
  /* if (coordinatingCenter === 'Y') {
     getCheckBoxCoordinateCenter().click().should('have.class', 'p-checkbox-checked') //This site is a coordinating center.
@@ -182,8 +183,7 @@ Cypress.Commands.add('siteList',(siteName,
 Cypress.Commands.add('sponsorList',(sponsorName: string,principalSponsor: string) => {
   trialEditorLeftPanelList().eq(6).should('contain', 'Sponsor List').click()
   getSponsorName().type(sponsorName)
-  getPrincipalSponsor().click()
-  getDefaultTrialEditorDropDown().contains(principalSponsor).click()
+  getPrincipalSponsor().contains(principalSponsor).click()
   getPrincipalSponsor().should('contain',principalSponsor)
   /*if (principalSponsor === 'Y') {
     getCheckBoxPrincipalSponsor().click().should('have.class', 'p-checkbox-checked') //This sponsor is a principal sponsor.
@@ -216,8 +216,7 @@ Cypress.Commands.add('arm',(armCode,armDescription,armInternalID,armSuspended) =
   getArmCode().type(String(armCode))
   getArmDescription().type(armDescription)
   getArmInternalId().type(String(armInternalID))
-  getArmSuspended().click()
-  getDefaultTrialEditorDropDown().contains(armSuspended).click()
+  getArmSuspended().contains(armSuspended).click()
   getArmSuspended().should('contain',armSuspended)
   /*const arm_suspended = armSuspended
   if(arm_suspended === 'Y') {
@@ -231,8 +230,7 @@ Cypress.Commands.add('doseLevel',(levelCode,levelDescription,levelInternalId,lev
   getLevelCode().type(levelCode)
   getLevelDescription().type(levelDescription)
   getLevelInternalId().type(String(levelInternalId))
-  getLevelSuspended().click()
-  getDefaultTrialEditorDropDown().contains(levelSuspended).click()
+  getLevelSuspended().contains(levelSuspended).click()
   getLevelSuspended().should('contain',levelSuspended)
  /* const level_suspended = levelSuspended
   if( level_suspended === 'Y') {
@@ -303,13 +301,15 @@ Cypress.Commands.add('validateExportJsonAndTestData', (testDataValue) => {
     ]*!/
   //})
 })*/
+
 Cypress.Commands.add('compareArrays', (actual, expected) => {
   /*cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((exportVal) =>{
     return expected = exportVal
   })*/
- actual.forEach((value, index) => {
+
+  actual.forEach((value, index) => {
     const expectedValue = expected[index]
-    expect(value,"Actual").to.deep.equal(expectedValue,"Expected")
+    expect(value,"Actual value").to.deep.equal(expectedValue,"Expected Value")
   })
 })
 //

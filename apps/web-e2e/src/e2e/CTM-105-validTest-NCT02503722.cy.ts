@@ -80,8 +80,10 @@ describe('CTIMS Trial Editor', () => {
       NCT02503722_Osimertinib.protocol_no,
       NCT02503722_Osimertinib.nct_purpose,
       NCT02503722_Osimertinib.status)
+
     // Prior treatment requirements
-   // cy.priorTreatmentRequirement(NCT02503722_Osimertinib.prior_treatment_requirements[0])
+    cy.priorTreatmentRequirement(NCT02503722_Osimertinib.prior_treatment_requirements[0])
+
     //Age
     cy.age(NCT02503722_Osimertinib.age)
 
@@ -261,7 +263,7 @@ describe('CTIMS Trial Editor', () => {
     })
   });
 
-  it.skip('should validate the match of the "Prior treatment requirement" values',  () => {
+  it('should validate the match of the "Prior treatment requirement" values',  () => {
     cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf8').then((downloadData) => {
       const exportData= downloadData.prior_treatment_requirements
       let testData = NCT02503722_Osimertinib.prior_treatment_requirements
