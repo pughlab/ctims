@@ -18,7 +18,7 @@ import CtimsErrorListTemplate from "../custom-rjsf-templates/CtimsErrorListTempl
 import DoseLevelObjectFieldTemplate from "../custom-rjsf-templates/DoseLevelObjectFieldTemplate";
 import CtimsArrayFieldSingleTemplate from "../custom-rjsf-templates/CtimsArrayFieldSingleTemplate";
 import CtimsNumberInput from "../custom-rjsf-templates/CtimsNumberInput";
-import CtimsArmItemObjectFieldTemplate from "../custom-rjsf-templates/CtimsArimItemObjectFieldTemplate";
+import CtimsArmItemObjectFieldTemplate from "../custom-rjsf-templates/CtimsArmItemObjectFieldTemplate";
 import CtimsSelectButton from "../custom-rjsf-templates/CtimsSelectButton";
 
 const Form = withTheme(PrimeTheme)

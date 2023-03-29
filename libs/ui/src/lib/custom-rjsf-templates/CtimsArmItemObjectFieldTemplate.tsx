@@ -1,5 +1,5 @@
 import {getTemplate, getUiOptions, ObjectFieldTemplatePropertyType, ObjectFieldTemplateProps} from "@rjsf/utils";
-import React from "react";
+import React, {useEffect} from "react";
 
 const CtimsArmItemObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
   const {
@@ -17,6 +17,10 @@ const CtimsArmItemObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
     title,
     uiSchema,
   } = props;
+
+  useEffect(() => {
+    registry.formContext = formData
+  }, []);
 
   const uiOptions = getUiOptions(uiSchema);
   const TitleFieldTemplate = getTemplate<"TitleFieldTemplate">(
@@ -57,7 +61,7 @@ const CtimsArmItemObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
   // if (!isObjectEmpty(formData)){
   //   registry.formContext = formData
   // }
-  registry.formContext = formData
+  // registry.formContext = formData
   console.group('CtimsArmItemObjectFieldTemplate', props)
   console.log('formContext registry', registry.formContext)
   console.log('formData', formData)
