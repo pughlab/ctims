@@ -58,6 +58,9 @@ export const getCheckBoxLevelIsSuspended = () => cy.get('#object-field-template-
 
 //Prior treatment requirements
 export const getPriorTreatmentRequirement = () => cy.get('#root_prior_treatment_requirements_0')
+export const getPriorTreatmentRequirementRegularExpression = () => cy.get('[id^="root_prior_treatment_requirements_"]')
+export const getPriorTreatmentRequirementPlusIcon = () => cy.get('#array-item-list-root_prior_treatment_requirements>div>i:nth-child(1)')
+
 
 //Age
 export const getAgeGroup = () => cy.get('#root_age_group_age')
