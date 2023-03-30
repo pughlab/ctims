@@ -343,7 +343,7 @@ describe('CTIMS Trial Editor', () => {
     let testDataMatchingCriteria = [
       jsonVal.arm_code,
       jsonVal.arm_description,
-      jsonVal.arm_internal_id,
+      jsonVal.arm_internal_id.toString(),
       jsonVal.arm_suspended,
     ]
     cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((exportedCtmlModel) => {
@@ -351,7 +351,7 @@ describe('CTIMS Trial Editor', () => {
       let ctmlMatchingCriteria = [
         exportData.arm_code,
         exportData.arm_description,
-        exportData.arm_internal_id,
+        exportData.arm_internal_id.toString(),
         exportData.arm_suspended,
       ]
       // @ts-ignore
@@ -365,7 +365,7 @@ describe('CTIMS Trial Editor', () => {
     let testDataMatchingCriteria = [
       jsonVal.level_code,
       jsonVal.level_description,
-      jsonVal.level_internal_id,
+      jsonVal.level_internal_id.toString(),
       jsonVal.level_suspended
     ]
     cy.log(JSON.stringify(testDataMatchingCriteria))
@@ -374,7 +374,7 @@ describe('CTIMS Trial Editor', () => {
       let ctmlMatchingCriteria = [
         exportData.level_code,
         exportData.level_description,
-        exportData.level_internal_id,
+        exportData.level_internal_id.toString(),
         exportData.level_suspended
       ]
       // @ts-ignore
