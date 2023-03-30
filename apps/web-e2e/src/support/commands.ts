@@ -123,11 +123,11 @@ Cypress.Commands.add('trialInformation', (nctId: string,
   getDefaultTrialEditorDropDown().contains(status).click()
 });
 
-/*Cypress.Commands.add('priorTreatmentRequirement',(priorRequirement: string) => {
+Cypress.Commands.add('priorTreatmentRequirement',(priorRequirement: string) => {
   trialEditorLeftPanelList().eq(1).should('contain','Prior Treatment Requirements').click()
   getPriorTreatmentRequirementPlusIcon().click()
   getPriorTreatmentRequirement().click().type(priorRequirement)
-})*/
+})
 
 
 Cypress.Commands.add('priorTreatmentRequirementRepeatingGroup',(priorRequirement) => {
