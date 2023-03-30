@@ -63,11 +63,12 @@ import {
 import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib"
 const { deleteDownloadsFolderBeforeAll } = require('cypress-delete-downloads-folder');
 import * as yaml from 'js-yaml';
+import {invalidNCT02503722_Osimertinib} from "../fixtures/invalidNCT02503722_Osimertinib"
 
 describe('CTIMS Trial Editor', () => {
   before(() => cy.visit('/'));
   deleteDownloadsFolderBeforeAll()
-  it('should Validate the Trial Editor Page with invalid protocol number, drug name', () => {
+  it('should Validate the Trial Editor Page with invalid "protocol number, drug name ,staff list(first name) "', () => {
     cy.title().should('contain', 'CTIMS')
     trialEditorLeftPanelList().should('have.length', '9')
     cy.trialInformation(NCT02503722_Osimertinib.nct_id,
@@ -77,7 +78,7 @@ describe('CTIMS Trial Editor', () => {
       NCT02503722_Osimertinib.long_title,
       NCT02503722_Osimertinib.short_title,
       NCT02503722_Osimertinib.phase,
-      '123-456', //NCT02503722_Osimertinib.protocol_no
+      invalidNCT02503722_Osimertinib.protocol_no, //NCT02503722_Osimertinib.protocol_no
       NCT02503722_Osimertinib.nct_purpose,
       NCT02503722_Osimertinib.status)
     // Prior treatment requirements
@@ -86,13 +87,13 @@ describe('CTIMS Trial Editor', () => {
     cy.age(NCT02503722_Osimertinib.age)
 
     //Drug List
-    cy.drugList("Advil") //drug name
+    cy.drugList(invalidNCT02503722_Osimertinib.drug_list.drug[0].drug_name) //drug name
 
     //Management Group List has 1-text field and 1-Checkbox
     cy.managementGroupList(NCT02503722_Osimertinib.management_group_list.management_group[0].management_group_name,
       NCT02503722_Osimertinib.management_group_list.management_group[0].is_primary)
 
-    //Site List has 2-Text field and 2-checkbox
+    //Site List has 2-Text field
     cy.siteList(NCT02503722_Osimertinib.site_list.site[0].site_name,
       NCT02503722_Osimertinib.site_list.site[0].site_status,
       NCT02503722_Osimertinib.site_list.site[0].coordinating_center,
@@ -121,7 +122,7 @@ describe('CTIMS Trial Editor', () => {
       NCT02503722_Osimertinib.treatment_list.step[0].arm[0].dose_level[0].level_suspended)
     //Click on Plus Icon to add another Dose Level
   })
-  it('should validate the Matching criteria modal with invalid Age', () => {
+  it('should validate the Matching criteria modal with invalid " Clinical Age"', () => {
     //click Match criteria
     getEditMatchingCriteria().click()
     getDefaultTextMatchingCriteria().should('contain', 'Matching criteria inputs will be shown here.')
@@ -137,7 +138,7 @@ describe('CTIMS Trial Editor', () => {
     cy.clickClinical()
     //click child component Clinical to update the fields
     getLeftMenuComponent().eq(1).click()
-    getClinicalAge().type("Test Age")
+    getClinicalAge().type(invalidNCT02503722_Osimertinib.treatment_list.step[0].arm[0].match[0].and[0].clinical.age_numerical) // invalid
     getClinicalOncotreePrimaryDiagnosis().type(NCT02503722_Osimertinib.treatment_list.step[0].arm[0].match[0].and[0].clinical.oncotree_primary_diagnosis)
     cy.clickParentNode(0)
     cy.clickOr()
@@ -171,7 +172,8 @@ describe('CTIMS Trial Editor', () => {
     getMatchModalFooterButtons().eq(1).should('be.enabled').contains('Save matching criteria').click()
   })
 
-  it('should validate the "Matching criteria" Json preview matches with "NCT02503722_Osimertinib" ', () => {
+  it('should validate the "Matching criteria" Json preview matches with "NCT02503722_Osimertinib","Age does not' +
+    ' match"', () => {
     getMatchingCriteriaTableHeader().contains('JSON').click()
     cy.get('.CtimsMatchingCriteriaWidget_pre-tag__gyYSW').invoke("text").then((text) => {
       const jsonArray = JSON.parse(text);
@@ -189,10 +191,8 @@ describe('CTIMS Trial Editor', () => {
 
   it('should compare "Matching criteria" of "JSON" preview matches with "YAML" preview ',  () => {
     getMatchingCriteriaTableHeader().contains('YAML').click()
-    // let jsonMatchCriteria =
     cy.get('.CtimsMatchingCriteriaWidget_pre-tag__gyYSW').invoke("text").then((yamlText) => {
       const yamlObject = yaml.load(yamlText)
-      // const jsonArray = JSON.parse(text);
       const yamlMatchCriteria = JSON.stringify(yamlObject)
       cy.log(yamlMatchCriteria);
       getMatchingCriteriaTableHeader().contains('JSON').click()

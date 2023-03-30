@@ -259,7 +259,7 @@ describe('CTIMS Trial Editor', () => {
     })
   });
 
-  it.skip('test',  () => {
+  /*it.skip('test',  () => {
     cy.readCtmlModelFile().then((exportedTrialInformation) => {
       let testDataTrialInformation = [
         NCT02503722_Osimertinib.nct_id,
@@ -272,7 +272,7 @@ describe('CTIMS Trial Editor', () => {
       ]
       cy.compareArrays(exportedTrialInformation, testDataTrialInformation.toString()) //to convert into single array
     })
-  });
+  });*/
 
   it('should validate the match of the "Age" values',  () => {
     let rawData = NCT02503722_Osimertinib.age
