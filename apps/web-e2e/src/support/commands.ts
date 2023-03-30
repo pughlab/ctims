@@ -123,10 +123,85 @@ Cypress.Commands.add('trialInformation', (nctId: string,
   getDefaultTrialEditorDropDown().contains(status).click()
 });
 
-Cypress.Commands.add('priorTreatmentRequirement',(priorRequirement: string) => {
+/*Cypress.Commands.add('priorTreatmentRequirement',(priorRequirement: string) => {
   trialEditorLeftPanelList().eq(1).should('contain','Prior Treatment Requirements').click()
   getPriorTreatmentRequirementPlusIcon().click()
   getPriorTreatmentRequirement().click().type(priorRequirement)
+})*/
+
+
+Cypress.Commands.add('priorTreatmentRequirementRepeatingGroup',(priorRequirement) => {
+  cy.log('before click')
+  let isFirstValueEntered
+  getPriorTreatmentRequirementPlusIcon().click()
+  cy.get('[id^="root_prior_treatment_requirements_"]').each(($el,index) => {
+   const val = $el.attr('id')
+    cy.log('Attribute value',val)
+    cy.log('index', String(index))
+    // @ts-ignore
+    cy.log('we are at ',$el)
+    // if ($el.attr('id').includes('root_prior_treatment_requirements_1')) {
+    //if(index === 0 ) {
+    cy.wait(1000)
+    if(val.includes('root_prior_treatment_requirements_0') ) {
+      cy.wait(1000)
+      cy.log('are we at index 0?')
+      getPriorTreatmentRequirementRegularExpression().eq(0).click().type(priorRequirement)
+      cy.log('text box1 contains',priorRequirement)
+      //getPriorTreatmentRequirementPlusIcon().click()
+      //breakParent
+      /*isFirstValueEntered = true;
+      return false;*/
+    }
+     if(val.includes('root_prior_treatment_requirements_1') ) {
+      cy.wait(1000)
+      getPriorTreatmentRequirementRegularExpression().eq(1).click().type(priorRequirement)
+       cy.log('text box2 contains',priorRequirement)
+      //getPriorTreatmentRequirementPlusIcon().click()
+
+     /*  isFirstValueEntered = true;
+       return false;*/
+    }
+   if(val.includes('root_prior_treatment_requirements_2') ) {
+      cy.wait(1000)
+      getPriorTreatmentRequirementRegularExpression().eq(2).click().type(priorRequirement)
+      cy.log('text box3 contains',priorRequirement)
+      //getPriorTreatmentRequirementPlusIcon().click()
+
+      // getPriorTreatmentRequirementPlusIcon().click()
+    /* isFirstValueEntered = true;
+     return false;*/
+   }
+
+     })
+ /* priorRequirement.forEach((requirement,index) => {
+    if(index === 1) {
+      getPriorTreatmentRequirementRegularExpression().eq(1).click().type(requirement)
+      cy.log(requirement)
+    }
+    else if(index === 2) {
+      cy.log(requirement)
+      getPriorTreatmentRequirementRegularExpression().eq(2).click().type(requirement)
+      cy.log(requirement)
+    }*!/
+    /!*if(getPriorTreatmentRequirementRegularExpression().contains('root_prior_treatment_requirements_1')) {
+      getPriorTreatmentRequirementRegularExpression().click().type(requirement)
+    } else if(getPriorTreatmentRequirementRegularExpression().contains('root_prior_treatment_requirements_1')) {
+      getPriorTreatmentRequirementRegularExpression().click().type(requirement)
+    }*/
+  //})
+  /*cy.get('[id^="root_prior_treatment_requirements_"]').each(($el,index) => {
+   // if ($el.attr('id').includes('root_prior_treatment_requirements_1')) {
+    if(index === 1 ) {
+      //|| $el.attr('id').includes('root_prior_treatment_requirements_2')) {
+      // cy.wrap($el).each(($el2) => {
+      cy.wrap($el).click().type(priorRequirement);
+      //  });
+    } //else if ($el.attr('id').includes('root_prior_treatment_requirements_2')) {
+    if(index === 2 ) {
+      cy.wrap($el).click().type(priorRequirement);
+    }*/
+  // })
 })
 
 Cypress.Commands.add('age',(ageGroup: string) => {
