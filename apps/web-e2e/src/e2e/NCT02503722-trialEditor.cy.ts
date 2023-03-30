@@ -68,7 +68,7 @@ describe('CTIMS Trial Editor', () => {
   before(() => cy.visit('/'));
   //deleteDownloadsFolderBeforeAll()
    it('should Validate the Trial Editor Page', () => {
-    /* cy.title().should('contain', 'CTIMS')
+     cy.title().should('contain', 'CTIMS')
      trialEditorLeftPanelList().should('have.length', '9')
      cy.trialInformation(NCT02503722_Osimertinib.nct_id,
        "My Trial",
@@ -79,11 +79,11 @@ describe('CTIMS Trial Editor', () => {
        NCT02503722_Osimertinib.phase,
        NCT02503722_Osimertinib.protocol_no,
        NCT02503722_Osimertinib.nct_purpose,
-       NCT02503722_Osimertinib.status)*/
+       NCT02503722_Osimertinib.status)
      // Prior treatment requirements
      cy.priorTreatmentRequirement(NCT02503722_Osimertinib.prior_treatment_requirements[0])
 
-     /* //Age
+      //Age
       cy.age(NCT02503722_Osimertinib.age)
 
       //Drug List
@@ -121,7 +121,7 @@ describe('CTIMS Trial Editor', () => {
         NCT02503722_Osimertinib.treatment_list.step[0].arm[0].dose_level[0].level_internal_id.toString(),
         NCT02503722_Osimertinib.treatment_list.step[0].arm[0].dose_level[0].level_suspended)
       //Click on Plus Icon to add another Dose Level
- */
+
    })
   it('should validate the match of the "Prior treatment requirement" values',  () => {
     cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf8').then((downloadData) => {
