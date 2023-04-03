@@ -26,5 +26,6 @@ declare namespace Cypress {
     priorTreatmentRequirementRepeatingGroup(priorRequirement: string)
     readCtmlModelFile(readValue: string[])
     compareArrays(actual:string[], expected:string[])
+    clickMultiple(selector:string, times:number)
   }
 }

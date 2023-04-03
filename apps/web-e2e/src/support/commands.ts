@@ -214,6 +214,12 @@ Cypress.Commands.add('drugList',(drugName: string) => {
   getDrugName().type(drugName)
 })
 
+Cypress.Commands.add('clickMultiple',(selector, times) => {
+  for (let i = 0; i < times; i++) {
+    cy.get(selector).click();
+  }
+})
+
 Cypress.Commands.add('managementGroupList',(managementGroupName: string, isPrimary: string) => {
   trialEditorLeftPanelList().eq(4).should('contain','Management Group List').click()
   getManagementGroupName().click()
