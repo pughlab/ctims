@@ -21,7 +21,7 @@ import {
   getClinicalOncotreePrimaryDiagnosis,
   getClinicalPRStatus,
   getCtmlStatusDropdown,
-  getDefaultTextMatchingCriteria,
+  getDefaultTextMatchingCriteria, getDefaultTrialEditorDropDown,
   getDrugName,
   getEditMatchingCriteria,
   getGenomicDropDown,
@@ -88,35 +88,30 @@ describe('CTIMS Trial Editor', () => {
 */
     //Age
     //cy.age(NCT03297606_CAPTUR.age)
-    /*NCT03297606_CAPTUR.drug_list.drug.forEach((el)=> {
-      if(el.drug_name.length !== null) {
-        cy.get('#array-item-list-root_drug_list_drug>div>.pi-plus-circle').click()
-        return false
-}*/
-    function clickMultiple(selector, times) {
-      for (let i = 0; i < times; i++) {
-        cy.get(selector).click();
+
+    //Drug List
+    /* cy.clickMultiple('#array-item-list-root_drug_list_drug>div>.pi-plus-circle',
+      NCT03297606_CAPTUR.drug_list.drug.length-1);
+
+       cy.get('[id^=root_drug_list_drug]').each((input, index) => {
+         // check if there is a corresponding value in the array
+         if (NCT03297606_CAPTUR.drug_list.drug[index]) {
+           // enter the value into the text box
+           cy.wrap(input).type(NCT03297606_CAPTUR.drug_list.drug[index].drug_name);
+         }
+     })*/
+
+    //Management Group List has 5-text field and 5-Buttons
+    cy.clickMultiple('#array-item-list-root_management_group_list_management_group>div>.pi-plus-circle',
+      NCT03297606_CAPTUR.management_group_list.management_group.length-1);
+    cy.get('[id^=root_management_group_list_management_group]').each((input, index) => {
+      // check if there is a corresponding value in the array
+      if (NCT03297606_CAPTUR.management_group_list.management_group[index]) {
+        // enter the value into the text box
+        cy.wrap(input).click()
+          getDefaultTrialEditorDropDown().contains(NCT03297606_CAPTUR.management_group_list.management_group[index].management_group_name).click();
       }
-    }
-    clickMultiple('#array-item-list-root_drug_list_drug>div>.pi-plus-circle', NCT03297606_CAPTUR.drug_list.drug.length-1);
-
-      cy.get('[id^=root_drug_list_drug]').each((input, index) => {
-
-        // check if there is a corresponding value in the array
-        if (NCT03297606_CAPTUR.drug_list.drug[index]) {
-          // enter the value into the text box
-          cy.wrap(input).type(NCT03297606_CAPTUR.drug_list.drug[index].drug_name);
-          cy.wait(1000)
-          // cy.get('#array-item-list-root_drug_list_drug>div>.pi-plus-circle').click()
-
-        }
-
-     // })
     })
-
-    //cy.drugList(NCT03297606_CAPTUR.drug_list.drug[0].drug_name)
-
-    //Management Group List has 1-text field and 1-Checkbox
     /* cy.managementGroupList(NCT03297606_CAPTUR.management_group_list.management_group[0].management_group_name,
        NCT03297606_CAPTUR.management_group_list.management_group[0].is_primary)
 
