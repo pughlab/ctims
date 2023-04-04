@@ -7,6 +7,7 @@ import {Theme as PrimeTheme} from "../primereact";
 import TreeNode from "primereact/treenode";
 import {ClinicalForm} from "./forms/ClinicalForm";
 import {GenomicForm} from "./forms/GenomicForm";
+import {EmptyHelper} from "./forms/EmptyHelper";
 
 
 const RjsfForm = withTheme(PrimeTheme)
@@ -62,6 +63,9 @@ const MatchingMenuAndForm = (props: any) => {
       break;
     case EComponentType.GenomicForm:
       ComponentToRender = GenomicForm;
+      break;
+    case EComponentType.AndOROperator:
+      ComponentToRender = EmptyHelper;
       break;
     default:
       ComponentToRender = (props: any) => null;

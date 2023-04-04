@@ -67,7 +67,7 @@ export const buildEmptyGroup = (label: string): TreeNode[] => {
       key: '0',
       label: label, // AND/OR
       icon: label.toLowerCase() === 'and' ? 'and-icon' : 'or-icon',
-      data: {},
+      data: {type: EComponentType.AndOROperator},
       children: []
     }
   ];
@@ -79,7 +79,7 @@ export const buildRootNodes = (rootLabel: string, firstChildLabel: string): Tree
     {
       key: '0',
       label: rootLabel, // AND/OR
-      data: {},
+      data: {type: EComponentType.AndOROperator},
       children: [
         {
           key: uuidv4(),

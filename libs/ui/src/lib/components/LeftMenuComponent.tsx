@@ -183,7 +183,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           setRootNodes(roodNodes);
           setSelectedNode(roodNodes[0]);
           setSelectedKeys(firstSelectedKey)
-          onTreeNodeClick(EComponentType.None, roodNodes[0]);
+          onTreeNodeClick(EComponentType.AndOROperator, roodNodes[0]);
         } else {
           const roodNodes = buildRootNodes(rootLabel, firstChildLabel);
           setRootNodesState(roodNodes);
@@ -240,7 +240,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           key: uuidv4(),
           label,
           icon: label === 'And' ? 'and-icon' : 'or-icon',
-          data: {},
+          data: {type: EComponentType.AndOROperator},
           children: []
         };
         parentNode.children!.push(newNode);
