@@ -27,5 +27,6 @@ declare namespace Cypress {
     readCtmlModelFile(readValue: string[])
     compareArrays(actual:string[], expected:string[])
     clickMultiple(selector:string, times:number)
+    clickMultipleArm(selector:string, times:number)
   }
 }
