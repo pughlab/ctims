@@ -129,7 +129,7 @@ describe('CTIMS Trial Editor', () => {
        NCT03297606_CAPTUR.site_list.site[0].coordinating_center,
        NCT03297606_CAPTUR.site_list.site[0].uses_cancer_center_irb)
 
-     //Sponsor List - done
+     //Sponsor List array of 5 values - done
     cy.clickMultiple('#array-item-list-root_sponsor_list_sponsor>div>.pi-plus-circle',
       NCT03297606_CAPTUR.sponsor_list.sponsor.length-1)
     cy.get('[id^=root_sponsor_list_sponsor]').each((input) => {
@@ -182,7 +182,32 @@ describe('CTIMS Trial Editor', () => {
 
      //Arm code
     cy.clickMultipleArm('[id^=array-item-list-root_treatment_list_step_0_arm]>div>div',
-      NCT03297606_CAPTUR.treatment_list.step[0].arm.length-1);    /* cy.arm(NCT03297606_CAPTUR.treatment_list.step[0].arm[0].arm_code,
+      NCT03297606_CAPTUR.treatment_list.step[0].arm.length-1);
+    //[id^=root_treatment_list_step_0_arm][id$=arm]
+    //[id^=root_treatment_list_step_0_arm(.*)_arm]
+    cy.get(`[id^=root_treatment_list_step_0_arm_]`).each(($input,index1) => {
+      cy.log('Selected input:', $input.attr('id'));
+      NCT03297606_CAPTUR.treatment_list.step[0].arm.map((element, index) => {
+        cy.log('Processing element:', element);
+
+        if ($input.attr('id').includes('arm_code')) {
+          cy.wrap($input).type(NCT03297606_CAPTUR.treatment_list.step[0].arm[index].arm_code);
+        }
+        if ($input.attr('id').includes('arm_description')) {
+          cy.wrap($input).type(NCT03297606_CAPTUR.treatment_list.step[0].arm[index].arm_description)
+        }
+        if ($input.attr('id').includes('arm_internal_id')) {
+          cy.wrap($input).type(NCT03297606_CAPTUR.treatment_list.step[0].arm[index].arm_internal_id.toString())
+        }
+        if ($input.attr('id').includes('arm_suspended')) {
+          cy.wrap($input).click().contains(NCT03297606_CAPTUR.treatment_list.step[0].arm[index].arm_suspended).click()
+        }
+
+
+      })
+    })
+
+    /* cy.arm(NCT03297606_CAPTUR.treatment_list.step[0].arm[0].arm_code,
        NCT03297606_CAPTUR.treatment_list.step[0].arm[0].arm_description,
        NCT03297606_CAPTUR.treatment_list.step[0].arm[0].arm_internal_id,
        NCT03297606_CAPTUR.treatment_list.step[0].arm[0].arm_suspended)
