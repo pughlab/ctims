@@ -197,6 +197,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
                   "type": "string",
                   "title": "Management Group Name",
                   "enum": [
+                    "BCCA - Vancouver Cancer Centre",
                     "Princess Margaret Cancer Centre",
                     "Cancer Centre of Southeastern Ontario at Kingston General Hospital",
                     "London Health Sciences Centre",
