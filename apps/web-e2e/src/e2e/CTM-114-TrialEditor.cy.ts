@@ -83,13 +83,21 @@ describe('CTIMS Trial Editor', () => {
       NCT03297606_CAPTUR.nct_purpose,
       NCT03297606_CAPTUR.status)
 
-    // Prior treatment requirements
-    cy.priorTreatmentRequirement(NCT03297606_CAPTUR.prior_treatment_requirements[0])
-*/
-    //Age
+    // Prior treatment requirements - Done
+    cy.clickMultiple('#array-item-list-root_prior_treatment_requirements>div>.pi-plus-circle',
+    NCT03297606_CAPTUR.prior_treatment_requirements.length);
+    cy.get('[id^=root_prior_treatment_requirements]').each((input, index) => {
+      // check if there is a corresponding value in the array
+      if (NCT03297606_CAPTUR.prior_treatment_requirements[index]) {
+        // enter the value into the text box
+        cy.wrap(input).type(NCT03297606_CAPTUR.prior_treatment_requirements[index]);
+      }
+    })
+    */
+    //Age - Done
     //cy.age(NCT03297606_CAPTUR.age)
 
-    //Drug List
+    //Drug List - Done
     /* cy.clickMultiple('#array-item-list-root_drug_list_drug>div>.pi-plus-circle',
       NCT03297606_CAPTUR.drug_list.drug.length-1);
 
@@ -101,7 +109,7 @@ describe('CTIMS Trial Editor', () => {
          }
      })*/
 
-   /* //Management Group List has 5-text field and 5-Buttons
+   /* //Management Group List - not done
     cy.clickMultiple('#array-item-list-root_management_group_list_management_group>div>.pi-plus-circle',
       NCT03297606_CAPTUR.management_group_list.management_group.length-1);
     cy.get('[id^=root_management_group_list_management_group]').each((input, index) => {
@@ -115,104 +123,71 @@ describe('CTIMS Trial Editor', () => {
     /* cy.managementGroupList(NCT03297606_CAPTUR.management_group_list.management_group[0].management_group_name,
        NCT03297606_CAPTUR.management_group_list.management_group[0].is_primary)
 
-     //Site List has 2-Text field and 2-checkbox
+     //Site List - not done
      cy.siteList(NCT03297606_CAPTUR.site_list.site[0].site_name,
        NCT03297606_CAPTUR.site_list.site[0].site_status,
        NCT03297606_CAPTUR.site_list.site[0].coordinating_center,
        NCT03297606_CAPTUR.site_list.site[0].uses_cancer_center_irb)
-*/
-     //Sponsor List
+
+     //Sponsor List - done
     cy.clickMultiple('#array-item-list-root_sponsor_list_sponsor>div>.pi-plus-circle',
       NCT03297606_CAPTUR.sponsor_list.sponsor.length-1)
-   /* cy.get('[id^=root_sponsor_list_sponsor]').each((inputGroup, index) => {
-      const sponsor = NCT03297606_CAPTUR.sponsor_list.sponsor[index];
-
-      if (sponsor) {
-        const sponsorName = sponsor.sponsor_name;
-        const isPrincipalSponsor = sponsor.is_principal_sponsor;
-    // Enter the sponsor name into the corresponding text box
-        const textBox = cy.wrap(inputGroup).find('#root_sponsor_list_sponsor_' + index + '_sponsor_name');
-        textBox.type(sponsorName);
-        cy.wait(1000);
-
-       /!* // Enter the sponsor name into the corresponding text box
-        const textBox = cy.wrap(inputGroup).find('.p-inputtext').eq(index);
-        textBox.type(sponsorName);
-        cy.wait(1000);*!/
-
-        // Click on the corresponding button
-      /!*  const button = cy.wrap(inputGroup).find('root_sponsor_list_sponsor_' + index + '_is_principal_sponsor');
-        button.contains(isPrincipalSponsor).click();
-        cy.wait(1000);*!/
-      }
-    });*/
-   // cy.clickMultiple('#array-item-list-root_sponsor_list_sponsor>div>.pi-plus-circle',
-    // NCT03297606_CAPTUR.sponsor_list.sponsor.join('').split(',').length-1)
-
-  /*  cy.get('[id^=root_sponsor_list_sponsor]').each((allVal,index) => {
-      cy.log(`Value ${index}: ${allVal.attr('id')}`)
-      cy.log('outside loop')
-    })*/
-     /* // @ts-ignore
-     // if(allVal.find('.p-inputtext') === true) {
-      if (NCT03297606_CAPTUR.sponsor_list.sponsor[index]) {
-
-        cy.log('inside loop')
-        const tt = allVal.attr('id').includes('.p-inputtext')
-        cy.wrap(allVal).contains('.p-inputtext').type(NCT03297606_CAPTUR.sponsor_list.sponsor[index].sponsor_name);
-
-       // return false
-      }
-     // else if (allVal.find('.p-selectbutton')) {
-       if(NCT03297606_CAPTUR.sponsor_list.sponsor[index]) {
-          cy.wrap(allVal).find('.p-selectbutton').contains(NCT03297606_CAPTUR.sponsor_list.sponsor[index].is_principal_sponsor).click()
-//return false
-      }
-    })*/
-  /*  //contain all the sponsor list buttons
-    cy.get('[id^=root_sponsor_list_sponsor].p-selectbutton').each((input, index) => {
-      // check if there is a corresponding value in the array
-      if (NCT03297606_CAPTUR.sponsor_list.sponsor[index]) {
-        // enter the value into the text box
-        cy.wrap(input).contains(NCT03297606_CAPTUR.sponsor_list.sponsor[index].is_principal_sponsor).click();
-        // cy.wait(1000)
-      }
-    })*/
-    /*cy.clickMultiple('#array-item-list-root_sponsor_list_sponsor>div>.pi-plus-circle',
-    NCT03297606_CAPTUR.sponsor_list.sponsor.join('').split(',').length-1)*/
-    //contains all the sponsor list text box
-    cy.get('[id^=root_sponsor_list_sponsor].p-inputtext').each((input, index) => {
-    // check if there is a corresponding value in the array
-    if (NCT03297606_CAPTUR.sponsor_list.sponsor[index]) {
-      // enter the value into the text box
-      cy.wrap(input).type(NCT03297606_CAPTUR.sponsor_list.sponsor[index].sponsor_name);
-      //cy.wait(1000)
-    }
+    cy.get('[id^=root_sponsor_list_sponsor]').each((input) => {
+      NCT03297606_CAPTUR.staff_list.protocol_staff.map((element, index) => {
+        if (input.attr('id').includes('sponsor_name')) {
+          // enter the value into the text box
+          cy.wrap(input).type(NCT03297606_CAPTUR.sponsor_list.sponsor[index].sponsor_name);
+        }
+        if (input.attr('class').includes('p-button')) {
+          //click the button
+          cy.wrap(input).contains(NCT03297606_CAPTUR.sponsor_list.sponsor[index].is_principal_sponsor).click();
+        }
+      })
     })
-    //contain all the sponsor list buttons
-    cy.get('[id^=root_sponsor_list_sponsor].p-selectbutton').each((input, index) => {
-     // check if there is a corresponding value in the array
-     if (NCT03297606_CAPTUR.sponsor_list.sponsor[index]) {
-       // enter the value into the text box
-       cy.wrap(input).contains(NCT03297606_CAPTUR.sponsor_list.sponsor[index].is_principal_sponsor).click();
-      // cy.wait(1000)
-     }
-    })
-    /*
 
-     //Staff List
-     cy.staffList(NCT03297606_CAPTUR.staff_list.protocol_staff[0].first_name,
-       NCT03297606_CAPTUR.staff_list.protocol_staff[0].last_name,
-       NCT03297606_CAPTUR.staff_list.protocol_staff[0].email_address,
-       NCT03297606_CAPTUR.staff_list.protocol_staff[0].institution_name,
-       NCT03297606_CAPTUR.staff_list.protocol_staff[0].staff_role)
+     */
+/*
+
+    //Staff List - Done
+    cy.clickMultiple('#array-item-list-root_drug_list_drug>div>.pi-plus-circle',
+      NCT03297606_CAPTUR.staff_list.protocol_staff.length-1);
+       cy.get('[id^=root_staff_list_protocol_staff_0_]').each(($input) => {
+         // check if there is a corresponding value in the array
+         NCT03297606_CAPTUR.staff_list.protocol_staff.map((element,index) => {
+
+           if ($input.attr('id').includes('first_name')) {
+             cy.log('first_name found', $input.attr('id'));
+             cy.wrap($input).type(NCT03297606_CAPTUR.staff_list.protocol_staff[index].first_name);
+           }
+           if ($input.attr('id').includes('last_name')) {
+             cy.log('last_name found', $input.attr('id'));
+             cy.log(NCT03297606_CAPTUR.staff_list.protocol_staff[index].last_name)
+              cy.wrap($input).type(NCT03297606_CAPTUR.staff_list.protocol_staff[index].last_name);
+           }
+           if ($input.attr('id').includes('email_address')) {
+             cy.log('last_name found', $input.attr('id'));
+             cy.wrap($input).type(NCT03297606_CAPTUR.staff_list.protocol_staff[index].email_address);
+           }
+           if ($input.attr('id').includes('institution_name')) {
+             cy.log('last_name found', $input.attr('id'));
+             cy.wrap($input).click().contains(NCT03297606_CAPTUR.staff_list.protocol_staff[index].institution_name).click();
+           }
+           if ($input.attr('id').includes('staff_role')) {
+             cy.log('last_name found', $input.attr('id'));
+             cy.wrap($input).click().contains(NCT03297606_CAPTUR.staff_list.protocol_staff[index].staff_role).click();
+           }
+         })
+       })
+*/
 
      //Arm code
-     cy.arm(NCT03297606_CAPTUR.treatment_list.step[0].arm[0].arm_code,
+    cy.clickMultipleArm('[id^=array-item-list-root_treatment_list_step_0_arm]>div>div',
+      NCT03297606_CAPTUR.treatment_list.step[0].arm.length-1);    /* cy.arm(NCT03297606_CAPTUR.treatment_list.step[0].arm[0].arm_code,
        NCT03297606_CAPTUR.treatment_list.step[0].arm[0].arm_description,
        NCT03297606_CAPTUR.treatment_list.step[0].arm[0].arm_internal_id,
        NCT03297606_CAPTUR.treatment_list.step[0].arm[0].arm_suspended)
-
+*/
+    /*
      //Level code
      cy.doseLevel(NCT03297606_CAPTUR.treatment_list.step[0].arm[0].dose_level[0].level_code,
        NCT03297606_CAPTUR.treatment_list.step[0].arm[0].dose_level[0].level_description,
