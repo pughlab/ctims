@@ -156,18 +156,29 @@ describe('CTIMS Trial Editor', () => {
     cy.get('#array-item-list-root_treatment_list_step_0_arm_0_dose_level > .flex > .p-panel >' +
       ' .ctimsPanelHeaderTopArm > div > .p-panel-header-icon > .pi').click()
     cy.wait(1000)
-    //root_treatment_list_step_0_arm_0_arm_code
-    //object-field-template-root_treatment_list_step_0_arm_0
-    //object-field-template-root_treatment_list_step_0_arm_0_dose_level_0 only dose level
-    //root_treatment_list_step_0_arm_0_dose_level_0_level_code
-   // cy.get('[id^=root_treatment_list_step_0_arm]')
-    cy.get('[id^=object-field-template-root_treatment_list_step_0_arm]').each(($input, index) => {
+   /* cy.get('[id^=object-field-template-root_treatment_list_step_0_arm]').each(($input, index) => {
       cy.log($input.attr('id'));
      cy.get('#root_treatment_list_step_0_arm_'+index+'_arm_code').type(NCT03297606_CAPTUR.treatment_list.step[0].arm[index].arm_code);
       cy.get('#root_treatment_list_step_0_arm_'+index+'_arm_description').type(NCT03297606_CAPTUR.treatment_list.step[0].arm[index].arm_description);
       cy.get('#root_treatment_list_step_0_arm_'+index+'_arm_internal_id').type(NCT03297606_CAPTUR.treatment_list.step[0].arm[index].arm_internal_id.toString());
      cy.get('#root_treatment_list_step_0_arm_'+index+'_arm_suspended').contains(NCT03297606_CAPTUR.treatment_list.step[0].arm[index].arm_suspended).click();
-    });
+    });*/
+   /* cy.get('#array-item-list-root_treatment_list_step_0_arm_0_dose_level > .flex > .p-panel >' +
+      ' .ctimsPanelHeaderTopArm > div > .p-panel-header-icon > .pi').click()
+*/
+// multiple Dose Level (Level 6 has 2 dose level and Level 7 has one dose level)
+    NCT03297606_CAPTUR.treatment_list.step[0].arm.forEach((arm,index) => {
+      cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]>div>div`).contains('Add Dose' +
+        ' Level').click();
+    })
+
+   /* cy.get('[id^=object-field-template-root_treatment_list_step_0_arm]').each(($input, index) => {
+      cy.log($input.attr('id'));
+      cy.get('#root_treatment_list_step_0_arm_'+index+'_arm_code').type(NCT03297606_CAPTUR.treatment_list.step[0].arm[index].arm_code);
+      cy.get('#root_treatment_list_step_0_arm_'+index+'_arm_description').type(NCT03297606_CAPTUR.treatment_list.step[0].arm[index].arm_description);
+      cy.get('#root_treatment_list_step_0_arm_'+index+'_arm_internal_id').type(NCT03297606_CAPTUR.treatment_list.step[0].arm[index].arm_internal_id.toString());
+      cy.get('#root_treatment_list_step_0_arm_'+index+'_arm_suspended').contains(NCT03297606_CAPTUR.treatment_list.step[0].arm[index].arm_suspended).click();
+    });*/
     /*
      //Level code
      cy.doseLevel(NCT03297606_CAPTUR.treatment_list.step[0].arm[0].dose_level[0].level_code,

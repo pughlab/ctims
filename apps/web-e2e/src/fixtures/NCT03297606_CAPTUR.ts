@@ -173,15 +173,21 @@ export const NCT03297606_CAPTUR: Ctml3 =
       {
         "arm": [
           {
-            "arm_code": "Group 1",
-            "arm_description": "Experimental: Group 1",
-            "arm_internal_id": 1,
+            "arm_code": "Group 6",
+            "arm_description": "Experimental: Group 6",
+            "arm_internal_id": 6,
             "arm_suspended": "N",
             "dose_level": [
               {
-                "level_code": "Axitinib",
-                "level_description": "5mg orally twice daily",
-                "level_internal_id": 1,
+                "level_code": "Nivolumab plus Ipilimumab",
+                "level_description": "Combination Phase - 3mg/kg nivolumab administered as an intravenous infusion over 30 minutes every 3 weeks for the first 4 doses in combination with ipilmumab 1mg/kg administered intravenously over 30 minutes, followed by the single-agent phase.",
+                "level_internal_id": 6,
+                "level_suspended": "N"
+              },
+              {
+                "level_code": "Nivolumab",
+                "level_description": "Single-Agent Phase - 480mg nivolumab administered as an intravenous infusion over 30 minutes every 4 weeks.",
+                "level_internal_id": 7,
                 "level_suspended": "N"
               }
             ],
@@ -192,201 +198,13 @@ export const NCT03297606_CAPTUR: Ctml3 =
                     "or": [
                       {
                         "genomic": {
-                          "cnv_call": "High level amplification",
-                          "hugo_symbol": "FLT1",
-                          "variant_category": "Copy Number Variation"
-                        }
-                      },
-                      {
-                        "genomic": {
-                          "hugo_symbol": "FLT1",
+                          "hugo_symbol": "POLE",
                           "variant_category": "Mutation"
                         }
                       },
                       {
                         "genomic": {
-                          "cnv_call": "High level amplification",
-                          "hugo_symbol": "KDR",
-                          "variant_category": "Copy Number Variation"
-                        }
-                      },
-                      {
-                        "genomic": {
-                          "hugo_symbol": "KDR",
-                          "variant_category": "Mutation"
-                        }
-                      },
-                      {
-                        "genomic": {
-                          "cnv_call": "High level amplification",
-                          "hugo_symbol": "FLT4",
-                          "variant_category": "Copy Number Variation"
-                        }
-                      },
-                      {
-                        "genomic": {
-                          "hugo_symbol": "FLT4",
-                          "variant_category": "Mutation"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "clinical": {
-                      "age_numerical": ">=18",
-                      "oncotree_primary_diagnosis": "!Renal Cell Carcinoma"
-                    }
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "arm_code": "Group 2",
-            "arm_description": "Experimental: Group 2",
-            "arm_internal_id": 2,
-            "arm_suspended": "N",
-            "dose_level": [
-              {
-                "level_code": "Bosutinib",
-                "level_description": "500mg orally once daily",
-                "level_internal_id": 2,
-                "level_suspended": "N"
-              }
-            ],
-            "match": [
-              {
-                "and": [
-                  {
-                    "or": [
-                      {
-                        "genomic": {
-                          "display_name": "BCR-ABL1",
-                          "fusion_partner_hugo_symbol": "ABL1",
-                          "hugo_symbol": "BCR",
-                          "molecular_function": "Activating",
-                          "variant_category": "Structural Variation"
-                        }
-                      },
-                      {
-                        "genomic": {
-                          "hugo_symbol": "SRC",
-                          "molecular_function": "Activating",
-                          "variant_category": "Mutation"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "clinical": {
-                      "age_numerical": ">=18",
-                      "oncotree_primary_diagnosis": "!Chronic Myelogenous Leukemia"
-                    }
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "arm_code": "Group 3",
-            "arm_description": "Experimental: Group 3",
-            "arm_internal_id": 3,
-            "arm_suspended": "N",
-            "dose_level": [
-              {
-                "level_code": "Crizotinib",
-                "level_description": "250mg orally twice daily",
-                "level_internal_id": 3,
-                "level_suspended": "N"
-              }
-            ],
-            "match": [
-              {
-                "and": [
-                  {
-                    "or": [
-                      {
-                        "genomic": {
-                          "hugo_symbol": "ALK",
-                          "variant_category": "Structural Variation"
-                        }
-                      },
-                      {
-                        "genomic": {
-                          "hugo_symbol": "ROS1",
-                          "variant_category": "Mutation",
-                          "molecular_function": "Activating"
-                        }
-                      },
-                      {
-                        "genomic": {
-                          "cnv_call": "High Amplication",
-                          "hugo_symbol": "MET",
-                          "variant_category": "Copy Number Variation"
-                        }
-                      },
-                      {
-                        "genomic": {
-                          "hugo_symbol": "MET",
-                          "variant_category": "Mutation",
-                          "molecular_function": "Activating"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "clinical": {
-                      "age_numerical": ">=18",
-                      "oncotree_primary_diagnosis": "!Non-Small Cell Lung Cancer"
-                    }
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "arm_code": "Group 4",
-            "arm_description": "Experimental: Group 4",
-            "arm_internal_id": 4,
-            "arm_suspended": "N",
-            "dose_level": [
-              {
-                "level_code": "Dasatinib",
-                "level_description": "100mg administered orally once daily",
-                "level_internal_id": 4,
-                "level_suspended": "N"
-              }
-            ],
-            "match": [
-              {
-                "and": [
-                  {
-                    "or": [
-                      {
-                        "genomic": {
-                          "hugo_symbol": "KIT",
-                          "molecular_function": "Activating",
-                          "variant_category": "Mutation"
-                        }
-                      },
-                      {
-                        "genomic": {
-                          "hugo_symbol": "PDGFRA",
-                          "molecular_function": "Activating",
-                          "variant_category": "Mutation"
-                        }
-                      },
-                      {
-                        "genomic": {
-                          "hugo_symbol": "PDGFRB",
-                          "molecular_function": "Activating",
-                          "variant_category": "Mutation"
-                        }
-                      },
-                      {
-                        "genomic": {
-                          "hugo_symbol": "ABL1",
-                          "molecular_function": "Activating",
+                          "hugo_symbol": "POLD1",
                           "variant_category": "Mutation"
                         }
                       }
@@ -397,13 +215,50 @@ export const NCT03297606_CAPTUR: Ctml3 =
                       {
                         "clinical": {
                           "age_numerical": ">=18",
-                          "oncotree_primary_diagnosis": "!Chronic Myelogenous Leukemia"
+                          "oncotree_primary_diagnosis": "!Melanoma"
                         }
                       },
                       {
                         "clinical": {
                           "age_numerical": ">=18",
-                          "oncotree_primary_diagnosis": "!Gastrointestinal Stromal Tumor"
+                          "oncotree_primary_diagnosis": "!Non-Small Cell Lung Cancer"
+                        }
+                      },
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "!Small Cell Lung Cancer"
+                        }
+                      },
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "!Renal Cell Carcinoma"
+                        }
+                      },
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "!Hepatocellular Carcinoma"
+                        }
+                      },
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "!Head and Neck"
+                        }
+                      },
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "!Colorectal Adenocarcinoma",
+                          "ms_status": "MSI-H"
+                        }
+                      },
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "tmb": 10
                         }
                       }
                     ]
@@ -413,15 +268,15 @@ export const NCT03297606_CAPTUR: Ctml3 =
             ]
           },
           {
-            "arm_code": "Group 5",
-            "arm_description": "Experimental: Group 5",
-            "arm_internal_id": 5,
+            "arm_code": "Group 7",
+            "arm_description": "Experimental: Group 7",
+            "arm_internal_id": 7,
             "arm_suspended": "N",
             "dose_level": [
               {
-                "level_code": "Erlotinib",
-                "level_description": "150mg orally, once daily",
-                "level_internal_id": 5,
+                "level_code": "Olaparib",
+                "level_description": "300mg taken twice daily",
+                "level_internal_id": 8,
                 "level_suspended": "N"
               }
             ],
@@ -429,23 +284,53 @@ export const NCT03297606_CAPTUR: Ctml3 =
               {
                 "and": [
                   {
-                    "genomic": {
-                      "hugo_symbol": "EGFR",
-                      "molecular_function": "Activating",
-                      "variant_category": "Mutation"
-                    }
+                    "or": [
+                      {
+                        "genomic": {
+                          "hugo_symbol": "BRCA1",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "BRCA2",
+                          "variant_category": "Mutation"
+                        }
+                      }
+                    ]
                   },
                   {
-                    "clinical": {
-                      "age_numerical": ">=18",
-                      "oncotree_primary_diagnosis": "!Non-Small Cell Lung Cancer"
-                    }
+                    "and": [
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "!Breast"
+                        }
+                      },
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "!Ovary"
+                        }
+                      },
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "!Prostate"
+                        }
+                      },
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "!Pancreas"
+                        }
+                      }
+                    ]
                   }
                 ]
               }
             ]
-          },
-                  ]
+          },       ]
       }
     ]
   }
