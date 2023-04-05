@@ -184,10 +184,10 @@ export const convertCtimsFormatToTreeNodeArray = (output: any, isParent = true):
         current = { key: parentKey, label: "Or", data: {}, children: [], icon: 'or-icon' };
         break;
       case "clinical":
-        current = { key: uuidv4(), label: "Clinical", data: { type: 1, formData: item.clinical }, icon: 'clinical-icon in-tree' };
+        current = { key: uuidv4(), label: "Clinical", data: { type: EComponentType.ClinicalForm, formData: item.clinical }, icon: 'clinical-icon in-tree' };
         break;
       case "genomic":
-        current = { key: uuidv4(), label: "Genomic", data: { type: 2, formData: item.genomic }, icon: 'genomic-icon in-tree' };
+        current = { key: uuidv4(), label: "Genomic", data: { type: EComponentType.GenomicForm, formData: item.genomic }, icon: 'genomic-icon in-tree' };
         break;
     }
     if (item[Object.keys(item)[0]].length > 0) {
