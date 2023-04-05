@@ -28,5 +28,6 @@ declare namespace Cypress {
     compareArrays(actual:string[], expected:string[])
     clickMultiple(selector:string, times:number)
     clickMultipleArm(selector:string, times:number)
+    clickMultipleDose(selector:string, times:number)
   }
 }

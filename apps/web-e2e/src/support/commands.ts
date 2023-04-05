@@ -224,7 +224,11 @@ Cypress.Commands.add('clickMultipleArm',(selector, times) => {
     cy.get(selector).contains('Add arm').click();
   }
 })
-
+Cypress.Commands.add('clickMultipleDose',(selector, times) => {
+  for (let i = 0; i < times; i++) {
+    cy.get(selector).contains('Add Dose Level').click();
+  }
+})
 Cypress.Commands.add('managementGroupList',(managementGroupName: string, isPrimary: string) => {
   trialEditorLeftPanelList().eq(4).should('contain','Management Group List').click()
   getManagementGroupName().click()
