@@ -146,7 +146,7 @@ describe('CTIMS Trial Editor', () => {
     if (NCT03297606_CAPTUR.sponsor_list.sponsor[index]) {
       // enter the value into the text box
       cy.wrap(input).type(NCT03297606_CAPTUR.sponsor_list.sponsor[index].sponsor_name);
-      cy.wait(1000)
+     // cy.wait(1000)
     }
     })
     //contain all the sponsor list buttons
@@ -155,7 +155,7 @@ describe('CTIMS Trial Editor', () => {
      if (NCT03297606_CAPTUR.sponsor_list.sponsor[index]) {
        // enter the value into the text box
        cy.wrap(input).contains(NCT03297606_CAPTUR.sponsor_list.sponsor[index].is_principal_sponsor).click();
-       cy.wait(1000)
+       //cy.wait(1000)
      }
     })
 

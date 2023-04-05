@@ -65,6 +65,8 @@ const { deleteDownloadsFolderBeforeAll } = require('cypress-delete-downloads-fol
 import * as yaml from 'js-yaml';
 import {doc} from "prettier";
 import breakParent = doc.builders.breakParent;
+import {Simulate} from "react-dom/test-utils";
+import input = Simulate.input;
 
 describe('CTIMS Trial Editor', () => {
   before(() => cy.visit('/'));
@@ -109,109 +111,63 @@ describe('CTIMS Trial Editor', () => {
          }
      })*/
 
-   /* //Management Group List - not done
-    cy.clickMultiple('#array-item-list-root_management_group_list_management_group>div>.pi-plus-circle',
+    //Management Group List - Done
+    /*cy.clickMultiple('#array-item-list-root_management_group_list_management_group>div>.pi-plus-circle',
       NCT03297606_CAPTUR.management_group_list.management_group.length-1);
-    cy.get('[id^=root_management_group_list_management_group]').each((input, index) => {
-      // check if there is a corresponding value in the array
-      if (NCT03297606_CAPTUR.management_group_list.management_group[index]) {
-        // enter the value into the text box
-        cy.wrap(input).click()
-          getDefaultTrialEditorDropDown().contains(NCT03297606_CAPTUR.management_group_list.management_group[index].management_group_name).click();
-      }
-    })*/
-    /* cy.managementGroupList(NCT03297606_CAPTUR.management_group_list.management_group[0].management_group_name,
-       NCT03297606_CAPTUR.management_group_list.management_group[0].is_primary)
+    cy.get('[id^=object-field-template-root_management_group_list_management_group').each(($input, index) => {
+      cy.get('#root_management_group_list_management_group_'+index+'_management_group_name').click().contains(NCT03297606_CAPTUR.management_group_list.management_group[index].management_group_name).click();
+      cy.get('#root_management_group_list_management_group_'+index+'_is_primary').contains(NCT03297606_CAPTUR.management_group_list.management_group[index].is_primary).click();
+     });*/
 
-     //Site List - not done
-     cy.siteList(NCT03297606_CAPTUR.site_list.site[0].site_name,
-       NCT03297606_CAPTUR.site_list.site[0].site_status,
-       NCT03297606_CAPTUR.site_list.site[0].coordinating_center,
-       NCT03297606_CAPTUR.site_list.site[0].uses_cancer_center_irb)
+     //Site List - done
+     /* cy.clickMultiple('#array-item-list-root_site_list_site>div>.pi-plus-circle',
+      NCT03297606_CAPTUR.site_list.site.length-1);
+    cy.get('[id^=object-field-template-root_site_list_site]').each(($input, index) => {
+      cy.get('#root_site_list_site_'+index+'_site_name').click().contains(NCT03297606_CAPTUR.site_list.site[index].site_name).click();
+      cy.get('#root_site_list_site_'+index+'_site_status').click().contains(NCT03297606_CAPTUR.site_list.site[index].site_status).click();
+      cy.get('#root_site_list_site_'+index+'_coordinating_center').contains(NCT03297606_CAPTUR.site_list.site[index].coordinating_center).click();
+      cy.get('#root_site_list_site_'+index+'_uses_cancer_center_irb').contains(NCT03297606_CAPTUR.site_list.site[index].uses_cancer_center_irb).click();
+    });*/
 
      //Sponsor List array of 5 values - done
-    cy.clickMultiple('#array-item-list-root_sponsor_list_sponsor>div>.pi-plus-circle',
-      NCT03297606_CAPTUR.sponsor_list.sponsor.length-1)
-    cy.get('[id^=root_sponsor_list_sponsor]').each((input) => {
-      NCT03297606_CAPTUR.staff_list.protocol_staff.map((element, index) => {
-        if (input.attr('id').includes('sponsor_name')) {
-          // enter the value into the text box
-          cy.wrap(input).type(NCT03297606_CAPTUR.sponsor_list.sponsor[index].sponsor_name);
-        }
-        if (input.attr('class').includes('p-button')) {
-          //click the button
-          cy.wrap(input).contains(NCT03297606_CAPTUR.sponsor_list.sponsor[index].is_principal_sponsor).click();
-        }
-      })
-    })
+   /*cy.clickMultiple('#array-item-list-root_sponsor_list_sponsor>div>.pi-plus-circle',NCT03297606_CAPTUR.sponsor_list.sponsor.length-1)
+    cy.get('[id^=object-field-template-root_sponsor_list_sponsor]').each(($input, index) => {
+      cy.get('#root_sponsor_list_sponsor_'+index+'_sponsor_name').type(NCT03297606_CAPTUR.sponsor_list.sponsor[index].sponsor_name);
+      cy.get('#root_sponsor_list_sponsor_'+index+'_is_principal_sponsor').contains(NCT03297606_CAPTUR.sponsor_list.sponsor[index].is_principal_sponsor).click();
+    });*/
 
-     */
-/*
-
-    //Staff List - Done
-    cy.clickMultiple('#array-item-list-root_drug_list_drug>div>.pi-plus-circle',
+   //Staff List - Done
+   /* cy.clickMultiple('#array-item-list-root_staff_list_protocol_staff>div>.pi-plus-circle',
       NCT03297606_CAPTUR.staff_list.protocol_staff.length-1);
-       cy.get('[id^=root_staff_list_protocol_staff_0_]').each(($input) => {
-         // check if there is a corresponding value in the array
-         NCT03297606_CAPTUR.staff_list.protocol_staff.map((element,index) => {
-
-           if ($input.attr('id').includes('first_name')) {
-             cy.log('first_name found', $input.attr('id'));
-             cy.wrap($input).type(NCT03297606_CAPTUR.staff_list.protocol_staff[index].first_name);
-           }
-           if ($input.attr('id').includes('last_name')) {
-             cy.log('last_name found', $input.attr('id'));
-             cy.log(NCT03297606_CAPTUR.staff_list.protocol_staff[index].last_name)
-              cy.wrap($input).type(NCT03297606_CAPTUR.staff_list.protocol_staff[index].last_name);
-           }
-           if ($input.attr('id').includes('email_address')) {
-             cy.log('last_name found', $input.attr('id'));
-             cy.wrap($input).type(NCT03297606_CAPTUR.staff_list.protocol_staff[index].email_address);
-           }
-           if ($input.attr('id').includes('institution_name')) {
-             cy.log('last_name found', $input.attr('id'));
-             cy.wrap($input).click().contains(NCT03297606_CAPTUR.staff_list.protocol_staff[index].institution_name).click();
-           }
-           if ($input.attr('id').includes('staff_role')) {
-             cy.log('last_name found', $input.attr('id'));
-             cy.wrap($input).click().contains(NCT03297606_CAPTUR.staff_list.protocol_staff[index].staff_role).click();
-           }
-         })
-       })
-*/
+    cy.get('[id^=object-field-template-root_staff_list_protocol_staff]').each(($input, index) => {
+      cy.log($input.attr('id'));
+      cy.get('#root_staff_list_protocol_staff_'+index+'_first_name').type(NCT03297606_CAPTUR.staff_list.protocol_staff[index].first_name);
+      cy.get('#root_staff_list_protocol_staff_'+index+'_last_name').type(NCT03297606_CAPTUR.staff_list.protocol_staff[index].last_name);
+      cy.get('#root_staff_list_protocol_staff_'+index+'_email_address').type(NCT03297606_CAPTUR.staff_list.protocol_staff[index].email_address);
+      cy.get('#root_staff_list_protocol_staff_'+index+'_institution_name').click().contains(NCT03297606_CAPTUR.staff_list.protocol_staff[index].institution_name).click();
+      cy.get('#root_staff_list_protocol_staff_'+index+'_staff_role').click().contains(NCT03297606_CAPTUR.staff_list.protocol_staff[index].staff_role).click();
+    });
+     */
 
      //Arm code
     cy.clickMultipleArm('[id^=array-item-list-root_treatment_list_step_0_arm]>div>div',
       NCT03297606_CAPTUR.treatment_list.step[0].arm.length-1);
-    //[id^=root_treatment_list_step_0_arm][id$=arm]
-    //[id^=root_treatment_list_step_0_arm(.*)_arm]
-    cy.get(`[id^=root_treatment_list_step_0_arm_]`).each(($input,index1) => {
-      cy.log('Selected input:', $input.attr('id'));
-      NCT03297606_CAPTUR.treatment_list.step[0].arm.map((element, index) => {
-        cy.log('Processing element:', element);
-
-        if ($input.attr('id').includes('arm_code')) {
-          cy.wrap($input).type(NCT03297606_CAPTUR.treatment_list.step[0].arm[index].arm_code);
-        }
-        if ($input.attr('id').includes('arm_description')) {
-          cy.wrap($input).type(NCT03297606_CAPTUR.treatment_list.step[0].arm[index].arm_description)
-        }
-        if ($input.attr('id').includes('arm_internal_id')) {
-          cy.wrap($input).type(NCT03297606_CAPTUR.treatment_list.step[0].arm[index].arm_internal_id.toString())
-        }
-        if ($input.attr('id').includes('arm_suspended')) {
-          cy.wrap($input).click().contains(NCT03297606_CAPTUR.treatment_list.step[0].arm[index].arm_suspended).click()
-        }
-
-
-      })
-    })
-
-    /* cy.arm(NCT03297606_CAPTUR.treatment_list.step[0].arm[0].arm_code,
-       NCT03297606_CAPTUR.treatment_list.step[0].arm[0].arm_description,
-       NCT03297606_CAPTUR.treatment_list.step[0].arm[0].arm_internal_id,
-       NCT03297606_CAPTUR.treatment_list.step[0].arm[0].arm_suspended)
-*/
+   //close the dose level in first arm only
+    cy.get('#array-item-list-root_treatment_list_step_0_arm_0_dose_level > .flex > .p-panel >' +
+      ' .ctimsPanelHeaderTopArm > div > .p-panel-header-icon > .pi').click()
+    cy.wait(1000)
+    //root_treatment_list_step_0_arm_0_arm_code
+    //object-field-template-root_treatment_list_step_0_arm_0
+    //object-field-template-root_treatment_list_step_0_arm_0_dose_level_0 only dose level
+    //root_treatment_list_step_0_arm_0_dose_level_0_level_code
+   // cy.get('[id^=root_treatment_list_step_0_arm]')
+    cy.get('[id^=object-field-template-root_treatment_list_step_0_arm]').each(($input, index) => {
+      cy.log($input.attr('id'));
+     cy.get('#root_treatment_list_step_0_arm_'+index+'_arm_code').type(NCT03297606_CAPTUR.treatment_list.step[0].arm[index].arm_code);
+      cy.get('#root_treatment_list_step_0_arm_'+index+'_arm_description').type(NCT03297606_CAPTUR.treatment_list.step[0].arm[index].arm_description);
+      cy.get('#root_treatment_list_step_0_arm_'+index+'_arm_internal_id').type(NCT03297606_CAPTUR.treatment_list.step[0].arm[index].arm_internal_id.toString());
+     cy.get('#root_treatment_list_step_0_arm_'+index+'_arm_suspended').contains(NCT03297606_CAPTUR.treatment_list.step[0].arm[index].arm_suspended).click();
+    });
     /*
      //Level code
      cy.doseLevel(NCT03297606_CAPTUR.treatment_list.step[0].arm[0].dose_level[0].level_code,
