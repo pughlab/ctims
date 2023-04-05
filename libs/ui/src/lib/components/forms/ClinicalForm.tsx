@@ -56,6 +56,38 @@ export const ClinicalForm = (props: IFormProps) => {
   const dispatch = useDispatch();
 
   const clinicalFormSchema = {
+    "definitions": {
+      "her2_status": {
+        "enumNames": [
+          "Positive",
+          "Negative"
+        ],
+        "enum": [
+          "True",
+          "False"
+        ]
+      },
+      "er_status": {
+        "enumNames": [
+          "Positive",
+          "Negative"
+        ],
+        "enum": [
+          "True",
+          "False"
+        ]
+      },
+      "pr_status": {
+        "enumNames": [
+          "Positive",
+          "Negative"
+        ],
+        "enum": [
+          "True",
+          "False"
+        ]
+      }
+    },
     "type": "object",
     "required": ["age_numerical", "oncotree_primary_diagnosis"],
     "properties": {
@@ -75,26 +107,17 @@ export const ClinicalForm = (props: IFormProps) => {
       'her2_status': {
         "type": "string",
         'title': 'HER2 Status',
-        "enum": [
-          "Positive",
-          "Negative"
-        ]
+        "$ref": "#/definitions/her2_status"
       },
       'er_status': {
         'type': 'string',
         'title': 'ER Status',
-        "enum": [
-          "Positive",
-          "Negative"
-        ]
+        "$ref": "#/definitions/er_status"
       },
       'pr_status': {
         'type': 'string',
         'title': 'PR Status',
-        "enum": [
-          "Positive",
-          "Negative"
-        ]
+        "$ref": "#/definitions/pr_status"
       }
     }
   }
