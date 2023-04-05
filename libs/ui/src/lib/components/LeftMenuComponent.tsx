@@ -227,7 +227,11 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         const payload = {[key]: true};
         dispatch(setMatchDialogErrors(payload))
         parentNode.children!.push(newNode);
+        setSelectedNode(newNode);
+        setSelectedKeys(newNode.key as string)
+        onTreeNodeClick(newNode.data.type, newNode);
       }
+
       setRootNodes([...rootNodes]);
     }
   }
@@ -267,8 +271,6 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   }
 
   const nodeTemplate = (node: TreeNode) => {
-
-    const [isMouseOverNode, setIsMouseOverNode] = useState(false);
 
     const tieredMenuModel = [
       {
@@ -329,6 +331,8 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       }
     ]
 
+    const divRef = useRef<any>(null)
+
     if (selectedNode) {
       const btnToShow = () => {
         let show = false;
@@ -353,12 +357,23 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         style['color'] = 'red';
       }
 
+      const onNodeClick = (e: any) => {
+        setSelectedNode(node);
+        setSelectedKeys(node.key as string)
+        onTreeNodeClick(node.data.type, node);
+
+      }
+
+      useEffect(() => {
+        divRef.current.addEventListener('click', onNodeClick);
+
+      }, [divRef.current])
+
+
+
       return (
         <>
-          <div className={styles.treeNodeContainer}
-            onMouseOver={() => setIsMouseOverNode(true)}
-            onMouseOut={() => setIsMouseOverNode(false)}
-          >
+          <div ref={divRef} className={styles.treeNodeContainer}>
               <span className="p-treenode-label" style={style}>
                 {label}
               </span>
@@ -381,15 +396,6 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     )
   }
 
-  const onNodeSelect = (node: TreeEventNodeParams) => {
-    console.log('onNodeSelect', node)
-    // console.log('selectedKeys', selectedKeys);
-    // console.log('expandedKeys', expandedKeys);
-    setSelectedNode(node.node);
-    setSelectedKeys(node.node.key as string)
-    onTreeNodeClick(node.node.data.type, node.node);
-  }
-
   const onNodeToggle = (e: any) => {
     console.log('selectedKeys', selectedKeys);
     setExpandedKeys(e.value)
@@ -410,7 +416,6 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
                 expandedKeys={expandedKeys}
                 selectionKeys={selectedKeys}
                 selectionMode="single"
-                onSelect={onNodeSelect}
                 onToggle={e => onNodeToggle(e) } />
         </div>
     </>
