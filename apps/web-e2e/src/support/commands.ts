@@ -81,10 +81,11 @@ import {
   getLevelSuspended,
   getPriorTreatmentRequirement,
   getPriorTreatmentRequirementPlusIcon,
-  getPriorTreatmentRequirementRegularExpression
+  getPriorTreatmentRequirementRegularExpression, getAddCriteriaToSameList
 } from './app.po';
 import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib";
 import {NCT04293094_testData} from "../fixtures/NCT04293094_testData";
+import {NCT03297606_CAPTUR} from "../fixtures/NCT03297606_CAPTUR";
 //import { ctmlModel } from '../support/models/ctml-model';
 
 //require('cypress-delete-downloads-folder').addCustomCommand();
@@ -345,6 +346,7 @@ Cypress.Commands.add('clickParentAnd',() => {
   getLeftMenuComponent().trigger('mouseover').invoke('addClass', 'p-menuitem-active').click()
   getTruncateButton().should('be.visible').click()
 })
+//All parents child
 Cypress.Commands.add('clickParentNode',(indexNum: number) => {
   getLeftMenuComponent().find('span').should('contain','And').eq(indexNum)
   getLeftMenuComponent().eq(indexNum).trigger('mouseover').invoke('addClass', 'p-menuitem-active').click()
@@ -401,6 +403,20 @@ Cypress.Commands.add('compareArrays', (actual, expected) => {
     const expectedValue = expected[index]
     expect(value,"Actual value").to.deep.equal(expectedValue,"Expected Value")
   })
+})
+Cypress.Commands.add('clickMultipleOr',() => {
+  for (let i = 0; i < 3; i++) {
+    //getTruncateButton().click()
+    getTruncateButton().click()
+    cy.clickGenomic()
+    //getAddCriteriaToSameGroup().trigger('mouseover').invoke('addClass', 'p-menuitem-active')
+   // getMenuItemGenomic().click()
+    getAddCriteriaToSameList().click()
+    //cy.clickParentNode(1)
+    //cy.clickGenomic()
+    //cy.get(selector).click();
+   // })
+  }
 })
 //
 // -- This is a child command --

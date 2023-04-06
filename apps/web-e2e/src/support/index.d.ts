@@ -29,5 +29,6 @@ declare namespace Cypress {
     clickMultiple(selector:string, times:number)
     clickMultipleArm(selector:string, times:number)
     clickMultipleDose(selector:string, times:number)
+    clickMultipleOr()
   }
 }
