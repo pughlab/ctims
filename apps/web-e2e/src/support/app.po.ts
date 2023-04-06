@@ -141,6 +141,9 @@ export const getDelete = () => cy.get('.p-tieredmenu>ul>li:nth-child(3)')
 //Add criteria to Subgroup
 export const getAddCriteriaToSubGroup = () => cy.get('.p-tieredmenu>ul>li:nth-child(5)')
 
+//Add criteria to same list
+export const getAddCriteriaToSameList = () => cy.get('.MatchingMenuAndForm_addCriteriaToSameListButton__jdH_U')
+
 //Clinical at child(1) and genomic at child(2)
 export const getMenuItemClinicalGenomic = () => cy.get('.p-tieredmenu>ul>li:nth-child(1)>ul>li') //2 elements
 export const getMenuItemClinical = () => cy.get('.p-menuitem-link>.clinical-icon') //2 elements
