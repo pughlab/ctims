@@ -1,5 +1,8 @@
 import {getTemplate, getUiOptions, ObjectFieldTemplatePropertyType, ObjectFieldTemplateProps} from "@rjsf/utils";
 import React, {useEffect} from "react";
+import {isObjectEmpty} from "../components/helpers";
+import {v4 as uuidv4} from 'uuid';
+
 
 const CtimsArmItemObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
   const {
@@ -18,9 +21,6 @@ const CtimsArmItemObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
     uiSchema,
   } = props;
 
-  useEffect(() => {
-    registry.formContext = formData
-  }, []);
 
   const uiOptions = getUiOptions(uiSchema);
   const TitleFieldTemplate = getTemplate<"TitleFieldTemplate">(
@@ -58,15 +58,15 @@ const CtimsArmItemObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
   }
 
   // This magic line allows two-way communication between the main form and the dialog
-  // if (!isObjectEmpty(formData)){
-  //   registry.formContext = formData
-  // }
+  if (!isObjectEmpty(formData)){
+    registry.formContext = formData
+    console.log('registry.formContext', registry.formContext)
+  }
   // registry.formContext = formData
-  console.group('CtimsArmItemObjectFieldTemplate', props)
-  console.log('formContext registry', registry.formContext)
-  console.log('formData', formData)
-  console.groupEnd()
-  const a = '';
+  // console.group('CtimsArmItemObjectFieldTemplate', props)
+  // console.log('formContext registry', registry.formContext)
+  // console.log('formData', formData)
+  // console.groupEnd()
   return (
     <>
       <div style={containerStyle}>
