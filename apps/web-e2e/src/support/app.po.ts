@@ -109,6 +109,9 @@ export const getMatchingCriteriaTableHeader = () => cy.get('.p-tabview-title')
 //Edit Matching Criteria
 export const getEditMatchingCriteria = () => cy.get('.CtimsMatchingCriteriaWidget_edit-matching-criteria-title__qEaKg')
 
+//Save Matching Criteria
+export const getSaveMatchingCriteria = () => cy.get('.p-dialog-footer>div>button:nth-child(2)')
+
 //******************* Match Modal Criteria ********************************************************//
 
 //Footer Buttons("Discard", "Save matching criteria")
@@ -152,6 +155,9 @@ export const getMenuItemGenomic = () => cy.get('.p-menuitem-link>.genomic-icon')
 //Clinical at child(3) and genomic at child(4)
 export const getMenuItemAnd = () => cy.get('.p-menuitem-active > .p-submenu-list > :nth-child(1) > .p-menuitem-link')
 export const getMenuItemOr = () => cy.get('.p-menuitem-active > .p-submenu-list > :nth-child(2) > .p-menuitem-link')
+
+//Left Menu Tree Node Children, has index always
+export const getTreeNodeChildren = () => cy.get('.p-treenode-children')
 
 //Operator
 export const getOperator = () => cy.get('.p-inputwrapper-filled') //do a click action
