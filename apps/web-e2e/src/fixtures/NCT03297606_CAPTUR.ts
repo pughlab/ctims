@@ -173,6 +173,75 @@ export const NCT03297606_CAPTUR: Ctml3 =
       {
         "arm": [
           {
+            "arm_code": "Group 1",
+            "arm_description": "Experimental: Group 1",
+            "arm_internal_id": 1,
+            "arm_suspended": "N",
+            "dose_level": [
+              {
+                "level_code": "Axitinib",
+                "level_description": "5mg orally twice daily",
+                "level_internal_id": 1,
+                "level_suspended": "N"
+              }
+            ],
+            "match": [
+              {
+                "and": [
+                  {
+                    "or": [
+                      {
+                        "genomic": {
+                          "cnv_call": "High level amplification",
+                          "hugo_symbol": "FLT1",
+                          "variant_category": "CNV"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "FLT1",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "cnv_call": "High level amplification",
+                          "hugo_symbol": "KDR",
+                          "variant_category": "CNV"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "KDR",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "cnv_call": "High level amplification",
+                          "hugo_symbol": "FLT4",
+                          "variant_category": "CNV"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "FLT4",
+                          "variant_category": "Mutation"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "clinical": {
+                      "age_numerical": ">=18",
+                      "oncotree_primary_diagnosis": "!Renal Cell Carcinoma"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
             "arm_code": "Group 6",
             "arm_description": "Experimental: Group 6",
             "arm_internal_id": 6,

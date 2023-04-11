@@ -220,16 +220,23 @@ Cypress.Commands.add('clickMultiple',(selector, times) => {
     cy.get(selector).click();
   }
 })
+Cypress.Commands.add('clickMultipleFunction',(selector, times) => {
+  for (let i = 0; i < times; i++) {
+    selector.click({force: true});
+  }
+})
 Cypress.Commands.add('clickMultipleArm',(selector, times) => {
   for (let i = 0; i < times; i++) {
-    cy.get(selector).contains('Add arm').click();
+    selector.contains('Add arm').click({force: true});
   }
 })
-Cypress.Commands.add('clickMultipleDose',(selector, times) => {
-  for (let i = 0; i < times; i++) {
-    cy.get(selector).contains('Add Dose Level').click();
+
+Cypress.Commands.add('clickMultipleDose', (armIndex, doses) => {
+  for (let i = 1; i <= doses; i++) {
+    cy.get("div[id$='dose_level']>div>i:nth-child(1)").eq(armIndex).click()
   }
-})
+});
+
 Cypress.Commands.add('managementGroupList',(managementGroupName: string, isPrimary: string) => {
   trialEditorLeftPanelList().eq(4).should('contain','Management Group List').click()
   getManagementGroupName().click()
@@ -404,8 +411,24 @@ Cypress.Commands.add('compareArrays', (actual, expected) => {
     expect(value,"Actual value").to.deep.equal(expectedValue,"Expected Value")
   })
 })
-Cypress.Commands.add('clickMultipleOr',() => {
-  for (let i = 0; i < 3; i++) {
+Cypress.Commands.add('clickChildOr',() => {
+  /*NCT03297606_CAPTUR.treatment_list.step[0].arm.forEach((matches,index) => {
+    let len = matches.match[index].and[index].or.length - 1
+    //getTruncateButton().click()
+    //click OR child
+    cy.get('.p-treenode-children > .p-treenode > .p-treenode-content > .LeftMenuComponent_treeNodeContainer__K7jg6 >' +
+      ' .p-treenode-label > b').click()
+    getTruncateButton().click()
+    cy.clickGenomic()
+    //getAddCriteriaToSameGroup().trigger('mouseover').invoke('addClass', 'p-menuitem-active')
+    // getMenuItemGenomic().click()
+    getAddCriteriaToSameList().click()
+    //cy.clickParentNode(1)
+    //cy.clickGenomic()
+    //cy.get(selector).click();
+    // })
+  })*/
+ // for (let i = 0; i < 2; i++) {
     //getTruncateButton().click()
     getTruncateButton().click()
     cy.clickGenomic()
@@ -416,7 +439,7 @@ Cypress.Commands.add('clickMultipleOr',() => {
     //cy.clickGenomic()
     //cy.get(selector).click();
    // })
-  }
+ // }
 })
 //
 // -- This is a child command --
