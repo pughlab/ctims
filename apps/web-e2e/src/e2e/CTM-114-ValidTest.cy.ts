@@ -557,7 +557,6 @@ describe('CTIMS Trial Editor', () => {
   })
 
   it('should validate the match of the "Treatment list Matching Criteria', () => {
-
     NCT03297606_CAPTUR.treatment_list.step.forEach((step) => {
       step.arm.forEach((arm) => {
         arm.match.forEach((matchObj) => {
