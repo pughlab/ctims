@@ -139,6 +139,7 @@ export interface AndGenomic {
   hugo_symbol:        string;
   molecular_function: string;
   variant_category:   string;
+  cnv_call: string
 }
 
 export enum MolecularFunction {
