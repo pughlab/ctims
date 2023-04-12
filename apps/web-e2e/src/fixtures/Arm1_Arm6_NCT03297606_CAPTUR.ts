@@ -241,6 +241,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
               }
             ]
           },
+
           {
             "arm_code": "Group 7",
             "arm_description": "Experimental: Group 7",
