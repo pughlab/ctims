@@ -565,7 +565,6 @@ describe('CTIMS Trial Editor', () => {
           for (let i = 0; i < andArray.length; i++) {
             const orArray = andArray[i]
             cy.log(JSON.stringify(orArray))
-
           }
         })
       })
