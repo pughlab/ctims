@@ -1,6 +1,8 @@
 #!/bin/bash
 source ./vars.sh
 
+FQIN="ctims-${GIT_BRANCH_SAFE}"
+
 eval "helm install --dry-run --debug \
 --set docker.registry.endpoint=$TECHNA_REGISTRY_ENDPOINT:$TECHNA_REGISTRY_PORT \
 --set git.branch=$GIT_COMMIT_ISH \
@@ -9,4 +11,4 @@ eval "helm install --dry-run --debug \
 --set domain=$TECHNA_HOSTNAME \
 --set app=\"ctims\" \
 --set domain=$TECHNA_HOSTNAME
-"
+$FQIN $SELFDIR"
