@@ -1,0 +1,4 @@
+domain: qa02.technainstitute.net
+ctimsweb:
+  port: 4201
+  slug: web
