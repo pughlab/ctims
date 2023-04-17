@@ -1,3 +1,5 @@
+#!/bin/bash
+
 source ./vars.sh
 echo "CTIMS_WEB_CONTAINER_IMAGE_LOCATION: $CTIMS_WEB_CONTAINER_IMAGE_LOCATION"
 echo "GIT_REF: $GIT_REF"
