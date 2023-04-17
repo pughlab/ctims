@@ -15,7 +15,7 @@ docker build \
 	-t $CTIMS_WEB_CONTAINER_IMAGE_LOCATION:$GIT_REF \
 	-t $CTIMS_WEB_CONTAINER_IMAGE_LOCATION:$COMMIT_ISH \
 	--label ca.uhn.techna.$PROJECT.appName="ctims" \
-	--label ca.uhn.techna.$PROJECT.appVersion="0.1.1" \
+	--label ca.uhn.techna.$PROJECT.appVersion="0.1.0" \
 	--label ca.uhn.techna.$PROJECT.containerName="$CONTAINER_NAME" \
 	--label ca.uhn.techna.$PROJECT.containerRole="frontend" \
 	--label ca.uhn.techna.$PROJECT.ref=$GIT_REF \
