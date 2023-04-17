@@ -8,20 +8,22 @@ datasource db {
 }
 
 model schema_ctml {
-  id        Int      @id @default(autoincrement())
-  version   String   @unique
-  schema    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  trials    trial[]
+  id         Int         @id @default(autoincrement())
+  version    String      @unique
+  schema     String
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  trials     trial[]
+  ctml_jsons ctml_json[]
 }
 
 model ctml_json {
-  id        Int      @id @default(autoincrement())
-  version   String   @unique
+  id        Int         @id @default(autoincrement())
+  version   schema_ctml @relation(fields: [versionId], references: [id])
+  versionId Int
   data      Json?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
   trials    trial[]
 }
 
