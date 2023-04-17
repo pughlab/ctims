@@ -9,7 +9,7 @@ echo "GIT_IS_CLEAN: $GIT_IS_CLEAN"
 echo "COMMIT_ISH: $COMMIT_ISH"
 
 #docker-compose build --no-cache
-docker build \
+docker build --no-cache  \
 	--build-arg CTIMS_WEB_PORT=4201 \
 	-t $CTIMS_WEB_CONTAINER_IMAGE_LOCATION:latest \
 	-t $CTIMS_WEB_CONTAINER_IMAGE_LOCATION:$GIT_REF \
