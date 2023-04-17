@@ -3,7 +3,7 @@ source ./vars.sh
 
 FQIN="ctims-${GIT_BRANCH_SAFE}"
 
-eval "helm install --dry-run --debug \
+eval "helm install --debug \
 --set docker.registry.endpoint=$TECHNA_REGISTRY_ENDPOINT:$TECHNA_REGISTRY_PORT \
 --set git.branch=$GIT_COMMIT_ISH \
 --set git.ref=$GIT_REF \
