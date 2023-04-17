@@ -20,6 +20,7 @@
     "@ant-design/icons": "^4.5.0",
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
+    "@nestjs/mapped-types": "^1.2.2",
     "@nestjs/platform-express": "^8.0.0",
     "@nrwl/next": "15.8.1",
     "@prisma/client": "^4.5.0",
