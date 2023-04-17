@@ -9,15 +9,15 @@ echo "GIT_IS_CLEAN: $GIT_IS_CLEAN"
 echo "COMMIT_ISH: $COMMIT_ISH"
 
 #docker-compose build --no-cache
-#docker build \
-#	--build-arg CTIMS_WEB_PORT=4201 \
-#	-t $CTIMS_WEB_CONTAINER_IMAGE_LOCATION:latest \
-#	-t $CTIMS_WEB_CONTAINER_IMAGE_LOCATION:$GIT_REF \
-#	-t $CTIMS_WEB_CONTAINER_IMAGE_LOCATION:$COMMIT_ISH \
-#	--label ca.uhn.techna.$PROJECT.appName="ctims" \
-#	--label ca.uhn.techna.$PROJECT.appVersion="0.1.1" \
-#	--label ca.uhn.techna.$PROJECT.containerName="$CONTAINER_NAME" \
-#	--label ca.uhn.techna.$PROJECT.containerRole="frontend" \
-#	--label ca.uhn.techna.$PROJECT.ref=$GIT_REF \
-#	--label ca.uhn.techna.$PROJECT.branch="$GIT_BRANCH" \
-#	"$SELFDIR"
+docker build \
+	--build-arg CTIMS_WEB_PORT=4201 \
+	-t $CTIMS_WEB_CONTAINER_IMAGE_LOCATION:latest \
+	-t $CTIMS_WEB_CONTAINER_IMAGE_LOCATION:$GIT_REF \
+	-t $CTIMS_WEB_CONTAINER_IMAGE_LOCATION:$COMMIT_ISH \
+	--label ca.uhn.techna.$PROJECT.appName="ctims" \
+	--label ca.uhn.techna.$PROJECT.appVersion="0.1.1" \
+	--label ca.uhn.techna.$PROJECT.containerName="$CONTAINER_NAME" \
+	--label ca.uhn.techna.$PROJECT.containerRole="frontend" \
+	--label ca.uhn.techna.$PROJECT.ref=$GIT_REF \
+	--label ca.uhn.techna.$PROJECT.branch="$GIT_BRANCH" \
+	"$SELFDIR"
