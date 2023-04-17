@@ -33,4 +33,4 @@ docker build \
 	--label ca.uhn.techna.$PROJECT.containerRole="frontend" \
 	--label ca.uhn.techna.$PROJECT.ref=$GIT_REF \
 	--label ca.uhn.techna.$PROJECT.branch="$GIT_BRANCH" \
-	"$DIR"
+	"$SELFDIR"
