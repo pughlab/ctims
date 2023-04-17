@@ -1,7 +1,7 @@
 #!/bin/bash
 source ./vars.sh
 
-eval "heml install --dry-run --debug \
+eval "helm install --dry-run --debug \
 --set docker.registry.endpoint=$TECHNA_REGISTRY_ENDPOINT:$TECHNA_REGISTRY_PORT \
 --set git.branch=$GIT_COMMIT_ISH \
 --set git.ref=$GIT_REF \
