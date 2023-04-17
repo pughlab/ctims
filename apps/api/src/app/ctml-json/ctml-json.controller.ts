@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {Controller, Get, Post, Body, Patch, Param, Delete, HttpCode} from '@nestjs/common';
 import { CtmlJsonService } from './ctml-json.service';
 import { CreateCtmlJsonDto } from './dto/create-ctml-json.dto';
 import { UpdateCtmlJsonDto } from './dto/update-ctml-json.dto';
@@ -12,14 +12,15 @@ export class CtmlJsonController {
     return this.ctmlJsonService.create(createCtmlJsonDto);
   }
 
-  @Get()
+  @Get('all')
   findAll() {
     return this.ctmlJsonService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.ctmlJsonService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const entities = await this.ctmlJsonService.findOne(+id)
+    return entities;
   }
 
   @Patch(':id')

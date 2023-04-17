@@ -1,19 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCtmlJsonDto } from './dto/create-ctml-json.dto';
 import { UpdateCtmlJsonDto } from './dto/update-ctml-json.dto';
+import {ctml_json} from "@prisma/client";
+import {PrismaService} from "../prisma.service";
+import {NotFoundError} from "@prisma/client/runtime";
 
 @Injectable()
 export class CtmlJsonService {
+
+  constructor(
+    private readonly prismaService: PrismaService
+  ) { }
   create(createCtmlJsonDto: CreateCtmlJsonDto) {
     return 'This action adds a new ctmlJson';
   }
 
-  findAll() {
-    return `This action returns all ctmlJson`;
+  findAll(): Promise<ctml_json[]> {
+    return this.prismaService.ctml_json.findMany();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} ctmlJson`;
+    return this.prismaService.ctml_json.findUnique({ where: { id: id } });
   }
 
   update(id: number, updateCtmlJsonDto: UpdateCtmlJsonDto) {
