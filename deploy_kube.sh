@@ -10,5 +10,5 @@ eval "helm install --dry-run --debug \
 --set git.is_clean=$GIT_IS_CLEAN \
 --set domain=$TECHNA_HOSTNAME \
 --set app=\"ctims\" \
---set domain=$TECHNA_HOSTNAME
+--set domain=$TECHNA_HOSTNAME \
 $FQIN $SELFDIR"
