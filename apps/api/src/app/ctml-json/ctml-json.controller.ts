@@ -1,4 +1,4 @@
-import {Controller, Get, Post, Body, Patch, Param, Delete, HttpCode} from '@nestjs/common';
+import {Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, NotImplementedException} from '@nestjs/common';
 import { CtmlJsonService } from './ctml-json.service';
 import { CreateCtmlJsonDto } from './dto/create-ctml-json.dto';
 import { UpdateCtmlJsonDto } from './dto/update-ctml-json.dto';
@@ -9,6 +9,7 @@ export class CtmlJsonController {
 
   @Post()
   create(@Body() createCtmlJsonDto: CreateCtmlJsonDto) {
+    throw new NotImplementedException();
     return this.ctmlJsonService.create(createCtmlJsonDto);
   }
 
@@ -25,11 +26,13 @@ export class CtmlJsonController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCtmlJsonDto: UpdateCtmlJsonDto) {
+    throw new NotImplementedException();
     return this.ctmlJsonService.update(+id, updateCtmlJsonDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
+    throw new NotImplementedException();
     return this.ctmlJsonService.remove(+id);
   }
 }
