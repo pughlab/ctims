@@ -1,4 +1,8 @@
 domain: qa02.technainstitute.net
+docker:
+    registry:
+        endpoint: null
+    image: null
 ctimsweb:
   port: 4201
   slug: web
