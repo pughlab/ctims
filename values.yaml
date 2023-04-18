@@ -4,5 +4,5 @@ docker:
         endpoint: null
     image: null
 ctimsweb:
-  port: 4201
+  port: 80
   slug: web
