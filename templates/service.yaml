@@ -8,7 +8,7 @@ spec:
   type: ClusterIP
   ports:
     - port: {{ .Values.ctimsweb.port }}
-      targetPort: {{ .Values.ctimsweb.port }}
+      targetPort: 3000
   selector:
     app.kubernetes.io/name: {{ include "thischart.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
