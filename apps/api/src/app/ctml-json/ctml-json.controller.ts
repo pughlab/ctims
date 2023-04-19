@@ -2,6 +2,7 @@ import {Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, NotImplemen
 import { CtmlJsonService } from './ctml-json.service';
 import { CreateCtmlJsonDto } from './dto/create-ctml-json.dto';
 import { UpdateCtmlJsonDto } from './dto/update-ctml-json.dto';
+import {ApiTags} from "@nestjs/swagger";
 
 @Controller('ctml-json')
 export class CtmlJsonController {
@@ -14,11 +15,13 @@ export class CtmlJsonController {
   }
 
   @Get('all')
+  @ApiTags('ctims')
   findAll() {
     return this.ctmlJsonService.findAll();
   }
 
   @Get(':id')
+  @ApiTags('ctims')
   async findOne(@Param('id') id: string) {
     const entities = await this.ctmlJsonService.findOne(+id)
     return entities;
