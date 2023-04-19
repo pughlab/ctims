@@ -20,7 +20,7 @@ export class TrialService {
   }
 
   findOne(id: number): Promise<trial> {
-    return this.prismaService.trial.findUnique({ where: { id: id }});
+    return this.prismaService.trial.findUniqueOrThrow({ where: { id: id }});
   }
 
   findTrialsByUser(userId: number): Promise<trial[]> {
