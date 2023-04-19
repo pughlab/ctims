@@ -1,11 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { CreateSchemaCtmlDto } from './dto/create-schema-ctml.dto';
 import { UpdateSchemaCtmlDto } from './dto/update-schema-ctml.dto';
+import {PrismaService} from "../prisma.service";
 
 @Injectable()
 export class SchemaCtmlService {
+
+  constructor(
+    private readonly prismaService: PrismaService
+  ) { }
+
   create(createSchemaCtmlDto: CreateSchemaCtmlDto) {
-    return 'This action adds a new schemaCtml';
+    const newSchema = this.prismaService.schema_ctml.create({
+      data: {
+        version: "testVersion",
+        schema: "Test Schema"
+      }
+    });
+    return newSchema;
   }
 
   findAll() {
