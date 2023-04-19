@@ -5,6 +5,7 @@ import { UpdateCtmlJsonDto } from './dto/update-ctml-json.dto';
 import {ApiTags} from "@nestjs/swagger";
 
 @Controller('ctml-json')
+@ApiTags('CTML JSON')
 export class CtmlJsonController {
   constructor(private readonly ctmlJsonService: CtmlJsonService) {}
 
@@ -15,13 +16,11 @@ export class CtmlJsonController {
   }
 
   @Get('all')
-  @ApiTags('ctims')
   findAll() {
     return this.ctmlJsonService.findAll();
   }
 
   @Get(':id')
-  @ApiTags('ctims')
   async findOne(@Param('id') id: string) {
     const entities = await this.ctmlJsonService.findOne(+id)
     return entities;
