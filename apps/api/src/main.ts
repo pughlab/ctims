@@ -28,7 +28,6 @@ function setupSwagger(app: INestApplication) {
     .setTitle('CTIMS API')
     .setDescription('The API for CTIMS backend.')
     .setVersion('0.1')
-    .addTag('ctims')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
