@@ -1,30 +1,54 @@
-import {Controller, Get, Post, Body, Patch, Param, Delete, NotImplementedException} from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  NotImplementedException,
+  NotFoundException, HttpStatus
+} from '@nestjs/common';
 import { TrialService } from './trial.service';
 import { CreateTrialDto } from './dto/create-trial.dto';
 import { UpdateTrialDto } from './dto/update-trial.dto';
-import {ApiTags} from "@nestjs/swagger";
+import {ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
 
 @Controller('trial')
+@ApiTags("Trial")
 export class TrialController {
   constructor(private readonly trialService: TrialService) {}
 
   @Post('create')
-  @ApiTags('ctims')
-  create(@Body() createTrialDto: CreateTrialDto) {
-    throw new NotImplementedException();
-    return this.trialService.create(createTrialDto);
+  @ApiResponse({ status: HttpStatus.CREATED, description: "New trial created." })
+  async create(@Body() createTrialDto: CreateTrialDto) {
+    const newTrial = await this.trialService.createTrial(createTrialDto);
+    return newTrial.id;
   }
 
   @Get('getAll')
-  @ApiTags('ctims')
+  @ApiResponse({ status: HttpStatus.OK, description: "List of trials found." })
   findAll() {
     return this.trialService.findAll();
   }
 
+  @Get('getTrialsForUser/:userId')
+  @ApiParam({ name: "userId", description: "ID of the user to find the trials for." })
+  @ApiResponse({ status: HttpStatus.OK, description: "List of trials found." })
+  getTrialsForUser(@Param('userId') userId: string) {
+    return this.trialService.findTrialsByUser(+userId);
+  }
+
   @Get('getTrial/:id')
-  @ApiTags('ctims')
-  findOne(@Param('id') id: string) {
-    return this.trialService.findOne(+id);
+  @ApiParam({ name: "id", description: "ID of the trial." })
+  @ApiResponse({ status: HttpStatus.OK, description: "Object found." })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: "Trial with the requested ID could not be found." })
+  async findOne(@Param('id') id: string) {
+    const result = await this.trialService.findOne(+id);
+    if (!result) {
+      throw new NotFoundException(`Trial with ID ${id} was not found.`)
+    }
+    return result
   }
 
   @Patch('update/:id')

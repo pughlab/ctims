@@ -11,8 +11,24 @@ export class TrialService {
     private readonly prismaService: PrismaService
   ) { }
 
-  create(createTrialDto: CreateTrialDto) {
-    return null;
+  async createTrial(createTrialDto: CreateTrialDto) {
+    const { nctId, nickname, principalInvestigator, status, ctml_schema_id, ctml_json_string } = createTrialDto;
+
+    const newTrial = await this.prismaService.trial.create({
+      data: {
+        nct_id: nctId,
+        nickname,
+        principal_investigator: principalInvestigator,
+        status,
+        ctml_json: {
+          create: {
+            data: ctml_json_string,
+            versionId: ctml_schema_id
+          }
+        }
+      }
+    });
+    return newTrial;
   }
 
   findAll(): Promise<trial[]> {
@@ -20,7 +36,7 @@ export class TrialService {
   }
 
   findOne(id: number): Promise<trial> {
-    return this.prismaService.trial.findUniqueOrThrow({ where: { id: id }});
+    return this.prismaService.trial.findUnique({ where: { id: id }});
   }
 
   findTrialsByUser(userId: number): Promise<trial[]> {
