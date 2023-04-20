@@ -3,7 +3,7 @@ import { CreateTrialDto } from './dto/create-trial.dto';
 import { UpdateTrialDto } from './dto/update-trial.dto';
 import {PrismaService} from "../prisma.service";
 import {trial} from "@prisma/client";
-import {isRecordNotFoundException} from "../utils/prisma-exception-tools";
+import {PrismaExceptionTools} from "../utils/prisma-exception-tools";
 
 @Injectable()
 export class TrialService {
@@ -73,14 +73,24 @@ export class TrialService {
       return updatedEntity;
     } catch (e) {
       // Check if the exception stems from the ID not existing in the trial db, throw appropriate exception.
-      if (isRecordNotFoundException(e)) {
+      if (PrismaExceptionTools.isRecordNotFoundException(e)) {
         throw new NotFoundException(`Trial with ID ${id} not found`);
       }
       throw e;
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} trial`;
+  async delete(id: number) {
+    try {
+      await this.prismaService.trial.delete({
+        where: { id }
+      });
+    } catch (e) {
+      // Check if the exception stems from the ID not existing in the trial db, throw appropriate exception.
+      if (PrismaExceptionTools.isRecordNotFoundException(e)) {
+        throw new NotFoundException(`Trial with ID ${id} not found`);
+      }
+      throw e;
+    }
   }
 }

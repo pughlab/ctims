@@ -5,6 +5,8 @@
 
 import {PrismaClientKnownRequestError} from "@prisma/client/runtime";
 
-export const isRecordNotFoundException = (e): boolean => {
-  return e instanceof PrismaClientKnownRequestError && e.code === 'P2025';
+export class PrismaExceptionTools {
+  static isRecordNotFoundException(e) {
+    return e instanceof PrismaClientKnownRequestError && e.code === 'P2025';
+  }
 }
