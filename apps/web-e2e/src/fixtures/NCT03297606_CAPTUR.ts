@@ -192,7 +192,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                     "or": [
                       {
                         "genomic": {
-                          "cnv_call": "High level amplification",
+                          "cnv_call": "High_level_amplification",
                           "hugo_symbol": "FLT1",
                           "variant_category": "CNV"
                         }
@@ -205,7 +205,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                       },
                       {
                         "genomic": {
-                          "cnv_call": "High level amplification",
+                          "cnv_call": "High_level_amplification",
                           "hugo_symbol": "KDR",
                           "variant_category": "CNV"
                         }
@@ -218,7 +218,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                       },
                       {
                         "genomic": {
-                          "cnv_call": "High level amplification",
+                          "cnv_call": "High_level_amplification",
                           "hugo_symbol": "FLT4",
                           "variant_category": "CNV"
                         }
@@ -304,7 +304,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                 ]
               }
             ]
-          },
+          }
         ]
       }
     ]

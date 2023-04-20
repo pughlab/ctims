@@ -92,6 +92,10 @@ export interface Arm {
   match:           ArmMatch[];
 }
 
+export enum Suspended {
+  N = "N",
+}
+
 export interface DoseLevel {
   level_code:        string;
   level_description: string;
@@ -105,14 +109,15 @@ export interface ArmMatch {
 
 export interface MatchAnd {
   or?:       Or[];
-  AndClinical?: AndClinical;
+  clinical?: FluffyClinical;
   and?:      AndAnd[];
-  clinical?: PurpleClinical;
+  genomic?:  AndGenomic;
 }
 
 export interface AndAnd {
-  clinical: AndClinical;
+  clinical: PurpleClinical;
 }
+
 export interface PurpleClinical {
   age_numerical:               string;
   oncotree_primary_diagnosis?: string;
@@ -120,17 +125,58 @@ export interface PurpleClinical {
   tmb?:                        number;
 }
 
-export interface AndClinical {
+export enum AgeNumerical {
+  The18 = ">=18",
+}
+
+export interface FluffyClinical {
   age_numerical:              string;
   oncotree_primary_diagnosis: string;
+  er_status?:                 string;
+}
+
+export interface AndGenomic {
+  hugo_symbol:        string;
+  molecular_function: string;
+  variant_category:   string;
+  cnv_call: string
+}
+
+export enum MolecularFunction {
+  Activating = "Activating",
+  Inactivating = "Inactivating",
+}
+
+export enum VariantCategory {
+  CopyNumberVariation = "Copy Number Variation",
+  Mutation = "Mutation",
+  StructuralVariation = "Structural Variation",
 }
 
 export interface Or {
-  genomic: Genomic;
+  genomic: OrGenomic;
 }
 
-export interface Genomic {
-  cnv_call?:        string;
-  hugo_symbol:      string;
-  variant_category: string;
+export interface OrGenomic {
+  cnv_call?:                   string;
+  hugo_symbol:                 string;
+  variant_category:            string;
+  display_name?:               string;
+  fusion_partner_hugo_symbol?: string;
+  molecular_function?:         string;
+  protein_change?:             string;
+  variant_classification?:     string;
+  wildcard_protein_change?:    string;
+}
+
+export enum CnvCall {
+  HeterozygousDeletion = "Heterozygous Deletion",
+  HighAmplication = "High Amplication",
+  HighLevelAmplification = "High level amplification",
+}
+
+export enum VariantClassification {
+  DelIns = "Del_Ins",
+  InFrameDel = "In_Frame_Del",
+  MissenseMutation = "Missense_Mutation",
 }
