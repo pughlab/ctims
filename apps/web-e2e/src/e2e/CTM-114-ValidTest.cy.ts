@@ -557,136 +557,82 @@ describe('CTIMS Trial Editor', () => {
   })
 
   it('should validate the match of the "Treatment list Matching Criteria', () => {
+     NCT03297606_CAPTUR.treatment_list.step.forEach((step) => {
+          step.arm[0].match.forEach((matchObj) => {
+              let andArrayT = matchObj.and
+              cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8')
+                .then((downloadData) => {
+                downloadData.treatment_list.step.forEach((step) => {
+                  step.arm[0].match.forEach((matchObj) => {
+                      const andArrayE = matchObj.and
 
-    NCT03297606_CAPTUR.treatment_list.step.forEach((step) => {
-      step.arm.forEach((arm) => {
-        arm.match.forEach((matchObj) => {
-          const andArray = matchObj.and
-          for (let i = 0; i < andArray.length; i++) {
-            const orArray = andArray[i]
-            cy.log(JSON.stringify(orArray))
-          }
-        })
-      })
-    })
+                      // Compare and arrays
+                      for (let i = 0; i < andArrayT.length; i++) {
+                        const andObjT = andArrayT[i]
+                        const andObjE = andArrayE[i]
+                        const andCObjT = andObjT.clinical
+                        const andCObjE = andObjE.clinical
+                        expect(JSON.stringify(andCObjT)).to.deep.equal(JSON.stringify(andCObjE))
 
-    /*  cy.intercept('/path/to/ctml-model.json', (req) => {
-        req.reply({ body: { /!* valid JSON data *!/ } })
-      })*/
+                        // Check if objects have same properties and values
+                        //expect(JSON.stringify(andArrayT[i])).to.deep.equal(JSON.stringify(andArrayE[i]))
 
-     /* NCT03297606_CAPTUR.treatment_list.step[0].arm.forEach((dose, index) => {
-        dose.match.forEach((matchingCriteria) => {
-          const testDataMatchingCriteria = matchingCriteria.and.map((or) => [
-            or.genomic.hugo_symbol,
-            or.genomic.variant_category,
-            or.genomic.cnv_call,
-          ]);
+                        // Compare or arrays
+                        if ( andObjT.or && andObjE.or && andObjT.or.length === andObjE.or.length) {
+                          for (let j = 0; j < andObjT.or.length; j++) {
+                            const orObjT = andObjT.or[j]
+                            const orObjE = andObjE.or[j]
 
-          cy.readFile('/path/to/ctml-model.json', 'utf-8').then((downloadData) => {
-            const ctmlMatchingCriteria = JSON.parse(downloadData);
-            const exportData = matchingCriteria.and;
-            const cctmlMatchingCriteria = exportData.map((or) => [
-              or.genomic.hugo_symbol,
-              or.genomic.variant_category,
-              or.genomic.cnv_call,
-            ]);
+                            // Compare genomic objects
+                            expect(JSON.stringify(orObjT.genomic)).to.deep.equal(JSON.stringify(orObjE.genomic))
 
-            for (let i = 0; i < ctmlMatchingCriteria.length; i++) {
-              expect(cctmlMatchingCriteria[i][0]).to.deep.equal(testDataMatchingCriteria[i][0]);
-            }
-          });
-        });
-      });*/
-
-   /* NCT03297606_CAPTUR.treatment_list.step.forEach((step) => {
-      step.arm.forEach((arm) => {
-        arm.match.forEach((matchObj) => {
-          const andArray = matchObj.and
-          for (let i = 0; i < andArray.length; i++) {
-            const orArray = andArray[i].or
-            for (let j = 0; j < orArray.length; j++) {
-              const genomicObj = orArray[j].genomic
-              if (genomicObj) {
-                // perform your matching checks here
-                const hugoSymbol = genomicObj.hugo_symbol
-                const variantCategory = genomicObj.variant_category
-                const cnvCall = genomicObj.cnv_call
-                cy.log(hugoSymbol)
-                cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((downloadData) => {
-                  const exportData = matchObj.and
-                  let ctmlMatchingCriteria = exportData.map(or => [
-                    or.genomic.hugo_symbol,
-                    or.genomic.variant_category,
-                    or.genomic.cnv_call
-                  ]);
-
-                  if (ctmlMatchingCriteria.length > 0) {
-                    for (let i = 0; i < ctmlMatchingCriteria.length; i++) {
-                      expect(ctmlMatchingCriteria[i][0]).to.deep.equal(testDataMatchingCriteria[i][0]);
-                    }
-                  } else {
-                    // Handle the case where ctmlMatchingCriteria is empty
-                  }
+                          }
+                           }
+                      }
+                    })
                 })
-                // assert if the values match the expected values
-               /!* assert.equal(hugoSymbol, expectedHugoSymbol)
-                assert.equal(variantCategory, expectedVariantCategory)
-                assert.equal(cnvCall, expectedCnvCall)*!/
-              }
-            }
-          }
+              })
+            })
         })
-      })
-    })
-*/
-
-    /*NCT03297606_CAPTUR.treatment_list.step[0].arm.forEach((dose, index) => {
-      dose.match.forEach((matchingCriteria) => {
-        let rawData = matchingCriteria.and;
-        let testDataMatchingCriteria = rawData.map(or => [
-          or.genomic?.hugo_symbol,
-          or.genomic?.variant_category,
-          or.genomic?.cnv_call
-        ]);
-
-        cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((downloadData) => {
-          const exportData = matchingCriteria.and;
-          let ctmlMatchingCriteria = exportData.map(or => [
-            or.genomic?.hugo_symbol,
-            or.genomic?.variant_category,
-            or.genomic?.cnv_call
-          ]);
-
-          for (let i = 0; i < ctmlMatchingCriteria.length; i++) {
-            expect(ctmlMatchingCriteria[i][0]).to.deep.equal(testDataMatchingCriteria[i][0]);
-          }
-        })
-      })
-    });*/
-
-
-    /* NCT03297606_CAPTUR.treatment_list.step[0].arm.forEach((dose, index) => {
-     dose.match.forEach((matchingCriteria) => {
-       let rawData = matchingCriteria.and
-       let testDataMatchingCriteria = rawData.map(or => [
-         or.genomic.hugo_symbol,
-         or.genomic.variant_category,
-         or.genomic.cnv_call
-       ])
-
-       cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((downloadData) => {
-         const exportData = matchingCriteria.and
-         let ctmlMatchingCriteria = exportData.map(or => [
-           or.genomic.hugo_symbol,
-           or.genomic.variant_category,
-           or.genomic.cnv_call
-         ]);
-
-         for (let i = 0; i < ctmlMatchingCriteria.length; i++) {
-           expect(ctmlMatchingCriteria[i][0]).to.deep.equal(testDataMatchingCriteria[i][0]);
-           }
-       })
-     })
-    })*/
   })
-})
+  it('should validate the match of the "Treatment list Matching Criteria ARM 7', () => {
+    const matchAndT = NCT03297606_CAPTUR.treatment_list.step[0].arm[1].match[0].and;
+
+    cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8')
+      .then((downloadData) => {
+        downloadData.treatment_list.step[0].arm[1].match[0].and.forEach((clauseE, index) => {
+          const clauseT = matchAndT[index];
+          if (clauseE.or) {
+            clauseE.or.forEach((objE, index2) => {
+              const objT = clauseT.or[index2];
+              cy.log(`Test object: ${JSON.stringify(objT)}`);
+              cy.log(`Exported object: ${JSON.stringify(objE)}`);
+              expect(JSON.stringify(objT)).to.deep.equal(JSON.stringify(objE));
+            });
+          } else if (clauseE.and) {
+            clauseE.and.forEach((objE, index2) => {
+              const objT = clauseT.and[index2];
+              cy.log(`Test object: ${JSON.stringify(objT)}`);
+              cy.log(`Exported object: ${JSON.stringify(objE)}`);
+              expect(JSON.stringify(objT)).to.deep.equal(JSON.stringify(objE));
+            })
+          }
+        })
+      });
+
+    /* const matchAndT = NCT03297606_CAPTUR.treatment_list.step[0].arm[1].match[0].and;
+     matchAndT.forEach(clause => {
+       if (clause.or) {
+         clause.or.forEach(obj => {
+           cy.log(JSON.stringify(obj));
+         });
+       } else if (clause.and) {
+         clause.and.forEach(objT => {
+           cy.log('test data',JSON.stringify(objT));
+         })
+       }
+     })*/
+
+
+  })
+  })
