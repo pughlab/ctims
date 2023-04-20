@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { CreateSchemaCtmlDto } from './dto/create-schema-ctml.dto';
-import { UpdateSchemaCtmlDto } from './dto/update-schema-ctml.dto';
+import { CreateCtmlSchemaDto } from './dto/create-ctml-schema.dto';
+import { UpdateCtmlSchemaDto } from './dto/update-ctml-schema.dto';
 import {PrismaService} from "../prisma.service";
 
 @Injectable()
-export class SchemaCtmlService {
+export class CtmlSchemaService {
 
   constructor(
     private readonly prismaService: PrismaService
   ) { }
 
-  create(createSchemaCtmlDto: CreateSchemaCtmlDto) {
+  create(createSchemaCtmlDto: CreateCtmlSchemaDto) {
     const newSchema = this.prismaService.schema_ctml.create({
       data: {
         version: "testVersion",
@@ -28,7 +28,7 @@ export class SchemaCtmlService {
     return `This action returns a #${id} schemaCtml`;
   }
 
-  update(id: number, updateSchemaCtmlDto: UpdateSchemaCtmlDto) {
+  update(id: number, updateSchemaCtmlDto: UpdateCtmlSchemaDto) {
     return `This action updates a #${id} schemaCtml`;
   }
 

@@ -1,17 +1,17 @@
 import {Controller, Get, Post, Body, Patch, Param, Delete, NotImplementedException, HttpStatus} from '@nestjs/common';
-import { SchemaCtmlService } from './schema-ctml.service';
-import { CreateSchemaCtmlDto } from './dto/create-schema-ctml.dto';
-import { UpdateSchemaCtmlDto } from './dto/update-schema-ctml.dto';
+import { CtmlSchemaService } from './ctml-schema.service';
+import { CreateCtmlSchemaDto } from './dto/create-ctml-schema.dto';
+import { UpdateCtmlSchemaDto } from './dto/update-ctml-schema.dto';
 import {ApiResponse, ApiTags} from "@nestjs/swagger";
 
 @Controller('schema-ctml')
 @ApiTags("Schema CTML")
-export class SchemaCtmlController {
-  constructor(private readonly schemaCtmlService: SchemaCtmlService) {}
+export class CtmlSchemaController {
+  constructor(private readonly schemaCtmlService: CtmlSchemaService) {}
 
   @Post()
   @ApiResponse({ status: HttpStatus.CREATED, description: "New CTML schema created." })
-  create(@Body() createSchemaCtmlDto: CreateSchemaCtmlDto) {
+  create(@Body() createSchemaCtmlDto: CreateCtmlSchemaDto) {
     return this.schemaCtmlService.create(createSchemaCtmlDto);
   }
 
@@ -28,7 +28,7 @@ export class SchemaCtmlController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSchemaCtmlDto: UpdateSchemaCtmlDto) {
+  update(@Param('id') id: string, @Body() updateSchemaCtmlDto: UpdateCtmlSchemaDto) {
     throw new NotImplementedException();
     return this.schemaCtmlService.update(+id, updateSchemaCtmlDto);
   }

@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SchemaCtmlService } from './schema-ctml.service';
+import { CtmlSchemaService } from './ctml-schema.service';
 
 describe('SchemaCtmlService', () => {
-  let service: SchemaCtmlService;
+  let service: CtmlSchemaService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [SchemaCtmlService],
+      providers: [CtmlSchemaService],
     }).compile();
 
-    service = module.get<SchemaCtmlService>(SchemaCtmlService);
+    service = module.get<CtmlSchemaService>(CtmlSchemaService);
   });
 
   it('should be defined', () => {

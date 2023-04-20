@@ -1,6 +1,6 @@
 import {ApiProperty} from "@nestjs/swagger";
 
-export class CreateSchemaCtmlDto {
+export class CreateCtmlSchemaDto {
   @ApiProperty({
     description: "Schema version.",
   })
