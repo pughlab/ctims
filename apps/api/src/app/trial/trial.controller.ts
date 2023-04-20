@@ -52,8 +52,10 @@ export class TrialController {
   }
 
   @Patch('update/:id')
+  @ApiParam({ name: "id", description: "ID of the trial to update." })
+  @ApiResponse({ status: HttpStatus.OK, description: "Object updated." })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: "Trial with the requested ID could not be found." })
   update(@Param('id') id: string, @Body() updateTrialDto: UpdateTrialDto) {
-    throw new NotImplementedException();
     return this.trialService.update(+id, updateTrialDto);
   }
 
