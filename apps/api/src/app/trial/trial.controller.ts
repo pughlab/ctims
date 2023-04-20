@@ -60,8 +60,10 @@ export class TrialController {
   }
 
   @Delete('delete/:id')
-  remove(@Param('id') id: string) {
-    throw new NotImplementedException();
-    return this.trialService.remove(+id);
+  @ApiParam({ name: "id", description: "ID of the trial to delete." })
+  @ApiResponse({ status: HttpStatus.OK, description: "Object deleted." })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: "Trial with the requested ID could not be found." })
+  async delete(@Param('id') id: string) {
+    await this.trialService.delete(+id);
   }
 }
