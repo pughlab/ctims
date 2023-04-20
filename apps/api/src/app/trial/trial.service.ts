@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, NotFoundException} from '@nestjs/common';
 import { CreateTrialDto } from './dto/create-trial.dto';
 import { UpdateTrialDto } from './dto/update-trial.dto';
 import {PrismaService} from "../prisma.service";
 import {trial} from "@prisma/client";
+import {isRecordNotFoundException} from "../utils/prisma-exception-tools";
 
 @Injectable()
 export class TrialService {
@@ -48,8 +49,35 @@ export class TrialService {
     return entities;
   }
 
-  update(id: number, updateTrialDto: UpdateTrialDto) {
-    return `This action updates a #${id} trial`;
+  async update(id: number, updateTrialDto: UpdateTrialDto) {
+    const { ctml_schema_id, ctml_json_string, status, principalInvestigator, nickname, nctId } = updateTrialDto;
+    try {
+      const updatedEntity = await this.prismaService.trial.update({
+        where: { id },
+        // Update the ctml_json associated with this trial record as well
+        include: { ctml_json: true },
+        data: {
+          status,
+          principal_investigator: principalInvestigator,
+          nickname,
+          nct_id: nctId,
+          ctml_json: {
+            update: {
+              data: ctml_json_string,
+              versionId: ctml_schema_id
+            }
+          }
+        }
+      });
+
+      return updatedEntity;
+    } catch (e) {
+      // Check if the exception stems from the ID not existing in the trial db, throw appropriate exception.
+      if (isRecordNotFoundException(e)) {
+        throw new NotFoundException(`Trial with ID ${id} not found`);
+      }
+      throw e;
+    }
   }
 
   remove(id: number) {
