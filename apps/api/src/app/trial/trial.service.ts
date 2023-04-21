@@ -2,8 +2,9 @@ import {Injectable, NotFoundException} from '@nestjs/common';
 import { CreateTrialDto } from './dto/create-trial.dto';
 import { UpdateTrialDto } from './dto/update-trial.dto';
 import {PrismaService} from "../prisma.service";
-import {trial} from "@prisma/client";
+import {prisma, trial} from "@prisma/client";
 import {PrismaExceptionTools} from "../utils/prisma-exception-tools";
+import {CreateTrialWithCtmlDto} from "./dto/create-trial-with-ctml.dto";
 
 @Injectable()
 export class TrialService {
@@ -13,18 +14,35 @@ export class TrialService {
   ) { }
 
   async createTrial(createTrialDto: CreateTrialDto) {
-    const { nctId, nickname, principalInvestigator, status, ctml_schema_id, ctml_json_string } = createTrialDto;
+    const { nctId, nickname, principalInvestigator, status } = createTrialDto;
 
     const newTrial = await this.prismaService.trial.create({
       data: {
         nct_id: nctId,
         nickname,
         principal_investigator: principalInvestigator,
+        status
+      }
+    });
+    return newTrial;
+  }
+
+  async createTrialWithCtml(creationDto: CreateTrialWithCtmlDto) {
+    const { nctId, nickname, principalInvestigator, status, ctml_schema_id } = creationDto.createTrialDto;
+    const { data: jsonString, schemaVersionId } = creationDto.createCtmlJsonDto;
+
+    const newTrial = await this.prismaService.trial.create({
+      include: { ctml_jsons: true },
+      data: {
+        nct_id: nctId,
+        nickname,
+        principal_investigator: principalInvestigator,
         status,
-        ctml_json: {
+        // Create a ctml_json record with this new trial record
+        ctml_jsons: {
           create: {
-            data: ctml_json_string,
-            versionId: ctml_schema_id
+            data: jsonString,
+            versionId: schemaVersionId
           }
         }
       }
