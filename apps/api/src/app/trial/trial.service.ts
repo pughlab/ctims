@@ -50,27 +50,30 @@ export class TrialService {
   }
 
   async update(id: number, updateTrialDto: UpdateTrialDto) {
-    const { ctml_schema_id, ctml_json_string, status, principalInvestigator, nickname, nctId } = updateTrialDto;
+    const { ctml_schema_id, status, principalInvestigator, nickname, nctId } = updateTrialDto;
     try {
-      const updatedEntity = await this.prismaService.trial.update({
+      // Find the most recent created JSON that has the version specified in the
+      const jsonToUpdate = await this.prismaService.ctml_json.findFirst({
+        where: {
+          trial: { id },
+          versionId: ctml_schema_id
+        },
+        orderBy: { createdAt: 'desc' }
+      });
+      const updatedTrialEntity = await this.prismaService.trial.update({
         where: { id },
         // Update the ctml_json associated with this trial record as well
-        include: { ctml_json: true },
+        include: { ctml_jsons: true },
         data: {
           status,
           principal_investigator: principalInvestigator,
           nickname,
-          nct_id: nctId,
-          ctml_json: {
-            update: {
-              data: ctml_json_string,
-              versionId: ctml_schema_id
-            }
-          }
+          nct_id: nctId
         }
       });
 
-      return updatedEntity;
+
+      return updatedTrialEntity;
     } catch (e) {
       // Check if the exception stems from the ID not existing in the trial db, throw appropriate exception.
       if (PrismaExceptionTools.isRecordNotFoundException(e)) {
