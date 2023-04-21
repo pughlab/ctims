@@ -7,24 +7,28 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model schema_ctml {
+model ctml_schema {
   id         Int         @id @default(autoincrement())
   version    String      @unique
   schema     String
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
+  // Many trials to many schema_ctml records
   trials     trial[]
   ctml_jsons ctml_json[]
 }
 
 model ctml_json {
   id        Int         @id @default(autoincrement())
-  version   schema_ctml @relation(fields: [versionId], references: [id])
+  version   ctml_schema @relation(fields: [versionId], references: [id])
   versionId Int
+  // This should be encrypted
   data      Json?
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
-  trials    trial[]
+  // One trial to many ctml_json records
+  trial     trial    @relation(fields: [trial_id], references: [id], onDelete: Cascade)
+  trial_id  Int
 }
 
 model trial {
@@ -33,15 +37,16 @@ model trial {
   nickname               String?
   principal_investigator String?
   status                 status?       @default(DRAFT)
-  ctml_schemas           schema_ctml[]
-  ctml_json              ctml_json?    @relation(fields: [ctml_jsonId], references: [id])
+  // Many trials to many ctml_schema records
+  ctml_schemas           ctml_schema[]
+  // One trial to many ctml_json records
+  ctml_jsons             ctml_json[]
   createdAt              DateTime      @default(now())
   updatedAt              DateTime      @updatedAt
   createdBy              user?         @relation("createdBy", fields: [userId], references: [id])
   modifiedBy             user?         @relation("modifiedBy", fields: [modifiedById], references: [id])
   userId                 Int?
   modifiedById           Int?
-  ctml_jsonId            Int?
 }
 
 model user {
