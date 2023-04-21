@@ -12,7 +12,9 @@ import {
 import { TrialService } from './trial.service';
 import { CreateTrialDto } from './dto/create-trial.dto';
 import { UpdateTrialDto } from './dto/update-trial.dto';
-import {ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {ApiOkResponse, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {CreateTrialWithCtmlDto} from "./dto/create-trial-with-ctml.dto";
+import {trial} from "@prisma/client";
 
 @Controller('trial')
 @ApiTags("Trial")
@@ -20,10 +22,21 @@ export class TrialController {
   constructor(private readonly trialService: TrialService) {}
 
   @Post('create')
-  @ApiResponse({ status: HttpStatus.CREATED, description: "New trial created." })
-  async create(@Body() createTrialDto: CreateTrialDto) {
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: "New trial created.",
+    // content: { 'application/json': { schema: { $ref: '#/components/schemas/trial' } } }
+  })
+  async create(@Body() createTrialDto: CreateTrialDto): Promise<trial> {
     const newTrial = await this.trialService.createTrial(createTrialDto);
-    return newTrial.id;
+    return newTrial;
+  }
+
+  @Post('createWithJson')
+  @ApiResponse({ status: HttpStatus.CREATED, description: "New trial and associated JSON created." })
+  async createWithJson(@Body() creationDto: CreateTrialWithCtmlDto) {
+    const newTrial = await this.trialService.createTrialWithCtml(creationDto);
+    return newTrial;
   }
 
   @Get('getAll')
