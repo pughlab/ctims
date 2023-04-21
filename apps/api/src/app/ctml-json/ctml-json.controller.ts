@@ -11,7 +11,6 @@ export class CtmlJsonController {
 
   @Post()
   create(@Body() createCtmlJsonDto: CreateCtmlJsonDto) {
-    throw new NotImplementedException();
     return this.ctmlJsonService.create(createCtmlJsonDto);
   }
 

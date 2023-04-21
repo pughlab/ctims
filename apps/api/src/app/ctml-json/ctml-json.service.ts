@@ -12,7 +12,15 @@ export class CtmlJsonService {
     private readonly prismaService: PrismaService
   ) { }
   create(createCtmlJsonDto: CreateCtmlJsonDto) {
-    return 'This action adds a new ctmlJson';
+    const { data, schemaVersionId, trialId } = createCtmlJsonDto;
+    const createdCtmlJson = this.prismaService.ctml_json.create({
+      data: {
+        data,
+        versionId: schemaVersionId,
+        trial_id: trialId
+      }
+    });
+    return createdCtmlJson;
   }
 
   findAll(): Promise<ctml_json[]> {
