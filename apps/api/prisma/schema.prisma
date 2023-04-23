@@ -27,7 +27,7 @@ model ctml_json {
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
   // One trial to many ctml_json records
-  trial     trial    @relation(fields: [trial_id], references: [id], onDelete: Cascade)
+  trial     trial       @relation(fields: [trial_id], references: [id], onDelete: Cascade)
   trial_id  Int
 }
 
@@ -39,23 +39,28 @@ model trial {
   status                 status?       @default(DRAFT)
   // Many trials to many ctml_schema records
   ctml_schemas           ctml_schema[]
-  // One trial to many ctml_json records
-  ctml_jsons             ctml_json[]
   createdAt              DateTime      @default(now())
   updatedAt              DateTime      @updatedAt
-  createdBy              user?         @relation("createdBy", fields: [userId], references: [id])
-  modifiedBy             user?         @relation("modifiedBy", fields: [modifiedById], references: [id])
-  userId                 Int?
+  modifiedBy             user?         @relation("ModifiedBy", fields: [modifiedById], references: [id])
   modifiedById           Int?
+  user                   user?         @relation("UserTrials", fields: [userId], references: [id])
+  userId                 Int?
+  // One trial to many ctml_json records
+  ctml_jsons             ctml_json[]
 }
 
 model user {
   id              Int      @id @default(autoincrement())
   email           String   @unique
-  firstName       String?
-  lastName        String?
-  created_trials  trial[]  @relation("createdBy")
-  modified_trials trial[]  @relation("modifiedBy")
+  name            String?
+  username        String?
+  first_name      String?
+  email_verified  Boolean  @default(false)
+  last_name       String?
+  refresh_token   String?
+  keycloak_id     String?
+  trials          trial[]  @relation("UserTrials")
+  modified_trials trial[]  @relation("ModifiedBy")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }
