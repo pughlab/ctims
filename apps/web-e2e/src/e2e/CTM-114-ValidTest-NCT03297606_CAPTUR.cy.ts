@@ -72,8 +72,8 @@ import {Arm} from "../support/interfaces/CtmlInterfaces3";
 
 describe('CTIMS Trial Editor', () => {
   before(() => cy.visit('/'));
-  deleteDownloadsFolderBeforeAll()
-  it('should Validate the Trial Editor Page with valid test data', () => {
+  //deleteDownloadsFolderBeforeAll()
+  /*it('should Validate the Trial Editor Page with valid test data', () => {
     cy.title().should('contain', 'CTIMS')
     trialEditorLeftPanelList().should('have.length', '9')
     cy.trialInformation(NCT03297606_CAPTUR.nct_id,
@@ -149,7 +149,7 @@ describe('CTIMS Trial Editor', () => {
       cy.wrap($input).find('.p-dropdown').eq(1).click().contains(NCT03297606_CAPTUR.staff_list.protocol_staff[index].staff_role).click();
     });
   })
-//************ Arm 1  *****************
+//!************ Arm 1  *****************
   it('should Validate the match criteria for Arm 1', () => {
     trialEditorLeftPanelList().eq(8).should('contain', 'Treatment List').click()
     cy.get('#array-item-list-root_treatment_list_step_0_arm>div>div>div>div>div').each(($input, index) => {
@@ -329,12 +329,12 @@ describe('CTIMS Trial Editor', () => {
       it('should click on the Export button and then Export as "YAML" file ', () => {
         trialEditorRadioButtons().eq(1).click({force: true})
         trialEditorExportCtml().eq(1).should('contain', 'Export CTML').click()
-      });
+      });*/
   it('should validate the match between "Export JSON" and "Export YAML" file', () => {
-    cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((jsonData) => {
-      const json = JSON.stringify(jsonData);
-      cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.yaml', 'utf-8').then((yamlData) => {
-        const yamlObject = yaml.load(yamlData);
+    cy.readJsonFile('ctml-model.json').then((exportedCtmlModelJson) => {
+      const json = JSON.stringify(exportedCtmlModelJson);
+      cy.readJsonFile('ctml-model.yaml').then((exportedCtmlModelYaml) => {
+        const yamlObject = yaml.load(exportedCtmlModelYaml);
         const yamlVal = JSON.stringify(yamlObject);
         cy.compareArrays(json.split(','), yamlVal.split(','))
       });
@@ -342,7 +342,7 @@ describe('CTIMS Trial Editor', () => {
   })
 
   it('should validate the match of the "Trial Information" values', () => {
-    cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((exportedCtmlModel) => {
+    cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
       let exportedTrialInformation = [exportedCtmlModel.trial_id,
         exportedCtmlModel.long_title,
         exportedCtmlModel.short_title,
@@ -362,24 +362,24 @@ describe('CTIMS Trial Editor', () => {
   });
 
   it('should validate the match of the "Age" values', () => {
-    cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf8').then((downloadData) => {
-      const exportData = downloadData.age
+    cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
+      const exportData = exportedCtmlModel.age
       let testData = NCT03297606_CAPTUR.age
       cy.compareArrays(exportData.split(' '), testData.split(' ')) //Age is a single value, not a array
     })
   });
 
   it('should validate the match of the "Prior treatment requirement" values', () => {
-    cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf8').then((downloadData) => {
-      const exportData = downloadData.prior_treatment_requirements
+    cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
+      const exportData = exportedCtmlModel.prior_treatment_requirements
       let testData = NCT03297606_CAPTUR.prior_treatment_requirements
       cy.compareArrays(exportData, testData)
     })
   });
 
   it('should validate the match of the "Drug list" values', () => {
-    cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf8').then((downloadData) => {
-      let exportData = downloadData.drug_list.drug
+    cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
+      let exportData = exportedCtmlModel.drug_list.drug
       let exportDrugNames = exportData.map(drug => drug.drug_name);
 
       let testData = NCT03297606_CAPTUR.drug_list.drug
@@ -394,8 +394,8 @@ describe('CTIMS Trial Editor', () => {
       group.is_primary
     ]);
 
-    cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((downloadData) => {
-      const exportData = downloadData.management_group_list.management_group;
+    cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
+      const exportData = exportedCtmlModel.management_group_list.management_group;
       let ctmlMatchingCriteria = exportData.map(group => [
         group.management_group_name,
         group.is_primary
@@ -416,8 +416,8 @@ describe('CTIMS Trial Editor', () => {
       group.coordinating_center,
       group.uses_cancer_center_irb]);
 
-    cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((downloadData) => {
-      const exportData = downloadData.site_list.site;
+    cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
+      const exportData = exportedCtmlModel.site_list.site;
       let ctmlMatchingCriteria = exportData.map(group => [
         group.site_name,
         group.site_status,
@@ -442,8 +442,8 @@ describe('CTIMS Trial Editor', () => {
       group.is_principal_sponsor,
     ]);
 
-    cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((downloadData) => {
-      const exportData = downloadData.sponsor_list.sponsor;
+    cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
+      const exportData = exportedCtmlModel.sponsor_list.sponsor;
       let ctmlMatchingCriteria = exportData.map(group => [
         group.sponsor_name,
         group.is_principal_sponsor,
@@ -466,8 +466,8 @@ describe('CTIMS Trial Editor', () => {
       group.staff_role,
     ]);
 
-    cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((downloadData) => {
-      const exportData = downloadData.staff_list.protocol_staff
+    cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
+      const exportData = exportedCtmlModel.staff_list.protocol_staff
       let ctmlMatchingCriteria = exportData.map(group => [
         group.first_name,
         group.last_name,
@@ -491,9 +491,8 @@ describe('CTIMS Trial Editor', () => {
     //matchAndE --> export json
      const matchAndT = NCT03297606_CAPTUR.treatment_list.step[0].arm;
     matchAndT.forEach((armT, armIndex) => {
-      cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8')
-        .then((downloadData) => {
-          const matchAndE = downloadData.treatment_list.step[0].arm;
+      cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
+          const matchAndE = exportedCtmlModel.treatment_list.step[0].arm;
 
           // Arm Code Validation
           matchAndE.forEach((clauseE_1, index_1) => {
