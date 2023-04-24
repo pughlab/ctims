@@ -34,7 +34,6 @@ export class CtmlSchemaController {
   @ApiOperation({ summary: "Find a CTML schema" })
   @ApiFoundResponse({ description: "CTML schema found." })
   findOne(@Param('id') id: string) {
-    throw new NotImplementedException();
     return this.schemaCtmlService.findOne(+id);
   }
 
@@ -42,7 +41,6 @@ export class CtmlSchemaController {
   @ApiOperation({ summary: "Update a CTML schema" })
   @ApiOkResponse({ description: "CTML schema updated." })
   update(@Param('id') id: string, @Body() updateSchemaCtmlDto: UpdateCtmlSchemaDto) {
-    throw new NotImplementedException();
     return this.schemaCtmlService.update(+id, updateSchemaCtmlDto);
   }
 
@@ -50,7 +48,6 @@ export class CtmlSchemaController {
   @ApiOperation({ summary: "Delete a CTML schema record" })
   @ApiNoContentResponse({ description: "CTML schema deleted." })
   remove(@Param('id') id: string) {
-    throw new NotImplementedException();
     return this.schemaCtmlService.remove(+id);
   }
 }
