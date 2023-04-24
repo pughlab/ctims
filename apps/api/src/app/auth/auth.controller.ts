@@ -2,7 +2,6 @@ import {BadRequestException, Controller, Get, Post, Req} from "@nestjs/common";
 import {KeycloakPasswordStrategy} from "./keycloak-password.strategy";
 import {AccessToken} from "./AccessToken";
 import { Token } from "keycloak-connect";
-import { ApiTags } from "@nestjs/swagger";
 
 
 @Controller('auth')
@@ -23,5 +22,12 @@ export class AuthController {
   @Get('refresh')
   async refresh(@AccessToken() accessToken: Token) {
     return await this.strategy.refreshToken(accessToken);
+  }
+
+  @Get('protected')
+  @UseGuards(KeycloakPasswordGuard)
+  getHello(@CurrentUser() user: user): any {
+    const a = '';
+    return {message: 'Hello World!'}
   }
 }

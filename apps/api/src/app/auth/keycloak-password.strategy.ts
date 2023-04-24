@@ -68,11 +68,12 @@ export class KeycloakPasswordStrategy extends PassportStrategy(KeycloakBearerStr
     return {accessToken: keycloakToken['token']};
   }
 
-  async validate(accessToken: string, done: (err: any, user: any, info?: any) => void): Promise<void> {
+  async validate(accessToken: any, done: (err: any, user: any, info?: any) => void): Promise<void> {
     // Here you can implement additional validation or store the user information in your application.
     // You can also attach roles and permissions to the user object based on the token's claims.
     // const r = await this.keycloak.grantManager.obtainFromCode(accessToken)
-    done(null, { accessToken });
+    const user = await this.userService.findUserBySub(accessToken.sub)
+    done(null, user);
   }
 
   onModuleInit(): any {

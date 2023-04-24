@@ -15,6 +15,7 @@
     "cypress:dev": "nx e2e web-e2e --watch"
   },
   "private": true,
+
   "type": "commonjs",
   "dependencies": {
     "@ant-design/icons": "^4.5.0",
