@@ -1,4 +1,4 @@
-import {getPrincipalInvestigator, getTrialId, getTrialNickname, selectDraftCtmlStatus} from '../support/app.po';
+import {getPrincipalInvestigator, getTrialId, getTrialNickname, selectDraftCtmlStatus} from '../../support/app.po';
 
 describe('web', () => {
   beforeEach(() => cy.visit('/'));
