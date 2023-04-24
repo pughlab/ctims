@@ -57,12 +57,14 @@ model user {
   first_name      String?
   email_verified  Boolean  @default(false)
   last_name       String?
-  refresh_token   String?
-  keycloak_id     String?
+  refresh_token   String?  @db.LongText
+  keycloak_id     String?  @unique
   trials          trial[]  @relation("UserTrials")
   modified_trials trial[]  @relation("ModifiedBy")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+
+  @@index(fields: [keycloak_id])
 }
 
 enum status {
