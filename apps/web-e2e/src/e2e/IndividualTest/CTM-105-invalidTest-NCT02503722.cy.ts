@@ -58,12 +58,12 @@ import {
   getVariantCategory, getVariantClassification,
   selectDraftCtmlStatus, trialEditorExportCtml, trialEditorHeaderButtons,
   trialEditorLeftPanelList, trialEditorRadioButtons
-} from '../support/app.po';
+} from '../../support/app.po';
 //import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib";
-import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib"
+import {NCT02503722_Osimertinib} from "../../fixtures/NCT02503722_Osimertinib"
 const { deleteDownloadsFolderBeforeAll } = require('cypress-delete-downloads-folder');
 import * as yaml from 'js-yaml';
-import {invalidNCT02503722_Osimertinib} from "../fixtures/invalidNCT02503722_Osimertinib"
+import {invalidNCT02503722_Osimertinib} from "../../fixtures/invalidNCT02503722_Osimertinib"
 
 describe('CTIMS Trial Editor', () => {
   before(() => cy.visit('/'));

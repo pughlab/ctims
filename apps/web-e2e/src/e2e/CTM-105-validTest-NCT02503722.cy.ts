@@ -151,12 +151,6 @@ describe('CTIMS Trial Editor', () => {
     getProteinChange().type(NCT02503722_Osimertinib.treatment_list.step[0].arm[0].match[0].and[1].or[0].genomic.protein_change)
     //Dropdown
     getVariantCategory().click()
-    const variant_category = getGenomicDropDown().each(element => {
-      // @ts-ignore
-      cy.log(element.text());
-    })
-    // @ts-ignore
-    //cy.log(variant_category)
     getGenomicDropDown().contains(NCT02503722_Osimertinib.treatment_list.step[0].arm[0].match[0].and[1].or[0].genomic.variant_category).click()
     getVariantClassification().click()
     getGenomicDropDown().contains(NCT02503722_Osimertinib.treatment_list.step[0].arm[0].match[0].and[1].or[0].genomic.variant_classification.replace(/_/g, " ")).click()
@@ -227,10 +221,6 @@ describe('CTIMS Trial Editor', () => {
         const yamlObject = yaml.load(yamlData);
         const yamlVal = JSON.stringify(yamlObject);
         cy.compareArrays(json.split(','),yamlVal.split(','))
-       /* jsonData.forEach(([key, value]) => {
-          const yamlData = yamlObject[key];
-          expect(value).to.deep.equal(yamlData);
-        });*/
       });
     });
   });
@@ -356,7 +346,6 @@ describe('CTIMS Trial Editor', () => {
         exportData.arm_internal_id.toString(),
         exportData.arm_suspended,
       ]
-      // @ts-ignore
       cy.compareArrays(ctmlMatchingCriteria,testDataMatchingCriteria)
 
     })
@@ -380,7 +369,6 @@ describe('CTIMS Trial Editor', () => {
         exportData.level_internal_id.toString(),
         exportData.level_suspended
       ]
-      // @ts-ignore
       cy.compareArrays(ctmlMatchingCriteria,testDataMatchingCriteria)
     })
   })
