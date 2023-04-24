@@ -13,7 +13,6 @@ import { CreateTrialDto } from './dto/create-trial.dto';
 import { UpdateTrialDto } from './dto/update-trial.dto';
 import { ApiNotFoundResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { trial } from "@prisma/client";
-import { TrialResponseDto } from "./dto/trial-response.dto";
 
 @Controller('trials')
 @ApiTags("Trial")
@@ -25,8 +24,7 @@ export class TrialController {
   @ApiOperation({ summary: "Create a new trial" })
   @ApiResponse({
     status: HttpStatus.CREATED,
-    description: "New trial created.",
-    type: TrialResponseDto
+    description: "New trial created."
   })
   async create(@Body() createTrialDto: CreateTrialDto): Promise<trial> {
     const newTrial = await this.trialService.createTrial(createTrialDto);
