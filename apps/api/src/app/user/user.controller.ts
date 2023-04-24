@@ -3,7 +3,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { TrialService } from "../trial/trial.service";
-import { ApiExcludeEndpoint, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiExcludeEndpoint, ApiFoundResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 @Controller('users')
 @ApiTags('User')
@@ -29,9 +29,10 @@ export class UserController {
   }
 
   @Get(':id')
-  @ApiExcludeEndpoint()
+  @ApiOperation({ summary: "Get a user record" })
+  @ApiParam({ name: "id", description: "ID of the user to get." })
+  @ApiFoundResponse({ description: "User record found." })
   findOne(@Param('id') id: string) {
-    throw new NotImplementedException();
     return this.userService.findOne(+id);
   }
 
@@ -51,8 +52,8 @@ export class UserController {
 
   @Get(':id/trials')
   @ApiOperation({ summary: "Get all trials for a user" })
-  @ApiParam({ name: "userId", description: "ID of the user to find the trials for." })
-  @ApiResponse({ status: HttpStatus.OK, description: "List of trials found." })
+  @ApiParam({ name: "id", description: "ID of the user to find the trials for." })
+  @ApiFoundResponse({ description: "List of trials found." })
   async getTrialsForUser(@Param('id') id: string) {
     return await this.trialService.findTrialsByUser(+id);
   }

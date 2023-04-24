@@ -5,6 +5,7 @@ import {KeycloakUser} from "./dto/IKeycloadUser";
 import {PrismaService} from "../prisma.service";
 import {KeycloakPasswordStrategy} from "../auth/keycloak-password.strategy";
 import {ModuleRef} from "@nestjs/core";
+import { PrismaPromise, user } from "@prisma/client";
 
 @Injectable()
 export class UserService {
@@ -48,8 +49,8 @@ export class UserService {
     return user;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findOne(id: number): PrismaPromise<user> {
+    return this.prismaService.user.findUnique({ where: { id } });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
