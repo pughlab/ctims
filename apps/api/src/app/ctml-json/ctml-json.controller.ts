@@ -4,7 +4,7 @@ import { CreateCtmlJsonDto } from './dto/create-ctml-json.dto';
 import { UpdateCtmlJsonDto } from './dto/update-ctml-json.dto';
 import {ApiTags} from "@nestjs/swagger";
 
-@Controller('ctml-json')
+@Controller('ctml-jsons')
 @ApiTags('CTML JSON')
 export class CtmlJsonController {
   constructor(private readonly ctmlJsonService: CtmlJsonService) {}
@@ -14,7 +14,7 @@ export class CtmlJsonController {
     return this.ctmlJsonService.create(createCtmlJsonDto);
   }
 
-  @Get('all')
+  @Get('')
   findAll() {
     return this.ctmlJsonService.findAll();
   }

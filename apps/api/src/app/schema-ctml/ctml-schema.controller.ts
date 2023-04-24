@@ -4,7 +4,7 @@ import { CreateCtmlSchemaDto } from './dto/create-ctml-schema.dto';
 import { UpdateCtmlSchemaDto } from './dto/update-ctml-schema.dto';
 import {ApiResponse, ApiTags} from "@nestjs/swagger";
 
-@Controller('schema-ctml')
+@Controller('ctml-schemas')
 @ApiTags("Schema CTML")
 export class CtmlSchemaController {
   constructor(private readonly schemaCtmlService: CtmlSchemaService) {}
