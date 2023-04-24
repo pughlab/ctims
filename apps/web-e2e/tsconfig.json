@@ -4,12 +4,13 @@
     "sourceMap": false,
     "outDir": "../../dist/out-tsc",
     "allowJs": true,
-    "types": ["cypress", "node", "./support", "@shelex/cypress-allure-plugin", "jest"]
+    "types": ["cypress", "node", "./support", "@shelex/cypress-allure-plugin", "jest",""]
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.js",
     "cypress.config.ts",
-    "../../node_modules/cypress-delete-downloads-folder/src/index.d.ts"
+    "../../node_modules/cypress-delete-downloads-folder/src/index.d.ts",
+    "src/cypress/downloads"
   ]
 }

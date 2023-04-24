@@ -300,6 +300,12 @@ Cypress.Commands.add('compareArrays', (actual, expected) => {
     expect(value,"Actual value").to.deep.equal(expectedValue,"Expected Value")
   })
 })
+Cypress.Commands.add('readJsonFile', (fileName) => {
+  const filePath = `/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/${fileName}`
+  return cy.readFile(filePath, 'utf-8').then((fileData) => {
+    return fileData;
+  });
+});
 
 //
 // -- This is a child command --
