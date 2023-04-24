@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateCtmlSchemaDto } from './dto/create-ctml-schema.dto';
 import { UpdateCtmlSchemaDto } from './dto/update-ctml-schema.dto';
 import {PrismaService} from "../prisma.service";
+import { ctml_schema, PrismaPromise } from "@prisma/client";
 
 @Injectable()
 export class CtmlSchemaService {
@@ -20,19 +21,23 @@ export class CtmlSchemaService {
     return newSchema;
   }
 
-  findAll() {
-    return `This action returns all schemaCtml`;
+  findAll(): PrismaPromise<ctml_schema[]> {
+    return this.prismaService.ctml_schema.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} schemaCtml`;
+  findOne(id: number): PrismaPromise<ctml_schema> {
+    return this.prismaService.ctml_schema.findUnique({ where: { id } });
   }
 
-  update(id: number, updateSchemaCtmlDto: UpdateCtmlSchemaDto) {
-    return `This action updates a #${id} schemaCtml`;
+  update(id: number, updateSchemaCtmlDto: UpdateCtmlSchemaDto): PrismaPromise<ctml_schema> {
+    const newSchema = this.prismaService.ctml_schema.update({
+      data: { ...updateSchemaCtmlDto },
+      where: { id }
+    })
+    return newSchema;
   }
 
   remove(id: number) {
-    return `This action removes a #${id} schemaCtml`;
+    this.prismaService.ctml_schema.delete({ where: { id }});
   }
 }
