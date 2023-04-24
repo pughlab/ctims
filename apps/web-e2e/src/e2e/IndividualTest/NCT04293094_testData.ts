@@ -1,4 +1,4 @@
-import {Ctml} from "../support/interfaces/CtmlInterfaces";
+import {Ctml} from "../../support/interfaces/CtmlInterfaces";
 
 export const NCT04293094_testData: Ctml = {
     "age": "Adult",

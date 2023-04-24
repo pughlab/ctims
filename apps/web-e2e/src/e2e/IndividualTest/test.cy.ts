@@ -5,7 +5,7 @@ import {
   getTrialId,
   getTrialNickname,
   selectDraftCtmlStatus
-} from '../support/app.po';
+} from '../../support/app.po';
 
 describe('web', () => {
   beforeEach(() => cy.visit('/'));

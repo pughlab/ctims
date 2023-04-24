@@ -68,9 +68,9 @@ import {
   trialEditorHeaderButtons,
   trialEditorLeftPanelList,
   trialEditorRadioButtons
-} from '../support/app.po';
+} from '../../support/app.po';
 //import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib";
-import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib"
+import {NCT02503722_Osimertinib} from "../../fixtures/NCT02503722_Osimertinib"
 const { deleteDownloadsFolderBeforeAll } = require('cypress-delete-downloads-folder');
 import * as yaml from 'js-yaml';
 

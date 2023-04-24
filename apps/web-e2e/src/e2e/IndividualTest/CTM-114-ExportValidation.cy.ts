@@ -58,9 +58,9 @@ import {
   getVariantCategory, getVariantClassification,
   selectDraftCtmlStatus, trialEditorExportCtml, trialEditorHeaderButtons,
   trialEditorLeftPanelList, trialEditorRadioButtons
-} from '../support/app.po';
+} from '../../support/app.po';
 //import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib";
-import {NCT03297606_CAPTUR} from "../fixtures/NCT03297606_CAPTUR"
+import {NCT03297606_CAPTUR} from "../../fixtures/NCT03297606_CAPTUR"
 const { deleteDownloadsFolderBeforeAll } = require('cypress-delete-downloads-folder');
 import * as yaml from 'js-yaml';
 import {doc} from "prettier";
@@ -68,7 +68,7 @@ import breakParent = doc.builders.breakParent;
 import {Simulate} from "react-dom/test-utils";
 import input = Simulate.input;
 import {cli} from "cypress";
-import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib";
+import {NCT02503722_Osimertinib} from "../../fixtures/NCT02503722_Osimertinib";
 
 describe('CTIMS Export CTML', () => {
   before(() => cy.visit('/'));

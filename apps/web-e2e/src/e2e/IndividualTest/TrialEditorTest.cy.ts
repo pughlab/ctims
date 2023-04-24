@@ -58,8 +58,8 @@ import {
   getVariantCategory,
   selectDraftCtmlStatus,
   trialEditorLeftPanelList
-} from '../support/app.po';
-import {NCT04293094_testData} from "../fixtures/NCT04293094_testData";
+} from '../../support/app.po';
+import {NCT04293094_testData} from "./NCT04293094_testData";
 
 describe('CTIMS Trial Editor', () => {
   beforeEach(() => cy.visit('/'));

@@ -84,12 +84,12 @@ import {
   getPriorTreatmentRequirementRegularExpression, getAddCriteriaToSameList
 } from './app.po';
 import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib";
-import {NCT04293094_testData} from "../fixtures/NCT04293094_testData";
+import {NCT04293094_testData} from "../e2e/IndividualTest/NCT04293094_testData";
 import {NCT03297606_CAPTUR} from "../fixtures/NCT03297606_CAPTUR";
 //import { ctmlModel } from '../support/models/ctml-model';
 
 //require('cypress-delete-downloads-folder').addCustomCommand();
-//
+
 // -- This is a parent command --
 Cypress.Commands.add('login', (email, password) => {
   console.log('Custom command example: Login', email, password);
@@ -132,77 +132,30 @@ Cypress.Commands.add('priorTreatmentRequirement',(priorRequirement: string) => {
 
 
 Cypress.Commands.add('priorTreatmentRequirementRepeatingGroup',(priorRequirement) => {
-  cy.log('before click')
-  let isFirstValueEntered
   getPriorTreatmentRequirementPlusIcon().click()
   cy.get('[id^="root_prior_treatment_requirements_"]').each(($el,index) => {
    const val = $el.attr('id')
     cy.log('Attribute value',val)
     cy.log('index', String(index))
-    // @ts-ignore
     cy.log('we are at ',$el)
-    // if ($el.attr('id').includes('root_prior_treatment_requirements_1')) {
-    //if(index === 0 ) {
     cy.wait(1000)
     if(val.includes('root_prior_treatment_requirements_0') ) {
       cy.wait(1000)
       cy.log('are we at index 0?')
       getPriorTreatmentRequirementRegularExpression().eq(0).click().type(priorRequirement)
       cy.log('text box1 contains',priorRequirement)
-      //getPriorTreatmentRequirementPlusIcon().click()
-      //breakParent
-      /*isFirstValueEntered = true;
-      return false;*/
     }
      if(val.includes('root_prior_treatment_requirements_1') ) {
       cy.wait(1000)
       getPriorTreatmentRequirementRegularExpression().eq(1).click().type(priorRequirement)
        cy.log('text box2 contains',priorRequirement)
-      //getPriorTreatmentRequirementPlusIcon().click()
-
-     /*  isFirstValueEntered = true;
-       return false;*/
     }
    if(val.includes('root_prior_treatment_requirements_2') ) {
       cy.wait(1000)
       getPriorTreatmentRequirementRegularExpression().eq(2).click().type(priorRequirement)
       cy.log('text box3 contains',priorRequirement)
-      //getPriorTreatmentRequirementPlusIcon().click()
-
-      // getPriorTreatmentRequirementPlusIcon().click()
-    /* isFirstValueEntered = true;
-     return false;*/
    }
-
      })
- /* priorRequirement.forEach((requirement,index) => {
-    if(index === 1) {
-      getPriorTreatmentRequirementRegularExpression().eq(1).click().type(requirement)
-      cy.log(requirement)
-    }
-    else if(index === 2) {
-      cy.log(requirement)
-      getPriorTreatmentRequirementRegularExpression().eq(2).click().type(requirement)
-      cy.log(requirement)
-    }*!/
-    /!*if(getPriorTreatmentRequirementRegularExpression().contains('root_prior_treatment_requirements_1')) {
-      getPriorTreatmentRequirementRegularExpression().click().type(requirement)
-    } else if(getPriorTreatmentRequirementRegularExpression().contains('root_prior_treatment_requirements_1')) {
-      getPriorTreatmentRequirementRegularExpression().click().type(requirement)
-    }*/
-  //})
-  /*cy.get('[id^="root_prior_treatment_requirements_"]').each(($el,index) => {
-   // if ($el.attr('id').includes('root_prior_treatment_requirements_1')) {
-    if(index === 1 ) {
-      //|| $el.attr('id').includes('root_prior_treatment_requirements_2')) {
-      // cy.wrap($el).each(($el2) => {
-      cy.wrap($el).click().type(priorRequirement);
-      //  });
-    } //else if ($el.attr('id').includes('root_prior_treatment_requirements_2')) {
-    if(index === 2 ) {
-      cy.wrap($el).click().type(priorRequirement);
-    }*/
-  // })
 })
 
 Cypress.Commands.add('age',(ageGroup: string) => {
@@ -244,11 +197,6 @@ Cypress.Commands.add('managementGroupList',(managementGroupName: string, isPrima
     //.type(managementGroupName)
   getPrimaryManagementGroup().contains(isPrimary).click()
   getPrimaryManagementGroup().should('contain',isPrimary)
-  /*if(isPrimary === 'Y') {
-    getCheckBoxPrimaryManagementGroup().click().should('have.class','p-checkbox-checked') //This is a primary
-  } else {
-    getCheckBoxPrimaryManagementGroup().should('have.class','p-checkbox') //This is a primary management group
-  }*/
 })
 
 Cypress.Commands.add('siteList',(siteName,
@@ -266,16 +214,6 @@ Cypress.Commands.add('siteList',(siteName,
   getCoordinatingCenter().should('contain',coordinatingCenter)
   getCancerCenterIRB().contains(cancerCenterIRB).click()
   getCancerCenterIRB().should('contain',cancerCenterIRB)
- /* if (coordinatingCenter === 'Y') {
-    getCheckBoxCoordinateCenter().click().should('have.class', 'p-checkbox-checked') //This site is a coordinating center.
-  } else {
-    getCheckBoxCoordinateCenter().eq(1).should('have.class', 'p-checkbox')
-  }
-  if (cancerCenterIRB === 'Y') {
-    getCheckBoxCancerCenterIRB().click().should('have.class', 'p-checkbox-checked') //This site uses cancer center IRB.
-  } else {
-    getCheckBoxCancerCenterIRB().should('have.class', 'p-checkbox')
-  }*/
 })
 
 Cypress.Commands.add('sponsorList',(sponsorName: string,principalSponsor: string) => {
@@ -283,11 +221,6 @@ Cypress.Commands.add('sponsorList',(sponsorName: string,principalSponsor: string
   getSponsorName().type(sponsorName)
   getPrincipalSponsor().contains(principalSponsor).click()
   getPrincipalSponsor().should('contain',principalSponsor)
-  /*if (principalSponsor === 'Y') {
-    getCheckBoxPrincipalSponsor().click().should('have.class', 'p-checkbox-checked') //This sponsor is a principal sponsor.
-  } else {
-    getCheckBoxPrincipalSponsor().should('have.class', 'p-checkbox')
-  }*/
 })
 
 Cypress.Commands.add('staffList',(firstName,
@@ -301,13 +234,9 @@ Cypress.Commands.add('staffList',(firstName,
   getProtocolStaffEmail().type(email)
   getProtocolStaffInstitutionalName().click()
   getDefaultTrialEditorDropDown().contains(institutionName).click()
-    //.type(institutionName)
   getProtocolStaffRole().click()
   getDefaultTrialEditorDropDown().contains(staffRole).click()
-    //.type(staffRole)
-  //status not given in json data
-  //getProtocolStaffStatus().type(NCT04293094_testData.staff_list.protocol_staff[0].status)
-})
+   })
 
 Cypress.Commands.add('arm',(armCode,armDescription,armInternalID,armSuspended) => {
   trialEditorLeftPanelList().eq(8).should('contain','Treatment List').click()
@@ -316,12 +245,6 @@ Cypress.Commands.add('arm',(armCode,armDescription,armInternalID,armSuspended) =
   getArmInternalId().type(String(armInternalID))
   getArmSuspended().contains(armSuspended).click()
   getArmSuspended().should('contain',armSuspended)
-  /*const arm_suspended = armSuspended
-  if(arm_suspended === 'Y') {
-    getCheckBoxArmIsSuspended().click().should('have.class','p-checkbox-checked')
-  } else if (arm_suspended === 'N'){
-    getCheckBoxArmIsSuspended().should('have.class','p-checkbox')
-  }*/
 })
 
 Cypress.Commands.add('doseLevel',(levelCode,levelDescription,levelInternalId,levelSuspended) => {
@@ -330,13 +253,6 @@ Cypress.Commands.add('doseLevel',(levelCode,levelDescription,levelInternalId,lev
   getLevelInternalId().type(String(levelInternalId))
   getLevelSuspended().contains(levelSuspended).click()
   getLevelSuspended().should('contain',levelSuspended)
- /* const level_suspended = levelSuspended
-  if( level_suspended === 'Y') {
-    getCheckBoxLevelIsSuspended().click().should('have.class','p-checkbox-checked')
-  }
-  else if(level_suspended === 'N') {
-    getCheckBoxLevelIsSuspended().should('have.class','p-checkbox')
-  }*/
 })
 
 Cypress.Commands.add('clickClinical',() => {
@@ -375,72 +291,16 @@ Cypress.Commands.add('clickChildToggleArrowButton',(indexNumber) => {
 })
 
 Cypress.Commands.add('validateExportJsonAndTestData', (testDataValue) => {
- // return (testDataValue) => {
     let rawData: string[] = testDataValue
-    cy.log("Original Test Data", JSON.stringify(rawData)) //has all the array values
-   /* cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf8').then((downloadData) => {
-      let exportData: string[] = downloadData.drug_list.drug
-      //let exportData : string[] = exportValue.exportJsonValue
-      cy.log("Exported data single Drug value", JSON.stringify(exportData)) // has a single value
-      expect(exportData[0]).to.deep.equal(rawData[0])
-    })*/
+    cy.log("Original Test Data", JSON.stringify(rawData)) //has all the array value
 })
-/*Cypress.Commands.add('readCtmlModelFile', () => {
-  //return
-  // cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8')
-    //.then((exportedCtmlModel) => {
-   /!* return [
-      exportedCtmlModel.trial_id,
-      exportedCtmlModel.long_title,
-      exportedCtmlModel.short_title,
-      exportedCtmlModel.phase,
-      exportedCtmlModel.protocol_no,
-      exportedCtmlModel.nct_purpose,
-      exportedCtmlModel.status
-    ]*!/
-  //})
-})*/
-
 Cypress.Commands.add('compareArrays', (actual, expected) => {
-  /*cy.readFile('/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/ctml-model.json', 'utf-8').then((exportVal) =>{
-    return expected = exportVal
-  })*/
-
   actual.forEach((value, index) => {
     const expectedValue = expected[index]
     expect(value,"Actual value").to.deep.equal(expectedValue,"Expected Value")
   })
 })
-Cypress.Commands.add('clickChildOr',() => {
-  /*NCT03297606_CAPTUR.treatment_list.step[0].arm.forEach((matches,index) => {
-    let len = matches.match[index].and[index].or.length - 1
-    //getTruncateButton().click()
-    //click OR child
-    cy.get('.p-treenode-children > .p-treenode > .p-treenode-content > .LeftMenuComponent_treeNodeContainer__K7jg6 >' +
-      ' .p-treenode-label > b').click()
-    getTruncateButton().click()
-    cy.clickGenomic()
-    //getAddCriteriaToSameGroup().trigger('mouseover').invoke('addClass', 'p-menuitem-active')
-    // getMenuItemGenomic().click()
-    getAddCriteriaToSameList().click()
-    //cy.clickParentNode(1)
-    //cy.clickGenomic()
-    //cy.get(selector).click();
-    // })
-  })*/
- // for (let i = 0; i < 2; i++) {
-    //getTruncateButton().click()
-    getTruncateButton().click()
-    cy.clickGenomic()
-    //getAddCriteriaToSameGroup().trigger('mouseover').invoke('addClass', 'p-menuitem-active')
-   // getMenuItemGenomic().click()
-    getAddCriteriaToSameList().click()
-    //cy.clickParentNode(1)
-    //cy.clickGenomic()
-    //cy.get(selector).click();
-   // })
- // }
-})
+
 //
 // -- This is a child command --
 // Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })
