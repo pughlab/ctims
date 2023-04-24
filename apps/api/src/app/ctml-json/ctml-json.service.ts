@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCtmlJsonDto } from './dto/create-ctml-json.dto';
 import { UpdateCtmlJsonDto } from './dto/update-ctml-json.dto';
-import {ctml_json} from "@prisma/client";
+import { ctml_json, PrismaPromise } from "@prisma/client";
 import {PrismaService} from "../prisma.service";
 import {NotFoundError} from "@prisma/client/runtime";
 
@@ -31,11 +31,19 @@ export class CtmlJsonService {
     return this.prismaService.ctml_json.findUnique({ where: { id: id } });
   }
 
-  update(id: number, updateCtmlJsonDto: UpdateCtmlJsonDto) {
-    return `This action updates a #${id} ctmlJson`;
+  update(id: number, updateCtmlJsonDto: UpdateCtmlJsonDto): PrismaPromise<ctml_json> {
+    const { data, schemaVersionId, trialId } = updateCtmlJsonDto;
+    return this.prismaService.ctml_json.update({
+      data: {
+        data,
+        versionId: schemaVersionId,
+        trial_id: trialId
+      },
+      where: { id }
+    })
   }
 
   remove(id: number) {
-    return `This action removes a #${id} ctmlJson`;
+    this.prismaService.ctml_json.delete({ where: { id } });
   }
 }

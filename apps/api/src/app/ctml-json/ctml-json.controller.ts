@@ -53,7 +53,6 @@ export class CtmlJsonController {
   @ApiOperation({ summary: "Update a CTML JSON record" })
   @ApiResponse({ status: HttpStatus.OK, description: "CTML JSON records found." })
   update(@Param('id') id: string, @Body() updateCtmlJsonDto: UpdateCtmlJsonDto) {
-    throw new NotImplementedException();
     return this.ctmlJsonService.update(+id, updateCtmlJsonDto);
   }
 
@@ -61,7 +60,6 @@ export class CtmlJsonController {
   @ApiOperation({ summary: "Get all CTML JSON records" })
   @ApiNoContentResponse({ description: "CTML JSON record deleted." })
   remove(@Param('id') id: string) {
-    throw new NotImplementedException();
     return this.ctmlJsonService.remove(+id);
   }
 }
