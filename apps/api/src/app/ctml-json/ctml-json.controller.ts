@@ -34,7 +34,7 @@ export class CtmlJsonController {
     return this.ctmlJsonService.create(createCtmlJsonDto);
   }
 
-  @Get('')
+  @Get()
   @ApiOperation({ summary: "Get all CTML JSON records" })
   @ApiFoundResponse({ description: "CTML JSON records found." })
   findAll() {
