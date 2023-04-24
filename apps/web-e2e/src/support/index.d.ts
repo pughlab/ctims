@@ -31,5 +31,6 @@ declare namespace Cypress {
     clickMultipleArm(selector:any, times:number)
     clickMultipleDose( armIndex:number, times:number)
     clickChildOr()
+    readJsonFile(fileName: any)
   }
 }
