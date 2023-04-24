@@ -11,8 +11,9 @@ import {
 import { TrialService } from './trial.service';
 import { CreateTrialDto } from './dto/create-trial.dto';
 import { UpdateTrialDto } from './dto/update-trial.dto';
-import { ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiNotFoundResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { trial } from "@prisma/client";
+import { TrialResponseDto } from "./dto/trial-response.dto";
 
 @Controller('trials')
 @ApiTags("Trial")
@@ -21,10 +22,11 @@ export class TrialController {
   }
 
   @Post()
+  @ApiOperation({ summary: "Create a new trial" })
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: "New trial created.",
-    // content: { 'application/json': { schema: { $ref: '#/components/schemas/trial' } } }
+    type: TrialResponseDto
   })
   async create(@Body() createTrialDto: CreateTrialDto): Promise<trial> {
     const newTrial = await this.trialService.createTrial(createTrialDto);
@@ -38,9 +40,10 @@ export class TrialController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: "Get a trial by ID" })
   @ApiParam({ name: "id", description: "ID of the trial." })
   @ApiResponse({ status: HttpStatus.OK, description: "Object found." })
-  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: "Trial with the requested ID could not be found." })
+  @ApiNotFoundResponse({ description: "Trial with the requested ID could not be found." })
   async findOne(@Param('id') id: string) {
     const result = await this.trialService.findOne(+id);
     if (!result) {

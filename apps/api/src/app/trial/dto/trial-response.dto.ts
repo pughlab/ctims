@@ -1,23 +1,17 @@
 import {ApiProperty, ApiPropertyOptional} from "@nestjs/swagger";
 import {status} from "@prisma/client";
 
-export class CreateTrialDto {
+export class TrialResponseDto {
   @ApiProperty()
   nctId: string;
 
-  @ApiPropertyOptional({
-    minLength: 1,
-    maxLength: 191
-  })
-  nickname?: string;
+  @ApiProperty()
+  nickname: string;
 
-  @ApiPropertyOptional({
-    minLength: 1,
-    maxLength: 191
-  })
-  principalInvestigator?: string;
+  @ApiProperty()
+  principalInvestigator: string;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     enum: status
   })
   status: status;
