@@ -32,6 +32,7 @@ export class TrialController {
   }
 
   @Get()
+  @ApiOperation({ summary: "Get all trials" })
   @ApiResponse({ status: HttpStatus.OK, description: "List of trials found." })
   findAll() {
     return this.trialService.findAll();
@@ -51,6 +52,7 @@ export class TrialController {
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: "Update a trial" })
   @ApiParam({ name: "id", description: "ID of the trial to update." })
   @ApiResponse({ status: HttpStatus.OK, description: "Object updated." })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: "Trial with the requested ID could not be found." })
@@ -59,6 +61,7 @@ export class TrialController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: "Delete a trial" })
   @ApiParam({ name: "id", description: "ID of the trial to delete." })
   @ApiResponse({ status: HttpStatus.OK, description: "Object deleted." })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: "Trial with the requested ID could not be found." })
