@@ -4,7 +4,6 @@ import { UpdateTrialDto } from './dto/update-trial.dto';
 import {PrismaService} from "../prisma.service";
 import {prisma, trial} from "@prisma/client";
 import {PrismaExceptionTools} from "../utils/prisma-exception-tools";
-import {CreateTrialWithCtmlDto} from "./dto/create-trial-with-ctml.dto";
 
 @Injectable()
 export class TrialService {
@@ -22,29 +21,6 @@ export class TrialService {
         nickname,
         principal_investigator: principalInvestigator,
         status
-      }
-    });
-    return newTrial;
-  }
-
-  async createTrialWithCtml(creationDto: CreateTrialWithCtmlDto) {
-    const { nctId, nickname, principalInvestigator, status, ctml_schema_id } = creationDto.createTrialDto;
-    const { data: jsonString, schemaVersionId } = creationDto.createCtmlJsonDto;
-
-    const newTrial = await this.prismaService.trial.create({
-      include: { ctml_jsons: true },
-      data: {
-        nct_id: nctId,
-        nickname,
-        principal_investigator: principalInvestigator,
-        status,
-        // Create a ctml_json record with this new trial record
-        ctml_jsons: {
-          create: {
-            data: jsonString,
-            versionId: schemaVersionId
-          }
-        }
       }
     });
     return newTrial;
