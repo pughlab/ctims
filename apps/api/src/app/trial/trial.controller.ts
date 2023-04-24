@@ -6,22 +6,21 @@ import {
   Patch,
   Param,
   Delete,
-  NotImplementedException,
   NotFoundException, HttpStatus
 } from '@nestjs/common';
 import { TrialService } from './trial.service';
 import { CreateTrialDto } from './dto/create-trial.dto';
 import { UpdateTrialDto } from './dto/update-trial.dto';
-import {ApiOkResponse, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
-import {CreateTrialWithCtmlDto} from "./dto/create-trial-with-ctml.dto";
-import {trial} from "@prisma/client";
+import { ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { trial } from "@prisma/client";
 
-@Controller('trial')
+@Controller('trials')
 @ApiTags("Trial")
 export class TrialController {
-  constructor(private readonly trialService: TrialService) {}
+  constructor(private readonly trialService: TrialService) {
+  }
 
-  @Post('create')
+  @Post()
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: "New trial created.",
@@ -32,27 +31,13 @@ export class TrialController {
     return newTrial;
   }
 
-  @Post('createWithJson')
-  @ApiResponse({ status: HttpStatus.CREATED, description: "New trial and associated JSON created." })
-  async createWithJson(@Body() creationDto: CreateTrialWithCtmlDto) {
-    const newTrial = await this.trialService.createTrialWithCtml(creationDto);
-    return newTrial;
-  }
-
-  @Get('getAll')
+  @Get()
   @ApiResponse({ status: HttpStatus.OK, description: "List of trials found." })
   findAll() {
     return this.trialService.findAll();
   }
 
-  @Get('getTrialsForUser/:userId')
-  @ApiParam({ name: "userId", description: "ID of the user to find the trials for." })
-  @ApiResponse({ status: HttpStatus.OK, description: "List of trials found." })
-  getTrialsForUser(@Param('userId') userId: string) {
-    return this.trialService.findTrialsByUser(+userId);
-  }
-
-  @Get('getTrial/:id')
+  @Get(':id')
   @ApiParam({ name: "id", description: "ID of the trial." })
   @ApiResponse({ status: HttpStatus.OK, description: "Object found." })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: "Trial with the requested ID could not be found." })
@@ -64,7 +49,7 @@ export class TrialController {
     return result
   }
 
-  @Patch('update/:id')
+  @Patch(':id')
   @ApiParam({ name: "id", description: "ID of the trial to update." })
   @ApiResponse({ status: HttpStatus.OK, description: "Object updated." })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: "Trial with the requested ID could not be found." })
@@ -72,7 +57,7 @@ export class TrialController {
     return this.trialService.update(+id, updateTrialDto);
   }
 
-  @Delete('delete/:id')
+  @Delete(':id')
   @ApiParam({ name: "id", description: "ID of the trial to delete." })
   @ApiResponse({ status: HttpStatus.OK, description: "Object deleted." })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: "Trial with the requested ID could not be found." })
