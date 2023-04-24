@@ -13,10 +13,7 @@ export class CtmlSchemaService {
 
   create(createSchemaCtmlDto: CreateCtmlSchemaDto) {
     const newSchema = this.prismaService.ctml_schema.create({
-      data: {
-        version: "testVersion",
-        schema: "Test Schema"
-      }
+      data: { ...createSchemaCtmlDto }
     });
     return newSchema;
   }
