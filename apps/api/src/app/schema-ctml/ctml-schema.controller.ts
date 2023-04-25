@@ -7,7 +7,6 @@ import {
   ApiFoundResponse,
   ApiNoContentResponse, ApiOkResponse,
   ApiOperation,
-  ApiResponse,
   ApiTags
 } from "@nestjs/swagger";
 
@@ -47,7 +46,7 @@ export class CtmlSchemaController {
   @Delete(':id')
   @ApiOperation({ summary: "Delete a CTML schema record" })
   @ApiNoContentResponse({ description: "CTML schema deleted." })
-  remove(@Param('id') id: string) {
-    return this.schemaCtmlService.remove(+id);
+  async remove(@Param('id') id: string) {
+    await this.schemaCtmlService.remove(+id);
   }
 }

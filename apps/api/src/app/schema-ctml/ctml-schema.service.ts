@@ -35,6 +35,6 @@ export class CtmlSchemaService {
   }
 
   remove(id: number) {
-    this.prismaService.ctml_schema.delete({ where: { id }});
+    return this.prismaService.ctml_schema.delete({ where: { id }});
   }
 }

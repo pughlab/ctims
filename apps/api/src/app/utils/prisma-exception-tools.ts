@@ -9,4 +9,8 @@ export class PrismaExceptionTools {
   static isRecordNotFoundException(e) {
     return e instanceof PrismaClientKnownRequestError && e.code === 'P2025';
   }
+
+  static isForeignKeyConstraintError(e) {
+    return e instanceof PrismaClientKnownRequestError && e.code === 'P2019';
+  }
 }
