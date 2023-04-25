@@ -6,6 +6,7 @@ import { Grant, Token } from "keycloak-connect";
 import {UserService} from "../user/user.service";
 import {ModuleRef} from "@nestjs/core";
 import {KeycloakUser} from "../user/dto/IKeycloadUser";
+import jwt_decode from "jwt-decode";
 
 
 const keycloakConfig = {
@@ -30,7 +31,6 @@ export class KeycloakPasswordStrategy extends PassportStrategy(KeycloakBearerStr
       realm: keycloakConfig['realm'],
       url: `https://cbioportal.pmgenomics.ca/newauth`,
     });
-
     this.keycloak = new KeycloakConnect({}, keycloakConfig);
   }
 
@@ -53,16 +53,16 @@ export class KeycloakPasswordStrategy extends PassportStrategy(KeycloakBearerStr
 
   async refreshToken(access_token: Token): Promise<any> {
 
-    const grant: Grant = await this.keycloak.grantManager.createGrant({access_token});
-    const userInfo: KeycloakUser = await this.keycloak.grantManager.userInfo<KeycloakConnect.Token, KeycloakUser>(grant.access_token)
+    const decoded: any = jwt_decode(access_token as unknown as string);
 
-    const user = await this.userService.findUserBySub(userInfo.sub)
+    const user = await this.userService.findUserBySub(decoded.sub)
     if (!user) {
       throw new NotFoundException('User not found')
     }
 
     const grantFromRefreshToken: Grant = await this.keycloak.grantManager.createGrant({access_token, refresh_token: user.refresh_token as unknown as Token})
     const freshGrant: Grant = await this.keycloak.grantManager.ensureFreshness(grantFromRefreshToken);
+    await this.userService.updateRefreshToken(decoded.sub, freshGrant.refresh_token['token'])
     const keycloakToken: KeycloakConnect.Token = freshGrant.access_token;
 
     return {accessToken: keycloakToken['token']};
