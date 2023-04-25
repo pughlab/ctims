@@ -59,7 +59,7 @@ export class CtmlJsonController {
   @Delete(':id')
   @ApiOperation({ summary: "Get all CTML JSON records" })
   @ApiNoContentResponse({ description: "CTML JSON record deleted." })
-  remove(@Param('id') id: string) {
-    return this.ctmlJsonService.remove(+id);
+  async remove(@Param('id') id: string) {
+    await this.ctmlJsonService.remove(+id);
   }
 }

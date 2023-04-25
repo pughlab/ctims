@@ -44,6 +44,6 @@ export class CtmlJsonService {
   }
 
   remove(id: number) {
-    this.prismaService.ctml_json.delete({ where: { id } });
+    return this.prismaService.ctml_json.delete({ where: { id } });
   }
 }
