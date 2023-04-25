@@ -32,5 +32,17 @@ declare namespace Cypress {
     clickMultipleDose( armIndex:number, times:number)
     clickChildOr()
     readJsonFile(fileName: any)
+    staffListAttributes(data: any)
+    sponsorListAttributes(data: any)
+    siteListAttributes(data: any)
+    managementGroupListAttributes(data: any)
+    drugListAttributes(data: any)
+    ageAttribute(data: any)
+    priorTreatmentListAttributes(data: any)
+    trialInformationAttributes(data: any)
+    compareTrialInformation(exportedTrial: any, testDataTrial: any)
+    compareMultiple(data: any,testData: any[][])
+
+
   }
 }

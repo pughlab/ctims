@@ -70,10 +70,10 @@ import input = Simulate.input;
 import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib";
 import {Arm} from "../support/interfaces/CtmlInterfaces3";
 
-describe('CTIMS Trial Editor', () => {
+describe('CTIMS Trial Editor "NCT03297606_CAPTUR', () => {
   before(() => cy.visit('/'));
-  //deleteDownloadsFolderBeforeAll()
-  /*it('should Validate the Trial Editor Page with valid test data', () => {
+  deleteDownloadsFolderBeforeAll()
+  it('should Validate the Trial Editor Page with valid test data', () => {
     cy.title().should('contain', 'CTIMS')
     trialEditorLeftPanelList().should('have.length', '9')
     cy.trialInformation(NCT03297606_CAPTUR.nct_id,
@@ -150,7 +150,7 @@ describe('CTIMS Trial Editor', () => {
     });
   })
 //!************ Arm 1  *****************
-  it('should Validate the match criteria for Arm 1', () => {
+  it('should validate the match criteria for Arm 1', () => {
     trialEditorLeftPanelList().eq(8).should('contain', 'Treatment List').click()
     cy.get('#array-item-list-root_treatment_list_step_0_arm>div>div>div>div>div').each(($input, index) => {
       cy.log($input.attr('id'));
@@ -220,7 +220,7 @@ describe('CTIMS Trial Editor', () => {
   })
   //!************ Arm 7  *****************
 
-  it('should Validate the match criteria for Arm 7', () => {
+  it('should validate the match criteria for Arm 7', () => {
     cy.get('#array-item-list-root_treatment_list_step_0_arm').contains('Add arm').click()
 
     cy.get('#object-field-template-root_treatment_list_step_0_arm_1').each(($input, index) => {
@@ -318,18 +318,51 @@ describe('CTIMS Trial Editor', () => {
     })
     getSaveMatchingCriteria().click()
 })
+  //!******** Match Preview ********************
+  it('should validate multiple "Json preview" match with "NCT03297606_CAPTUR"', () => {
+    NCT03297606_CAPTUR.treatment_list.step[0].arm.forEach((arm,armIndex) => {
+      const matchCriteria = arm.match
+      cy.get('.p-tabview.p-component').each(($el, index) => {
+        if (index === 0) {
+          cy.log("click parent")
+          cy.wrap($el).parent().contains('JSON').click()
+          cy.wrap($el).find('.p-tabview-panels').invoke('text').then((text) => {
+            const jsonArray = JSON.parse(text);
+            cy.log('jsonArray', JSON.stringify(jsonArray))
+            cy.log('matchCriteria test data',JSON.stringify(matchCriteria[index]))
+            if(JSON.stringify(jsonArray) == JSON.stringify(matchCriteria)) {
+              expect(JSON.stringify(jsonArray), 'matchPreview').to.deep.equal(JSON.stringify(matchCriteria))
+            }
+          })
+        }
+        if (index === 1) {
+          cy.log("click parent")
+          cy.wrap($el).parent().contains('JSON').click()
+          cy.wrap($el).find('.p-tabview-panels').invoke('text').then((text) => {
+            const jsonArray = JSON.parse(text);
+            cy.log('jsonArray', JSON.stringify(jsonArray))
+            cy.log('matchCriteria test data',JSON.stringify(matchCriteria[index]))
+            if(JSON.stringify(jsonArray) == JSON.stringify(matchCriteria)) {
+              expect(JSON.stringify(jsonArray), 'matchPreview').to.deep.equal(JSON.stringify(matchCriteria))
+            }
+          })
+        }
+      })
+    })
+  });
     //!************Export Ctml***************
-      it('should click on the Export button and then Export as "JSON" file ', () => {
-        trialEditorHeaderButtons().eq(1).should('contain', 'Export').click()
-        trialEditorRadioButtons().eq(0).should('contain.html', 'json')
-        cy.get('[type="radio"]').first().check({force: true}).should('be.checked')
-        trialEditorExportCtml().eq(1).should('contain', 'Export CTML').click()
-      });
+  it('should click on Export button, "Export as JSON" file ', () => {
+    trialEditorHeaderButtons().eq(1).should('contain', 'Export').click()
+    trialEditorRadioButtons().eq(0).should('contain.html', 'json')
+    cy.get('[type="radio"]').first().check({force: true}).should('be.checked')
+    trialEditorExportCtml().eq(1).should('contain', 'Export CTML').click()
+  });
 
-      it('should click on the Export button and then Export as "YAML" file ', () => {
-        trialEditorRadioButtons().eq(1).click({force: true})
-        trialEditorExportCtml().eq(1).should('contain', 'Export CTML').click()
-      });*/
+  it('should click on Export button, "Export as YAML" file ', () => {
+    trialEditorRadioButtons().eq(1).click({force: true})
+    trialEditorExportCtml().eq(1).should('contain', 'Export CTML').click()
+  });
+
   it('should validate the match between "Export JSON" and "Export YAML" file', () => {
     cy.readJsonFile('ctml-model.json').then((exportedCtmlModelJson) => {
       const json = JSON.stringify(exportedCtmlModelJson);
@@ -340,28 +373,21 @@ describe('CTIMS Trial Editor', () => {
       });
     });
   })
+//**************** Match Export Json file with Test Data
 
-  it('should validate the match of the "Trial Information" values', () => {
+  it('should validate exported "Trial Information" matches "NCT03297606_CAPTUR" ', () => {
     cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
-      let exportedTrialInformation = [exportedCtmlModel.trial_id,
-        exportedCtmlModel.long_title,
-        exportedCtmlModel.short_title,
-        exportedCtmlModel.phase,
-        exportedCtmlModel.protocol_no,
-        exportedCtmlModel.nct_purpose,
-        exportedCtmlModel.status]
-      let testDataTrialInformation = [NCT03297606_CAPTUR.nct_id,
-        NCT03297606_CAPTUR.long_title,
-        NCT03297606_CAPTUR.short_title,
-        NCT03297606_CAPTUR.phase,
-        NCT03297606_CAPTUR.protocol_no,
-        NCT03297606_CAPTUR.nct_purpose,
-        NCT03297606_CAPTUR.status]
-      cy.compareArrays(exportedTrialInformation, testDataTrialInformation)
-    })
+      const exportedAttributeNames = ['trial_id', 'long_title', 'short_title', 'phase', 'protocol_no', 'nct_purpose', 'status'];
+      const testDataAttributeNames = ['nct_id', 'long_title', 'short_title', 'phase', 'protocol_no', 'nct_purpose', 'status'];
+
+      const exportedTrialInformation = exportedAttributeNames.map((attribute) => exportedCtmlModel[attribute]);
+      const testDataTrialInformation = testDataAttributeNames.map((attribute) => NCT03297606_CAPTUR[attribute]);
+
+      cy.compareArrays(exportedTrialInformation, testDataTrialInformation);
+    });
   });
 
-  it('should validate the match of the "Age" values', () => {
+  it('should validate exported "Age" matches "NCT03297606_CAPTUR"', () => {
     cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
       const exportData = exportedCtmlModel.age
       let testData = NCT03297606_CAPTUR.age
@@ -369,7 +395,7 @@ describe('CTIMS Trial Editor', () => {
     })
   });
 
-  it('should validate the match of the "Prior treatment requirement" values', () => {
+  it('should validate exported "Prior treatment requirement" match "NCT03297606_CAPTUR"', () => {
     cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
       const exportData = exportedCtmlModel.prior_treatment_requirements
       let testData = NCT03297606_CAPTUR.prior_treatment_requirements
@@ -377,157 +403,98 @@ describe('CTIMS Trial Editor', () => {
     })
   });
 
-  it('should validate the match of the "Drug list" values', () => {
-    cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
-      let exportData = exportedCtmlModel.drug_list.drug
-      let exportDrugNames = exportData.map(drug => drug.drug_name);
+  it('should validate exported "Drug list" match "NCT03297606_CAPTUR"', () => {
+    let rawData = NCT03297606_CAPTUR.drug_list.drug
 
-      let testData = NCT03297606_CAPTUR.drug_list.drug
-      let testDataDrugNames = testData.map(drug => drug.drug_name);
-      cy.compareArrays(exportDrugNames, testDataDrugNames)
-    })
+    cy.drugListAttributes(rawData).then(testDataMatchingCriteria => {
+      cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
+        const exportData = exportedCtmlModel.drug_list.drug
+
+        cy.drugListAttributes(exportData).then(ctmlMatchingCriteria => {
+        cy.compareMultiple(ctmlMatchingCriteria,testDataMatchingCriteria)
+        });
+      });
+    });
   });
-  it('should validate the match of the "Management Group list" values', () => {
+  it('should validate expotred "Management Group list" matches "NCT03297606_CAPTUR"', () => {
     let rawData = NCT03297606_CAPTUR.management_group_list.management_group;
-    let testDataMatchingCriteria = rawData.map(group => [
-      group.management_group_name,
-      group.is_primary
-    ]);
 
-    cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
-      const exportData = exportedCtmlModel.management_group_list.management_group;
-      let ctmlMatchingCriteria = exportData.map(group => [
-        group.management_group_name,
-        group.is_primary
-      ]);
+    cy.managementGroupListAttributes(rawData).then(testDataMatchingCriteria => {
+      cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
+        const exportData = exportedCtmlModel.management_group_list.management_group
 
-      for (let i = 0; i < ctmlMatchingCriteria.length; i++) {
-        expect(ctmlMatchingCriteria[i][0]).to.deep.equal(testDataMatchingCriteria[i][0]);
-        expect(ctmlMatchingCriteria[i][1]).to.deep.equal(testDataMatchingCriteria[i][1]);
-      }
-    })
+        cy.managementGroupListAttributes(exportData).then(ctmlMatchingCriteria => {
+          cy.compareMultiple(ctmlMatchingCriteria,testDataMatchingCriteria)
+        });
+      });
+    });
   });
 
-  it('should validate the match of the "Site Group list" values', () => {
+  it('should validate exported "Site Group list" matches "NCT03297606_CAPTUR"', () => {
     let rawData = NCT03297606_CAPTUR.site_list.site
-    let testDataMatchingCriteria = rawData.map(group => [
-      group.site_name,
-      group.site_status,
-      group.coordinating_center,
-      group.uses_cancer_center_irb]);
 
-    cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
-      const exportData = exportedCtmlModel.site_list.site;
-      let ctmlMatchingCriteria = exportData.map(group => [
-        group.site_name,
-        group.site_status,
-        group.coordinating_center,
-        group.uses_cancer_center_irb
-      ]);
+    cy.siteListAttributes(rawData).then(testDataMatchingCriteria => {
+      cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
+        const exportData = exportedCtmlModel.site_list.site
 
-      for (let i = 0; i < ctmlMatchingCriteria.length; i++) {
-        expect(ctmlMatchingCriteria[i][0]).to.deep.equal(testDataMatchingCriteria[i][0]);
-        expect(ctmlMatchingCriteria[i][1]).to.deep.equal(testDataMatchingCriteria[i][1]);
-        expect(ctmlMatchingCriteria[i][2]).to.deep.equal(testDataMatchingCriteria[i][2]);
-        expect(ctmlMatchingCriteria[i][3]).to.deep.equal(testDataMatchingCriteria[i][3]);
-
-      }
-    })
+        cy.siteListAttributes(exportData).then(ctmlMatchingCriteria => {
+          cy.compareMultiple(ctmlMatchingCriteria,testDataMatchingCriteria)
+        });
+      });
+    });
   });
 
-  it('should validate the match of the "Sponsor list" values', () => {
+  it('should validate exported "Sponsor list" matches "NCT03297606_CAPTUR"', () => {
     let rawData = NCT03297606_CAPTUR.sponsor_list.sponsor
-    let testDataMatchingCriteria = rawData.map(group => [
-      group.sponsor_name,
-      group.is_principal_sponsor,
-    ]);
 
-    cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
-      const exportData = exportedCtmlModel.sponsor_list.sponsor;
-      let ctmlMatchingCriteria = exportData.map(group => [
-        group.sponsor_name,
-        group.is_principal_sponsor,
-      ]);
+    cy.sponsorListAttributes(rawData).then(testDataMatchingCriteria => {
+      cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
+        const exportData = exportedCtmlModel.sponsor_list.sponsor
 
-      for (let i = 0; i < ctmlMatchingCriteria.length; i++) {
-        expect(ctmlMatchingCriteria[i][0]).to.deep.equal(testDataMatchingCriteria[i][0]);
-        expect(ctmlMatchingCriteria[i][1]).to.deep.equal(testDataMatchingCriteria[i][1]);
-      }
-    })
+        cy.sponsorListAttributes(exportData).then(ctmlMatchingCriteria => {
+          cy.compareMultiple(ctmlMatchingCriteria,testDataMatchingCriteria)
+        });
+      });
+    });
   });
 
-  it('should validate the match of the "Staff list" values', () => {
+  it('should validate exported "Staff list" matches "NCT03297606_CAPTUR"', () => {
     let rawData = NCT03297606_CAPTUR.staff_list.protocol_staff
-    let testDataMatchingCriteria = rawData.map(group => [
-      group.first_name,
-      group.last_name,
-      group.email_address,
-      group.institution_name,
-      group.staff_role,
-    ]);
 
-    cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
-      const exportData = exportedCtmlModel.staff_list.protocol_staff
-      let ctmlMatchingCriteria = exportData.map(group => [
-        group.first_name,
-        group.last_name,
-        group.email_address,
-        group.institution_name,
-        group.staff_role,
-      ]);
+    cy.staffListAttributes(rawData).then(testDataMatchingCriteria => {
+      cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
+        const exportData = exportedCtmlModel.staff_list.protocol_staff;
 
-      for (let i = 0; i < ctmlMatchingCriteria.length; i++) {
-        expect(ctmlMatchingCriteria[i][0]).to.deep.equal(testDataMatchingCriteria[i][0]);
-        expect(ctmlMatchingCriteria[i][1]).to.deep.equal(testDataMatchingCriteria[i][1]);
-        expect(ctmlMatchingCriteria[i][2]).to.deep.equal(testDataMatchingCriteria[i][2]);
-        expect(ctmlMatchingCriteria[i][3]).to.deep.equal(testDataMatchingCriteria[i][3]);
-        expect(ctmlMatchingCriteria[i][4]).to.deep.equal(testDataMatchingCriteria[i][4]);
-      }
-    })
+        cy.staffListAttributes(exportData).then(ctmlMatchingCriteria => {
+          cy.compareMultiple(ctmlMatchingCriteria,testDataMatchingCriteria)
+        });
+      });
+    });
   })
 
-  it('should validate each arm and the matching criteria',() =>{
-    //matchAndT--> test data json
-    //matchAndE --> export json
-     const matchAndT = NCT03297606_CAPTUR.treatment_list.step[0].arm;
-    matchAndT.forEach((armT, armIndex) => {
-      cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
-          const matchAndE = exportedCtmlModel.treatment_list.step[0].arm;
+  it('should validate "Treatment list" with multiple arm/matching criteria matches with "NCT03297606_CAPTUR"',() =>{
+    const matchAndT = NCT03297606_CAPTUR.treatment_list.step[0].arm;
+    cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
+      const matchAndE = exportedCtmlModel.treatment_list.step[0].arm;
 
-          // Arm Code Validation
-          matchAndE.forEach((clauseE_1, index_1) => {
-            if(JSON.stringify(clauseE_1.arm_code) === JSON.stringify(armT.arm_code)) {
-              expect(JSON.stringify(clauseE_1.arm_code),'Arm Code Match').to.deep.equal(JSON.stringify(armT.arm_code));
-            }
-            if(JSON.stringify(clauseE_1.arm_description) === JSON.stringify(armT.arm_description)) {
-              expect(JSON.stringify(clauseE_1.arm_description),'Arm Description Match').to.deep.equal(JSON.stringify(armT.arm_description));
-            }
-            if(JSON.stringify(clauseE_1.arm_internal_id) === JSON.stringify(armT.arm_internal_id.toString())) {
-              expect(JSON.stringify(clauseE_1.arm_internal_id),'Arm Internal Id Match').to.deep.equal(JSON.stringify(armT.arm_internal_id.toString()));
-            }
-            if(JSON.stringify(clauseE_1.arm_suspended) === JSON.stringify(armT.arm_suspended)) {
-              expect(JSON.stringify(clauseE_1.arm_suspended),'Arm Suspended Match').to.deep.equal(JSON.stringify(armT.arm_suspended));
-            }
+      matchAndT.forEach((armT, armIndex) => {
+        const clauseE_1 = matchAndE.find((clause) => JSON.stringify(clause.arm_code) === JSON.stringify(armT.arm_code));
 
-            // Arm Dose Level Validation
-            clauseE_1.dose_level.forEach((objE_1, index_2) => {
-              armT.dose_level.forEach((objE_2, index_3) => {
+        if (clauseE_1) {
+          expect(JSON.stringify(clauseE_1.arm_code), 'Arm Code Match').to.deep.equal(JSON.stringify(armT.arm_code));
+          expect(JSON.stringify(clauseE_1.arm_description), 'Arm Description Match').to.deep.equal(JSON.stringify(armT.arm_description));
+          expect(JSON.stringify(clauseE_1.arm_internal_id), 'Arm Internal Id Match').to.deep.equal(JSON.stringify(armT.arm_internal_id.toString()));
+          expect(JSON.stringify(clauseE_1.arm_suspended), 'Arm Suspended Match').to.deep.equal(JSON.stringify(armT.arm_suspended));
 
-                if(JSON.stringify(objE_1.level_code) === JSON.stringify(objE_2.level_code)) {
-                  expect(JSON.stringify(objE_1.level_code),'Dose Level : Level Code Match').to.deep.equal(JSON.stringify(objE_2.level_code));
-                }
-                if(JSON.stringify(objE_1.level_description) === JSON.stringify(objE_2.level_description)) {
-                  expect(JSON.stringify(objE_1.level_description),'Dose Level : Level Description Match').to.deep.equal(JSON.stringify(objE_2.level_description));
-                }
-                if(JSON.stringify(objE_1.level_internal_id) === JSON.stringify(objE_2.level_internal_id.toString())) {
-                  expect(JSON.stringify(objE_1.level_internal_id),'Dose Level : Level Internal ID Match').to.deep.equal(JSON.stringify(objE_2.level_internal_id.toString()));
-                }
-                if(JSON.stringify(objE_1.level_suspended) === JSON.stringify(objE_2.level_suspended)) {
-                  expect(JSON.stringify(objE_1.level_suspended),'Dose Level : Level Suspended Match').to.deep.equal(JSON.stringify(objE_2.level_suspended));
-                }
-              });
-            });
+          clauseE_1.dose_level.forEach((objE_1, index_2) => {
+            const objE_2 = armT.dose_level[index_2];
+
+            expect(JSON.stringify(objE_1.level_code), 'Dose Level : Level Code Match').to.deep.equal(JSON.stringify(objE_2.level_code));
+            expect(JSON.stringify(objE_1.level_description), 'Dose Level : Level Description Match').to.deep.equal(JSON.stringify(objE_2.level_description));
+            expect(JSON.stringify(objE_1.level_internal_id), 'Dose Level : Level Internal ID Match').to.deep.equal(JSON.stringify(objE_2.level_internal_id.toString()));
+            expect(JSON.stringify(objE_1.level_suspended), 'Dose Level : Level Suspended Match').to.deep.equal(JSON.stringify(objE_2.level_suspended));
           });
+        }
           //matching criteria validation
           const armE = matchAndE[armIndex].match[0].and;
           armE.forEach((clauseE, index) => {
