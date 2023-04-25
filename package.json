@@ -17,11 +17,11 @@
     "firefox:dev": "nx e2e web-e2e --watch --browser firefox --headed",
     "edge:dev": "nx e2e web-e2e --watch --browser edge --headed",
     "cy:run": "nx e2e web-e2e allure=true",
-    "allurereport": "allure generate allure-results && allure open allure-report",
+    "allurereport": "allure generate ./apps/web-e2e/allure-results && allure open ./apps/web-e2e/allure-report",
     "allure:clean": "rm -R -f ./apps/web-e2e/allure-report && rm -R -f ./apps/web-e2e/allure-results  && mkdir ./apps/web-e2e/allure-results && mkdir ./apps/web-e2e/allure-report ",
     "allureclear": "npm run allure:clean",
-    "allureposttest": "nx run e2e web-e2e allurereport",
-    "allure:test": "nx e2e web-e2e --watch cy:run && npm run allurereport"
+    "allureposttest": "npm run allurereport",
+    "allure:test": "npm run cy:run && npm run allurereport"
   },
   "private": true,
   "type": "commonjs",
