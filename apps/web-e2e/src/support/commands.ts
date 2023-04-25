@@ -86,6 +86,7 @@ import {
 import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib";
 import {NCT04293094_testData} from "../e2e/IndividualTest/NCT04293094_testData";
 import {NCT03297606_CAPTUR} from "../fixtures/NCT03297606_CAPTUR";
+const path = require('path')
 //import { ctmlModel } from '../support/models/ctml-model';
 
 //require('cypress-delete-downloads-folder').addCustomCommand();
@@ -301,12 +302,84 @@ Cypress.Commands.add('compareArrays', (actual, expected) => {
   })
 })
 Cypress.Commands.add('readJsonFile', (fileName) => {
-  const filePath = `/Users/srimathijayasimman/WebstormProjects/CTIMS/ctims/apps/web-e2e/cypress/downloads/${fileName}`
+  cy.log(__dirname)
+  const filePath = path.join(__dirname, '../../','cypress', 'downloads',fileName);
+  cy.log(filePath)
+  cy.log(fileName)
   return cy.readFile(filePath, 'utf-8').then((fileData) => {
     return fileData;
   });
 });
-
+Cypress.Commands.add('staffListAttributes', (data) => {
+  return Cypress.Promise.resolve(data.map(group => [
+    group.first_name,
+    group.last_name,
+    group.email_address,
+    group.institution_name,
+    group.staff_role,
+  ]));
+});
+Cypress.Commands.add('sponsorListAttributes', (data) => {
+  return Cypress.Promise.resolve(data.map(group => [
+    group.sponsor_name,
+    group.is_principal_sponsor,
+  ]));
+});
+Cypress.Commands.add('siteListAttributes', (data) => {
+  return Cypress.Promise.resolve(data.map(group => [
+    group.site_name,
+    group.site_status,
+    group.coordinating_center,
+    group.uses_cancer_center_irb
+  ]));
+});
+Cypress.Commands.add('managementGroupListAttributes', (data) => {
+  return Cypress.Promise.resolve(data.map(group => [
+    group.management_group_name,
+    group.is_primary
+  ]));
+});
+Cypress.Commands.add('drugListAttributes', (data) => {
+  return Cypress.Promise.resolve(data.map(group => [
+    group.drug_name
+  ]));
+});
+Cypress.Commands.add('ageAttribute', (data) => {
+  return Cypress.Promise.resolve(data.map(group => [
+    group.age,
+  ]));
+});
+Cypress.Commands.add('priorTreatmentListAttributes', (data) => {
+  return Cypress.Promise.resolve(data.map(group => [
+    group.sponsor_name,
+    group.is_principal_sponsor,
+  ]));
+});
+Cypress.Commands.add('trialInformationAttributes', (data) => {
+  return Cypress.Promise.resolve(data.map(group => [
+    group.nct_id,
+   // group.principal_investigator,
+    group.long_title,
+    group.short_title,
+    group.phase,
+    group.protocol_no,
+    group.nct_purpose,
+    group.status
+  ]));
+});
+Cypress.Commands.add('compareTrialInformation', (exportedTrial, testDataTrial) => {
+  const attributes = ['trial_id', 'long_title', 'short_title', 'phase', 'protocol_no', 'nct_purpose', 'status'];
+  attributes.forEach((attr) => {
+    expect(exportedTrial[attr]).to.deep.equal(testDataTrial[attr]);
+  });
+});
+Cypress.Commands.add('compareMultiple', (data,testData) => {
+   data.forEach((criteria, i) => {
+            criteria.forEach((element, j) => {
+              expect(element).to.deep.equal(testData[i][j]);
+            });
+          });
+});
 //
 // -- This is a child command --
 // Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })
