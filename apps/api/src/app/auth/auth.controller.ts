@@ -1,7 +1,11 @@
-import {BadRequestException, Controller, Get, Post, Req} from "@nestjs/common";
+import {BadRequestException, Controller, Get, Post, Req, UseGuards} from "@nestjs/common";
 import {KeycloakPasswordStrategy} from "./keycloak-password.strategy";
 import {AccessToken} from "./AccessToken";
 import { Token } from "keycloak-connect";
+import {KeycloakPasswordGuard} from "./KeycloakPasswordGuard";
+import {ApiTags} from "@nestjs/swagger";
+import {CurrentUser} from "./CurrentUser";
+import {user} from "@prisma/client";
 
 
 @Controller('auth')
