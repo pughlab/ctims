@@ -2,9 +2,11 @@ import {BadRequestException, Controller, Get, Post, Req} from "@nestjs/common";
 import {KeycloakPasswordStrategy} from "./keycloak-password.strategy";
 import {AccessToken} from "./AccessToken";
 import { Token } from "keycloak-connect";
+import { ApiTags } from "@nestjs/swagger";
 
 
 @Controller('auth')
+@ApiTags('Auth')
 export class AuthController {
   constructor(public strategy: KeycloakPasswordStrategy) {}
 
