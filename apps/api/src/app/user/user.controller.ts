@@ -1,9 +1,31 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotImplementedException, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  NotImplementedException,
+  HttpStatus,
+  UseGuards
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { TrialService } from "../trial/trial.service";
-import { ApiExcludeEndpoint, ApiFoundResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
+import {
+  ApiBearerAuth,
+  ApiExcludeEndpoint,
+  ApiFoundResponse,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags
+} from "@nestjs/swagger";
+import { CurrentUser } from "../auth/CurrentUser";
+import { KeycloakPasswordGuard } from "../auth/KeycloakPasswordGuard";
+import { user } from "@prisma/client";
 
 @Controller('users')
 @ApiTags('User')
@@ -51,10 +73,11 @@ export class UserController {
   }
 
   @Get(':id/trials')
+  @UseGuards(KeycloakPasswordGuard)
+  @ApiBearerAuth("KeycloakPasswordGuard")
   @ApiOperation({ summary: "Get all trials for a user" })
-  @ApiParam({ name: "id", description: "ID of the user to find the trials for." })
   @ApiFoundResponse({ description: "List of trials found." })
-  async getTrialsForUser(@Param('id') id: string) {
-    return await this.trialService.findTrialsByUser(+id);
+  async getTrialsForUser(@CurrentUser() user: user) {
+    return await this.trialService.findTrialsByUser(user.id);
   }
 }

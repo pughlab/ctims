@@ -6,13 +6,24 @@ import {
   Patch,
   Param,
   Delete,
-  NotFoundException, HttpStatus
+  NotFoundException, HttpStatus, UseGuards
 } from '@nestjs/common';
 import { TrialService } from './trial.service';
 import { CreateTrialDto } from './dto/create-trial.dto';
 import { UpdateTrialDto } from './dto/update-trial.dto';
-import { ApiNotFoundResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse, ApiFoundResponse,
+  ApiNotFoundResponse, ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags
+} from "@nestjs/swagger";
 import { trial } from "@prisma/client";
+import { KeycloakPasswordGuard } from "../auth/KeycloakPasswordGuard";
+import { CurrentUser } from "../auth/CurrentUser";
+import { user } from "@prisma/client";
 
 @Controller('trials')
 @ApiTags("Trial")
@@ -21,27 +32,31 @@ export class TrialController {
   }
 
   @Post()
+  @UseGuards(KeycloakPasswordGuard)
+  @ApiBearerAuth("KeycloakPasswordGuard")
   @ApiOperation({ summary: "Create a new trial" })
-  @ApiResponse({
-    status: HttpStatus.CREATED,
-    description: "New trial created."
-  })
-  async create(@Body() createTrialDto: CreateTrialDto): Promise<trial> {
-    const newTrial = await this.trialService.createTrial(createTrialDto);
+  @ApiCreatedResponse({ description: "New trial created." })
+  async create(
+    @CurrentUser() user: user,
+    @Body() createTrialDto: CreateTrialDto
+  ): Promise<trial> {
+    const newTrial = await this.trialService.createTrial(createTrialDto, user);
     return newTrial;
   }
 
   @Get()
   @ApiOperation({ summary: "Get all trials" })
-  @ApiResponse({ status: HttpStatus.OK, description: "List of trials found." })
+  @ApiOkResponse({ description: "List of trials found." })
   findAll() {
     return this.trialService.findAll();
   }
 
   @Get(':id')
+  @UseGuards(KeycloakPasswordGuard)
+  @ApiBearerAuth("KeycloakPasswordGuard")
   @ApiOperation({ summary: "Get a trial by ID" })
   @ApiParam({ name: "id", description: "ID of the trial." })
-  @ApiResponse({ status: HttpStatus.OK, description: "Object found." })
+  @ApiFoundResponse({ description: "Object found." })
   @ApiNotFoundResponse({ description: "Trial with the requested ID could not be found." })
   async findOne(@Param('id') id: string) {
     const result = await this.trialService.findOne(+id);
@@ -54,8 +69,8 @@ export class TrialController {
   @Patch(':id')
   @ApiOperation({ summary: "Update a trial" })
   @ApiParam({ name: "id", description: "ID of the trial to update." })
-  @ApiResponse({ status: HttpStatus.OK, description: "Object updated." })
-  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: "Trial with the requested ID could not be found." })
+  @ApiOkResponse({ description: "Object updated." })
+  @ApiNotFoundResponse({ description: "Trial with the requested ID could not be found." })
   update(@Param('id') id: string, @Body() updateTrialDto: UpdateTrialDto) {
     return this.trialService.update(+id, updateTrialDto);
   }
@@ -63,8 +78,8 @@ export class TrialController {
   @Delete(':id')
   @ApiOperation({ summary: "Delete a trial" })
   @ApiParam({ name: "id", description: "ID of the trial to delete." })
-  @ApiResponse({ status: HttpStatus.OK, description: "Object deleted." })
-  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: "Trial with the requested ID could not be found." })
+  @ApiOkResponse({ description: "Object deleted." })
+  @ApiNotFoundResponse({ description: "Trial with the requested ID could not be found." })
   async delete(@Param('id') id: string) {
     await this.trialService.delete(+id);
   }

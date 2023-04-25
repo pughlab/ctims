@@ -2,7 +2,7 @@ import {Injectable, NotFoundException} from '@nestjs/common';
 import { CreateTrialDto } from './dto/create-trial.dto';
 import { UpdateTrialDto } from './dto/update-trial.dto';
 import {PrismaService} from "../prisma.service";
-import {prisma, trial} from "@prisma/client";
+import { prisma, trial, user } from "@prisma/client";
 import {PrismaExceptionTools} from "../utils/prisma-exception-tools";
 
 @Injectable()
@@ -12,7 +12,7 @@ export class TrialService {
     private readonly prismaService: PrismaService
   ) { }
 
-  async createTrial(createTrialDto: CreateTrialDto) {
+  async createTrial(createTrialDto: CreateTrialDto, creatingUser: user) {
     const { nctId, nickname, principalInvestigator, status } = createTrialDto;
 
     const newTrial = await this.prismaService.trial.create({
@@ -20,7 +20,9 @@ export class TrialService {
         nct_id: nctId,
         nickname,
         principal_investigator: principalInvestigator,
-        status
+        status,
+        userId: creatingUser.id,
+        modifiedById: creatingUser.id
       }
     });
     return newTrial;

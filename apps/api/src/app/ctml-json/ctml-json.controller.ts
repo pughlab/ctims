@@ -8,19 +8,21 @@ import {
   Delete,
   HttpCode,
   NotImplementedException,
-  HttpStatus
+  HttpStatus, UseGuards
 } from '@nestjs/common';
 import { CtmlJsonService } from './ctml-json.service';
 import { CreateCtmlJsonDto } from './dto/create-ctml-json.dto';
 import { UpdateCtmlJsonDto } from './dto/update-ctml-json.dto';
 import {
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiFoundResponse,
-  ApiNoContentResponse,
+  ApiNoContentResponse, ApiOkResponse,
   ApiOperation,
   ApiResponse,
   ApiTags
 } from "@nestjs/swagger";
+import { KeycloakPasswordGuard } from "../auth/KeycloakPasswordGuard";
 
 @Controller('ctml-jsons')
 @ApiTags('CTML JSON')
@@ -28,6 +30,8 @@ export class CtmlJsonController {
   constructor(private readonly ctmlJsonService: CtmlJsonService) {}
 
   @Post()
+  @UseGuards(KeycloakPasswordGuard)
+  @ApiBearerAuth("KeycloakPasswordGuard")
   @ApiOperation({ summary: "Create a new CTML JSON record" })
   @ApiCreatedResponse({ description: "CTML JSON record created." })
   create(@Body() createCtmlJsonDto: CreateCtmlJsonDto) {
@@ -42,6 +46,8 @@ export class CtmlJsonController {
   }
 
   @Get(':id')
+  @UseGuards(KeycloakPasswordGuard)
+  @ApiBearerAuth("KeycloakPasswordGuard")
   @ApiOperation({ summary: "Get a CTML JSON record" })
   @ApiFoundResponse({ description: "CTML JSON record found." })
   async findOne(@Param('id') id: string) {
@@ -50,13 +56,17 @@ export class CtmlJsonController {
   }
 
   @Patch(':id')
+  @UseGuards(KeycloakPasswordGuard)
+  @ApiBearerAuth("KeycloakPasswordGuard")
   @ApiOperation({ summary: "Update a CTML JSON record" })
-  @ApiResponse({ status: HttpStatus.OK, description: "CTML JSON records found." })
+  @ApiOkResponse({ description: "CTML JSON records found." })
   update(@Param('id') id: string, @Body() updateCtmlJsonDto: UpdateCtmlJsonDto) {
     return this.ctmlJsonService.update(+id, updateCtmlJsonDto);
   }
 
   @Delete(':id')
+  @UseGuards(KeycloakPasswordGuard)
+  @ApiBearerAuth("KeycloakPasswordGuard")
   @ApiOperation({ summary: "Get all CTML JSON records" })
   @ApiNoContentResponse({ description: "CTML JSON record deleted." })
   async remove(@Param('id') id: string) {
