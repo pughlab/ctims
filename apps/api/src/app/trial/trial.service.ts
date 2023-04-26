@@ -2,7 +2,7 @@ import {Injectable, NotFoundException} from '@nestjs/common';
 import { CreateTrialDto } from './dto/create-trial.dto';
 import { UpdateTrialDto } from './dto/update-trial.dto';
 import {PrismaService} from "../prisma.service";
-import { prisma, trial, user } from "@prisma/client";
+import { ctml_schema, prisma, trial, user } from "@prisma/client";
 import {PrismaExceptionTools} from "../utils/prisma-exception-tools";
 
 @Injectable()
@@ -43,6 +43,17 @@ export class TrialService {
       }
     });
     return entities;
+  }
+
+  async findSchemasByTrial(trialId: number): Promise<ctml_schema[]> {
+    const foundTrial = await this.prismaService.trial.findUnique({
+      include: { ctml_schemas: true },
+      where: { id: trialId }
+    });
+    if (!foundTrial) {
+      return null;
+    }
+    return foundTrial.ctml_schemas;
   }
 
   async update(id: number, updateTrialDto: UpdateTrialDto) {
