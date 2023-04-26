@@ -4,6 +4,7 @@ import { UpdateTrialDto } from './dto/update-trial.dto';
 import {PrismaService} from "../prisma.service";
 import { ctml_json, ctml_schema, prisma, trial, user } from "@prisma/client";
 import {PrismaExceptionTools} from "../utils/prisma-exception-tools";
+import { UpdateTrialSchemasDto } from "./dto/update-trial-schemas.dto";
 
 @Injectable()
 export class TrialService {
@@ -99,6 +100,17 @@ export class TrialService {
       }
       throw e;
     }
+  }
+
+  async updateTrialSchemaList(id: number, updateTrialSchemasDto: UpdateTrialSchemasDto) {
+    return this.prismaService.trial.update({
+      where: { id },
+      data: {
+        ctml_schemas: {
+          set: updateTrialSchemasDto.schemaIdList.map(schemaId => ({ id: schemaId }))
+        }
+      }
+    })
   }
 
   async delete(id: number) {

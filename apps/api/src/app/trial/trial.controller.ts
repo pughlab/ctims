@@ -26,6 +26,7 @@ import { CurrentUser } from "../auth/CurrentUser";
 import { user } from "@prisma/client";
 import { CtmlSchemaService } from "../schema-ctml/ctml-schema.service";
 import { CtmlJsonService } from "../ctml-json/ctml-json.service";
+import { UpdateTrialSchemasDto } from "./dto/update-trial-schemas.dto";
 
 @Controller('trials')
 @ApiTags("Trial")
@@ -106,6 +107,15 @@ export class TrialController {
   @ApiNotFoundResponse({ description: "Trial with the requested ID could not be found." })
   update(@Param('id') id: string, @Body() updateTrialDto: UpdateTrialDto) {
     return this.trialService.update(+id, updateTrialDto);
+  }
+
+  @Patch(':id/ctml-schemas')
+  @ApiOperation({ summary: "Set the ctml schema list for a trail" })
+  @ApiParam({ name: "id", description: "ID of the trial to update." })
+  @ApiOkResponse({ description: "Object updated." })
+  @ApiNotFoundResponse({ description: "Trial with the requested ID could not be found." })
+  updateAssocSchemas(@Param('id') id: string, @Body() updateTrialSchemasDto: UpdateTrialSchemasDto) {
+    return this.trialService.updateTrialSchemaList(+id, updateTrialSchemasDto);
   }
 
   @Delete(':id')
