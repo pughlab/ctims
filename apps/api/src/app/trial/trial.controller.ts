@@ -25,13 +25,13 @@ import { KeycloakPasswordGuard } from "../auth/KeycloakPasswordGuard";
 import { CurrentUser } from "../auth/CurrentUser";
 import { user } from "@prisma/client";
 import { CtmlSchemaService } from "../schema-ctml/ctml-schema.service";
+import { CtmlJsonService } from "../ctml-json/ctml-json.service";
 
 @Controller('trials')
 @ApiTags("Trial")
 export class TrialController {
   constructor(
     private readonly trialService: TrialService,
-    private readonly ctmlSchemaService: CtmlSchemaService
     ) { }
 
   @Post()
@@ -77,7 +77,22 @@ export class TrialController {
   @ApiFoundResponse({ description: "CTML schema list found." })
   @ApiNotFoundResponse({ description: "Trial with the requested ID could not be found." })
   async findRelatedSchemas(@Param('id') id: string) {
-    const result = await this.ctmlSchemaService.findSchemasByTrial(+id);
+    const result = await this.trialService.findSchemasByTrial(+id);
+    if (!result) {
+      throw new NotFoundException(`Trial with ID ${id} was not found.`)
+    }
+    return result
+  }
+
+  @Get(':id/ctml-jsons')
+  @UseGuards(KeycloakPasswordGuard)
+  @ApiBearerAuth("KeycloakPasswordGuard")
+  @ApiOperation({ summary: "Get a list of CTML JSON records associated with a trial" })
+  @ApiParam({ name: "id", description: "ID of the trial." })
+  @ApiFoundResponse({ description: "CTML JSON record list found." })
+  @ApiNotFoundResponse({ description: "Trial with the requested ID could not be found." })
+  async findRelatedJsons(@Param('id') id: string) {
+    const result = await this.trialService.findRelatedJsons(+id);
     if (!result) {
       throw new NotFoundException(`Trial with ID ${id} was not found.`)
     }
