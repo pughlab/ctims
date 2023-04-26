@@ -6,9 +6,7 @@ import {
   Patch,
   Param,
   Delete,
-  NotImplementedException,
-  HttpStatus,
-  UseGuards
+  UseGuards, BadRequestException
 } from '@nestjs/common';
 import { CtmlSchemaService } from './ctml-schema.service';
 import { CreateCtmlSchemaDto } from './dto/create-ctml-schema.dto';
@@ -22,6 +20,7 @@ import {
   ApiTags
 } from "@nestjs/swagger";
 import { KeycloakPasswordGuard } from "../auth/KeycloakPasswordGuard";
+import { PrismaExceptionTools } from "../utils/prisma-exception-tools";
 
 @Controller('ctml-schemas')
 @ApiTags("Schema CTML")
@@ -33,8 +32,14 @@ export class CtmlSchemaController {
   @ApiBearerAuth("KeycloakPasswordGuard")
   @ApiOperation({ summary: "Create a CTML schema record" })
   @ApiCreatedResponse({ description: "New CTML schema created." })
-  create(@Body() createSchemaCtmlDto: CreateCtmlSchemaDto) {
-    return this.schemaCtmlService.create(createSchemaCtmlDto);
+  async create(@Body() createSchemaCtmlDto: CreateCtmlSchemaDto) {
+    try {
+      return await this.schemaCtmlService.create(createSchemaCtmlDto);
+    } catch (e) {
+      if (PrismaExceptionTools.isUniqueConstraintFailedError(e)) {
+        throw new BadRequestException("A schema with this version name already exists.");
+      }
+    }
   }
 
   @Get()

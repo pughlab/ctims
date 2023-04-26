@@ -13,4 +13,8 @@ export class PrismaExceptionTools {
   static isForeignKeyConstraintError(e) {
     return e instanceof PrismaClientKnownRequestError && e.code === 'P2019';
   }
+
+  static isUniqueConstraintFailedError(e) {
+    return e instanceof PrismaClientKnownRequestError && e.code === 'P2002';
+  }
 }
