@@ -1,5 +1,6 @@
 import {useState} from "react";
 import axios, {AxiosRequestConfig} from "axios";
+import {useSession} from "next-auth/react";
 
 const useAxios = () => {
 
@@ -9,17 +10,26 @@ const useAxios = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const {data} = useSession()
+
 
   const operation = async(params: AxiosRequestConfig) => {
-    try {
-      setLoading(true)
-      const result = await axios.request(params);
-      setResponse(result.data);
-    } catch (error: any) {
-      setError(error);
-    } finally {
-      setLoading(false);
+    params.headers = {
+      'Authorization': 'Bearer ' + data['accessToken'],
     }
+    axios.request(params).then(response => {
+      setResponse(response.data);
+    }).catch(error => {
+      console.log('response', error.response)
+      if(error.response) {
+        setError(error.response.data);
+      } else {
+        setError(error);
+      }
+    })
+      .finally(() => {
+        setLoading(false);
+      })
   };
 
   return { response, error, loading, operation };

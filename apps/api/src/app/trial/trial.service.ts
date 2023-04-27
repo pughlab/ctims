@@ -14,13 +14,13 @@ export class TrialService {
   ) { }
 
   async createTrial(createTrialDto: CreateTrialDto, creatingUser: user) {
-    const { nctId, nickname, principalInvestigator, status } = createTrialDto;
+    const { nct_id, nickname, principal_investigator, status } = createTrialDto;
 
     const newTrial = await this.prismaService.trial.create({
       data: {
-        nct_id: nctId,
+        nct_id,
         nickname,
-        principal_investigator: principalInvestigator,
+        principal_investigator,
         status,
         userId: creatingUser.id,
         modifiedById: creatingUser.id
@@ -69,7 +69,7 @@ export class TrialService {
   }
 
   async update(id: number, updateTrialDto: UpdateTrialDto) {
-    const { ctml_schema_id, status, principalInvestigator, nickname, nctId } = updateTrialDto;
+    const { ctml_schema_id, status, principal_investigator, nickname, nct_id } = updateTrialDto;
     try {
       // Find the most recent created JSON that has the version specified in the
       const jsonToUpdate = await this.prismaService.ctml_json.findFirst({
@@ -85,9 +85,9 @@ export class TrialService {
         include: { ctml_jsons: true },
         data: {
           status,
-          principal_investigator: principalInvestigator,
+          principal_investigator,
           nickname,
-          nct_id: nctId
+          nct_id
         }
       });
 

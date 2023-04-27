@@ -3,15 +3,33 @@ import {useRouter} from "next/router";
 import { Button } from 'primereact/button';
 import {store} from "../../store/store";
 import {ValidationData} from "@rjsf/utils";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import ExportCtmlDialog from "./ExportCtmlDialog";
+import useAxios from "../../hooks/useAxios";
+import {signOut} from "next-auth/react";
 
 
 const EditorTopBar = () => {
 
   const [isDialogVisible, setIsDialogVisible] = useState<boolean>(false);
-
+  const {response, error, loading, operation} = useAxios();
   const router = useRouter();
+
+
+  useEffect(() => {
+    if (response) {
+      console.log('response', response);
+
+    }
+    if(error) {
+      console.log('error', error);
+      if (error.statusCode === 401) {
+        signOut().then(() => {
+          router.push('/');
+        });
+      }
+    }
+  }, [error, response]);
 
   const backClick = (e) => {
     e.preventDefault();
@@ -26,22 +44,25 @@ const EditorTopBar = () => {
     // setErrorViewModel(viewModelErrors)
     setIsDialogVisible(true);
     console.log('onExportClick', formErrors);
-
-    // const blob = new Blob([ctmlModelString], {type: 'application/json'});
-    // const url = URL.createObjectURL(blob);
-    // const link = document.createElement('a');
-    // link.setAttribute('href', url);
-    // link.setAttribute('download', 'ctml-model.json');
-    // link.style.display = 'none';
-    // document.body.appendChild(link);
-    // link.click();
-    // document.body.removeChild(link);
   }
 
   const getValidationErrors = () => {
     const state = store.getState();
     const formErrors: ValidationData<any> = state.finalModelAndErrors.errorSchema;
     return formErrors;
+  }
+
+  const onSaveClick = () => {
+    operation({
+      method: 'post',
+      url: 'http://localhost:3333/api/trials',
+      data: {
+        nct_id: 'NCT00000000',
+        nickname: 'test',
+        principal_investigator: 'test',
+        status: 'DRAFT',
+      }
+    })
   }
 
   return (
@@ -67,7 +88,7 @@ const EditorTopBar = () => {
           <Button label="Export"
                   onClick={onExportClick}
                   className="p-button-text p-button-plain" />
-          <Button label="Save" className={styles.saveBtn} />
+          <Button label="Save" className={styles.saveBtn} onClick={onSaveClick} />
         </div>
 
       </div>

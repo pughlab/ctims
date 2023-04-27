@@ -3,7 +3,7 @@ import {status} from "@prisma/client";
 
 export class CreateTrialDto {
   @ApiProperty()
-  nctId: string;
+  nct_id: string;
 
   @ApiPropertyOptional({
     minLength: 1,
@@ -15,7 +15,7 @@ export class CreateTrialDto {
     minLength: 1,
     maxLength: 191
   })
-  principalInvestigator?: string;
+  principal_investigator?: string;
 
   @ApiPropertyOptional({
     enum: status
