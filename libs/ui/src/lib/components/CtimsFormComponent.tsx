@@ -6,7 +6,7 @@ import {JSONSchema7} from "json-schema";
 import CtimsArrayFieldItemTemplate from "../custom-rjsf-templates/CtimsArrayFieldItemTemplate";
 import CtimsArrayFieldTemplate from "../custom-rjsf-templates/CtimsArrayFieldTemplate";
 import localValidator, {customizeValidator} from "@rjsf/validator-ajv8";
-import {CSSProperties, ForwardedRef, forwardRef, memo, useEffect} from "react";
+import {CSSProperties, ForwardedRef, forwardRef, memo} from "react";
 import {withTheme} from "@rjsf/core";
 import {Theme as PrimeTheme} from "../primereact";
 import {RegistryWidgetsType, RJSFValidationError} from "@rjsf/utils";
@@ -17,7 +17,6 @@ import CtimsFieldTemplate from "../custom-rjsf-templates/CtimsFieldTemplate";
 import CtimsErrorListTemplate from "../custom-rjsf-templates/CtimsErrorListTemplate";
 import DoseLevelObjectFieldTemplate from "../custom-rjsf-templates/DoseLevelObjectFieldTemplate";
 import CtimsArrayFieldSingleTemplate from "../custom-rjsf-templates/CtimsArrayFieldSingleTemplate";
-import CtimsNumberInput from "../custom-rjsf-templates/CtimsNumberInput";
 import CtimsArmItemObjectFieldTemplate from "../custom-rjsf-templates/CtimsArmItemObjectFieldTemplate";
 import CtimsSelectButton from "../custom-rjsf-templates/CtimsSelectButton";
 
@@ -41,6 +40,20 @@ export const ctims_validator = customizeValidator({ ajvOptionsOverrides });
 const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: ForwardedRef<any>) => {
 // Comment just to rebase tutorial 2
   const schema = {
+    "definitions": {
+      "ctml_status": {
+        "enumNames": [
+          "Draft",
+          "In Review",
+          "Complete"
+        ],
+        "enum": [
+          "DRAFT",
+          "IN_REVIEW",
+          "COMPLETED"
+        ]
+      }
+    },
     "type": "object",
     "properties": {
       "trialInformation": {
@@ -72,14 +85,10 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             "description": "Enter details of the overall principal investigator"
           },
           "ctml_status": {
-            "type": "string",
             "title": "Ctml Status",
             "description": "Categorize the status of your CTML",
-            "enum": [
-              "Draft",
-              "In Review",
-              "Complete"
-            ]
+            "default": "DRAFT",
+            "$ref": "#/definitions/ctml_status"
           },
           "long_title": {
             "type": "string",

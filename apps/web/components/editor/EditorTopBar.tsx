@@ -24,9 +24,7 @@ const EditorTopBar = () => {
     if(error) {
       console.log('error', error);
       if (error.statusCode === 401) {
-        signOut().then(() => {
-          router.push('/');
-        });
+        signOut({callbackUrl: '/#/login', redirect: false});
       }
     }
   }, [error, response]);
