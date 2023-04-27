@@ -1,6 +1,7 @@
 import {Menu} from "primereact/menu";
 import {useRef} from "react";
 import styles from './TopBar.module.scss';
+import {signOut} from "next-auth/react";
 
 const TopBar = () => {
 
@@ -12,6 +13,7 @@ const TopBar = () => {
       icon: 'pi pi-sign-out',
       command: () => {
         console.log('Sign Out');
+        signOut({callbackUrl: '/#/login', redirect: false});
       }
     }
   ]

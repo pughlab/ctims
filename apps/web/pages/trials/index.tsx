@@ -8,8 +8,20 @@ import {useEffect, useRef, useState} from "react";
 import {useRouter} from "next/router";
 import React from 'react';
 import {Menu} from "primereact/menu";
+import {useSession} from "next-auth/react";
 
 const Trials = () => {
+
+  const {data} = useSession()
+  console.log('session', data);
+  // const { accessToken } = data
+
+  useEffect(() => {
+    if(!data) {
+      router.push('/');
+    }
+  }, [data])
+
 
   const [trials, setTrials] = useState<any>([]);
   const [rowEntered, setRowEntered] = useState<DataTableRowMouseEventParams>(null);
@@ -54,7 +66,7 @@ const Trials = () => {
         id: 1,
         nickname: 'Trial 1',
         principalInvestigator: 'Dr. John Doe',
-        status: 'Draft',
+        status: 'Active',
         createdOn: '2021-01-01 by Dr. John Doe',
         updatedOn: '2021-01-01 by Dr. John Doe',
       },
@@ -115,18 +127,20 @@ const Trials = () => {
 
   return (
     <>
-      <TopBar />
-      <div className={styles.pageContainer}>
-        <div className={styles.titleAndButtonsContainer}>
-          <span className={styles.trialsText}>Trials</span>
-          <div className={styles.buttonsContainer}>
-            <Button label="Import" className="p-button-text p-button-plain" />
-            <Button label="Create CTML" className={styles.createCtmlButton} onClick={(e) => createCtmlClick(e)} />
+      {data && <>
+        <TopBar />
+        {/*<div>Access Token: {data['accessToken']}</div>*/}
+        <div className={styles.pageContainer}>
+          <div className={styles.titleAndButtonsContainer}>
+            <span className={styles.trialsText}>Trials</span>
+            <div className={styles.buttonsContainer}>
+              <Button label="Import" className="p-button-text p-button-plain" />
+              <Button label="Create CTML" className={styles.createCtmlButton} onClick={(e) => createCtmlClick(e)} />
+            </div>
           </div>
-        </div>
 
-        <Menu model={trialMenuItems} ref={menu} popup id="popup_menu" className={styles.menu} appendTo={'self'}
-          onHide={() => clearRowClicked()}/>
+          <Menu model={trialMenuItems} ref={menu} popup id="popup_menu" className={styles.menu} appendTo={'self'}
+                onHide={() => clearRowClicked()}/>
 
         <div className={styles.tableContainer}>
           <DataTable value={trials} rowHover={true}
@@ -145,7 +159,8 @@ const Trials = () => {
           </DataTable>
         </div>
 
-      </div>
+        </div></>}
+
     </>
 
 

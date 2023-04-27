@@ -47,7 +47,8 @@ export class KeycloakPasswordStrategy extends PassportStrategy(KeycloakBearerStr
     }
     await this.userService.updateRefreshToken(userInfo.sub, refreshToken['token'])
 
-    return {accessToken: keycloakToken['token']};
+    return {accessToken: keycloakToken['token'],
+    user};
     // return grant;
   }
 

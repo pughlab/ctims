@@ -42,6 +42,7 @@
     "jwt-encode": "^1.0.1",
     "keycloak-connect": "^21.1.0",
     "next": "^13.0.0",
+    "next-auth": "^4.22.1",
     "nx": "^15.8.1",
     "passport": "^0.6.0",
     "passport-keycloak-bearer": "^2.3.0",

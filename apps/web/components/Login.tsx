@@ -7,6 +7,7 @@ import Layout from "./Layout";
 import {Button} from "primereact/button";
 import {useDispatch, useSelector} from "react-redux";
 import {increment} from "../store/slices/counterSlice";
+import {signIn} from "next-auth/react";
 
 const Login = () => {
   const hasMounted = useHasMounted();
@@ -20,10 +21,12 @@ const Login = () => {
   const router: NextRouter = useRouter();
 
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     // need prevent default, otherwise the page will be reloaded
     e.preventDefault();
     console.log('Login');
+    const result = await signIn('credentials', {username, password, redirect: false})
+    console.log('result', result);
     router.push('/trials');
   }
 
