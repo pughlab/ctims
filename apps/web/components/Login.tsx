@@ -8,6 +8,7 @@ import {Button} from "primereact/button";
 import {useDispatch, useSelector} from "react-redux";
 import {increment} from "../store/slices/counterSlice";
 import {signIn} from "next-auth/react";
+import {Password} from "primereact/password";
 
 const Login = () => {
   const hasMounted = useHasMounted();
@@ -61,7 +62,11 @@ const Login = () => {
             </div>
             <div className={styles.passwordContainer}>
               <div className={styles.password}>Password</div>
-              <InputText className={styles.passwordInput} onChange={(e) => setPassword(e.target.value)}/>
+              <Password className={styles.passwordInput}
+                        inputClassName={styles.passwordInputText}
+                        onChange={(e) => setPassword(e.target.value)}
+                        feedback={false}
+              />
               {/*<small className="p-error block">Fill out this field.</small>*/}
             </div>
               <Button label="Sign In" onClick={(e) => handleLogin(e)} />
