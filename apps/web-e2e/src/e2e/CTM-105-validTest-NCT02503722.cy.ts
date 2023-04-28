@@ -70,7 +70,7 @@ describe('CTIMS Trial Editor', () => {
   });
   deleteDownloadsFolderBeforeAll()
   it('should Validate the Trial Editor Page with valid test data', () => {
-   /* cy.title().should('contain', 'CTIMS')
+    cy.title().should('contain', 'CTIMS')
     trialEditorLeftPanelList().should('have.length', '9')
     cy.trialInformation(NCT02503722_Osimertinib.nct_id,
       "My Trial",
@@ -85,11 +85,10 @@ describe('CTIMS Trial Editor', () => {
 
     // Prior treatment requirements
     cy.priorTreatmentRequirement(NCT02503722_Osimertinib.prior_treatment_requirements[0])
-*/
     //Age
     cy.age(NCT02503722_Osimertinib.age)
 
-   /* //Drug List
+    //Drug List
     cy.drugList(NCT02503722_Osimertinib.drug_list.drug[0].drug_name)
 
     //Management Group List has 1-text field and 1-Checkbox
@@ -124,16 +123,13 @@ describe('CTIMS Trial Editor', () => {
       NCT02503722_Osimertinib.treatment_list.step[0].arm[0].dose_level[0].level_internal_id.toString(),
       NCT02503722_Osimertinib.treatment_list.step[0].arm[0].dose_level[0].level_suspended)
     //Click on Plus Icon to add another Dose Level
-*/  })
-  /* it('should validate the Matching criteria modal with valid test data', () => {
+  })
+   it('should validate the Matching criteria modal with valid test data', () => {
     //click Match criteria
     getEditMatchingCriteria().click()
     getDefaultTextMatchingCriteria().should('contain', 'Matching criteria inputs will be shown here.')
     getAddCriteriaGroup().click()
-    //cy.clickParentAnd()
     cy.clickParentNode(0)
-    // cy.wait(1000)
-    //getTruncateButton().should('be.visible').click()
     getAddCriteriaList().should('contain', 'Add criteria to same group')
       .and('contain', 'Switch group operator')
       .and('contain', 'Delete')
@@ -373,7 +369,7 @@ describe('CTIMS Trial Editor', () => {
       ]
       cy.compareArrays(ctmlMatchingCriteria,testDataMatchingCriteria)
     })
-  })*/
+  })
 })
 
 

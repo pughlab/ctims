@@ -60,27 +60,35 @@ export const getCheckBoxLevelIsSuspended = () => cy.get('#object-field-template-
 export const getPriorTreatmentRequirement = () => cy.get('#root_prior_treatment_requirements_0')
 export const getPriorTreatmentRequirementRegularExpression = () => cy.get('[id^="root_prior_treatment_requirements_"]')
 export const getPriorTreatmentRequirementPlusIcon = () => cy.get('#array-item-list-root_prior_treatment_requirements>div>i:nth-child(1)')
-
+export const getPriorTreatmentRequirementPlusIconMultiple = () => cy.get('#array-item-list-root_prior_treatment_requirements>div>.pi-plus-circle')
+export const getPriorTreatmentRequirementMultiple = () => cy.get('[id^=root_prior_treatment_requirements]')
 
 //Age
 export const getAgeGroup = () => cy.get('#root_age_group_age')
 
 //Drug List
 export const getDrugName = () => cy.get('#root_drug_list_drug_0_drug_name')
+export const getDrugNamePlusIcon = () => cy.get('#array-item-list-root_drug_list_drug>div>.pi-plus-circle')
+export const getDrugNameTextBoxMultiple = () => cy.get('[id^=root_drug_list_drug]')
 
 //Management Group List
 export const getManagementGroupName = () => cy.get('#root_management_group_list_management_group_0_management_group_name')
 export const getPrimaryManagementGroup = () => cy.get('#root_management_group_list_management_group_0_is_primary')
-
+export const getPrimaryManagementGroupPlusIcon = () => cy.get('#array-item-list-root_management_group_list_management_group>div>.pi-plus-circle')
+export const getManagementGroupNameTextBoxMultiple = () => cy.get('[id^=object-field-template-root_management_group_list_management_group')
 //Site List
 export const getSiteName = () => cy.get('#root_site_list_site_0_site_name')
 export const getSiteStatus = () => cy.get('#root_site_list_site_0_site_status')
 export const getCoordinatingCenter = () => cy.get('#root_site_list_site_0_coordinating_center')
 export const getCancerCenterIRB = () => cy.get('#root_site_list_site_0_uses_cancer_center_irb')
+export const getSiteNamePlusIcon = () => cy.get('#array-item-list-root_site_list_site>div>.pi-plus-circle')
+export const getSiteNameMultiple = () =>  cy.get('[id^=object-field-template-root_site_list_site]')
 
 //Sponsor List
 export const getSponsorName = () => cy.get('#root_sponsor_list_sponsor_0_sponsor_name')
 export const getPrincipalSponsor = () => cy.get('#root_sponsor_list_sponsor_0_is_principal_sponsor')
+export const getSponsorNamePlusIcon = () => cy.get('#array-item-list-root_sponsor_list_sponsor>div>.pi-plus-circle')
+export const getSponsorNameMultiple = () => cy.get('[id^=object-field-template-root_sponsor_list_sponsor_]')
 
 //Staff List
 export const getProtocolStaffFirstName = () => cy.get('#root_staff_list_protocol_staff_0_first_name')
@@ -89,6 +97,8 @@ export const getProtocolStaffEmail = () => cy.get('#root_staff_list_protocol_sta
 export const getProtocolStaffInstitutionalName = () => cy.get('#root_staff_list_protocol_staff_0_institution_name')
 export const getProtocolStaffRole = () => cy.get('#root_staff_list_protocol_staff_0_staff_role')
 export const getProtocolStaffStatus = () => cy.get('#root_staff_list_protocol_staff_0_status')
+export const getProtocolStaffPlusIcon = () => cy.get('#array-item-list-root_staff_list_protocol_staff>div>.pi-plus-circle')
+export const getProtocolStaffMultiple = () => cy.get('[id^=object-field-template-root_staff_list_protocol_staff]')
 
 //Treatment List
 //Step1
@@ -97,17 +107,25 @@ export const getArmCode = () => cy.get('#root_treatment_list_step_0_arm_0_arm_co
 export const getArmDescription = () => cy.get('#root_treatment_list_step_0_arm_0_arm_description')
 export const getArmInternalId = () => cy.get('#root_treatment_list_step_0_arm_0_arm_internal_id')
 export const getArmSuspended = () => cy.get('#root_treatment_list_step_0_arm_0_arm_suspended')
+export const getMultipleArm =() => cy.get('#array-item-list-root_treatment_list_step_0_arm>div>div>div>div>div')
+export const getAddArmPlusIcon =() => cy.get('#array-item-list-root_treatment_list_step_0_arm>div>.pi-plus-circle')
 //DOSE_LEVEL 1
 export const getLevelCode = () => cy.get('#root_treatment_list_step_0_arm_0_dose_level_0_level_code')
 export const getLevelDescription = () => cy.get('#root_treatment_list_step_0_arm_0_dose_level_0_level_description')
 export const getLevelInternalId = () => cy.get('#root_treatment_list_step_0_arm_0_dose_level_0_level_internal_id')
 export const getLevelSuspended = () => cy.get('#root_treatment_list_step_0_arm_0_dose_level_0_level_suspended')
 
+//preview window
+export const getPreviewWindow = () => cy.get('.p-tabview.p-component')
+
 //Matching Criteria Table View Content has"YAML" and "JSON"
 export const getMatchingCriteriaTableHeader = () => cy.get('.p-tabview-title')
 
 //Edit Matching Criteria
 export const getEditMatchingCriteria = () => cy.get('.CtimsMatchingCriteriaWidget_edit-matching-criteria-title__qEaKg')
+
+//Edit matching criteria multiple
+export const getEditMatchingCriteriaMultiple = () => cy.get('.CtimsMatchingCriteriaWidget_edit-matching-criteria-container__MFwrC')
 
 //Save Matching Criteria
 export const getSaveMatchingCriteria = () => cy.get('.p-dialog-footer>div>button:nth-child(2)')
@@ -119,6 +137,9 @@ export const getMatchModalFooterButtons = () => cy.get('.p-dialog-footer>div>but
 
 //Match Criteria Default Text
 export const getDefaultTextMatchingCriteria = () => cy.get('.MatchingMenuAndForm_matchingCriteriaFormContainerEmptyText__6I4Dm')
+
+//Match criteria Header
+export const getMatchCriteriaHeader = () => cy.get('.p-dialog-header>div')
 
 //Add criteria group component
 export const getAddCriteriaGroup = () => cy.get('.MatchingMenuAndForm_addCriteriaBtn___mgY1')
@@ -137,6 +158,9 @@ export const getAddCriteriaToSameGroup = () => cy.get('.p-tieredmenu>ul>li:nth-c
 
 //Switch group operator
 export const getSwitchGroupOperator = () => cy.get('.p-tieredmenu>ul>li:nth-child(2)')
+
+//Match criteria sub children
+export const getSubGroup = () => cy.get('.LeftMenuComponent_matchingCriteriaMenuContainer__fe8dz>div:nth-child(2)>ul>li>ul>li')
 
 //Delete
 export const getDelete = () => cy.get('.p-tieredmenu>ul>li:nth-child(3)')
