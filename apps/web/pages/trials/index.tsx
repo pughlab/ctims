@@ -133,6 +133,7 @@ const Trials = () => {
                      onRowMouseEnter={(event) => setRowEntered(event.data) }
                      onRowMouseLeave={() => setRowEntered(null) }
                      sortField="createdOn" sortOrder={-1}
+                     emptyMessage="No CTML files. Select the 'Create' button to start."
           >
             <Column field="id" header="ID" ></Column>
             <Column field="id" header="" body={subMenuTemplate}></Column>
