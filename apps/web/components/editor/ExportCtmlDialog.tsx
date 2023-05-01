@@ -118,10 +118,16 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
     const ctmlModelCopy = move();
 
     let ctmlModelString = JSON.stringify(ctmlModelCopy, null, 2);
-    let fileName = 'ctml-model.json';
+    let fileName = 'ctml-model';
+    if (ctmlModel.trialInformation.trial_id !== undefined) {
+      fileName = ctmlModel.trialInformation.trial_id;
+    }
+    fileName += '_' + new Date().toISOString().slice(0, 10)
     if (format === 'YAML') {
       ctmlModelString = stringify(ctmlModelCopy);
-      fileName = 'ctml-model.yaml';
+      fileName += '.yaml';
+    } else {
+      fileName += '.json';
     }
     const blob = new Blob([ctmlModelString], {type: 'application/json'});
     const url = URL.createObjectURL(blob);
