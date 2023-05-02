@@ -25,6 +25,6 @@ export class CreateTrialDto {
   @ApiProperty({
     description: "The ID of the schema for this trial data."
   })
-  ctml_schema_id: number;
+  ctml_schema_version: number;
 
 }

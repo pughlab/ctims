@@ -11,9 +11,9 @@ export class CtmlSchemaService {
     private readonly prismaService: PrismaService
   ) { }
 
-  create(createSchemaCtmlDto: CreateCtmlSchemaDto) {
-    const newSchema = this.prismaService.ctml_schema.create({
-      data: { ...createSchemaCtmlDto }
+  async create(createSchemaCtmlDto: CreateCtmlSchemaDto) {
+    const newSchema = await this.prismaService.ctml_schema.create({
+      data: { version: createSchemaCtmlDto.version, schema: JSON.stringify(createSchemaCtmlDto.schema) }
     });
     return newSchema;
   }
@@ -24,6 +24,12 @@ export class CtmlSchemaService {
 
   findOne(id: number): PrismaPromise<ctml_schema> {
     return this.prismaService.ctml_schema.findUnique({ where: { id } });
+  }
+
+  async findBySchemaVersion(schemaVersion: number): Promise<any> {
+    const result = await this.prismaService.ctml_schema.findUnique({ where: { version: schemaVersion } });
+    const schema = JSON.parse(result.schema);
+    return {schema: schema, version: result.version, id: result.id};
   }
 
   update(id: number, updateSchemaCtmlDto: UpdateCtmlSchemaDto): PrismaPromise<ctml_schema> {

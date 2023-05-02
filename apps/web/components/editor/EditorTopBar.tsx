@@ -1,33 +1,43 @@
 import styles from './EditorTopBar.module.scss';
 import {useRouter} from "next/router";
-import { Button } from 'primereact/button';
+import {Button} from 'primereact/button';
 import {store} from "../../store/store";
 import {ValidationData} from "@rjsf/utils";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import ExportCtmlDialog from "./ExportCtmlDialog";
-import useAxios from "../../hooks/useAxios";
 import {signOut} from "next-auth/react";
+import {Toast} from "primereact/toast";
+import useSaveTrial from "../../hooks/useSaveTrial";
+import {UpdateTrialDto} from "../../../api/src/app/trial/dto/update-trial.dto";
 
 
 const EditorTopBar = () => {
 
   const [isDialogVisible, setIsDialogVisible] = useState<boolean>(false);
-  const {response, error, loading, operation} = useAxios();
+  const {
+    response: saveTrialResponse,
+    error: saveTrialError,
+    loading: saveTrialLoading,
+    saveTrialOperation
+  } = useSaveTrial();
+
+
   const router = useRouter();
 
+  const toast = useRef(null);
 
   useEffect(() => {
-    if (response) {
-      console.log('response', response);
+    if (saveTrialResponse) {
+      console.log('response', saveTrialResponse);
 
     }
-    if(error) {
-      console.log('error', error);
-      if (error.statusCode === 401) {
+    if(saveTrialError) {
+      console.log('error', saveTrialError);
+      if (saveTrialError.statusCode === 401) {
         signOut({callbackUrl: '/#/login', redirect: false});
       }
     }
-  }, [error, response]);
+  }, [saveTrialError, saveTrialResponse]);
 
   const backClick = (e) => {
     e.preventDefault();
@@ -51,20 +61,48 @@ const EditorTopBar = () => {
   }
 
   const onSaveClick = () => {
-    operation({
-      method: 'post',
-      url: 'http://localhost:3333/api/trials',
-      data: {
-        nct_id: 'NCT00000000',
-        nickname: 'test',
-        principal_investigator: 'test',
-        status: 'DRAFT',
+
+    const state = store.getState();
+    const ctmlModel = state.finalModelAndErrors.ctmlModel;
+
+    const getCtmlJsonOnly = () => {
+      let ctmlModelCopy;
+      const age_group = ctmlModel.age_group;
+      const trialInformation = ctmlModel.trialInformation;
+      ctmlModelCopy = {...ctmlModel, ...trialInformation, ...age_group};
+      delete ctmlModelCopy.age_group;
+      delete ctmlModelCopy.trialInformation;
+      delete ctmlModelCopy.ctml_status;
+      delete ctmlModelCopy.nickname;
+      return ctmlModelCopy;
+    }
+
+    const getTrialModelOnly = (): UpdateTrialDto => {
+      return {
+        nct_id: ctmlModel.trialInformation.trial_id,
+        nickname: ctmlModel.trialInformation.nickname,
+        principal_investigator: ctmlModel.trialInformation.principal_investigator,
+        status: ctmlModel.trialInformation.status,
       }
-    })
+    }
+
+    console.log('onSaveClick', ctmlModel);
+    if (!ctmlModel.trialInformation.trial_id) {
+      toast.current.show({
+        severity:
+          'info',
+        summary: 'Error Saving',
+        detail: 'Trial ID is required',
+      });
+      return;
+    }
+
+    saveTrialOperation(getTrialModelOnly(), getCtmlJsonOnly());
   }
 
   return (
     <>
+      <Toast ref={toast} position="top-center" />
       <ExportCtmlDialog
         isDialogVisible={isDialogVisible}
         exportCtmlClicked={onExportClick}

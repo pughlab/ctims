@@ -12,15 +12,15 @@ export class CtmlJsonService {
     private readonly prismaService: PrismaService
   ) { }
   create(createCtmlJsonDto: CreateCtmlJsonDto) {
-    const { data, schemaVersionId, trialId } = createCtmlJsonDto;
-    const createdCtmlJson = this.prismaService.ctml_json.create({
-      data: {
-        data,
-        versionId: schemaVersionId,
-        trial_id: trialId
-      }
-    });
-    return createdCtmlJson;
+    const { data, version } = createCtmlJsonDto;
+    // const createdCtmlJson = this.prismaService.ctml_json.create({
+    //   data: {
+    //     data,
+    //     versionId: schemaVersionId,
+    //     trial_id: trialId
+    //   }
+    // });
+    return null;
   }
 
   findAll(): Promise<ctml_json[]> {
@@ -31,16 +31,45 @@ export class CtmlJsonService {
     return this.prismaService.ctml_json.findUnique({ where: { id: id } });
   }
 
-  update(id: number, updateCtmlJsonDto: UpdateCtmlJsonDto): PrismaPromise<ctml_json> {
-    const { data, schemaVersionId, trialId } = updateCtmlJsonDto;
-    return this.prismaService.ctml_json.update({
+  async update(updateCtmlJsonDto: UpdateCtmlJsonDto): Promise<ctml_json> {
+    const { data, version, trialId } = updateCtmlJsonDto;
+
+    const ctml_schema_version = await this.prismaService.ctml_schema.findUnique({
+      where: {
+        version
+      }
+    })
+
+    const existingJsons = await this.prismaService.ctml_json.findMany({
+      where: {
+        AND: [
+          { trialId: trialId },
+          { versionId: ctml_schema_version.id }
+        ]
+      }
+    })
+
+    if (existingJsons.length > 0) {
+      this.prismaService.ctml_json.updateMany({
+        data: {
+          data,
+        },
+        where: {
+          AND: [
+            { trialId: trialId },
+            { versionId: ctml_schema_version.id }
+          ]
+        }
+      })
+    }
+
+    return await this.prismaService.ctml_json.create({
       data: {
         data,
-        versionId: schemaVersionId,
-        trial_id: trialId
-      },
-      where: { id }
-    })
+        versionId: ctml_schema_version.id,
+        trialId: trialId
+      }
+    });
   }
 
   remove(id: number) {

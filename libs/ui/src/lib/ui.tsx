@@ -23,7 +23,9 @@ const containerStyle: CSSProperties = {
 
 
 /* eslint-disable-next-line */
-export interface UiProps {}
+export interface UiProps {
+  ctml_schema: {schema: any, version: any};
+}
 
 export const Ui = (props: UiProps) => {
 
@@ -37,6 +39,7 @@ export const Ui = (props: UiProps) => {
 
   useEffect(() => {
     console.log('My component was re-rendered');
+    console.log(props)
   });
 
   const handleSpecialClick = (formD: any, id: string) => {
@@ -81,6 +84,7 @@ export const Ui = (props: UiProps) => {
     <div style={containerStyle}>
       <CtimsFormComponentMemo
         ref={formRef}
+        schema={props.ctml_schema.schema}
         onSpecialButtonClick={handleSpecialClick}
         onRjsfFormChange={onFormChange}
       />

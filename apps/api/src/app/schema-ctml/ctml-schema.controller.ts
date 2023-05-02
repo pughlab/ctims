@@ -28,7 +28,7 @@ export class CtmlSchemaController {
   constructor(private readonly schemaCtmlService: CtmlSchemaService) {}
 
   @Post()
-  @UseGuards(KeycloakPasswordGuard)
+  // @UseGuards(KeycloakPasswordGuard)
   @ApiBearerAuth("KeycloakPasswordGuard")
   @ApiOperation({ summary: "Create a CTML schema record" })
   @ApiCreatedResponse({ description: "New CTML schema created." })
@@ -58,6 +58,15 @@ export class CtmlSchemaController {
   @ApiFoundResponse({ description: "CTML schema found." })
   findOne(@Param('id') id: string) {
     return this.schemaCtmlService.findOne(+id);
+  }
+
+  @Get('/schema-version/:schemaVersion')
+  // @UseGuards(KeycloakPasswordGuard)
+  @ApiBearerAuth("KeycloakPasswordGuard")
+  @ApiOperation({ summary: "Find a CTML schema" })
+  @ApiFoundResponse({ description: "CTML schema found." })
+  findBySchemaVersion(@Param('schemaVersion') id: string) {
+    return this.schemaCtmlService.findBySchemaVersion(+id);
   }
 
   @Patch(':id')

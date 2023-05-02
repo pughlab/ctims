@@ -9,26 +9,28 @@ datasource db {
 
 model ctml_schema {
   id         Int         @id @default(autoincrement())
-  version    String      @unique
-  schema     String
+  version    Int         @unique
+  schema     String      @db.LongText
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
   // Many trials to many schema_ctml records
   trials     trial[]
   ctml_jsons ctml_json[]
+
+  @@index(fields: [version])
 }
 
 model ctml_json {
-  id        Int         @id @default(autoincrement())
-  version   ctml_schema @relation(fields: [versionId], references: [id])
-  versionId Int
+  id        Int          @id @default(autoincrement())
+  version   ctml_schema? @relation(fields: [versionId], references: [id])
+  versionId Int?
   // This should be encrypted
   data      Json?
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
   // One trial to many ctml_json records
-  trial     trial       @relation(fields: [trial_id], references: [id], onDelete: Cascade)
-  trial_id  Int
+  trial     trial?       @relation(fields: [trialId], references: [id])
+  trialId   Int?
 }
 
 model trial {

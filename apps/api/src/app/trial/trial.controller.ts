@@ -1,32 +1,21 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  NotFoundException, HttpStatus, UseGuards
-} from '@nestjs/common';
-import { TrialService } from './trial.service';
-import { CreateTrialDto } from './dto/create-trial.dto';
-import { UpdateTrialDto } from './dto/update-trial.dto';
+import {Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, UseGuards} from '@nestjs/common';
+import {TrialService} from './trial.service';
+import {CreateTrialDto} from './dto/create-trial.dto';
+import {UpdateTrialDto} from './dto/update-trial.dto';
 import {
   ApiBearerAuth,
-  ApiCreatedResponse, ApiFoundResponse,
-  ApiNotFoundResponse, ApiOkResponse,
+  ApiCreatedResponse,
+  ApiFoundResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiParam,
-  ApiResponse,
   ApiTags
 } from "@nestjs/swagger";
-import { trial } from "@prisma/client";
-import { KeycloakPasswordGuard } from "../auth/KeycloakPasswordGuard";
-import { CurrentUser } from "../auth/CurrentUser";
-import { user } from "@prisma/client";
-import { CtmlSchemaService } from "../schema-ctml/ctml-schema.service";
-import { CtmlJsonService } from "../ctml-json/ctml-json.service";
-import { UpdateTrialSchemasDto } from "./dto/update-trial-schemas.dto";
+import {trial, user} from "@prisma/client";
+import {KeycloakPasswordGuard} from "../auth/KeycloakPasswordGuard";
+import {CurrentUser} from "../auth/CurrentUser";
+import {UpdateTrialSchemasDto} from "./dto/update-trial-schemas.dto";
 
 @Controller('trials')
 @ApiTags("Trial")
@@ -85,28 +74,30 @@ export class TrialController {
     return result
   }
 
-  @Get(':id/ctml-jsons')
-  @UseGuards(KeycloakPasswordGuard)
-  @ApiBearerAuth("KeycloakPasswordGuard")
-  @ApiOperation({ summary: "Get a list of CTML JSON records associated with a trial" })
-  @ApiParam({ name: "id", description: "ID of the trial." })
-  @ApiFoundResponse({ description: "CTML JSON record list found." })
-  @ApiNotFoundResponse({ description: "Trial with the requested ID could not be found." })
-  async findRelatedJsons(@Param('id') id: string) {
-    const result = await this.trialService.findRelatedJsons(+id);
-    if (!result) {
-      throw new NotFoundException(`Trial with ID ${id} was not found.`)
-    }
-    return result
-  }
+  // @Get(':id/ctml-jsons')
+  // @UseGuards(KeycloakPasswordGuard)
+  // @ApiBearerAuth("KeycloakPasswordGuard")
+  // @ApiOperation({ summary: "Get a list of CTML JSON records associated with a trial" })
+  // @ApiParam({ name: "id", description: "ID of the trial." })
+  // @ApiFoundResponse({ description: "CTML JSON record list found." })
+  // @ApiNotFoundResponse({ description: "Trial with the requested ID could not be found." })
+  // async findRelatedJsons(@Param('id') id: string) {
+  //   const result = await this.trialService.findRelatedJsons(+id);
+  //   if (!result) {
+  //     throw new NotFoundException(`Trial with ID ${id} was not found.`)
+  //   }
+  //   return result
+  // }
 
-  @Patch(':id')
-  @ApiOperation({ summary: "Update a trial" })
+  @Patch()
+  @UseGuards(KeycloakPasswordGuard)
+  @ApiOperation({ summary: "Update or create a trial" })
   @ApiParam({ name: "id", description: "ID of the trial to update." })
   @ApiOkResponse({ description: "Object updated." })
   @ApiNotFoundResponse({ description: "Trial with the requested ID could not be found." })
-  update(@Param('id') id: string, @Body() updateTrialDto: UpdateTrialDto) {
-    return this.trialService.update(+id, updateTrialDto);
+  update(@CurrentUser() user: user,
+         @Body() updateTrialDto: UpdateTrialDto) {
+    return this.trialService.update(updateTrialDto, user);
   }
 
   @Patch(':id/ctml-schemas')

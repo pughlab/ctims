@@ -4,7 +4,7 @@ export class CreateCtmlSchemaDto {
   @ApiProperty({
     description: "Schema version.",
   })
-  version: string;
+  version: number;
 
   @ApiProperty()
   schema: string;

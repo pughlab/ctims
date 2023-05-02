@@ -1,28 +1,18 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  HttpCode,
-  NotImplementedException,
-  HttpStatus, UseGuards
-} from '@nestjs/common';
-import { CtmlJsonService } from './ctml-json.service';
-import { CreateCtmlJsonDto } from './dto/create-ctml-json.dto';
-import { UpdateCtmlJsonDto } from './dto/update-ctml-json.dto';
+import {Body, Controller, Delete, Get, Param, Patch, Post, UseGuards} from '@nestjs/common';
+import {CtmlJsonService} from './ctml-json.service';
+import {CreateCtmlJsonDto} from './dto/create-ctml-json.dto';
+import {UpdateCtmlJsonDto} from './dto/update-ctml-json.dto';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiFoundResponse,
-  ApiNoContentResponse, ApiOkResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
   ApiOperation,
-  ApiResponse,
   ApiTags
 } from "@nestjs/swagger";
-import { KeycloakPasswordGuard } from "../auth/KeycloakPasswordGuard";
+import {KeycloakPasswordGuard} from "../auth/KeycloakPasswordGuard";
+import {ctml_json} from "@prisma/client";
 
 @Controller('ctml-jsons')
 @ApiTags('CTML JSON')
@@ -55,13 +45,13 @@ export class CtmlJsonController {
     return entities;
   }
 
-  @Patch(':id')
+  @Patch()
   @UseGuards(KeycloakPasswordGuard)
   @ApiBearerAuth("KeycloakPasswordGuard")
-  @ApiOperation({ summary: "Update a CTML JSON record" })
+  @ApiOperation({ summary: "Update or create CTML JSON record" })
   @ApiOkResponse({ description: "CTML JSON records found." })
-  update(@Param('id') id: string, @Body() updateCtmlJsonDto: UpdateCtmlJsonDto) {
-    return this.ctmlJsonService.update(+id, updateCtmlJsonDto);
+  update(@Body() updateCtmlJsonDto: UpdateCtmlJsonDto): Promise<ctml_json> {
+    return this.ctmlJsonService.update(updateCtmlJsonDto);
   }
 
   @Delete(':id')
