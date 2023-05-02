@@ -24,7 +24,7 @@ export const NCT02503722_Osimertinib: Ctml2 = {
     },
     {
       "is_primary": "Y",
-      "management_group_name": "BCCA-Vancouver Cancer Centre"
+      "management_group_name": "BCCA - Vancouver Cancer Centre"
     }
   ]
 },
@@ -49,7 +49,7 @@ export const NCT02503722_Osimertinib: Ctml2 = {
   "Patients with stage IV or recurrent/metastatic histologically or cytologically confirmed non-squamous NSCLC.",
   "NSCLC must harbor an EGFR activating mutation (Exon 21 L858R, Exon 19 deletion).",
   "Progressive disease on osimertinib (AZD9291) given first line.",
-  /*"For the dose expansion portion ONLY, patient must: 1) have progression of disease with first line osimertinib administered for advanced or metastatic disease as the last previous systemic treatment, 2) be treatment naïve for other 3rd generation EGFR-TKI (CO-1686) and mTOR inhibitors.",
+  "For the dose expansion portion ONLY, patient must: 1) have progression of disease with first line osimertinib administered for advanced or metastatic disease as the last previous systemic treatment, 2) be treatment naïve for other 3rd generation EGFR-TKI (CO-1686) and mTOR inhibitors.",
   "Patients must have measurable disease by Response Evaluation Criteria in Solid Tumors (RECIST) 1.1, defined as at least one lesion that can be accurately measured in at least one dimension >= 10 mm (>= 1 cm) by computed tomography (CT) imaging or magnetic resonance imaging (MRI) within 28 days prior to start of protocol therapy; the CT from a combined positron emission tomography (PET)/CT may be used if it is of diagnostic quality; laboratory parameters are not acceptable as the only evidence of disease.",
   "For the dose expansion, no other systemic therapies for advanced/metastatic disease is permissible after first line osimertinib.",
   "Eastern Cooperative Oncology Group (ECOG) performance status =< 1 (Karnofsky >= 70%).",
@@ -68,7 +68,7 @@ export const NCT02503722_Osimertinib: Ctml2 = {
   "Patients must have had sufficient time between a prior therapy and resolution of toxicities from the prior therapies prior to registration as follows: - Prior EGFR inhibitor: A minimum of 7 days must have elapsed from the last dose of the prior EGFR inhibitor and resolution of any drug-related toxicity to =< grade 1 except for alopecia. - Chemotherapy: A minimum of 21 days must have elapsed from the last dose and resolution of toxicity to =< grade 1 excluding =< grade 2 peripheral neuropathy or alopecia. - Surgery: A minimum of 21 days must have elapsed following major surgery and resolution of toxicity to < grade 1 and complete wound healing must have occurred. - Radiation: A minimum of 14 days must have elapsed following radiation therapy and resolution of all radiation induced toxicity excluding alopecia. - Treatment with an investigational drug: A minimum of 3 months or five half-lives of the compound, whichever is greater, must have elapsed from last treatment date.",
   "Ability to understand and the willingness to sign a written informed consent document.",
   "Available for follow-up of their disease after treatment until progressive disease is documented and resolution of related adverse events until < grade 2."
-*/],
+],
   "protocol_no": "123-020",
   "short_title": "Testing the Combination of MLN0128 (TAK-228) and AZD9291 in Advanced EGFR (Epidermal Growth Factor Receptor) Mutation Positive Non-small Cell Lung Cancer",
   "site_list": {
@@ -81,7 +81,7 @@ export const NCT02503722_Osimertinib: Ctml2 = {
     },
     {
       "coordinating_center": "Y",
-      "site_name": "BCCA-Vancouver Cancer Centre",
+      "site_name": "BCCA - Vancouver Cancer Centre",
       "site_status": "Closed to Accrual",
       "uses_cancer_center_irb": "Y"
     }
