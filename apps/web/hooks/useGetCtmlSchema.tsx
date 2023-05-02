@@ -1,6 +1,7 @@
 import axios, {AxiosRequestConfig} from "axios";
 import {useState} from "react";
 import {useSession} from "next-auth/react";
+import {store} from "../store/store";
 
 const useGetCtmlSchema = () => {
   const [response, setResponse] = useState(null);
@@ -9,14 +10,16 @@ const useGetCtmlSchema = () => {
 
   const {data} = useSession()
 
-  const SCHEMA_VERSION = 1;
-
   const getCtmlSchemaOperation = async() => {
+
+    const state = store.getState();
+    const schemaVersion = state.context.schema_version
+
     axios.defaults.baseURL = process.env.REACT_APP_API_URL || "http://localhost:3333/api"
 
     axios.request({
       method: 'get',
-      url: `/ctml-schemas/schema-version/${SCHEMA_VERSION}`,
+      url: `/ctml-schemas/schema-version/${schemaVersion}`,
       headers: {
         'Authorization': 'Bearer ' + data['accessToken'],
       },

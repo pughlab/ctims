@@ -89,15 +89,16 @@ export class TrialController {
   //   return result
   // }
 
-  @Patch()
+  @Patch(':id')
   @UseGuards(KeycloakPasswordGuard)
   @ApiOperation({ summary: "Update or create a trial" })
   @ApiParam({ name: "id", description: "ID of the trial to update." })
   @ApiOkResponse({ description: "Object updated." })
   @ApiNotFoundResponse({ description: "Trial with the requested ID could not be found." })
-  update(@CurrentUser() user: user,
+  update(@Param('id') id: string,
+         @CurrentUser() user: user,
          @Body() updateTrialDto: UpdateTrialDto) {
-    return this.trialService.update(updateTrialDto, user);
+    return this.trialService.update(+id, updateTrialDto, user);
   }
 
   @Patch(':id/ctml-schemas')

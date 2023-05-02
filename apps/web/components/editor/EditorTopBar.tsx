@@ -29,6 +29,11 @@ const EditorTopBar = () => {
   useEffect(() => {
     if (saveTrialResponse) {
       console.log('response', saveTrialResponse);
+      toast.current.show({
+        severity:
+          'info',
+        summary: 'Trial saved',
+      });
 
     }
     if(saveTrialError) {
@@ -90,7 +95,7 @@ const EditorTopBar = () => {
     if (!ctmlModel.trialInformation.trial_id) {
       toast.current.show({
         severity:
-          'info',
+          'error',
         summary: 'Error Saving',
         detail: 'Trial ID is required',
       });

@@ -57,14 +57,14 @@ export class TrialService {
     return foundTrial.ctml_schemas;
   }
 
-  async update(updateTrialDto: UpdateTrialDto,
+  async update(id: number, updateTrialDto: UpdateTrialDto,
                user: user
   ): Promise<trial> {
 
     const { status, principal_investigator, nickname, ctml_schema_version, nct_id } = updateTrialDto;
-    const existing_trial = await this.prismaService.trial.findFirst({
+    const existing_trial = await this.prismaService.trial.findUnique({
       where: {
-        nct_id
+        id
       }
     });
 
