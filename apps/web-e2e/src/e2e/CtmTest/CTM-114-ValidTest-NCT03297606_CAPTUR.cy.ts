@@ -77,8 +77,8 @@ import {
   trialEditorHeaderButtons,
   trialEditorLeftPanelList,
   trialEditorRadioButtons
-} from '../support/app.po';
-import {NCT03297606_CAPTUR} from "../fixtures/NCT03297606_CAPTUR"
+} from '../../support/app.po';
+import {NCT03297606_CAPTUR} from "../../fixtures/NCT03297606_CAPTUR"
 const { deleteDownloadsFolderBeforeAll } = require('cypress-delete-downloads-folder');
 import * as yaml from 'js-yaml';
 
