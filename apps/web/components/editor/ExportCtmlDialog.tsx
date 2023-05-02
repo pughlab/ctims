@@ -138,6 +138,7 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    onDialogHide();
   }
 
   return (
