@@ -50,7 +50,7 @@ export class CtmlJsonService {
     })
 
     if (existingJsons.length > 0) {
-      this.prismaService.ctml_json.updateMany({
+      const r = await this.prismaService.ctml_json.updateMany({
         data: {
           data,
         },
@@ -61,6 +61,8 @@ export class CtmlJsonService {
           ]
         }
       })
+      return r[0]
+
     }
 
     return await this.prismaService.ctml_json.create({
