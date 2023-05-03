@@ -8,7 +8,7 @@ import {
   Delete,
   NotImplementedException,
   HttpStatus,
-  UseGuards
+  UseGuards, OnModuleInit
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -26,13 +26,17 @@ import {
 import { CurrentUser } from "../auth/CurrentUser";
 import { KeycloakPasswordGuard } from "../auth/KeycloakPasswordGuard";
 import { user } from "@prisma/client";
+import {ModuleRef} from "@nestjs/core";
 
 @Controller('users')
 @ApiTags('User')
-export class UserController {
+export class UserController implements OnModuleInit {
+
+  private trialService: TrialService;
+
   constructor(
     private readonly userService: UserService,
-    private readonly trialService: TrialService
+    public moduleRef: ModuleRef,
   ) {
   }
 
@@ -45,9 +49,18 @@ export class UserController {
 
   @Get()
   @ApiExcludeEndpoint()
-  findAll() {
+  findAll(@CurrentUser() user: user) {
     throw new NotImplementedException();
     return this.userService.findAll();
+  }
+
+  @Get('trials')
+  @UseGuards(KeycloakPasswordGuard)
+  // @ApiBearerAuth("KeycloakPasswordGuard")
+  // @ApiOperation({ summary: "Get all trials for logged in user" })
+  // @ApiFoundResponse({ description: "List of trials found." })
+  async getTrialsForUser(@CurrentUser() user: user) {
+    return await this.trialService.findTrialsByUser(user.id);
   }
 
   @Get(':id')
@@ -72,12 +85,7 @@ export class UserController {
     return this.userService.remove(+id);
   }
 
-  @Get(':id/trials')
-  @UseGuards(KeycloakPasswordGuard)
-  @ApiBearerAuth("KeycloakPasswordGuard")
-  @ApiOperation({ summary: "Get all trials for a user" })
-  @ApiFoundResponse({ description: "List of trials found." })
-  async getTrialsForUser(@CurrentUser() user: user) {
-    return await this.trialService.findTrialsByUser(user.id);
+  onModuleInit(): any {
+    this.trialService = this.moduleRef.get(TrialService, { strict: false });
   }
 }

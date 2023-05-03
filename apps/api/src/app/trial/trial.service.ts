@@ -103,40 +103,6 @@ export class TrialService {
 
   }
 
-  // async update(id: number, updateTrialDto: UpdateTrialDto) {
-  //   const { ctml_schema_id, status, principal_investigator, nickname, trial_id } = updateTrialDto;
-  //   try {
-  //     // Find the most recent created JSON that has the version specified in the
-  //     const jsonToUpdate = await this.prismaService.ctml_json.findFirst({
-  //       where: {
-  //         trial: { id },
-  //         versionId: ctml_schema_id
-  //       },
-  //       orderBy: { createdAt: 'desc' }
-  //     });
-  //     const updatedTrialEntity = await this.prismaService.trial.update({
-  //       where: { id },
-  //       // Update the ctml_json associated with this trial record as well
-  //       include: { ctml_jsons: true },
-  //       data: {
-  //         status,
-  //         principal_investigator,
-  //         nickname,
-  //         trial_id
-  //       }
-  //     });
-  //
-  //
-  //     return updatedTrialEntity;
-  //   } catch (e) {
-  //     // Check if the exception stems from the ID not existing in the trial db, throw appropriate exception.
-  //     if (PrismaExceptionTools.isRecordNotFoundException(e)) {
-  //       throw new NotFoundException(`Trial with ID ${id} not found`);
-  //     }
-  //     throw e;
-  //   }
-  // }
-
   async updateTrialSchemaList(id: number, updateTrialSchemasDto: UpdateTrialSchemasDto) {
     return this.prismaService.trial.update({
       where: { id },

@@ -9,8 +9,11 @@ import {useRouter} from "next/router";
 import React from 'react';
 import {Menu} from "primereact/menu";
 import {useSession} from "next-auth/react";
+import useGetUserTrials from "../../hooks/useGetUserTrials";
 
 const Trials = () => {
+
+  const {response, error, loading, getAllTrialsOperation} = useGetUserTrials();
 
   const {data} = useSession()
   console.log('session', data);
@@ -21,6 +24,16 @@ const Trials = () => {
       router.push('/');
     }
   }, [data])
+
+  useEffect(() => {
+    getAllTrialsOperation();
+  }, []);
+
+  useEffect(() => {
+    if (response) {
+      setTrials(response);
+    }
+  }, [response]);
 
 
   const [trials, setTrials] = useState<any>([]);
@@ -149,13 +162,13 @@ const Trials = () => {
                      sortField="createdOn" sortOrder={-1}
                      emptyMessage="No CTML files. Select the 'Create' button to start."
           >
-            <Column field="id" header="ID" ></Column>
+            <Column field="nct_id" header="ID" ></Column>
             <Column field="id" header="" body={subMenuTemplate}></Column>
             <Column field="nickname" header="Nickname"></Column>
-            <Column field="principalInvestigator" header="Principal Investigator" ></Column>
+            <Column field="principal_investigator" header="Principal Investigator" ></Column>
             <Column field="status" header="Status" sortable></Column>
-            <Column field="createdOn" header="Created on" ></Column>
-            <Column field="updatedOn" header="Modified on"></Column>
+            <Column field="createdAt" header="Created on" dataType="date"></Column>
+            <Column field="updatedAt" header="Modified on" dataType="date"></Column>
           </DataTable>
         </div>
 
