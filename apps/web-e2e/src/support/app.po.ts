@@ -117,6 +117,7 @@ export const getLevelSuspended = () => cy.get('#root_treatment_list_step_0_arm_0
 
 //preview window
 export const getPreviewWindow = () => cy.get('.p-tabview.p-component')
+export const getPreviewTextWindow = () => cy.get('.CtimsMatchingCriteriaWidget_pre-tag__gyYSW')
 
 //Matching Criteria Table View Content has"YAML" and "JSON"
 export const getMatchingCriteriaTableHeader = () => cy.get('.p-tabview-title')
