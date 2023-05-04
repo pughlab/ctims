@@ -18,11 +18,33 @@ spec:
         app.kubernetes.io/name: {{ include "thischart.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      volumes:
+        - name: "ctims-mysql-data"
+          hostPath:
+            path: "{{.Values.mountRoot}}/mysql/data"
+            type: DirectoryOrCreate
       containers:
         - image: "{{ .Values.docker.image }}:latest"
           name: ctimsweb
           ports:
             - containerPort: {{ .Values.ctimsweb.port }}
               name: ctimsweb
+        - image: "{{ .Values.docker.image }}:latest"
+          name: ctimsdb
+          ports:
+            - containerPort: {{ .Values.ctimsdb.port }}
+              name: mysql
+          volumeMounts:
+            - name: "ctims-mysql-data"
+              mountPath: "/var/lib/mysql"
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "{{ .Values.ctimsdb.password }}"
+            - name: MYSQL_DATABASE
+              value: "{{ .Values.ctimsdb.database }}"
+            - name: MYSQL_USER
+              value: "{{ .Values.ctimsdb.user }}"
+            - name: MYSQL_PASSWORD
+              value: "{{ .Values.ctimsdb.password }}"
       imagePullSecrets:
         - name: regcred
