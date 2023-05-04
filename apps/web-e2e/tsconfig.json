@@ -4,13 +4,17 @@
     "sourceMap": false,
     "outDir": "../../dist/out-tsc",
     "allowJs": true,
-    "types": ["cypress", "node", "./support", "@shelex/cypress-allure-plugin", "jest",""]
+    "noEmit": true,
+    "types": ["cypress", "node", "./support", "@shelex/cypress-allure-plugin","./allure-report","./allure-results"]
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.js",
     "cypress.config.ts",
     "../../node_modules/cypress-delete-downloads-folder/src/index.d.ts",
-    "src/cypress/downloads"
+    "src/cypress/downloads",
+    "../../node_modules/@shelex/cypress-allure-plugin/reporter",
+    "../../node_modules/@shelex/cypress-allure-plugin/writer",
+    "../../node_modules/@shelex"
   ]
 }

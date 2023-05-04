@@ -68,9 +68,10 @@ import breakParent = doc.builders.breakParent;
 import {Simulate} from "react-dom/test-utils";
 import input = Simulate.input;
 import {cli} from "cypress";
+import baseClass from "../Base/baseClass.cy";
 
 describe('CTIMS Match criteria Arm 7', () => {
-  before(() => cy.visit('/'));
+  baseClass.beforeClass()
   //deleteDownloadsFolderBeforeAll()
   it('should Validate the match criteria for Arm 7', () => {
     cy.get('#array-item-list-root_treatment_list_step_0_arm').contains('Add arm').click()

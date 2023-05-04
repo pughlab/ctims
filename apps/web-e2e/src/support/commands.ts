@@ -216,12 +216,27 @@ Cypress.Commands.add('siteList',(siteName,
   getCancerCenterIRB().contains(cancerCenterIRB).click()
   getCancerCenterIRB().should('contain',cancerCenterIRB)
 })
+Cypress.Commands.add('fillSiteDetails',(input,site) => {
+  cy.wrap(input).find('.p-dropdown').eq(0).click().contains(site.site_name).click();
+  cy.wrap(input).find('.p-dropdown').eq(1).click().contains(site.site_status).click();
+  cy.wrap(input).find('.p-selectbutton').eq(0).click().contains(site.coordinating_center).click();
+  cy.wrap(input).find('.p-selectbutton').eq(1).click().contains(site.uses_cancer_center_irb).click();
+})
 
 Cypress.Commands.add('sponsorList',(sponsorName: string,principalSponsor: string) => {
   trialEditorLeftPanelList().eq(6).should('contain', 'Sponsor List').click()
   getSponsorName().type(sponsorName)
   getPrincipalSponsor().contains(principalSponsor).click()
   getPrincipalSponsor().should('contain',principalSponsor)
+})
+Cypress.Commands.add('fillProtocolStaffDetails',(input, staff) => {
+  trialEditorLeftPanelList().eq(7).should('contain','Staff List').click()
+  cy.wrap(input).find('.p-inputtext').eq(0).type(staff.first_name);
+  cy.wrap(input).find('.p-inputtext').eq(1).type(staff.last_name);
+  cy.wrap(input).find('.p-inputtext').eq(2).type(staff.email_address);
+  cy.wrap(input).find('.p-dropdown').eq(0).click().contains(staff.institution_name).click();
+  cy.wrap(input).find('.p-dropdown').eq(1).click().contains(staff.staff_role).click();
+
 })
 
 Cypress.Commands.add('staffList',(firstName,

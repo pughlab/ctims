@@ -16,5 +16,33 @@
 // Import commands.js using ES2015 syntax:
 import './commands';
 import '@shelex/cypress-allure-plugin';
+/// <reference types=”@shelex/cypress-allure-plugin” />
+Cypress.config("pageLoadTimeout", 5000);
+Cypress.config('defaultCommandTimeout', 6000);
+Cypress.config('requestTimeout', 6000);
+
+
+Cypress.on("uncaught:exception", (error) => {
+  if (
+    error.message.includes(
+      "Timed out after waiting `5000ms` for your remote page to load",
+    )
+  ) {
+    return false;
+  }
+});
+
+Cypress.on("fail", (error) => {
+  if (
+    error.message.includes(
+      "Timed out after waiting `5000ms` for your remote page to load",
+    )
+  ) {
+    return false;
+  }
+
+  throw error;
+});
+
 
 

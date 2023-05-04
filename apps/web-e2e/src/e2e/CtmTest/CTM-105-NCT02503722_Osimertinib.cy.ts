@@ -42,7 +42,7 @@ import {
   getMenuItemOr, getMultipleArm,
   getNCTPurpose,
   getPhaseDropdownList,
-  getPlusIcon, getPreviewWindow, getPrimaryManagementGroupPlusIcon,
+  getPlusIcon, getPreviewTextWindow, getPreviewWindow, getPrimaryManagementGroupPlusIcon,
   getPrincipalInvestigator,
   getPriorTreatmentRequirementMultiple,
   getPriorTreatmentRequirementPlusIconMultiple,
@@ -70,99 +70,89 @@ import {
   trialEditorLeftPanelList,
   trialEditorRadioButtons
 } from '../../support/app.po';
-//import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib";
 import {NCT02503722_Osimertinib} from "../../fixtures/NCT02503722_Osimertinib"
-//import {NCT02503722_Osimertinib} from "../../"
-
+import baseClass from "../Base/baseClass.cy"
 const { deleteDownloadsFolderBeforeAll } = require('cypress-delete-downloads-folder');
 import * as yaml from 'js-yaml';
 
-describe('CTIMS Trial Editor', () => {
-  before(() => {
-    cy.visit('/')
-  });
+describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false }, () => {
+  baseClass.beforeClass()
   deleteDownloadsFolderBeforeAll()
-  it('should Validate the Trial Editor Page with valid test data', () => {
+  const ctmlTestData = NCT02503722_Osimertinib
+  it('should enter values into the "Trial Editor Form"', () => {
      cy.title().should('contain', 'CTIMS')
      trialEditorLeftPanelList().should('have.length', '9')
-     cy.trialInformation(NCT02503722_Osimertinib.nct_id,
+     cy.trialInformation(ctmlTestData.nct_id,
        "My Trial",
        "John Doe",
        "Draft",
-       NCT02503722_Osimertinib.long_title,
-       NCT02503722_Osimertinib.short_title,
-       NCT02503722_Osimertinib.phase,
-       NCT02503722_Osimertinib.protocol_no,
-       NCT02503722_Osimertinib.nct_purpose,
-       NCT02503722_Osimertinib.status)
+       ctmlTestData.long_title,
+       ctmlTestData.short_title,
+       ctmlTestData.phase,
+       ctmlTestData.protocol_no,
+       ctmlTestData.nct_purpose,
+       ctmlTestData.status)
 
      // Prior treatment requirements
-     cy.clickMultipleFunction(getPriorTreatmentRequirementPlusIconMultiple(),NCT02503722_Osimertinib.prior_treatment_requirements.length)
+     cy.clickMultipleFunction(getPriorTreatmentRequirementPlusIconMultiple(),ctmlTestData.prior_treatment_requirements.length)
      getPriorTreatmentRequirementMultiple().each((input, index) => {
        // check if there is a corresponding value in the array
-       if (NCT02503722_Osimertinib.prior_treatment_requirements[index]) {
-         // enter the value into the text box
-         cy.wrap(input).type(NCT02503722_Osimertinib.prior_treatment_requirements[index]);
+       if (ctmlTestData.prior_treatment_requirements[index]) {
+         cy.wrap(input).type(ctmlTestData.prior_treatment_requirements[index]);
        }
      })
-    //cy.priorTreatmentRequirement(NCT02503722_Osimertinib.prior_treatment_requirements[0])
+
     //Age
-    cy.age(NCT02503722_Osimertinib.age)
+    cy.age(ctmlTestData.age)
 
     //Drug List
-    cy.clickMultipleFunction(getDrugNamePlusIcon(), NCT02503722_Osimertinib.drug_list.drug.length - 1)
+    cy.clickMultipleFunction(getDrugNamePlusIcon(), ctmlTestData.drug_list.drug.length - 1)
 
     getDrugNameTextBoxMultiple().each((input, index) => {
-      // check if there is a corresponding value in the array
-      if (NCT02503722_Osimertinib.drug_list.drug[index]) {
-        // enter the value into the text box
-        cy.wrap(input).type(NCT02503722_Osimertinib.drug_list.drug[index].drug_name);
+      if (ctmlTestData.drug_list.drug[index]) {
+        cy.wrap(input).type(ctmlTestData.drug_list.drug[index].drug_name);
       }
     })
-    //Management Group List has 1-text field and 1-Checkbox
-    cy.clickMultipleFunction(getPrimaryManagementGroupPlusIcon(), NCT02503722_Osimertinib.management_group_list.management_group.length - 1)
+    //Management Group List
+    cy.clickMultipleFunction(getPrimaryManagementGroupPlusIcon(), ctmlTestData.management_group_list.management_group.length - 1)
     getManagementGroupNameTextBoxMultiple().each(($input, index) => {
-      cy.wrap($input).find('.p-dropdown').click().contains(NCT02503722_Osimertinib.management_group_list.management_group[index].management_group_name).click();
-      cy.wrap($input).find('.p-selectbutton').contains(NCT02503722_Osimertinib.management_group_list.management_group[index].is_primary).click();
+      cy.wrap($input).find('.p-dropdown').click().contains(ctmlTestData.management_group_list.management_group[index].management_group_name).click();
+      cy.wrap($input).find('.p-selectbutton').contains(ctmlTestData.management_group_list.management_group[index].is_primary).click();
     });
 
     //Site List
-    cy.clickMultipleFunction(getSiteNamePlusIcon(), NCT02503722_Osimertinib.site_list.site.length - 1)
+    cy.clickMultipleFunction(getSiteNamePlusIcon(), ctmlTestData.site_list.site.length - 1)
     getSiteNameMultiple().each(($input, index) => {
-      cy.wrap($input).find('.p-dropdown').eq(0).click().contains(NCT02503722_Osimertinib.site_list.site[index].site_name).click();
-      cy.wrap($input).find('.p-dropdown').eq(1).click().contains(NCT02503722_Osimertinib.site_list.site[index].site_status).click();
-      cy.wrap($input).find('.p-selectbutton').eq(0).click().contains(NCT02503722_Osimertinib.site_list.site[index].coordinating_center).click();
-      cy.wrap($input).find('.p-selectbutton').eq(1).click().contains(NCT02503722_Osimertinib.site_list.site[index].uses_cancer_center_irb).click();
-    });
+      const site = ctmlTestData.site_list.site[index]
+      cy.fillSiteDetails($input, site)
+    })
 
-    //Sponsor List array of 5 values - done
-    cy.clickMultipleFunction(getSponsorNamePlusIcon(), NCT02503722_Osimertinib.sponsor_list.sponsor.length - 1)
+    //Sponsor List
+    cy.clickMultipleFunction(getSponsorNamePlusIcon(), ctmlTestData.sponsor_list.sponsor.length - 1)
     getSponsorNameMultiple().each(($input, index) => {
-      cy.wrap($input).find('.p-inputtext').type(NCT02503722_Osimertinib.sponsor_list.sponsor[index].sponsor_name)
-      cy.wrap($input).find('.p-selectbutton').contains(NCT02503722_Osimertinib.sponsor_list.sponsor[index].is_principal_sponsor).click();
+      cy.wrap($input).find('.p-inputtext').type(ctmlTestData.sponsor_list.sponsor[index].sponsor_name)
+      cy.wrap($input).find('.p-selectbutton').contains(ctmlTestData.sponsor_list.sponsor[index].is_principal_sponsor).click();
     });
 
-    //Staff List - Done
-    cy.clickMultipleFunction(getProtocolStaffPlusIcon,
-      NCT02503722_Osimertinib.staff_list.protocol_staff.length - 1);
+    //Staff List
+    cy.clickMultipleFunction(getProtocolStaffPlusIcon(), ctmlTestData.staff_list.protocol_staff.length - 1);
     getProtocolStaffMultiple().each(($input, index) => {
-      cy.log($input.attr('id'));
-      cy.wrap($input).find('.p-inputtext').eq(0).type(NCT02503722_Osimertinib.staff_list.protocol_staff[index].first_name);
-      cy.wrap($input).find('.p-inputtext').eq(1).type(NCT02503722_Osimertinib.staff_list.protocol_staff[index].last_name);
-      cy.wrap($input).find('.p-inputtext').eq(2).type(NCT02503722_Osimertinib.staff_list.protocol_staff[index].email_address);
-      cy.wrap($input).find('.p-dropdown').eq(0).click().contains(NCT02503722_Osimertinib.staff_list.protocol_staff[index].institution_name).click();
-      cy.wrap($input).find('.p-dropdown').eq(1).click().contains(NCT02503722_Osimertinib.staff_list.protocol_staff[index].staff_role).click();
+      const staff = ctmlTestData.staff_list.protocol_staff[index]
+      cy.fillProtocolStaffDetails($input, staff)
     });
   })
-//!************ Arm 1  *****************
-    it('should validate the match criteria for Arm 1', () => {
+//************ Arm 1  *****************
+    it('should enter the values in "Treatment List and Matching criteria modal" for Arm 1', () => {
       trialEditorLeftPanelList().eq(8).should('contain', 'Treatment List').click()
      //delete the dose level
+      cy.wait(2000)
       cy.get('#array-item-list-root_treatment_list_step_0_arm_0_dose_level').children().find('.pi-trash').click()
-      cy.clickMultipleFunction(getAddArmPlusIcon(), NCT02503722_Osimertinib.treatment_list.step[0].arm.length - 1)
-      const treatmentList = NCT02503722_Osimertinib.treatment_list.step[0].arm;
-      const doseLevels = treatmentList[0].dose_level;
+      cy.wait(1000)
 
+      cy.clickMultipleFunction(getAddArmPlusIcon(), ctmlTestData.treatment_list.step[0].arm.length - 1)
+      const treatmentList = ctmlTestData.treatment_list.step[0].arm;
+      const doseLevels = treatmentList[0].dose_level;
+      cy.wait(1000)
       getMultipleArm().each(($input, index) => {
         cy.log($input.attr('id'));
         const arm = treatmentList[index];
@@ -205,13 +195,13 @@ describe('CTIMS Trial Editor', () => {
            //!******** Add clinical at Parent AND ********************
            cy.clickParentNode(0).click()
            cy.clickClinical()
-           getClinicalAge().type(NCT02503722_Osimertinib.treatment_list.step[0].arm[0].match[0].and[0].clinical.age_numerical)
-           getClinicalOncotreePrimaryDiagnosis().type(NCT02503722_Osimertinib.treatment_list.step[0].arm[0].match[0].and[0].clinical.oncotree_primary_diagnosis)
+           getClinicalAge().type(ctmlTestData.treatment_list.step[0].arm[0].match[0].and[0].clinical.age_numerical)
+           getClinicalOncotreePrimaryDiagnosis().type(ctmlTestData.treatment_list.step[0].arm[0].match[0].and[0].clinical.oncotree_primary_diagnosis)
 
            //!******** OR ********************
            cy.clickParentNode(0).click()
            cy.clickOr()
-           let orConditions = NCT02503722_Osimertinib.treatment_list.step[0].arm[0].match[0].and[1].or
+           let orConditions = ctmlTestData.treatment_list.step[0].arm[0].match[0].and[1].or
            cy.log(JSON.stringify(orConditions))
            cy.log(orConditions.length.toString())
            cy.clickParentNode(2).click()
@@ -257,10 +247,9 @@ describe('CTIMS Trial Editor', () => {
     })
 
 
-  it('should validate multiple "Json preview" match with "NCT03297606_CAPTUR"', () => {
-    NCT02503722_Osimertinib.treatment_list.step[0].arm.forEach((arm,armIndex) => {
+  it('should validate the match between "Json preview window text" and "ctmlTestData"', () => {
+    ctmlTestData.treatment_list.step[0].arm.forEach((arm,armIndex) => {
       const matchCriteria = arm.match
-      //const matchCriteria = JSON.parse(matchVal)
       getPreviewWindow().each(($el, index) => {
         if (index === 0) {
           cy.log("click parent")
@@ -278,7 +267,20 @@ describe('CTIMS Trial Editor', () => {
       })
     })
   });
-  //************Export Ctml***************
+  it('should validate the match between "JSON preview window text" and "YAML preview window text" ',  () => {
+    getMatchingCriteriaTableHeader().contains('YAML').click()
+    getPreviewTextWindow().invoke("text").then((yamlText) => {
+      const yamlObject = yaml.load(yamlText)
+      const yamlMatchCriteria = JSON.stringify(yamlObject)
+      getMatchingCriteriaTableHeader().contains('JSON').click()
+      getPreviewTextWindow().invoke("text").then((text) => {
+        const jsonArray = JSON.parse(text);
+        const jsonMatchCriteria = JSON.stringify(jsonArray)
+        cy.compareArrays(yamlMatchCriteria.split(','),jsonMatchCriteria.split(','))
+      })
+    })
+  })
+  //!************Export Ctml***************
   it('should click on Export button, "Export as JSON" file ', () => {
     trialEditorHeaderButtons().eq(1).should('contain', 'Export').click()
     trialEditorRadioButtons().eq(0).should('contain.html', 'json')
@@ -303,36 +305,36 @@ describe('CTIMS Trial Editor', () => {
   })
 //!**************** Match Export Json file with Test Data
 
-  it('should validate exported "Trial Information" matches "NCT02503722_Osimertinib" ', () => {
+  it('should validate exported "Trial Information" matches "ctmlTestData" ', () => {
     cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
       const exportedAttributeNames = ['trial_id', 'long_title', 'short_title', 'phase', 'protocol_no', 'nct_purpose', 'status'];
       const testDataAttributeNames = ['nct_id', 'long_title', 'short_title', 'phase', 'protocol_no', 'nct_purpose', 'status'];
 
       const exportedTrialInformation = exportedAttributeNames.map((attribute) => exportedCtmlModel[attribute]);
-      const testDataTrialInformation = testDataAttributeNames.map((attribute) => NCT02503722_Osimertinib[attribute]);
+      const testDataTrialInformation = testDataAttributeNames.map((attribute) => ctmlTestData[attribute]);
 
       cy.compareArrays(exportedTrialInformation, testDataTrialInformation);
     });
   });
 
-  it('should validate exported "Age" matches "NCT02503722_Osimertinib"', () => {
+  it('should validate exported "Age" matches "ctmlTestData"', () => {
     cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
       const exportData = exportedCtmlModel.age
-      let testData = NCT02503722_Osimertinib.age
+      let testData = ctmlTestData.age
       cy.compareArrays(exportData.split(' '), testData.split(' ')) //Age is a single value, not a array
     })
   });
 
-  it('should validate exported "Prior treatment requirement" match "NCT02503722_Osimertinib"', () => {
+  it('should validate exported "Prior treatment requirement" match "ctmlTestData"', () => {
     cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
       const exportData = exportedCtmlModel.prior_treatment_requirements
-      let testData = NCT02503722_Osimertinib.prior_treatment_requirements
+      let testData = ctmlTestData.prior_treatment_requirements
       cy.compareArrays(exportData, testData)
     })
   });
 
-  it('should validate exported "Drug list" match "NCT02503722_Osimertinib"', () => {
-    let rawData = NCT02503722_Osimertinib.drug_list.drug
+  it('should validate exported "Drug list" match "ctmlTestData"', () => {
+    let rawData = ctmlTestData.drug_list.drug
 
     cy.drugListAttributes(rawData).then(testDataMatchingCriteria => {
       cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
@@ -344,8 +346,8 @@ describe('CTIMS Trial Editor', () => {
       });
     });
   });
-  it('should validate expotred "Management Group list" matches "NCT02503722_Osimertinib"', () => {
-    let rawData = NCT02503722_Osimertinib.management_group_list.management_group;
+  it('should validate exported "Management Group list" matches "ctmlTestData"', () => {
+    let rawData = ctmlTestData.management_group_list.management_group;
 
     cy.managementGroupListAttributes(rawData).then(testDataMatchingCriteria => {
       cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
@@ -358,8 +360,8 @@ describe('CTIMS Trial Editor', () => {
     });
   });
 
-  it('should validate exported "Site Group list" matches "NCT02503722_Osimertinib"', () => {
-    let rawData = NCT02503722_Osimertinib.site_list.site
+  it('should validate exported "Site Group list" matches "ctmlTestData"', () => {
+    let rawData = ctmlTestData.site_list.site
 
     cy.siteListAttributes(rawData).then(testDataMatchingCriteria => {
       cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
@@ -372,8 +374,8 @@ describe('CTIMS Trial Editor', () => {
     });
   });
 
-  it('should validate exported "Sponsor list" matches "NCT02503722_Osimertinib"', () => {
-    let rawData = NCT02503722_Osimertinib.sponsor_list.sponsor
+  it('should validate exported "Sponsor list" matches "ctmlTestData"', () => {
+    let rawData = ctmlTestData.sponsor_list.sponsor
 
     cy.sponsorListAttributes(rawData).then(testDataMatchingCriteria => {
       cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
@@ -386,8 +388,8 @@ describe('CTIMS Trial Editor', () => {
     });
   });
 
-  it('should validate exported "Staff list" matches "NCT02503722_Osimertinib"', () => {
-    let rawData = NCT02503722_Osimertinib.staff_list.protocol_staff
+  it('should validate exported "Staff list" matches "ctmlTestData"', () => {
+    let rawData = ctmlTestData.staff_list.protocol_staff
 
     cy.staffListAttributes(rawData).then(testDataMatchingCriteria => {
       cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
@@ -400,9 +402,9 @@ describe('CTIMS Trial Editor', () => {
     });
   })
 
-  it('should validate "Treatment list" with multiple arm/matching criteria matches with "NCT02503722_Osimertinib"',() =>{
+  it('should validate exported "Treatment list" with multiple arm/matching criteria matches with "ctmlTestData"',() =>{
     //Arm and dose level validation
-    const matchAndT = NCT02503722_Osimertinib.treatment_list.step[0].arm;
+    const matchAndT = ctmlTestData.treatment_list.step[0].arm;
     cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
       const matchAndE = exportedCtmlModel.treatment_list.step[0].arm;
 
@@ -437,7 +439,6 @@ describe('CTIMS Trial Editor', () => {
             expect(JSON.stringify(clauseT)).to.deep.equal(JSON.stringify(clauseE));
           }
         });
-
       });
     });
   });
