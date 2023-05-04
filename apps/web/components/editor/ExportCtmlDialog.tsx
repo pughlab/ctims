@@ -77,7 +77,7 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
         <Button label="Cancel" className={cancelBtn} onClick={onDialogHide} />
         <Button
           label="Export CTML"
-          disabled={exportButtonDisabled}
+          disabled={false}
           onClick={exportCtmlClicked}
           className={exportBtn}
         />

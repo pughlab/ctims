@@ -7,22 +7,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model schema_ctml {
-  id        Int      @id @default(autoincrement())
-  version   String   @unique
-  schema    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  trials    trial[]
+model ctml_schema {
+  id         Int         @id @default(autoincrement())
+  version    Int         @unique
+  schema     String      @db.LongText
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  // Many trials to many schema_ctml records
+  trials     trial[]
+  ctml_jsons ctml_json[]
+
+  @@index(fields: [version])
 }
 
 model ctml_json {
-  id        Int      @id @default(autoincrement())
-  version   String   @unique
+  id        Int          @id @default(autoincrement())
+  version   ctml_schema? @relation(fields: [versionId], references: [id])
+  versionId Int?
+  // This should be encrypted
   data      Json?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  trials    trial[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  // One trial to many ctml_json records
+  trial     trial?       @relation(fields: [trialId], references: [id])
+  trialId   Int?
 }
 
 model trial {
@@ -31,26 +39,34 @@ model trial {
   nickname               String?
   principal_investigator String?
   status                 status?       @default(DRAFT)
-  ctml_schemas           schema_ctml[]
-  ctml_json              ctml_json?    @relation(fields: [ctml_jsonId], references: [id])
+  // Many trials to many ctml_schema records
+  ctml_schemas           ctml_schema[]
   createdAt              DateTime      @default(now())
   updatedAt              DateTime      @updatedAt
-  createdBy              user?         @relation("createdBy", fields: [userId], references: [id])
-  modifiedBy             user?         @relation("modifiedBy", fields: [modifiedById], references: [id])
-  userId                 Int?
+  modifiedBy             user?         @relation("ModifiedBy", fields: [modifiedById], references: [id])
   modifiedById           Int?
-  ctml_jsonId            Int?
+  user                   user?         @relation("UserTrials", fields: [userId], references: [id])
+  userId                 Int?
+  // One trial to many ctml_json records
+  ctml_jsons             ctml_json[]
 }
 
 model user {
   id              Int      @id @default(autoincrement())
   email           String   @unique
-  firstName       String?
-  lastName        String?
-  created_trials  trial[]  @relation("createdBy")
-  modified_trials trial[]  @relation("modifiedBy")
+  name            String?
+  username        String?
+  first_name      String?
+  email_verified  Boolean  @default(false)
+  last_name       String?
+  refresh_token   String?  @db.LongText
+  keycloak_id     String?  @unique
+  trials          trial[]  @relation("UserTrials")
+  modified_trials trial[]  @relation("ModifiedBy")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+
+  @@index(fields: [keycloak_id])
 }
 
 enum status {

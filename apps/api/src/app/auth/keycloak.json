@@ -1,0 +1,10 @@
+{
+  "realm": "UHN",
+  "auth-server-url": "https://cbioportal.pmgenomics.ca",
+  "ssl-required": "external",
+  "resource": "ctims",
+  "credentials": {
+    "secret": "yEV5YAWsE7XbhBEwUDHLRqXrR5jMhEwm"
+  },
+  "confidential-port": 0
+}

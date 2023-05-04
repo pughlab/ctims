@@ -1,10 +1,29 @@
 import EditorTopBar from "../../../components/editor/EditorTopBar";
 import {Ui} from "@ctims-mono-repo/ui";
 
-import React from "react";
+import React, {useEffect} from "react";
 import LeftMenuEditorComponent from "../../../components/editor/LeftMenuEditorComponent";
+import {useSession} from "next-auth/react";
+import {useRouter} from "next/router";
+import useGetCtmlSchema from "../../../hooks/useGetCtmlSchema";
 
 const EditorCreateCtml = () => {
+
+  const { error, response, loading, operation} = useGetCtmlSchema();
+
+  const router = useRouter();
+
+  const {data} = useSession()
+
+  useEffect(() => {
+    operation();
+  }, [])
+
+  useEffect(() => {
+    if(!data) {
+      router.push('/');
+    }
+  }, [data])
 
   const containerStyle: React.CSSProperties = {
     display: 'flex',
@@ -21,9 +40,8 @@ const EditorCreateCtml = () => {
       <EditorTopBar />
 
       <div style={containerStyle}>
-        {/*<Tree value={nodes} />*/}
         <LeftMenuEditorComponent />
-        <Ui></Ui>
+        {response && <Ui ctml_schema={response}></Ui>}
       </div>
 
     </>

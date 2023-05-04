@@ -8,8 +8,33 @@ import {useEffect, useRef, useState} from "react";
 import {useRouter} from "next/router";
 import React from 'react';
 import {Menu} from "primereact/menu";
+import {useSession} from "next-auth/react";
+import useGetUserTrials from "../../hooks/useGetUserTrials";
 
 const Trials = () => {
+
+  const {response, error, loading, getAllTrialsOperation} = useGetUserTrials();
+
+  const {data} = useSession()
+  console.log('session', data);
+  // const { accessToken } = data
+
+  useEffect(() => {
+    if(!data) {
+      router.push('/');
+    }
+  }, [data])
+
+  useEffect(() => {
+    getAllTrialsOperation();
+  }, []);
+
+  useEffect(() => {
+    if (response) {
+      setTrials(response);
+    }
+  }, [response]);
+
 
   const [trials, setTrials] = useState<any>([]);
   const [rowEntered, setRowEntered] = useState<DataTableRowMouseEventParams>(null);
@@ -54,7 +79,7 @@ const Trials = () => {
         id: 1,
         nickname: 'Trial 1',
         principalInvestigator: 'Dr. John Doe',
-        status: 'Draft',
+        status: 'Active',
         createdOn: '2021-01-01 by Dr. John Doe',
         updatedOn: '2021-01-01 by Dr. John Doe',
       },
@@ -115,18 +140,20 @@ const Trials = () => {
 
   return (
     <>
-      <TopBar />
-      <div className={styles.pageContainer}>
-        <div className={styles.titleAndButtonsContainer}>
-          <span className={styles.trialsText}>Trials</span>
-          <div className={styles.buttonsContainer}>
-            <Button label="Import" className="p-button-text p-button-plain" />
-            <Button label="Create CTML" className={styles.createCtmlButton} onClick={(e) => createCtmlClick(e)} />
+      {data && <>
+        <TopBar />
+        {/*<div>Access Token: {data['accessToken']}</div>*/}
+        <div className={styles.pageContainer}>
+          <div className={styles.titleAndButtonsContainer}>
+            <span className={styles.trialsText}>Trials</span>
+            <div className={styles.buttonsContainer}>
+              <Button label="Import" className="p-button-text p-button-plain" />
+              <Button label="Create CTML" className={styles.createCtmlButton} onClick={(e) => createCtmlClick(e)} />
+            </div>
           </div>
-        </div>
 
-        <Menu model={trialMenuItems} ref={menu} popup id="popup_menu" className={styles.menu} appendTo={'self'}
-          onHide={() => clearRowClicked()}/>
+          <Menu model={trialMenuItems} ref={menu} popup id="popup_menu" className={styles.menu} appendTo={'self'}
+                onHide={() => clearRowClicked()}/>
 
         <div className={styles.tableContainer}>
           <DataTable value={trials} rowHover={true}
@@ -135,17 +162,18 @@ const Trials = () => {
                      sortField="createdOn" sortOrder={-1}
                      emptyMessage="No CTML files. Select the 'Create' button to start."
           >
-            <Column field="id" header="ID" ></Column>
+            <Column field="nct_id" header="ID" ></Column>
             <Column field="id" header="" body={subMenuTemplate}></Column>
             <Column field="nickname" header="Nickname"></Column>
-            <Column field="principalInvestigator" header="Principal Investigator" ></Column>
+            <Column field="principal_investigator" header="Principal Investigator" ></Column>
             <Column field="status" header="Status" sortable></Column>
-            <Column field="createdOn" header="Created on" ></Column>
-            <Column field="updatedOn" header="Modified on"></Column>
+            <Column field="createdAt" header="Created on" dataType="date"></Column>
+            <Column field="updatedAt" header="Modified on" dataType="date"></Column>
           </DataTable>
         </div>
 
-      </div>
+        </div></>}
+
     </>
 
 

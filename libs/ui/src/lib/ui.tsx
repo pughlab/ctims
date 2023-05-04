@@ -13,6 +13,7 @@ import {setCtmlModel, setErrorSchema} from "../../../../apps/web/store/slices/ct
 import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
 import Form from "@rjsf/core";
 import {ValidationData} from "@rjsf/utils";
+import {setTrialId} from "../../../../apps/web/store/slices/contextSlice";
 
 
 const containerStyle: CSSProperties = {
@@ -23,7 +24,9 @@ const containerStyle: CSSProperties = {
 
 
 /* eslint-disable-next-line */
-export interface UiProps {}
+export interface UiProps {
+  ctml_schema: {schema: any, version: any};
+}
 
 export const Ui = (props: UiProps) => {
 
@@ -36,8 +39,8 @@ export const Ui = (props: UiProps) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log('My component was re-rendered');
-  });
+    dispatch(setTrialId(0))
+  }, []);
 
   const handleSpecialClick = (formD: any, id: string) => {
     const formData = formD
@@ -81,6 +84,7 @@ export const Ui = (props: UiProps) => {
     <div style={containerStyle}>
       <CtimsFormComponentMemo
         ref={formRef}
+        schema={props.ctml_schema.schema}
         onSpecialButtonClick={handleSpecialClick}
         onRjsfFormChange={onFormChange}
       />
