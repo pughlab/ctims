@@ -5,12 +5,13 @@ const { removeDirectory } = require('cypress-delete-downloads-folder');
 const {verifyDownloadTasks} = require('cy-verify-downloads')
 const {fs} = require('fs')
 const path = require('path')
+
 const crypto = require('crypto')
 const allureWriter = require('@shelex/cypress-allure-plugin/writer');
 
 const cypressJsonConfig: EndToEndConfigOptions = {
   fileServerFolder: '.',
-  baseUrl: 'http://localhost:4200/trials/create',
+  //baseUrl: 'http://localhost:4200/trials/create',
   fixturesFolder: './src/fixtures',
   includeShadowDom: true,
   experimentalStudio: true,
@@ -21,10 +22,15 @@ const cypressJsonConfig: EndToEndConfigOptions = {
   screenshotsFolder: '../../dist/cypress/apps/web-e2e/screenshots',
   trashAssetsBeforeRuns: true,  //trash screenshot and video before every run
   chromeWebSecurity: false,
-  specPattern: 'src/e2e/CtmTest/**/*.cy.{js,jsx,ts,tsx}',
   supportFile: 'src/support/e2e.ts',
   downloadsFolder: 'cypress/downloads',
-  //specPattern: 'src/e2e/CTM-105-validTest-NCT02503722.cy.ts',
+  //specPattern: 'src/e2e/CtmTest/**/*.cy.{js,jsx,ts,tsx}',
+  //specPattern: 'src/e2e/CtmTest/CTM-105-NCT02503722_Osimertinib.cy.ts',
+  specPattern: 'src/e2e/CtmTest/CTM-114-NCT03297606_CAPTUR.cy.ts',
+  //specPattern: 'src/e2e/Regression/E2E-RegressionTest.cy.ts',
+
+  defaultCommandTimeout: 10000,
+  pageLoadTimeout: 30000,
   setupNodeEvents(on,config) {
     on('task', verifyDownloadTasks)
     on('task', { removeDirectory })
@@ -32,14 +38,22 @@ const cypressJsonConfig: EndToEndConfigOptions = {
     return config;
   }
 
-
 };
-export default defineConfig({
+module.exports = defineConfig({
   //viewportWidth: 1920,
   //viewportHeight: 1080,
   "env": {
-     "baseUrl": "http://localhost:4200/",
-   },
+    //"baseUrl": "http://localhost:4200/",
+    baseUrl: 'http://localhost:4200/trials/create',
+    defaultCommandTimeout: 30000,
+    allureReuseAfterSpec: true,
+    allureResultsPath: "allure-results",
+    allure:true,
+    snapshotOnly: true,
+    testIsolation: false,
+    experimentalSessionSupport: true,
+
+  },
   e2e: {
     ...nxE2EPreset(__dirname),
     ...cypressJsonConfig,
