@@ -47,7 +47,7 @@ import {
   getMenuItemOr, getMultipleArm,
   getNCTPurpose,
   getPhaseDropdownList,
-  getPlusIcon,
+  getPlusIcon, getPreviewTextWindow,
   getPreviewWindow, getPrimaryManagementGroupPlusIcon,
   getPrincipalInvestigator,
   getPriorTreatmentRequirementMultiple,
@@ -81,95 +81,87 @@ import {
 import {NCT03297606_CAPTUR} from "../../fixtures/NCT03297606_CAPTUR"
 const { deleteDownloadsFolderBeforeAll } = require('cypress-delete-downloads-folder');
 import * as yaml from 'js-yaml';
+import baseClass from "../Base/baseClass.cy";
 
-describe('CTIMS Trial Editor "NCT03297606_CAPTUR', () => {
-  before(() => cy.visit('/'));
+describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() => {
+  baseClass.beforeClass()
   deleteDownloadsFolderBeforeAll()
-  it('should Validate the Trial Editor Page with valid test data', () => {
+  const ctmlTestData = NCT03297606_CAPTUR
+
+  it('should enter the Trial Editor form with valid test data', () => {
     cy.title().should('contain', 'CTIMS')
     trialEditorLeftPanelList().should('have.length', '9')
-    cy.trialInformation(NCT03297606_CAPTUR.nct_id,
+    cy.trialInformation(ctmlTestData.nct_id,
       "My Trial",
       "John Doe",
       "Draft",
-      NCT03297606_CAPTUR.long_title,
-      NCT03297606_CAPTUR.short_title,
-      NCT03297606_CAPTUR.phase,
-      NCT03297606_CAPTUR.protocol_no,
-      NCT03297606_CAPTUR.nct_purpose,
-      NCT03297606_CAPTUR.status)
+      ctmlTestData.long_title,
+      ctmlTestData.short_title,
+      ctmlTestData.phase,
+      ctmlTestData.protocol_no,
+      ctmlTestData.nct_purpose,
+      ctmlTestData.status)
 
     // Prior treatment requirements
-    //cy.clickMultiple('#array-item-list-root_prior_treatment_requirements>div>.pi-plus-circle',
-    //  NCT03297606_CAPTUR.prior_treatment_requirements.length);
-    cy.clickMultipleFunction(getPriorTreatmentRequirementPlusIconMultiple(),NCT03297606_CAPTUR.prior_treatment_requirements.length)
+    cy.clickMultipleFunction(getPriorTreatmentRequirementPlusIconMultiple(),ctmlTestData.prior_treatment_requirements.length)
     getPriorTreatmentRequirementMultiple().each((input, index) => {
-      // check if there is a corresponding value in the array
-      if (NCT03297606_CAPTUR.prior_treatment_requirements[index]) {
-        // enter the value into the text box
-        cy.wrap(input).type(NCT03297606_CAPTUR.prior_treatment_requirements[index]);
+      if (ctmlTestData.prior_treatment_requirements[index]) {
+        cy.wrap(input).type(ctmlTestData.prior_treatment_requirements[index]);
       }
     })
     //Age
-    cy.age(NCT03297606_CAPTUR.age)
+    cy.age(ctmlTestData.age)
 
     //Drug List
-   // cy.clickMultiple('#array-item-list-root_drug_list_drug>div>.pi-plus-circle',
-    //  NCT03297606_CAPTUR.drug_list.drug.length - 1);
-    cy.clickMultipleFunction(getDrugNamePlusIcon(),NCT03297606_CAPTUR.drug_list.drug.length - 1)
+    cy.clickMultipleFunction(getDrugNamePlusIcon(),ctmlTestData.drug_list.drug.length - 1)
 
     getDrugNameTextBoxMultiple().each((input, index) => {
-      // check if there is a corresponding value in the array
-      if (NCT03297606_CAPTUR.drug_list.drug[index]) {
-        // enter the value into the text box
-        cy.wrap(input).type(NCT03297606_CAPTUR.drug_list.drug[index].drug_name);
+      if (ctmlTestData.drug_list.drug[index]) {
+        cy.wrap(input).type(ctmlTestData.drug_list.drug[index].drug_name);
       }
     })
 
     //Management Group List
-    //cy.clickMultiple('#array-item-list-root_management_group_list_management_group>div>.pi-plus-circle',
-     // NCT03297606_CAPTUR.management_group_list.management_group.length - 1);
-    cy.clickMultipleFunction(getPrimaryManagementGroupPlusIcon(),NCT03297606_CAPTUR.management_group_list.management_group.length - 1)
+    cy.clickMultipleFunction(getPrimaryManagementGroupPlusIcon(),ctmlTestData.management_group_list.management_group.length - 1)
     getManagementGroupNameTextBoxMultiple().each(($input, index) => {
-      cy.wrap($input).find('.p-dropdown').click().contains(NCT03297606_CAPTUR.management_group_list.management_group[index].management_group_name).click();
-      cy.wrap($input).find('.p-selectbutton').contains(NCT03297606_CAPTUR.management_group_list.management_group[index].is_primary).click();
+      cy.wrap($input).find('.p-dropdown').click().contains(ctmlTestData.management_group_list.management_group[index].management_group_name).click();
+      cy.wrap($input).find('.p-selectbutton').contains(ctmlTestData.management_group_list.management_group[index].is_primary).click();
     });
 
     //Site List - done
-   // cy.clickMultiple('#array-item-list-root_site_list_site>div>.pi-plus-circle',
-   //   NCT03297606_CAPTUR.site_list.site.length - 1);
-    cy.clickMultipleFunction(getSiteNamePlusIcon(),NCT03297606_CAPTUR.site_list.site.length - 1)
+    cy.clickMultipleFunction(getSiteNamePlusIcon(),ctmlTestData.site_list.site.length - 1)
     getSiteNameMultiple().each(($input, index) => {
-      cy.wrap($input).find('.p-dropdown').eq(0).click().contains(NCT03297606_CAPTUR.site_list.site[index].site_name).click();
-      cy.wrap($input).find('.p-dropdown').eq(1).click().contains(NCT03297606_CAPTUR.site_list.site[index].site_status).click();
-      cy.wrap($input).find('.p-selectbutton').eq(0).click().contains(NCT03297606_CAPTUR.site_list.site[index].coordinating_center).click();
-      cy.wrap($input).find('.p-selectbutton').eq(1).click().contains(NCT03297606_CAPTUR.site_list.site[index].uses_cancer_center_irb).click();
+      cy.wrap($input).find('.p-dropdown').eq(0).click().contains(ctmlTestData.site_list.site[index].site_name).click();
+      cy.wrap($input).find('.p-dropdown').eq(1).click().contains(ctmlTestData.site_list.site[index].site_status).click();
+      cy.wrap($input).find('.p-selectbutton').eq(0).click().contains(ctmlTestData.site_list.site[index].coordinating_center).click();
+      cy.wrap($input).find('.p-selectbutton').eq(1).click().contains(ctmlTestData.site_list.site[index].uses_cancer_center_irb).click();
     });
 
     //Sponsor List array of 5 values - done
-    cy.clickMultipleFunction(getSponsorNamePlusIcon(), NCT03297606_CAPTUR.sponsor_list.sponsor.length - 1)
+    cy.clickMultipleFunction(getSponsorNamePlusIcon(), ctmlTestData.sponsor_list.sponsor.length - 1)
     getSponsorNameMultiple().each(($input, index) => {
-      cy.wrap($input).find('.p-inputtext').type(NCT03297606_CAPTUR.sponsor_list.sponsor[index].sponsor_name)
-      cy.wrap($input).find('.p-selectbutton').contains(NCT03297606_CAPTUR.sponsor_list.sponsor[index].is_principal_sponsor).click();
+      cy.wrap($input).find('.p-inputtext').type(ctmlTestData.sponsor_list.sponsor[index].sponsor_name)
+      cy.wrap($input).find('.p-selectbutton').contains(ctmlTestData.sponsor_list.sponsor[index].is_principal_sponsor).click();
     });
 
     //Staff List - Done
     cy.clickMultipleFunction(getProtocolStaffPlusIcon,
-      NCT03297606_CAPTUR.staff_list.protocol_staff.length - 1);
+      ctmlTestData.staff_list.protocol_staff.length - 1);
     getProtocolStaffMultiple().each(($input, index) => {
       cy.log($input.attr('id'));
-      cy.wrap($input).find('.p-inputtext').eq(0).type(NCT03297606_CAPTUR.staff_list.protocol_staff[index].first_name);
-      cy.wrap($input).find('.p-inputtext').eq(1).type(NCT03297606_CAPTUR.staff_list.protocol_staff[index].last_name);
-      cy.wrap($input).find('.p-inputtext').eq(2).type(NCT03297606_CAPTUR.staff_list.protocol_staff[index].email_address);
-      cy.wrap($input).find('.p-dropdown').eq(0).click().contains(NCT03297606_CAPTUR.staff_list.protocol_staff[index].institution_name).click();
-      cy.wrap($input).find('.p-dropdown').eq(1).click().contains(NCT03297606_CAPTUR.staff_list.protocol_staff[index].staff_role).click();
+      cy.wrap($input).find('.p-inputtext').eq(0).type(ctmlTestData.staff_list.protocol_staff[index].first_name);
+      cy.wrap($input).find('.p-inputtext').eq(1).type(ctmlTestData.staff_list.protocol_staff[index].last_name);
+      cy.wrap($input).find('.p-inputtext').eq(2).type(ctmlTestData.staff_list.protocol_staff[index].email_address);
+      cy.wrap($input).find('.p-dropdown').eq(0).click().contains(ctmlTestData.staff_list.protocol_staff[index].institution_name).click();
+      cy.wrap($input).find('.p-dropdown').eq(1).click().contains(ctmlTestData.staff_list.protocol_staff[index].staff_role).click();
     });
   })
+
 //!************ Arm 1  *****************
-  it('should validate the match criteria for Arm 1', () => {
+  it('should enter the values in "Treatment List and Matching criteria modal" for Arm 1', () => {
     trialEditorLeftPanelList().eq(8).should('contain', 'Treatment List').click()
-    cy.clickMultipleFunction(getAddArmPlusIcon(), NCT03297606_CAPTUR.treatment_list.step[0].arm.length - 1)
-    const treatmentList = NCT03297606_CAPTUR.treatment_list.step[0].arm;
+    cy.clickMultipleFunction(getAddArmPlusIcon(), ctmlTestData.treatment_list.step[0].arm.length - 1)
+    const treatmentList = ctmlTestData.treatment_list.step[0].arm;
     const doseLevels = treatmentList[0].dose_level;
 
     getMultipleArm().each(($input, index) => {
@@ -199,12 +191,12 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR', () => {
         getAddCriteriaGroup().click()
         //})
 
-        //!******** OR ********************
+        //******** OR ********************
         cy.clickParentAnd()
         cy.clickOr()
         //Click Or Parent at index 1
         cy.clickParentNode(1).click()
-        let orConditions = NCT03297606_CAPTUR.treatment_list.step[0].arm[0].match[0].and[0].or
+        let orConditions = ctmlTestData.treatment_list.step[0].arm[0].match[0].and[0].or
         cy.log(JSON.stringify(orConditions))
         cy.log(orConditions.length.toString())
         cy.clickGenomic()
@@ -238,17 +230,17 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR', () => {
         cy.clickParentNode(0).click()
         //cy.clickAnd()
         cy.clickClinical()
-        getClinicalAge().type(NCT03297606_CAPTUR.treatment_list.step[0].arm[0].match[0].and[1].clinical.age_numerical)
-        getClinicalOncotreePrimaryDiagnosis().type(NCT03297606_CAPTUR.treatment_list.step[0].arm[0].match[0].and[1].clinical.oncotree_primary_diagnosis)
+        getClinicalAge().type(ctmlTestData.treatment_list.step[0].arm[0].match[0].and[1].clinical.age_numerical)
+        getClinicalOncotreePrimaryDiagnosis().type(ctmlTestData.treatment_list.step[0].arm[0].match[0].and[1].clinical.oncotree_primary_diagnosis)
         getSaveMatchingCriteria().click()
       }
-      })
+    })
   })
   //!************ Arm 7  *****************
 
-  it('should validate the match criteria for Arm 7', () => {
+  it('should enter the values in "Treatment List and Matching criteria modal" for Arm 7', () => {
 
-    const treatmentList = NCT03297606_CAPTUR.treatment_list.step[0].arm;
+    const treatmentList = ctmlTestData.treatment_list.step[0].arm;
     const doseLevels = treatmentList[1].dose_level;
 
     getMultipleArm().each(($input, index) => {
@@ -263,14 +255,7 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR', () => {
 
         cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]`).each(($input, doseIndex) => {
           const dose = arm.dose_level[doseIndex]
-            //doseLevels[doseIndex];
-         /* cy.wrap($input).find('.p-inputtext').eq(0).type(dose.level_code);
-          cy.wrap($input).find('.p-inputtext').eq(1).type(dose.level_description);
-          cy.wrap($input).find('.p-inputtext').eq(2).type(dose.level_internal_id.toString());
-          cy.wrap($input).find('.p-selectbutton').contains(dose.level_suspended).click();
-        */   cy.log($input.attr('id'));
-          //const dose = doseLevels[doseIndex];
-          cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
+        cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
           cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
           cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
           cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
@@ -289,7 +274,7 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR', () => {
         cy.clickOr()
         //Click Or Parent at index 1
         cy.clickParentNode(1).click()
-        //let orConditions = NCT03297606_CAPTUR.treatment_list.step[0].arm[1].match[0].and[0].or
+        //let orConditions = ctmlTestData.treatment_list.step[0].arm[1].match[0].and[0].or
         let orConditions = treatmentList[index].match[0].and[0].or
 
         cy.log(JSON.stringify(orConditions))
@@ -324,13 +309,14 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR', () => {
         cy.clickAnd()
         cy.clickParentNode(4)
         cy.clickClinical()
-        cy.clickChildToggleArrowButton(2)
+//        cy.clickChildToggleArrowButton(2)
         // cy.wait(1000)
         let clinicalLength = treatmentList[index].match[0].and[1].and.length - 1
         cy.clickMultipleFunction(getAddCriteriaToSameList(), clinicalLength)
+        cy.clickChildToggleArrowButton(2)
 
         let andConditions = treatmentList[index].match[0].and[1].and
-        getSubGroup().contains('And').find('.p-treenode-children>li')
+        cy.get('.LeftMenuComponent_matchingCriteriaMenuContainer__fe8dz>div:nth-child(2)>ul>li>ul>li:nth-child(2)').find('.p-treenode-children>li')
           .each((childElement, index) => {
             cy.log(index.toString())
             if (Cypress.$(childElement).length > 0) {
@@ -356,10 +342,10 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR', () => {
         getSaveMatchingCriteria().click()
       }
     })
-})
+  })
   //******** Matching criteria Preview ********************
-  it('should validate multiple "Json preview" match with "NCT03297606_CAPTUR"', () => {
-    NCT03297606_CAPTUR.treatment_list.step[0].arm.forEach((arm,armIndex) => {
+  it('should validate Arm 1 & Arm 7 "Json preview window text" matches with "ctmlTestData"', () => {
+    ctmlTestData.treatment_list.step[0].arm.forEach((arm,armIndex) => {
       const matchCriteria = arm.match
       getPreviewWindow().each(($el, index) => {
         if (index === 0) {
@@ -390,7 +376,39 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR', () => {
       })
     })
   });
-    //!************Export Ctml***************
+  it('should validate the match between "JSON preview window text" and "YAML preview window text" ',  () => {
+    ctmlTestData.treatment_list.step[0].arm.forEach((arm,armIndex) => {
+      getPreviewWindow().each(($el, index) => {
+        if (index === 0) {
+          cy.wrap($el).parent().contains('YAML').click()
+          cy.wrap($el).find('.p-tabview-panels').invoke("text").then((yamlText) => {
+            const yamlObject = yaml.load(yamlText)
+            const yamlMatchCriteria = JSON.stringify(yamlObject)
+            cy.wrap($el).parent().contains('JSON').click()
+            cy.wrap($el).find('.p-tabview-panels').invoke("text").then((text) => {
+              const jsonArray = JSON.parse(text);
+              const jsonMatchCriteria = JSON.stringify(jsonArray)
+              cy.compareArrays(yamlMatchCriteria.split(','), jsonMatchCriteria.split(','))
+            })
+          })
+        }
+        if (index === 1) {
+          cy.wrap($el).parent().contains('YAML').click()
+          cy.wrap($el).find('.p-tabview-panels').invoke("text").then((yamlText) => {
+            const yamlObject = yaml.load(yamlText)
+            const yamlMatchCriteria = JSON.stringify(yamlObject)
+            cy.wrap($el).parent().contains('JSON').click()
+            cy.wrap($el).find('.p-tabview-panels').invoke("text").then((text) => {
+              const jsonArray = JSON.parse(text);
+              const jsonMatchCriteria = JSON.stringify(jsonArray)
+              cy.compareArrays(yamlMatchCriteria.split(','), jsonMatchCriteria.split(','))
+            })
+          })
+        }
+      })
+    })
+  })
+  //************Export Ctml***************
   it('should click on Export button, "Export as JSON" file ', () => {
     trialEditorHeaderButtons().eq(1).should('contain', 'Export').click()
     trialEditorRadioButtons().eq(0).should('contain.html', 'json')
@@ -415,49 +433,49 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR', () => {
   })
 //!**************** Match Export Json file with Test Data
 
-  it('should validate exported "Trial Information" matches "NCT03297606_CAPTUR" ', () => {
+  it('should validate exported "Trial Information" matches "ctmlTestData" ', () => {
     cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
       const exportedAttributeNames = ['trial_id', 'long_title', 'short_title', 'phase', 'protocol_no', 'nct_purpose', 'status'];
       const testDataAttributeNames = ['nct_id', 'long_title', 'short_title', 'phase', 'protocol_no', 'nct_purpose', 'status'];
 
       const exportedTrialInformation = exportedAttributeNames.map((attribute) => exportedCtmlModel[attribute]);
-      const testDataTrialInformation = testDataAttributeNames.map((attribute) => NCT03297606_CAPTUR[attribute]);
+      const testDataTrialInformation = testDataAttributeNames.map((attribute) => ctmlTestData[attribute]);
 
       cy.compareArrays(exportedTrialInformation, testDataTrialInformation);
     });
   });
 
-  it('should validate exported "Age" matches "NCT03297606_CAPTUR"', () => {
+  it('should validate exported "Age" matches "ctmlTestData"', () => {
     cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
       const exportData = exportedCtmlModel.age
-      let testData = NCT03297606_CAPTUR.age
+      let testData = ctmlTestData.age
       cy.compareArrays(exportData.split(' '), testData.split(' ')) //Age is a single value, not a array
     })
   });
 
-  it('should validate exported "Prior treatment requirement" match "NCT03297606_CAPTUR"', () => {
+  it('should validate exported "Prior treatment requirement" match "ctmlTestData"', () => {
     cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
       const exportData = exportedCtmlModel.prior_treatment_requirements
-      let testData = NCT03297606_CAPTUR.prior_treatment_requirements
+      let testData = ctmlTestData.prior_treatment_requirements
       cy.compareArrays(exportData, testData)
     })
   });
 
-  it('should validate exported "Drug list" match "NCT03297606_CAPTUR"', () => {
-    let rawData = NCT03297606_CAPTUR.drug_list.drug
+  it('should validate exported "Drug list" match "ctmlTestData"', () => {
+    let rawData = ctmlTestData.drug_list.drug
 
     cy.drugListAttributes(rawData).then(testDataMatchingCriteria => {
       cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
         const exportData = exportedCtmlModel.drug_list.drug
 
         cy.drugListAttributes(exportData).then(ctmlMatchingCriteria => {
-        cy.compareMultiple(ctmlMatchingCriteria,testDataMatchingCriteria)
+          cy.compareMultiple(ctmlMatchingCriteria,testDataMatchingCriteria)
         });
       });
     });
   });
-  it('should validate expotred "Management Group list" matches "NCT03297606_CAPTUR"', () => {
-    let rawData = NCT03297606_CAPTUR.management_group_list.management_group;
+  it('should validate exported "Management Group list" matches "ctmlTestData"', () => {
+    let rawData = ctmlTestData.management_group_list.management_group;
 
     cy.managementGroupListAttributes(rawData).then(testDataMatchingCriteria => {
       cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
@@ -470,8 +488,8 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR', () => {
     });
   });
 
-  it('should validate exported "Site Group list" matches "NCT03297606_CAPTUR"', () => {
-    let rawData = NCT03297606_CAPTUR.site_list.site
+  it('should validate exported "Site Group list" matches "ctmlTestData"', () => {
+    let rawData = ctmlTestData.site_list.site
 
     cy.siteListAttributes(rawData).then(testDataMatchingCriteria => {
       cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
@@ -484,8 +502,8 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR', () => {
     });
   });
 
-  it('should validate exported "Sponsor list" matches "NCT03297606_CAPTUR"', () => {
-    let rawData = NCT03297606_CAPTUR.sponsor_list.sponsor
+  it('should validate exported "Sponsor list" matches "ctmlTestData"', () => {
+    let rawData = ctmlTestData.sponsor_list.sponsor
 
     cy.sponsorListAttributes(rawData).then(testDataMatchingCriteria => {
       cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
@@ -498,8 +516,8 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR', () => {
     });
   });
 
-  it('should validate exported "Staff list" matches "NCT03297606_CAPTUR"', () => {
-    let rawData = NCT03297606_CAPTUR.staff_list.protocol_staff
+  it('should validate exported "Staff list" matches "ctmlTestData"', () => {
+    let rawData = ctmlTestData.staff_list.protocol_staff
 
     cy.staffListAttributes(rawData).then(testDataMatchingCriteria => {
       cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
@@ -512,9 +530,9 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR', () => {
     });
   })
 
-  it('should validate "Treatment list" with multiple arm/matching criteria matches with "NCT03297606_CAPTUR"',() =>{
+  it('should validate "Treatment list" with multiple arm/matching criteria matches with "ctmlTestData"',() =>{
     //Arm and dose level validation
-    const matchAndT = NCT03297606_CAPTUR.treatment_list.step[0].arm;
+    const matchAndT = ctmlTestData.treatment_list.step[0].arm;
     cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
       const matchAndE = exportedCtmlModel.treatment_list.step[0].arm;
 
@@ -536,27 +554,27 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR', () => {
             expect(JSON.stringify(objE_1.level_suspended), 'Dose Level : Level Suspended Match').to.deep.equal(JSON.stringify(objE_2.level_suspended));
           });
         }
-          //matching criteria validation
-          const armE = matchAndE[armIndex].match[0].and;
-          armE.forEach((clauseE, index) => {
-            const clauseT = armT.match[0].and[index];
-            if (clauseE.or) {
-              clauseE.or.forEach((objE, index2) => {
-                const objT = clauseT.or[index2];
-                expect(JSON.stringify(objT)).to.deep.equal(JSON.stringify(objE));
-              });
-            } else if (clauseE.and) {
-              clauseE.and.forEach((objE, index2) => {
-                const objT = clauseT.and[index2];
-                expect(JSON.stringify(objT)).to.deep.equal(JSON.stringify(objE));
-              });
-            } else if (clauseE.clinical) {
-              expect(JSON.stringify(clauseT)).to.deep.equal(JSON.stringify(clauseE));
-            }
-          });
-
+        //matching criteria validation
+        const armE = matchAndE[armIndex].match[0].and;
+        armE.forEach((clauseE, index) => {
+          const clauseT = armT.match[0].and[index];
+          if (clauseE.or) {
+            clauseE.or.forEach((objE, index2) => {
+              const objT = clauseT.or[index2];
+              expect(JSON.stringify(objT)).to.deep.equal(JSON.stringify(objE));
+            });
+          } else if (clauseE.and) {
+            clauseE.and.forEach((objE, index2) => {
+              const objT = clauseT.and[index2];
+              expect(JSON.stringify(objT)).to.deep.equal(JSON.stringify(objE));
+            });
+          } else if (clauseE.clinical) {
+            expect(JSON.stringify(clauseT)).to.deep.equal(JSON.stringify(clauseE));
+          }
         });
+
+      });
     });
 
   });
-  })
+})
