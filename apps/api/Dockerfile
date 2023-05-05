@@ -1,6 +1,12 @@
-FROM node:16.14-alpine
+FROM node:16.14-slim
 
-RUN apk add --update python3 make g++ && rm -rf /var/cache/apk/*
+#RUN apk add --update python3 make g++ && rm -rf /var/cache/apk/*
+RUN apt-get update && \
+    apt-get install -y \
+    python3 \
+    make \
+    g++ && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src
 RUN mkdir -p /usr/src/app
@@ -12,10 +18,14 @@ RUN mkdir -p /usr/src/app/dist
 WORKDIR /usr/src/app
 RUN yarn install --loglevel=error
 
-RUN #npx nx build api
+#CMD ["yarn", "schema:generate-client"]
+#RUN npx nx build api
 ARG RESTSERVER_PORT=3000
 ENV RESTSERVER_PORT=$RESTSERVER_PORT
 EXPOSE ${RESTSERVER_PORT}
 #CMD ["node", "dist/main.js"]
+CMD ["yarn", "generate:build"]
+
+#CMD ["yarn", "start:prod"]
 CMD ["tail", "-f", "/dev/null"]
 

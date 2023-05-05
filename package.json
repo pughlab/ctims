@@ -8,8 +8,10 @@
     "schema:format": "npx prisma format --schema=./apps/api/prisma/schema.prisma",
     "schema:push": "npx prisma db push --schema=./apps/api/prisma/schema.prisma",
     "schema:generate-client": "npx prisma generate --schema=./apps/api/prisma/schema.prisma",
+    "start:prod": "node dist/apps/api/main.js",
     "build": "nx build",
     "test": "nx test",
+    "generate:build": "npx prisma generate --schema=./apps/api/prisma/schema.prisma && nx build api",
     "build-web": "nx build web --verbose --development",
     "build-all": "nx run-many --target=build --projects=api,web --parallel",
     "cypress:dev": "nx e2e web-e2e --watch"
