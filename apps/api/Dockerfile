@@ -1,9 +1,9 @@
-FROM node:16.0
+FROM node:16.14-alpine
 
 WORKDIR /usr/src
 RUN mkdir -p /usr/src/app
-COPY ../../package.json /usr/src/
-COPY ../../yarn.lock /usr/src/
+COPY package.json /usr/src/
+COPY yarn.lock /usr/src/
 RUN yarn install --loglevel=error
 COPY ./ /usr/src/app/
 RUN mkdir -p /usr/src/app/dist
