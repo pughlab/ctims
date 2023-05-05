@@ -8,7 +8,6 @@ import ExportCtmlDialog from "./ExportCtmlDialog";
 import {signOut} from "next-auth/react";
 import {Toast} from "primereact/toast";
 import useSaveTrial from "../../hooks/useSaveTrial";
-import {UpdateTrialDto} from "../../../api/src/app/trial/dto/update-trial.dto";
 
 
 const EditorTopBar = () => {
@@ -82,7 +81,7 @@ const EditorTopBar = () => {
       return ctmlModelCopy;
     }
 
-    const getTrialModelOnly = (): UpdateTrialDto => {
+    const getTrialModelOnly = () => {
       return {
         nct_id: ctmlModel.trialInformation.trial_id,
         nickname: ctmlModel.trialInformation.nickname,

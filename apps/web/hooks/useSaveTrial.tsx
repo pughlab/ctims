@@ -3,8 +3,6 @@ import {useEffect, useState} from "react";
 import {useSession} from "next-auth/react";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store/store";
-import {UpdateTrialDto} from "../../api/src/app/trial/dto/update-trial.dto";
-import {UpdateCtmlJsonDto} from "../../api/src/app/ctml-json/dto/update-ctml-json.dto";
 import {useRouter} from "next/router";
 import {setTrialId} from "../store/slices/contextSlice";
 
@@ -47,7 +45,7 @@ const useSaveTrial = () => {
 
       dispatch(setTrialId(trialResponse.data.id));
 
-      const updateCtmlResponse = await axios.request<UpdateCtmlJsonDto>({
+      const updateCtmlResponse = await axios.request({
         method: 'patch',
         url: `/ctml-jsons`,
         headers,
