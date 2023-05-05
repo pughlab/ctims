@@ -1,16 +1,21 @@
 FROM node:16.14-alpine
 
+RUN apk add --update python3 make g++ && rm -rf /var/cache/apk/*
+
 WORKDIR /usr/src
 RUN mkdir -p /usr/src/app
 COPY package.json /usr/src/
 COPY yarn.lock /usr/src/
-RUN yarn install --loglevel=error
+
 COPY ./ /usr/src/app/
 RUN mkdir -p /usr/src/app/dist
 WORKDIR /usr/src/app
+RUN yarn install --loglevel=error
 
-RUN npx nx build api
+RUN #npx nx build api
 ARG RESTSERVER_PORT=3000
 ENV RESTSERVER_PORT=$RESTSERVER_PORT
 EXPOSE ${RESTSERVER_PORT}
-CMD ["node", "dist/main.js"]
+#CMD ["node", "dist/main.js"]
+CMD ["tail", "-f", "/dev/null"]
+
