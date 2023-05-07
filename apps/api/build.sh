@@ -1,6 +1,12 @@
 #!/bin/bash
 SELFDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
+PROJECT_DIR=$(cd ../.. && pwd)
+
+
+TECHNA_REGISTRY_PORT=443
+TECHNA_REGISTRY_ENDPOINT=docker-registry.uhn.ca
+
 CTIMS_API_CONTAINER_IMAGE_NAME=ctims-spi
 CTIMS_API_CONTAINER_IMAGE_LOCATION=$TECHNA_REGISTRY_ENDPOINT:$TECHNA_REGISTRY_PORT/$CTIMS_API_CONTAINER_IMAGE_NAME
 
@@ -10,7 +16,9 @@ COMMIT_ISH="$(git describe --tags --all --always | grep --color=never -o -E '[^\
 PROJECT=ctims
 CONTAINER_NAME=ctims-api
 
+echo $PROJECT_DIR
 docker build \
+  -f ${PROJECT_DIR}/apps/api/Dockerfile \
   -t ${CTIMS_API_CONTAINER_IMAGE_LOCATION}:latest \
   -t ${CTIMS_API_CONTAINER_IMAGE_LOCATION}:${GIT_REF} \
   -t ${CTIMS_API_CONTAINER_IMAGE_LOCATION}:${COMMIT_ISH} \
@@ -20,4 +28,4 @@ docker build \
   --label ca.uhn.techna.${PROJECT}.appVersion="0.1.0" \
   --label ca.uhn.techna.${PROJECT}.containerName=$CONTAINER_NAME \
   --label ca.uhn.techna.${PROJECT}.containerRole="backend" \
-  $SELFDIR
+  $PROJECT_DIR
