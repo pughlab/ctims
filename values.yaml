@@ -10,6 +10,10 @@ docker:
         endpoint: null
     image: null
     dbImage: null
+    apiImage: null
 ctimsweb:
   port: 80
   slug: web
+ctimsapi:
+  port: 3000
+  slug: api

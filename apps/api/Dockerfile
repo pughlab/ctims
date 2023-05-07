@@ -23,11 +23,10 @@ RUN yarn install --loglevel=error
 ARG RESTSERVER_PORT=3000
 ENV RESTSERVER_PORT=$RESTSERVER_PORT
 EXPOSE ${RESTSERVER_PORT}
-#CMD ["node", "dist/main.js"]
-#CMD ["yarn", "generate:build"]
+
 RUN yarn generate:build
+RUN yarn schema:push
 RUN yarn start:prod
 
-#CMD ["yarn", "start:prod"]
 CMD ["tail", "-f", "/dev/null"]
 

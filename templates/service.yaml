@@ -9,6 +9,10 @@ spec:
   ports:
     - port: {{ .Values.ctimsweb.port }}
       targetPort: 3000
+      name: ctimsweb
+    - port: {{ .Values.ctimsapi.port }}
+      targetPort: 3333
+      name: ctimsapi
   selector:
     app.kubernetes.io/name: {{ include "thischart.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}

@@ -29,6 +29,14 @@ spec:
           ports:
             - containerPort: {{ .Values.ctimsweb.port }}
               name: ctimsweb
+        - image: "{{ .Values.docker.apiImage }}:latest"
+          name: ctimsapi
+          ports:
+            - containerPort: {{ .Values.ctimsapi.port }}
+              name: ctimsapi
+          env:
+            - name: DATABASE_URL
+              value: "mysql://ctims:ctims@localhost:3306/ctims"
         - image: "{{ .Values.docker.dbImage }}:latest"
           name: ctimsdb
           ports:
