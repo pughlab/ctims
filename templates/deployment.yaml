@@ -29,7 +29,7 @@ spec:
           ports:
             - containerPort: {{ .Values.ctimsweb.port }}
               name: ctimsweb
-        - image: "{{ .Values.docker.image }}:latest"
+        - image: "{{ .Values.docker.dbImage }}:latest"
           name: ctimsdb
           ports:
             - containerPort: {{ .Values.ctimsdb.port }}

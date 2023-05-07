@@ -26,6 +26,7 @@ EXPOSE ${RESTSERVER_PORT}
 #CMD ["node", "dist/main.js"]
 #CMD ["yarn", "generate:build"]
 RUN yarn generate:build
+RUN yarn start:prod
 
 #CMD ["yarn", "start:prod"]
 CMD ["tail", "-f", "/dev/null"]
