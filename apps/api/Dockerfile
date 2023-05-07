@@ -25,7 +25,7 @@ ENV RESTSERVER_PORT=$RESTSERVER_PORT
 EXPOSE ${RESTSERVER_PORT}
 
 RUN yarn generate:build
-RUN yarn start:prod
-
+#RUN yarn start:prod
+CMD ["yarn", "start:prod"]
 #CMD ["tail", "-f", "/dev/null"]
 
