@@ -15,7 +15,7 @@ spec:
           - pathType: "ImplementationSpecific"
             backend:
               service:
-                name: {{ $fullName }}
+                name: ctimsweb
                 port:
                   number: {{ .Values.ctimsweb.port }}
     - host: "ctims-api.{{ .Values.domain }}"
@@ -24,6 +24,6 @@ spec:
           - pathType: "ImplementationSpecific"
             backend:
               service:
-                name: {{ $fullName }}
+                name: ctimsapi
                 port:
                   number: {{ .Values.ctimsapi.port }}
