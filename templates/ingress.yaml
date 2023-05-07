@@ -15,15 +15,15 @@ spec:
           - pathType: "ImplementationSpecific"
             backend:
               service:
-                name: ctimsweb
+                name: {{ $fullName }}
                 port:
-                  number: {{ .Values.ctimsweb.port }}
+                  name: ctimsweb
     - host: "ctims-api.{{ .Values.domain }}"
       http:
         paths:
           - pathType: "ImplementationSpecific"
             backend:
               service:
-                name: ctimsapi
+                name: {{ $fullName }}
                 port:
-                  number: {{ .Values.ctimsapi.port }}
+                  name: ctimsapi
