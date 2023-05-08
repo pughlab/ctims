@@ -25,9 +25,10 @@ export default NextAuth({
 
     authorize: async  (credentials: any) => {
       // console.log('credentials', credentials, req);
+      const api_url = process.env.REACT_APP_API_URL || 'http://localhost:3333/api';
 
       try {
-        const response = await fetch('http://localhost:3333/api/auth/login', {
+        const response = await fetch(`${api_url}/auth/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -51,4 +52,5 @@ export default NextAuth({
       }
     }
   })],
+  secret: process.env.NEXTAUTH_SECRET || 'secret',
 });

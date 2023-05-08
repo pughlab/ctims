@@ -4,7 +4,6 @@ import './styles.css';
 import Layout from "../components/Layout";
 import { Provider } from 'react-redux'
 import {store} from "../store/store";
-import {session} from "next-auth/core/routes";
 import {SessionProvider} from "next-auth/react";
 
 function CustomApp({ Component, pageProps: { session, ...pageProps }, }: AppProps) {
