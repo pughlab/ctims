@@ -12,6 +12,8 @@ spec:
     matchLabels:
       app.kubernetes.io/name: {{ include "thischart.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
