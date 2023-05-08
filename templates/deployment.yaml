@@ -28,6 +28,7 @@ spec:
       containers:
         - image: "{{ .Values.docker.image }}:latest"
           name: ctimsweb
+          imagePullPolicy: Always
           ports:
             - containerPort: {{ .Values.ctimsweb.port }}
               name: ctimsweb
