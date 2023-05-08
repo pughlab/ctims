@@ -26,6 +26,7 @@ export default NextAuth({
     authorize: async  (credentials: any) => {
       // console.log('credentials', credentials, req);
       const api_url = process.env.REACT_APP_API_URL || 'http://localhost:3333/api';
+      console.log('api_url', api_url)
 
       try {
         const response = await fetch(`${api_url}/auth/login`, {
