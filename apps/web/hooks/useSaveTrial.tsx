@@ -5,10 +5,12 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store/store";
 import {useRouter} from "next/router";
 import {setTrialId} from "../store/slices/contextSlice";
+import getConfig from 'next/config';
 
 const useSaveTrial = () => {
 
-  axios.defaults.baseURL = process.env.REACT_APP_API_URL || "http://localhost:3333/api"
+  const { publicRuntimeConfig } = getConfig();
+  axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
 
   const schemaVersion = useSelector((state: RootState) => state.context.schema_version);
   const trialId = useSelector((state: RootState) => state.context.trialId);

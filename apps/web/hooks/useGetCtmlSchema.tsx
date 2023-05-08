@@ -2,6 +2,7 @@ import axios, {AxiosRequestConfig} from "axios";
 import {useState} from "react";
 import {useSession} from "next-auth/react";
 import {store} from "../store/store";
+import getConfig from 'next/config';
 
 const useGetCtmlSchema = () => {
   const [response, setResponse] = useState(null);
@@ -15,7 +16,9 @@ const useGetCtmlSchema = () => {
     const state = store.getState();
     const schemaVersion = state.context.schema_version
 
-    axios.defaults.baseURL = process.env.REACT_APP_API_URL || "http://localhost:3333/api"
+    const { publicRuntimeConfig } = getConfig();
+    axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
+
 
     axios.request({
       method: 'get',
