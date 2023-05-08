@@ -1,5 +1,7 @@
 domain: qa02.technainstitute.net
 mountRoot: /mnt/k8s/ctims/qa
+git:
+  ref: null
 ctimsdb:
   port: 3306
   password: ctims
