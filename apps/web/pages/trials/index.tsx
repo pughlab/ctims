@@ -73,36 +73,6 @@ const Trials = () => {
     }
   ]
 
-  useEffect(() => {
-    const trials = [
-      {
-        id: 1,
-        nickname: 'Trial 1',
-        principalInvestigator: 'Dr. John Doe',
-        status: 'Active',
-        createdOn: '2021-01-01 by Dr. John Doe',
-        updatedOn: '2021-01-01 by Dr. John Doe',
-      },
-      {
-        id: 2,
-        nickname: 'Trial 2',
-        principalInvestigator: 'Dr. Who',
-        status: 'In review',
-        createdOn: '2021-02-02 by Dr. Who',
-        updatedOn: '2021-02-02 by Dr. Who',
-      },
-      {
-        id: 3,
-        nickname: 'Trial 3',
-        principalInvestigator: 'Dr. Dolittle',
-        status: 'Complete',
-        createdOn: '2021-03-03 by Dr. Dolittle',
-        updatedOn: '2021-03-03 by Dr. Dolittle',
-      }
-    ]
-    setTrials(trials);
-  }, []);
-
   const menuButtonStyle = {
     color: 'black',
     height: '20px',
