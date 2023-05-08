@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ctims-mysql-nodeport
+  labels:
+    fqin: ctims-mysql
+spec:
+  type: NodePort
+  ports:
+
+    - port: 3306
+      targetPort: 3306
+      nodePort: 31256
+      name: ctimsdb
+
+  selector:
+    app.kubernetes.io/name: {{ include "thischart.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
