@@ -33,7 +33,9 @@ spec:
             - name: NEXTAUTH_SECRET
               value: "dAbxJF2DRzqwGYn+BWKdj8o9ieMri4FWsmIRn77r2F8="
             - name: REACT_APP_API_URL
-              value: "http://ctims-api.{{ .Values.domain }}"
+              value: "https://ctims-api.{{ .Values.domain }}"
+            - name: NEXTAUTH_URL
+              value: "https://ctims-web.{{ .Values.domain }}"
         - image: "{{ .Values.docker.apiImage }}:latest"
           name: ctimsapi
           ports:
