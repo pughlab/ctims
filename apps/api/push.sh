@@ -4,6 +4,7 @@ CTIMS_API_CONTAINER_IMAGE_LOCATION=$TECHNA_REGISTRY_ENDPOINT:$TECHNA_REGISTRY_PO
 
 GIT_REF="$(git rev-parse @)"
 GIT_BRANCH="$(git symbolic-ref --short HEAD)"
+COMMIT_ISH="$(git describe --tags --all --always | grep --color=never -o -E '[^\/]+$' | sed "s/~/-/g")"
 
 echo 'pushing backend...'
 docker push ${CTIMS_API_CONTAINER_IMAGE_LOCATION}:latest
