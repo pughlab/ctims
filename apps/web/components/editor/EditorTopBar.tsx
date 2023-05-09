@@ -38,7 +38,9 @@ const EditorTopBar = () => {
     if(saveTrialError) {
       console.log('error', saveTrialError);
       if (saveTrialError.statusCode === 401) {
-        signOut({callbackUrl: '/#/login', redirect: false});
+        signOut({callbackUrl: '/#/login', redirect: false}).then(() => {
+          localStorage.removeItem('ctims-accessToken');
+        });
       }
     }
   }, [saveTrialError, saveTrialResponse]);

@@ -24,8 +24,9 @@ const useGetUserTrials = () => {
 
 
   const getAllTrialsOperation = async () => {
+    const accessToken = localStorage.getItem('ctims-accessToken');
     const headers = {
-      'Authorization': 'Bearer ' + data['accessToken'],
+      'Authorization': 'Bearer ' + accessToken,
     }
 
     try {

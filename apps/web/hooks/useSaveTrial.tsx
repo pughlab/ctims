@@ -33,8 +33,9 @@ const useSaveTrial = () => {
   }, [data])
 
   const saveTrialOperation = async (trialModel: any, ctmlJson: any) => {
+    const accessToken = localStorage.getItem('ctims-accessToken');
     const headers = {
-      'Authorization': 'Bearer ' + data['accessToken'],
+      'Authorization': 'Bearer ' + accessToken,
     }
 
     try {

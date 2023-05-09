@@ -22,7 +22,9 @@ const Trials = () => {
   useEffect(() => {
     if(!data) {
       router.push('/');
+      return;
     }
+    localStorage.setItem('ctims-accessToken', data['accessToken']);
   }, [data])
 
   useEffect(() => {

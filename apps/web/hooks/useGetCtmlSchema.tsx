@@ -18,13 +18,13 @@ const useGetCtmlSchema = () => {
 
     const { publicRuntimeConfig } = getConfig();
     axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
-
+    const accessToken = localStorage.getItem('ctims-accessToken');
 
     axios.request({
       method: 'get',
       url: `/ctml-schemas/schema-version/${schemaVersion}`,
       headers: {
-        'Authorization': 'Bearer ' + data['accessToken'],
+        'Authorization': 'Bearer ' + accessToken,
       },
     })
       .then(response => {
