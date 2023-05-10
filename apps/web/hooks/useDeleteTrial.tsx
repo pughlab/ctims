@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
+import { v4 as uuidv4 } from 'uuid';
 
 const useDeleteTrial = () => {
   const { publicRuntimeConfig } = getConfig();
@@ -35,7 +36,7 @@ const useDeleteTrial = () => {
         url: `/trials/${trialId}`,
         headers
       });
-      setResponse("Success");
+      setResponse(uuidv4());
     }
     catch (error) {
       if(error.response) {

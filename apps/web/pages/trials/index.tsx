@@ -51,6 +51,7 @@ const Trials = () => {
 
   useEffect(() => {
     if (deleteTrialResponse) {
+      // console.log('deleteTrialResponse', deleteTrialResponse);
       getAllTrialsOperation();
     }
   }, [deleteTrialResponse]);
