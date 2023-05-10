@@ -85,6 +85,8 @@ const Trials = () => {
         confirmDialog({
           header: 'Are you sure you want to delete?',
           message: 'You will not be able to recover this after it has been deleted.',
+          rejectLabel: 'Cancel',
+          acceptLabel: 'Delete',
           accept: () => {
             console.log('accept', rowClicked);
             deleteTrialOperation(rowClicked.id);
