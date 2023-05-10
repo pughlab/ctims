@@ -11,12 +11,23 @@ import {Menu} from "primereact/menu";
 import {useSession} from "next-auth/react";
 import useGetUserTrials from "../../hooks/useGetUserTrials";
 
+import { ConfirmDialog } from 'primereact/confirmdialog';
+import { confirmDialog } from 'primereact/confirmdialog';
+import useDeleteTrial from '../../hooks/useDeleteTrial';
+
+
 const Trials = () => {
 
   const {response, error, loading, getAllTrialsOperation} = useGetUserTrials();
+  const {
+    response: deleteTrialResponse,
+    error: deleteTrialError,
+    loading: deleteTrial,
+    deleteTrialOperation
+  } = useDeleteTrial();
 
   const {data} = useSession()
-  console.log('session', data);
+  // console.log('session', data);
   // const { accessToken } = data
 
   useEffect(() => {
@@ -34,8 +45,15 @@ const Trials = () => {
   useEffect(() => {
     if (response) {
       setTrials(response);
+      console.log('response', response);
     }
   }, [response]);
+
+  useEffect(() => {
+    if (deleteTrialResponse) {
+      getAllTrialsOperation();
+    }
+  }, [deleteTrialResponse]);
 
 
   const [trials, setTrials] = useState<any>([]);
@@ -63,7 +81,17 @@ const Trials = () => {
       label: 'Delete',
       icon: 'pi pi-trash',
       command: () => {
-        console.log('Edit');
+        confirmDialog({
+          header: 'Are you sure you want to delete?',
+          message: 'You will not be able to recover this after it has been deleted.',
+          accept: () => {
+            console.log('accept', rowClicked);
+            deleteTrialOperation(rowClicked.id);
+          },
+          reject: () => {
+            console.log('reject');
+          }
+        });
       }
     },
     {
@@ -112,6 +140,7 @@ const Trials = () => {
 
   return (
     <>
+      <ConfirmDialog />
       {data && <>
         <TopBar />
         {/*<div>Access Token: {data['accessToken']}</div>*/}
