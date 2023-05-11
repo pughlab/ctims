@@ -84,7 +84,6 @@ import {
   getPriorTreatmentRequirementRegularExpression, getAddCriteriaToSameList
 } from './app.po';
 import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib";
-import {NCT04293094_testData} from "../e2e/IndividualTest/NCT04293094_testData";
 import {NCT03297606_CAPTUR} from "../fixtures/NCT03297606_CAPTUR";
 const path = require('path')
 //import { ctmlModel } from '../support/models/ctml-model';
