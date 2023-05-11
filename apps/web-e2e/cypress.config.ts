@@ -24,9 +24,9 @@ const cypressJsonConfig: EndToEndConfigOptions = {
   chromeWebSecurity: false,
   supportFile: 'src/support/e2e.ts',
   downloadsFolder: 'cypress/downloads',
-  //specPattern: 'src/e2e/CtmTest/**/*.cy.{js,jsx,ts,tsx}',
+  specPattern: 'src/e2e/CtmTest/**/*.cy.{js,jsx,ts,tsx}',
   //specPattern: 'src/e2e/CtmTest/CTM-105-NCT02503722_Osimertinib.cy.ts',
-  specPattern: 'src/e2e/CtmTest/CTM-114-NCT03297606_CAPTUR.cy.ts',
+ // specPattern: 'src/e2e/CtmTest/CTM-114-NCT03297606_CAPTUR.cy.ts',
   //specPattern: 'src/e2e/Regression/E2E-RegressionTest.cy.ts',
 
   defaultCommandTimeout: 10000,
