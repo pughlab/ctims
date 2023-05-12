@@ -44,7 +44,7 @@ module.exports = defineConfig({
   //viewportHeight: 1080,
   "env": {
     //"baseUrl": "http://localhost:4200/",
-    baseUrl: 'http://localhost:4200/trials/create',
+    baseUrl: 'http://localhost:3000',
     defaultCommandTimeout: 30000,
     allureReuseAfterSpec: true,
     allureResultsPath: "allure-results",

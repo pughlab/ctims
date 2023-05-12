@@ -81,17 +81,21 @@ import {
   getLevelSuspended,
   getPriorTreatmentRequirement,
   getPriorTreatmentRequirementPlusIcon,
-  getPriorTreatmentRequirementRegularExpression, getAddCriteriaToSameList
+  getPriorTreatmentRequirementRegularExpression, getAddCriteriaToSameList, getUserName, getPassword, signInButton
 } from './app.po';
 import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib";
 import {NCT03297606_CAPTUR} from "../fixtures/NCT03297606_CAPTUR";
 const path = require('path')
+
 //import { ctmlModel } from '../support/models/ctml-model';
 
 //require('cypress-delete-downloads-folder').addCustomCommand();
 
 // -- This is a parent command --
 Cypress.Commands.add('login', (email, password) => {
+  getUserName().type(email)
+  getPassword().type(password)
+  signInButton().click()
   console.log('Custom command example: Login', email, password);
 });
 

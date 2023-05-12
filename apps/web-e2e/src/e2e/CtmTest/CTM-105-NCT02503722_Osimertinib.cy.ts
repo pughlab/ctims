@@ -1,4 +1,5 @@
 import {
+  createCTMLButton,
   getAddArmPlusIcon,
   getAddCriteriaGroup,
   getAddCriteriaList,
@@ -72,14 +73,24 @@ import {
 } from '../../support/app.po';
 import {NCT02503722_Osimertinib} from "../../fixtures/NCT02503722_Osimertinib"
 import baseClass from "../Base/baseClass.cy"
+import dateClass from "../Base/dateClass.cy";
+
 const { deleteDownloadsFolderBeforeAll } = require('cypress-delete-downloads-folder');
 import * as yaml from 'js-yaml';
+let exportJsonFile = 'NCT02503722_2023-05-12.json';
+let split = exportJsonFile.substring(0,11); //grab only NCT id
+let jsonFile = split.concat('_', dateClass.currentDate()).concat('.json');
+let yamlFile = split.concat('_', dateClass.currentDate()).concat('.yaml');
+
 
 describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false }, () => {
   baseClass.beforeClass()
   deleteDownloadsFolderBeforeAll()
   const ctmlTestData = NCT02503722_Osimertinib
+  const ctmlJson = `./cypress/downloads/${jsonFile}`
+  const ctmlYaml = `./cypress/downloads/${yamlFile}`
   it('should enter values into the "Trial Editor Form"', () => {
+    createCTMLButton().click()
      cy.title().should('contain', 'CTIMS')
      trialEditorLeftPanelList().should('have.length', '9')
      cy.trialInformation(ctmlTestData.nct_id,
@@ -289,14 +300,15 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
   });
 
   it('should click on Export button, "Export as YAML" file ', () => {
+    trialEditorHeaderButtons().eq(1).should('contain', 'Export').click()
     trialEditorRadioButtons().eq(1).click({force: true})
     trialEditorExportCtml().eq(1).should('contain', 'Export CTML').click()
   });
 
   it('should validate the match between "Export JSON" and "Export YAML" file', () => {
-    cy.readJsonFile('ctml-model.json').then((exportedCtmlModelJson) => {
+    cy.readFile(ctmlJson).then((exportedCtmlModelJson) => {
       const json = JSON.stringify(exportedCtmlModelJson);
-      cy.readJsonFile('ctml-model.yaml').then((exportedCtmlModelYaml) => {
+      cy.readFile(ctmlYaml).then((exportedCtmlModelYaml) => {
         const yamlObject = yaml.load(exportedCtmlModelYaml);
         const yamlVal = JSON.stringify(yamlObject);
         cy.compareArrays(json.split(','), yamlVal.split(','))
@@ -306,7 +318,7 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
 //!**************** Match Export Json file with Test Data
 
   it('should validate exported "Trial Information" matches "ctmlTestData" ', () => {
-    cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
+    cy.readFile(ctmlJson).then((exportedCtmlModel) => {
       const exportedAttributeNames = ['trial_id', 'long_title', 'short_title', 'phase', 'protocol_no', 'nct_purpose', 'status'];
       const testDataAttributeNames = ['nct_id', 'long_title', 'short_title', 'phase', 'protocol_no', 'nct_purpose', 'status'];
 
@@ -318,7 +330,7 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
   });
 
   it('should validate exported "Age" matches "ctmlTestData"', () => {
-    cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
+    cy.readFile(ctmlJson).then((exportedCtmlModel) => {
       const exportData = exportedCtmlModel.age
       let testData = ctmlTestData.age
       cy.compareArrays(exportData.split(' '), testData.split(' ')) //Age is a single value, not a array
@@ -326,7 +338,7 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
   });
 
   it('should validate exported "Prior treatment requirement" match "ctmlTestData"', () => {
-    cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
+    cy.readFile(ctmlJson).then((exportedCtmlModel) => {
       const exportData = exportedCtmlModel.prior_treatment_requirements
       let testData = ctmlTestData.prior_treatment_requirements
       cy.compareArrays(exportData, testData)
@@ -337,7 +349,7 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
     let rawData = ctmlTestData.drug_list.drug
 
     cy.drugListAttributes(rawData).then(testDataMatchingCriteria => {
-      cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
+      cy.readFile(ctmlJson).then((exportedCtmlModel) => {
         const exportData = exportedCtmlModel.drug_list.drug
 
         cy.drugListAttributes(exportData).then(ctmlMatchingCriteria => {
@@ -350,7 +362,7 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
     let rawData = ctmlTestData.management_group_list.management_group;
 
     cy.managementGroupListAttributes(rawData).then(testDataMatchingCriteria => {
-      cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
+      cy.readFile(ctmlJson).then((exportedCtmlModel) => {
         const exportData = exportedCtmlModel.management_group_list.management_group
 
         cy.managementGroupListAttributes(exportData).then(ctmlMatchingCriteria => {
@@ -364,7 +376,7 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
     let rawData = ctmlTestData.site_list.site
 
     cy.siteListAttributes(rawData).then(testDataMatchingCriteria => {
-      cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
+      cy.readFile(ctmlJson).then((exportedCtmlModel) => {
         const exportData = exportedCtmlModel.site_list.site
 
         cy.siteListAttributes(exportData).then(ctmlMatchingCriteria => {
@@ -378,7 +390,7 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
     let rawData = ctmlTestData.sponsor_list.sponsor
 
     cy.sponsorListAttributes(rawData).then(testDataMatchingCriteria => {
-      cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
+      cy.readFile(ctmlJson).then((exportedCtmlModel) => {
         const exportData = exportedCtmlModel.sponsor_list.sponsor
 
         cy.sponsorListAttributes(exportData).then(ctmlMatchingCriteria => {
@@ -392,7 +404,7 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
     let rawData = ctmlTestData.staff_list.protocol_staff
 
     cy.staffListAttributes(rawData).then(testDataMatchingCriteria => {
-      cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
+      cy.readFile(ctmlJson).then((exportedCtmlModel) => {
         const exportData = exportedCtmlModel.staff_list.protocol_staff;
 
         cy.staffListAttributes(exportData).then(ctmlMatchingCriteria => {
@@ -405,7 +417,7 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
   it('should validate exported "Treatment list" with multiple arm/matching criteria matches with "ctmlTestData"',() =>{
     //Arm and dose level validation
     const matchAndT = ctmlTestData.treatment_list.step[0].arm;
-    cy.readJsonFile('ctml-model.json').then((exportedCtmlModel) => {
+    cy.readFile(ctmlJson).then((exportedCtmlModel) => {
       const matchAndE = exportedCtmlModel.treatment_list.step[0].arm;
 
       matchAndT.forEach((armT, armIndex) => {

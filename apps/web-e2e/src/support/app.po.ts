@@ -1,6 +1,9 @@
 const getVisitUrl = () => cy.visit(Cypress.env('baseUrl'),{timeout: 10000})
-const signInButton = () => cy.get('.p-button')
-const createCTMLButton = () => cy.get('.p-button')
+export const getUserName = () => cy.get('.Login_usernameInput__fcjd7')
+export const getPassword = () => cy.get('.Login_passwordInputText__E6Ybu')
+
+export const signInButton = () => cy.get('.p-button')
+export const createCTMLButton = () => cy.get('.trials_createCtmlButton__JBdrd')
 
 //TrialEditor Header
 export const trialEditorHeader = () => cy.get('.EditorTopBar_title__kDE8R')
