@@ -1,26 +1,19 @@
 #	BUILD STEP
-FROM node:16.14-slim AS base
+FROM node:current-alpine3.16 AS base
 
-#RUN apk add --update python3 make g++ && rm -rf /var/cache/apk/*
-RUN apt-get update && \
-    apt-get install -y \
-    python3 \
-    make \
-    g++ && \
-    rm -rf /var/lib/apt/lists/*
+RUN apk add --update python3 make g++ && rm -rf /var/cache/apk/*
 
 ARG NODE_ENV
 
 ## base
-WORKDIR /usr/src
-RUN mkdir -p /usr/src/app
+WORKDIR /app
 COPY ./package.json ./yarn.* ./
-RUN yarn install --pure-lockfile --loglevel=error
+RUN yarn install --pure-lockfile
 
 ENV PORT=3000
 EXPOSE ${PORT}
 
-## build frontend
+## build
 FROM base as build
 COPY . .
 
@@ -32,8 +25,9 @@ RUN npx nx build web
 ## deploy
 FROM build as deploy
 WORKDIR /var/www/html
-COPY --from=build /usr/src/dist/apps/web .
+COPY --from=build /app/dist/apps/web .
 RUN sh -c 'echo "[]" > /var/www/html/.next/server/next-font-manifest.json'
+
 
 RUN yarn install --production
 

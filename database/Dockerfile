@@ -9,4 +9,7 @@ EXPOSE 3306
 
 COPY my.cnf /etc/mysql/conf.d/
 
+# Copy the SQL seed file into the container
+COPY ./seed.sql /docker-entrypoint-initdb.d/seed-data.sql
+
 CMD ["mysqld"]
