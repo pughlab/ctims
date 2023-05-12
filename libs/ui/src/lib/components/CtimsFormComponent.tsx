@@ -6,7 +6,7 @@ import {JSONSchema7} from "json-schema";
 import CtimsArrayFieldItemTemplate from "../custom-rjsf-templates/CtimsArrayFieldItemTemplate";
 import CtimsArrayFieldTemplate from "../custom-rjsf-templates/CtimsArrayFieldTemplate";
 import localValidator, {customizeValidator} from "@rjsf/validator-ajv8";
-import {CSSProperties, ForwardedRef, forwardRef, memo} from "react";
+import {CSSProperties, ForwardedRef, forwardRef, memo, useState} from "react";
 import {withTheme} from "@rjsf/core";
 import {Theme as PrimeTheme} from "../primereact";
 import {RegistryWidgetsType, RJSFValidationError} from "@rjsf/utils";
@@ -19,7 +19,6 @@ import DoseLevelObjectFieldTemplate from "../custom-rjsf-templates/DoseLevelObje
 import CtimsArrayFieldSingleTemplate from "../custom-rjsf-templates/CtimsArrayFieldSingleTemplate";
 import CtimsArmItemObjectFieldTemplate from "../custom-rjsf-templates/CtimsArmItemObjectFieldTemplate";
 import CtimsSelectButton from "../custom-rjsf-templates/CtimsSelectButton";
-import {ctimsFormComponentSchema} from "./CtimsFormComponentSchema";
 
 const Form = withTheme(PrimeTheme)
 
@@ -387,14 +386,6 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
 
   }
 
-  const handleSubmit = (e: any) => {
-    console.log(e);
-  };
-
-  const onError = (e: RJSFValidationError) => {
-    console.log('onError', e);
-  }
-
   const initialFormData = {
     "trialInformation": {},
     "age_group": {},
@@ -440,6 +431,17 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
     }
   }
 
+  const [formData, setFormData] = useState<any>(props.formData ? props.formData : initialFormData);
+
+  const handleSubmit = (e: any) => {
+    console.log(e);
+  };
+
+  const onError = (e: RJSFValidationError) => {
+    console.log('onError', e);
+  }
+
+
   return (
     <div style={containerStyle}>
       <Form ref={ref} schema={props.schema as JSONSchema7}
@@ -455,7 +457,8 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
               props.onRjsfFormChange(data)
             }} // @ts-ignore
             onError={(data) => {onError(data)}}
-            formData={initialFormData}
+            // formData={props.formData ? props.formData : initialFormData}
+            formData={formData}
             uiSchema={uiSchema}
             widgets={widgets}
             onSubmit={(data) => {
