@@ -11,18 +11,31 @@ import {Menu} from "primereact/menu";
 import {useSession} from "next-auth/react";
 import useGetUserTrials from "../../hooks/useGetUserTrials";
 
+import { ConfirmDialog } from 'primereact/confirmdialog';
+import { confirmDialog } from 'primereact/confirmdialog';
+import useDeleteTrial from '../../hooks/useDeleteTrial';
+
+
 const Trials = () => {
 
   const {response, error, loading, getAllTrialsOperation} = useGetUserTrials();
+  const {
+    response: deleteTrialResponse,
+    error: deleteTrialError,
+    loading: deleteTrial,
+    deleteTrialOperation
+  } = useDeleteTrial();
 
   const {data} = useSession()
-  console.log('session', data);
+  // console.log('session', data);
   // const { accessToken } = data
 
   useEffect(() => {
     if(!data) {
       router.push('/');
+      return;
     }
+    localStorage.setItem('ctims-accessToken', data['accessToken']);
   }, [data])
 
   useEffect(() => {
@@ -32,8 +45,16 @@ const Trials = () => {
   useEffect(() => {
     if (response) {
       setTrials(response);
+      console.log('response', response);
     }
   }, [response]);
+
+  useEffect(() => {
+    if (deleteTrialResponse) {
+      // console.log('deleteTrialResponse', deleteTrialResponse);
+      getAllTrialsOperation();
+    }
+  }, [deleteTrialResponse]);
 
 
   const [trials, setTrials] = useState<any>([]);
@@ -61,7 +82,19 @@ const Trials = () => {
       label: 'Delete',
       icon: 'pi pi-trash',
       command: () => {
-        console.log('Edit');
+        confirmDialog({
+          header: 'Are you sure you want to delete?',
+          message: 'You will not be able to recover this after it has been deleted.',
+          rejectLabel: 'Cancel',
+          acceptLabel: 'Delete',
+          accept: () => {
+            console.log('accept', rowClicked);
+            deleteTrialOperation(rowClicked.id);
+          },
+          reject: () => {
+            console.log('reject');
+          }
+        });
       }
     },
     {
@@ -72,36 +105,6 @@ const Trials = () => {
       }
     }
   ]
-
-  useEffect(() => {
-    const trials = [
-      {
-        id: 1,
-        nickname: 'Trial 1',
-        principalInvestigator: 'Dr. John Doe',
-        status: 'Active',
-        createdOn: '2021-01-01 by Dr. John Doe',
-        updatedOn: '2021-01-01 by Dr. John Doe',
-      },
-      {
-        id: 2,
-        nickname: 'Trial 2',
-        principalInvestigator: 'Dr. Who',
-        status: 'In review',
-        createdOn: '2021-02-02 by Dr. Who',
-        updatedOn: '2021-02-02 by Dr. Who',
-      },
-      {
-        id: 3,
-        nickname: 'Trial 3',
-        principalInvestigator: 'Dr. Dolittle',
-        status: 'Complete',
-        createdOn: '2021-03-03 by Dr. Dolittle',
-        updatedOn: '2021-03-03 by Dr. Dolittle',
-      }
-    ]
-    setTrials(trials);
-  }, []);
 
   const menuButtonStyle = {
     color: 'black',
@@ -140,6 +143,7 @@ const Trials = () => {
 
   return (
     <>
+      <ConfirmDialog />
       {data && <>
         <TopBar />
         {/*<div>Access Token: {data['accessToken']}</div>*/}

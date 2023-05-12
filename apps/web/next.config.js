@@ -10,6 +10,13 @@ const nextConfig = {
   //   // See: https://github.com/gregberge/svgr
   //   svgr: false,
   // },
+  publicRuntimeConfig: {
+    // Will be available on both server and client
+    REACT_APP_API_URL: process.env.REACT_APP_API_URL,
+  },
+  env: {
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+  }
 };
 
 module.exports = withNx(nextConfig);

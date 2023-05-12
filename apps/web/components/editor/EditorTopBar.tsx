@@ -8,7 +8,6 @@ import ExportCtmlDialog from "./ExportCtmlDialog";
 import {signOut} from "next-auth/react";
 import {Toast} from "primereact/toast";
 import useSaveTrial from "../../hooks/useSaveTrial";
-import {UpdateTrialDto} from "../../../api/src/app/trial/dto/update-trial.dto";
 
 
 const EditorTopBar = () => {
@@ -39,7 +38,9 @@ const EditorTopBar = () => {
     if(saveTrialError) {
       console.log('error', saveTrialError);
       if (saveTrialError.statusCode === 401) {
-        signOut({callbackUrl: '/#/login', redirect: false});
+        signOut({callbackUrl: '/#/login', redirect: false}).then(() => {
+          localStorage.removeItem('ctims-accessToken');
+        });
       }
     }
   }, [saveTrialError, saveTrialResponse]);
@@ -82,7 +83,7 @@ const EditorTopBar = () => {
       return ctmlModelCopy;
     }
 
-    const getTrialModelOnly = (): UpdateTrialDto => {
+    const getTrialModelOnly = () => {
       return {
         nct_id: ctmlModel.trialInformation.trial_id,
         nickname: ctmlModel.trialInformation.nickname,

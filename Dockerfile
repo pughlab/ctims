@@ -19,7 +19,8 @@ COPY . .
 
 ENV NODE_ENV=production
 
-RUN npx nx run-many --target=build --all
+#RUN npx nx run-many --target=build --all
+RUN npx nx build web
 
 ## deploy
 FROM build as deploy

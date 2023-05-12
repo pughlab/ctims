@@ -14,7 +14,9 @@ const TopBar = () => {
       label: 'Sign Out',
       icon: 'pi pi-sign-out',
       command: () => {
-        signOut({callbackUrl: '/#/login', redirect: false});
+        signOut({callbackUrl: '/#/login', redirect: false}).then(() => {
+          localStorage.removeItem('ctims-accessToken');
+        });
       }
     }
   ]

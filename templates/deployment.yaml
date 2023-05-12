@@ -12,17 +12,58 @@ spec:
     matchLabels:
       app.kubernetes.io/name: {{ include "thischart.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
         app.kubernetes.io/name: {{ include "thischart.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      volumes:
+        - name: "ctims-mysql-data"
+          hostPath:
+            path: "{{.Values.mountRoot}}/mysql/data"
+            type: DirectoryOrCreate
       containers:
-        - image: "{{ .Values.docker.image }}:latest"
+        - image: "{{ .Values.docker.image }}:{{ .Values.git.ref }}"
           name: ctimsweb
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: {{ .Values.ctimsweb.port }}
               name: ctimsweb
+          env:
+            - name: NEXTAUTH_SECRET
+              value: "dAbxJF2DRzqwGYn+BWKdj8o9ieMri4FWsmIRn77r2F8="
+            - name: REACT_APP_API_URL
+              value: "https://ctims-api.{{ .Values.domain }}/api"
+            - name: NEXTAUTH_URL
+              value: "https://ctims-web.{{ .Values.domain }}"
+        - image: "{{ .Values.docker.apiImage }}:{{ .Values.git.ref }}"
+          name: ctimsapi
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: {{ .Values.ctimsapi.port }}
+              name: ctimsapi
+          env:
+            - name: DATABASE_URL
+              value: "mysql://ctims:ctims@localhost:3306/ctims"
+        - image: "{{ .Values.docker.dbImage }}:latest"
+          name: ctimsdb
+          ports:
+            - containerPort: {{ .Values.ctimsdb.port }}
+              name: mysql
+          volumeMounts:
+            - name: "ctims-mysql-data"
+              mountPath: "/var/lib/mysql"
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "{{ .Values.ctimsdb.password }}"
+            - name: MYSQL_DATABASE
+              value: "{{ .Values.ctimsdb.database }}"
+            - name: MYSQL_USER
+              value: "{{ .Values.ctimsdb.user }}"
+            - name: MYSQL_PASSWORD
+              value: "{{ .Values.ctimsdb.password }}"
       imagePullSecrets:
         - name: regcred

@@ -1,11 +1,38 @@
 version: "3.8"
 
 services:
-  ctims:
-    container_name: ctims
+  frontend:
+    container_name: ctims-web
     build:
       context: ./
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
     restart: on-failure
+    networks:
+        - my-network
+
+  backend:
+    container_name: ctims-api
+    build:
+      context: ./
+      dockerfile: ./apps/api/Dockerfile
+    ports:
+      - "3000:3000"
+    restart: on-failure
+    networks:
+        - my-network
+
+  database:
+    container_name: ctims-db
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    ports:
+      - "3306:3306"
+    restart: on-failure
+    networks:
+        - my-network
+networks:
+    my-network:
+

@@ -172,6 +172,23 @@
   margin: 0 !important;
 }
 
+.p-confirm-dialog  {
+  width: 600px !important;
+}
+
+.p-dialog.p-confirm-dialog .p-confirm-dialog-message {
+  margin-left: 1.5rem;
+}
+
+.p-confirm-dialog-accept {
+  background-color: red !important;
+  border: 0 !important;
+}
+
+.p-confirm-dialog-reject {
+  color: #2E72D2 !important;
+}
+
 .p-panel .p-panel-content {
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
