@@ -8,6 +8,12 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    environment:
+      NEXTAUTH_SECRET: "dAbxJF2DRzqwGYn+BWKdj8o9ieMri4FWsmIRn77r2F8="
+      REACT_APP_API_URL: "http://205.210.128.25:3333/api"
+      NEXTAUTH_URL: "http://localhost:3000"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
     restart: on-failure
     networks:
         - my-network
@@ -17,8 +23,10 @@ services:
     build:
       context: ./
       dockerfile: ./apps/api/Dockerfile
+    environment:
+      DATABASE_URL: mysql://ctims:ctims@database:3306/ctims
     ports:
-      - "3000:3000"
+      - "3333:3333"
     restart: on-failure
     networks:
         - my-network
