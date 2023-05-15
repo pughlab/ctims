@@ -179,7 +179,7 @@ const Trials = () => {
             <Column field="id" header="" body={subMenuTemplate}></Column>
             <Column field="nickname" header="Nickname"></Column>
             <Column field="principal_investigator" header="Principal Investigator" ></Column>
-            <Column field="status" header="Status" sortable></Column>
+            <Column field="status" header="CTML Status" sortable></Column>
             <Column field="createdAt" header="Created on" dataType="date"></Column>
             <Column field="updatedAt" header="Modified on" dataType="date"></Column>
           </DataTable>
