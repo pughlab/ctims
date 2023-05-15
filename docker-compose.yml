@@ -10,7 +10,7 @@ services:
       - "3000:3000"
     environment:
       NEXTAUTH_SECRET: "dAbxJF2DRzqwGYn+BWKdj8o9ieMri4FWsmIRn77r2F8="
-      REACT_APP_API_URL: "http://localhost:3333/api"
+      REACT_APP_API_URL: "http://205.210.128.25:3333/api"
       NEXTAUTH_URL: "http://localhost:3000"
     volumes:
       - /etc/localtime:/etc/localtime:ro
