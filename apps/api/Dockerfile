@@ -20,9 +20,9 @@ RUN yarn install --loglevel=error
 
 #CMD ["yarn", "schema:generate-client"]
 #RUN npx nx build api
-ARG RESTSERVER_PORT=3000
-ENV RESTSERVER_PORT=$RESTSERVER_PORT
-EXPOSE ${RESTSERVER_PORT}
+#ARG RESTSERVER_PORT=3000
+#ENV RESTSERVER_PORT=$RESTSERVER_PORT
+#EXPOSE ${RESTSERVER_PORT}
 
 RUN yarn generate:build
 #RUN yarn start:prod
