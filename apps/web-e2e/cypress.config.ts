@@ -47,7 +47,7 @@ module.exports = defineConfig({
     baseUrl: 'http://localhost:3000',
     defaultCommandTimeout: 30000,
     allureReuseAfterSpec: true,
-    allureResultsPath: "allure-results",
+   // allureResultsPath: "allure-results",
     allure:true,
     snapshotOnly: true,
     testIsolation: false,
