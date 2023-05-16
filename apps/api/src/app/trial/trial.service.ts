@@ -14,7 +14,7 @@ export class TrialService {
   ) { }
 
   async createTrial(createTrialDto: CreateTrialDto, creatingUser: user) {
-    const { nct_id, nickname, principal_investigator, status } = createTrialDto;
+    const { nct_id, nickname, principal_investigator, status, trial_status } = createTrialDto;
 
     const newTrial = await this.prismaService.trial.create({
       data: {
@@ -23,7 +23,8 @@ export class TrialService {
         principal_investigator,
         status,
         userId: creatingUser.id,
-        modifiedById: creatingUser.id
+        modifiedById: creatingUser.id,
+        trial_status
       }
     });
     return newTrial;
