@@ -147,17 +147,14 @@ See the [open issues](https://github.com/Louis3797/nx-next-nest-template/issues)
 
 <!-- LICENSE -->
 ## License
-
-Distributed under the MIT License. See `LICENSE.txt` for more information.
-
+Apache 2.0 License
 
 
 
 
 <!-- CONTACT -->
 ## Contact
-
-Louis
+Pugh Lab, UHN.
 
 Project Link: [Nx-Next-Nest-Template](https://github.com/Louis3797/nx-next-nest-template)
 

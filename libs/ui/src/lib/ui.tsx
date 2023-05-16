@@ -26,6 +26,7 @@ const containerStyle: CSSProperties = {
 /* eslint-disable-next-line */
 export interface UiProps {
   ctml_schema: {schema: any, version: any};
+  formData?: any;
 }
 
 export const Ui = (props: UiProps) => {
@@ -87,6 +88,7 @@ export const Ui = (props: UiProps) => {
         schema={props.ctml_schema.schema}
         onSpecialButtonClick={handleSpecialClick}
         onRjsfFormChange={onFormChange}
+        formData={props.formData}
       />
       <CtimsMatchDialog
                       onDialogHide={onDialogHideCallback}

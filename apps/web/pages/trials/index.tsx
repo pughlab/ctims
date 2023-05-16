@@ -26,6 +26,10 @@ const Trials = () => {
     deleteTrialOperation
   } = useDeleteTrial();
 
+  useEffect(() => {
+    getAllTrialsOperation();
+  }, [])
+
   const {data} = useSession()
   // console.log('session', data);
   // const { accessToken } = data
@@ -70,12 +74,17 @@ const Trials = () => {
     router.push('/trials/create');
   }
 
+  const trialEditClick = () => {
+    router.push(`/trials/edit/${rowClicked.id}`).catch(err => console.log(err));
+  }
+
   const trialMenuItems = [
     {
       label: 'Edit',
       icon: 'pi pi-pencil',
       command: () => {
         console.log('Edit');
+        router.push(`/trials/edit/${rowClicked.id}`);
       }
     },
     {

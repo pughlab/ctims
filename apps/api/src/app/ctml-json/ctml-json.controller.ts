@@ -45,6 +45,15 @@ export class CtmlJsonController {
     return entities;
   }
 
+  @Get('trialId/:trialId')
+  @UseGuards(KeycloakPasswordGuard)
+  @ApiBearerAuth("KeycloakPasswordGuard")
+  @ApiOperation({ summary: "Get a CTML JSON record by Trial Id" })
+  @ApiFoundResponse({ description: "CTML JSON record found." })
+  async findByTrialId(@Param('trialId') trialId: string) {
+    return this.ctmlJsonService.findByTrialId(+trialId);
+  }
+
   @Patch()
   @UseGuards(KeycloakPasswordGuard)
   @ApiBearerAuth("KeycloakPasswordGuard")
