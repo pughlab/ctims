@@ -68,7 +68,14 @@ export class TrialService {
                user: user
   ): Promise<trial> {
 
-    const { status, principal_investigator, nickname, ctml_schema_version, nct_id } = updateTrialDto;
+    const {
+      status,
+      principal_investigator,
+      nickname,
+      ctml_schema_version,
+      nct_id ,
+      trial_status
+    } = updateTrialDto;
     const existing_trial = await this.prismaService.trial.findUnique({
       where: {
         id
@@ -80,6 +87,7 @@ export class TrialService {
         where: { id: existing_trial.id },
         data: {
           status,
+          trial_status,
           principal_investigator,
           nickname,
           nct_id,
