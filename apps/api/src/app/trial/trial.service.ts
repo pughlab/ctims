@@ -84,7 +84,7 @@ export class TrialService {
     });
 
     if (existing_trial) {
-      return await this.prismaService.trial.update({
+      return this.prismaService.trial.update({
         where: { id: existing_trial.id },
         data: {
           status,
@@ -101,12 +101,13 @@ export class TrialService {
       });
     }
 
-    return await this.prismaService.trial.create({
+    return this.prismaService.trial.create({
       data: {
         nct_id,
         nickname,
         principal_investigator,
         status,
+        trial_status,
         userId: user.id,
         modifiedById: user.id,
         ctml_schemas: {
