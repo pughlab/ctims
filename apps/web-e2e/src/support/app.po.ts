@@ -12,6 +12,19 @@ export const trialEditorHeader = () => cy.get('.EditorTopBar_title__kDE8R')
 export const trialEditorHeaderButtons = () => cy.get('.EditorTopBar_menuBtnGroup__dBNyO>button') //3 elements
 export const trialEditorRadioButtons = () => cy.get('.field-radiobutton>.p-radiobutton') //json and yamlradio buttons
 export const trialEditorExportCtml = () => cy.get('.p-dialog-footer>div>button') //2 buttons Cancel and Export CTML
+export const trialEditorSave = () => cy.get('.EditorTopBar_menuBtnGroup__dBNyO>button:nth-child(3)')
+export const trialEditorBackButton = () => cy.get('.EditorTopBar_backBtn__Ivwqo')
+
+//Trial table
+export const trialTableDots = () => cy.get('tbody>tr:nth-child(1)>td:nth-child(2)')
+  //cy.get(':nth-child(1) > :nth-child(2) > .trials_trailsEllipseBtn__OHV_W')
+  //cy.get('tbody>tr>td:nth-child(2)>div')
+export const trialTableEdit = () => cy.get('#popup_menu>ul>li:nth-child(1)')
+export const trialTableDelete = () => cy.get('#popup_menu>ul>li:nth-child(2)')
+export const trialTableExport = () => cy.get('#popup_menu>ul>li:nth-child(3)')
+export const trialTableDialogueDeleteBtn = () => cy.get('.p-confirm-dialog-accept')
+
+
 
 //LeftPanel Trial Editor
 export const trialEditorLeftPanelList = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li') //8 elements
