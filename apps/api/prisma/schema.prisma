@@ -49,6 +49,7 @@ model trial {
   userId                 Int?
   // One trial to many ctml_json records
   ctml_jsons             ctml_json[]
+  trial_status           trial_status
 }
 
 model user {
@@ -73,4 +74,11 @@ enum status {
   DRAFT
   IN_REVIEW
   COMPLETED
+}
+
+enum trial_status {
+  OPEN_TO_ACCRUAL
+  CLOSED_TO_ACCRUAL
+  NOT_YET_RECRUITING
+  RECRUITING
 }
