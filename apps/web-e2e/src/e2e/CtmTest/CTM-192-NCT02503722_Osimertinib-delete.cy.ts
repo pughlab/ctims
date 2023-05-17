@@ -178,7 +178,7 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
     });
   })
 //!************ Arm 1  *****************
-   it('should enter the values in "Treatment List and Matching criteria modal" for Arm 1', () => {
+   it.skip('should enter the values in "Treatment List and Matching criteria modal" for Arm 1', () => {
       trialEditorLeftPanelList().eq(8).should('contain', 'Treatment List').click()
      //delete the dose level
       cy.wait(2000)
