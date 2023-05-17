@@ -1,5 +1,5 @@
 import {ApiProperty, ApiPropertyOptional} from "@nestjs/swagger";
-import { status, trial_status } from "@prisma/client";
+import { status } from "@prisma/client";
 
 export class CreateTrialDto {
   @ApiProperty()
@@ -26,10 +26,5 @@ export class CreateTrialDto {
     description: "The ID of the schema for this trial data."
   })
   ctml_schema_version: number;
-
-  @ApiProperty({
-    enum: trial_status
-  })
-  trial_status: trial_status;
 
 }

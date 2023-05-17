@@ -38,6 +38,7 @@ model trial {
   nct_id                 String
   nickname               String?
   principal_investigator String?
+  // This status refers to the CTML status
   status                 status?       @default(DRAFT)
   // Many trials to many ctml_schema records
   ctml_schemas           ctml_schema[]
@@ -49,7 +50,6 @@ model trial {
   userId                 Int?
   // One trial to many ctml_json records
   ctml_jsons             ctml_json[]
-  trial_status           trial_status
 }
 
 model user {
