@@ -14,7 +14,7 @@ export class TrialService {
   ) { }
 
   async createTrial(createTrialDto: CreateTrialDto, creatingUser: user) {
-    const { nct_id, nickname, principal_investigator, status, trial_status } = createTrialDto;
+    const { nct_id, nickname, principal_investigator, status } = createTrialDto;
 
     const newTrial = await this.prismaService.trial.create({
       data: {
@@ -23,8 +23,7 @@ export class TrialService {
         principal_investigator,
         status,
         userId: creatingUser.id,
-        modifiedById: creatingUser.id,
-        trial_status
+        modifiedById: creatingUser.id
       }
     });
     return newTrial;
@@ -74,8 +73,7 @@ export class TrialService {
       principal_investigator,
       nickname,
       ctml_schema_version,
-      nct_id ,
-      trial_status
+      nct_id
     } = updateTrialDto;
     const existing_trial = await this.prismaService.trial.findUnique({
       where: {
@@ -88,7 +86,6 @@ export class TrialService {
         where: { id: existing_trial.id },
         data: {
           status,
-          trial_status,
           principal_investigator,
           nickname,
           nct_id,
@@ -107,9 +104,8 @@ export class TrialService {
         nickname,
         principal_investigator,
         status,
-        trial_status,
-        userId: user.id,
-        modifiedById: user.id,
+        user: { connect: { id: user.id } },
+        modifiedBy: { connect: { id: user.id } },
         ctml_schemas: {
           connect: {
             version: ctml_schema_version
