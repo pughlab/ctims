@@ -75,10 +75,3 @@ enum status {
   IN_REVIEW
   COMPLETED
 }
-
-enum trial_status {
-  OPEN_TO_ACCRUAL
-  CLOSED_TO_ACCRUAL
-  NOT_YET_RECRUITING
-  RECRUITING
-}
