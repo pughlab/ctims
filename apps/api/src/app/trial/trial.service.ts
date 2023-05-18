@@ -22,8 +22,8 @@ export class TrialService {
         nickname,
         principal_investigator,
         status,
-        userId: creatingUser.id,
-        modifiedById: creatingUser.id
+        user: { connect: {id: creatingUser.id } },
+        modifiedBy: { connect: {id: creatingUser.id } }
       }
     });
     return newTrial;
