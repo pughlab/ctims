@@ -46,7 +46,7 @@ export const NCT02503722_Osimertinib: Ctml2 = {
   "nct_purpose": "This phase I trial studies the side effects and best dose of sapanisertib when given together with osimertinib in treating patients with stage IV EGFR mutation positive non-small cell lung cancer that has progressed after treatment with an EGFR tyrosine kinase inhibitor. Sapanisertib and osimertinib may stop the growth of tumor cells by blocking some of the enzymes needed for cell growth.",
   "phase": "I",
   "prior_treatment_requirements": [
-  /*"Patients with stage IV or recurrent/metastatic histologically or cytologically confirmed non-squamous NSCLC.",
+  "Patients with stage IV or recurrent/metastatic histologically or cytologically confirmed non-squamous NSCLC.",
   "NSCLC must harbor an EGFR activating mutation (Exon 21 L858R, Exon 19 deletion).",
   "Progressive disease on osimertinib (AZD9291) given first line.",
   "For the dose expansion portion ONLY, patient must: 1) have progression of disease with first line osimertinib administered for advanced or metastatic disease as the last previous systemic treatment, 2) be treatment naïve for other 3rd generation EGFR-TKI (CO-1686) and mTOR inhibitors.",
@@ -68,7 +68,7 @@ export const NCT02503722_Osimertinib: Ctml2 = {
   "Patients must have had sufficient time between a prior therapy and resolution of toxicities from the prior therapies prior to registration as follows: - Prior EGFR inhibitor: A minimum of 7 days must have elapsed from the last dose of the prior EGFR inhibitor and resolution of any drug-related toxicity to =< grade 1 except for alopecia. - Chemotherapy: A minimum of 21 days must have elapsed from the last dose and resolution of toxicity to =< grade 1 excluding =< grade 2 peripheral neuropathy or alopecia. - Surgery: A minimum of 21 days must have elapsed following major surgery and resolution of toxicity to < grade 1 and complete wound healing must have occurred. - Radiation: A minimum of 14 days must have elapsed following radiation therapy and resolution of all radiation induced toxicity excluding alopecia. - Treatment with an investigational drug: A minimum of 3 months or five half-lives of the compound, whichever is greater, must have elapsed from last treatment date.",
   "Ability to understand and the willingness to sign a written informed consent document.",
   "Available for follow-up of their disease after treatment until progressive disease is documented and resolution of related adverse events until < grade 2."
-*/],
+],
   "protocol_no": "123-020",
   "short_title": "Testing the Combination of MLN0128 (TAK-228) and AZD9291 in Advanced EGFR (Epidermal Growth Factor Receptor) Mutation Positive Non-small Cell Lung Cancer",
   "site_list": {
