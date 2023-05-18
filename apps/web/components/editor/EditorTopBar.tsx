@@ -47,7 +47,7 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
 
   const backClick = (e) => {
     e.preventDefault();
-    router.back();
+    router.push('/trials');
   }
 
   const onExportClick = () => {
