@@ -40,7 +40,10 @@ export const Ui = (props: UiProps) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(setTrialId(0))
+    const currentURL = window.location.href;
+    if (currentURL.includes('/trials/create')) {
+      dispatch(setTrialId(0))
+    }
   }, []);
 
   const handleSpecialClick = (formD: any, id: string) => {

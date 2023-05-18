@@ -20,14 +20,11 @@ const useEditTrial = () => {
     try {
       const response = await axios.request({
         method: 'get',
-        url: `/ctml-jsons/trialId/${trialId}`,
+        url: `/trials/${trialId}`,
         headers,
       });
-      const trials: any[] = response.data;
-      if (trials.length > 0) {
-        setResponse(trials[0]);
-      }
-
+      const trial: any = response.data;
+      setResponse(trial);
     }
     catch (error) {
       console.log('response', error.response)

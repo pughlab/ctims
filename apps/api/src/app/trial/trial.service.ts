@@ -34,7 +34,14 @@ export class TrialService {
   }
 
   findOne(id: number): Promise<trial> {
-    return this.prismaService.trial.findUnique({ where: { id: id }});
+    return this.prismaService.trial.findUnique(
+      {
+        where: { id: id },
+        include: {
+          ctml_jsons: true,
+        }
+      }
+    );
   }
 
   findTrialsByUser(userId: number): Promise<trial[]> {

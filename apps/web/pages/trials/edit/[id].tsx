@@ -6,6 +6,8 @@ import React, {useEffect, useState} from "react";
 import useGetCtmlSchema from "../../../hooks/useGetCtmlSchema";
 import useEditTrial from "../../../hooks/useEditTrial";
 import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
+import {setTrialId} from "../../../store/slices/contextSlice";
+import {useDispatch} from "react-redux";
 
 const containerStyle: React.CSSProperties = {
   display: 'flex',
@@ -17,7 +19,10 @@ const containerStyle: React.CSSProperties = {
 
 const EditorEditTrialPage = () => {
   const router = useRouter()
+  const dispatch = useDispatch();
   const { id } = router.query
+
+  dispatch(setTrialId(+id));
 
   const [formData, setFormData] = useState(null);
 
@@ -45,34 +50,32 @@ const {
 
   useEffect(() => {
     if (editTrialResponse) {
-      const trial = structuredClone(editTrialResponse.data)
+      const trial = structuredClone(editTrialResponse)
+      const ctml_json = trial.ctml_jsons[0].data;
       let editTrialObject = {
         trialInformation: {
-          trial_id: trial.trial_id,
+          trial_id: trial.nct_id,
           nickname: trial.nickname,
           principal_investigator: trial.principal_investigator,
-          ctml_status: trial.ctml_status,
-          long_title: trial.long_title,
-          short_title: trial.short_title,
-          phase: trial.phase,
-          protocol_no: trial.protocol_no,
-          nct_purpose: trial.nct_purpose,
-          status: trial.status,
+          ctml_status: trial.status,
+          long_title: ctml_json.long_title,
+          short_title: ctml_json.short_title,
+          phase: ctml_json.phase,
+          protocol_no: ctml_json.protocol_no,
+          nct_purpose: ctml_json.nct_purpose,
+          status: ctml_json.status,
         },
+        age_group: {
+          age: ctml_json.age,
+        }
       }
 
       delete trial.trial_id
       delete trial.nickname
       delete trial.principal_investigator
       delete trial.ctml_status
-      delete trial.long_title
-      delete trial.short_title
-      delete trial.phase
-      delete trial.protocol_no
-      delete trial.nct_purpose
-      delete trial.status
 
-      editTrialObject = {...editTrialObject, ...trial}
+      editTrialObject = {...editTrialObject, ...ctml_json}
       setFormData(editTrialObject)
       console.log('editTrialObject', editTrialObject)
     }

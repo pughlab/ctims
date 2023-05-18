@@ -1,4 +1,4 @@
-import axios, {AxiosResponse} from "axios";
+import axios from "axios";
 import {useEffect, useState} from "react";
 import {useSession} from "next-auth/react";
 import {useDispatch, useSelector} from "react-redux";
@@ -6,6 +6,7 @@ import {RootState} from "../store/store";
 import {useRouter} from "next/router";
 import {setTrialId} from "../store/slices/contextSlice";
 import getConfig from 'next/config';
+import {v4 as uuidv4} from "uuid";
 
 const useSaveTrial = () => {
 
@@ -59,7 +60,7 @@ const useSaveTrial = () => {
         }
       });
 
-      setResponse(updateCtmlResponse.data)
+      setResponse(uuidv4())
     } catch (error) {
       console.log('response', error.response)
       if(error.response) {
