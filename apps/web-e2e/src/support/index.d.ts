@@ -44,6 +44,8 @@ declare namespace Cypress {
     trialInformationAttributes(data: any)
     compareTrialInformation(exportedTrial: any, testDataTrial: any)
     compareMultiple(data: any,testData: any[][])
+    saveAndEdit()
+    saveAndDelete()
 
 
   }
