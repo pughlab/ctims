@@ -81,7 +81,12 @@ import {
   getLevelSuspended,
   getPriorTreatmentRequirement,
   getPriorTreatmentRequirementPlusIcon,
-  getPriorTreatmentRequirementRegularExpression, getAddCriteriaToSameList, getUserName, getPassword, signInButton
+  getPriorTreatmentRequirementRegularExpression,
+  getAddCriteriaToSameList,
+  getUserName,
+  getPassword,
+  signInButton,
+  trialTableDots, trialTableDelete, trialTableDialogueDeleteBtn, trialTableEdit, trialEditorSave, trialEditorBackButton
 } from './app.po';
 import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib";
 import {NCT03297606_CAPTUR} from "../fixtures/NCT03297606_CAPTUR";
@@ -397,6 +402,26 @@ Cypress.Commands.add('compareMultiple', (data,testData) => {
               expect(element).to.deep.equal(testData[i][j]);
             });
           });
+});
+Cypress.Commands.add('saveAndEdit', () => {
+  trialEditorSave().click()
+  cy.get('.p-toast-message-content').should('contain','Trial saved')
+  cy.get('.p-toast-icon-close').click()
+  trialEditorBackButton().should('be.visible').trigger("click")
+  cy.get('.trials_trialsText__0DJhD').should('contain','Trials')
+  trialTableDots().trigger('mouseover').invoke('addClass', 'p-button').click()
+  trialTableEdit().click()
+});
+Cypress.Commands.add('saveAndDelete', () => {
+  trialEditorSave().click()
+  cy.get('.p-toast-message-content').should('contain','Trial saved')
+  cy.get('.p-toast-icon-close').click()
+  cy.go(-1)
+  trialEditorBackButton().should('be.visible').trigger("click")
+  cy.get('.trials_trialsText__0DJhD').should('contain','Trials')
+  trialTableDots().trigger('mouseover').invoke('addClass', 'p-button').click()
+  trialTableDelete().click()
+  trialTableDialogueDeleteBtn().click()
 });
 //
 // -- This is a child command --
