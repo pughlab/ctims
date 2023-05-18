@@ -3,7 +3,8 @@ import {
   getAddArmPlusIcon,
   getAddCriteriaGroup,
   getAddCriteriaList,
-  getAddCriteriaToSameGroup, getAddCriteriaToSameList,
+  getAddCriteriaToSameGroup,
+  getAddCriteriaToSameList,
   getAddCriteriaToSubGroup,
   getAgeGroup,
   getArmCode,
@@ -22,11 +23,17 @@ import {
   getClinicalERStatus,
   getClinicalHER2Status,
   getClinicalOncotreePrimaryDiagnosis,
-  getClinicalPRStatus, getCNVCall,
+  getClinicalPRStatus,
+  getCNVCall,
   getCtmlStatusDropdown,
+  getCtmlStatusDropdownList,
   getDefaultTextMatchingCriteria,
-  getDrugName, getDrugNamePlusIcon, getDrugNameTextBoxMultiple,
-  getEditMatchingCriteria, getEditMatchingCriteriaMultiple,
+  getDefaultTrialEditorDropDown,
+  getDrugName,
+  getDrugNamePlusIcon,
+  getDrugNameTextBoxMultiple,
+  getEditMatchingCriteria,
+  getEditMatchingCriteriaMultiple,
   getGenomicDropDown,
   getHugoSymbol,
   getLeftMenuComponent,
@@ -34,16 +41,22 @@ import {
   getLevelDescription,
   getLevelInternalId,
   getLongTitle,
-  getManagementGroupName, getManagementGroupNameTextBoxMultiple, getMatchCriteriaHeader,
+  getManagementGroupName,
+  getManagementGroupNameTextBoxMultiple,
+  getMatchCriteriaHeader,
   getMatchingCriteriaTableHeader,
   getMatchModalFooterButtons,
   getMenuItemAnd,
   getMenuItemClinical,
   getMenuItemClinicalGenomic,
-  getMenuItemOr, getMultipleArm,
+  getMenuItemOr,
+  getMultipleArm,
   getNCTPurpose,
   getPhaseDropdownList,
-  getPlusIcon, getPreviewTextWindow, getPreviewWindow, getPrimaryManagementGroupPlusIcon,
+  getPlusIcon,
+  getPreviewTextWindow,
+  getPreviewWindow,
+  getPrimaryManagementGroupPlusIcon,
   getPrincipalInvestigator,
   getPriorTreatmentRequirementMultiple,
   getPriorTreatmentRequirementPlusIconMultiple,
@@ -52,29 +65,43 @@ import {
   getProtocolStaffEmail,
   getProtocolStaffFirstName,
   getProtocolStaffInstitutionalName,
-  getProtocolStaffLastName, getProtocolStaffMultiple, getProtocolStaffPlusIcon,
+  getProtocolStaffLastName,
+  getProtocolStaffMultiple,
+  getProtocolStaffPlusIcon,
   getProtocolStaffRole,
-  getProtocolStaffStatus, getSaveMatchingCriteria,
+  getProtocolStaffStatus,
+  getSaveMatchingCriteria,
   getShortTitle,
-  getSiteName, getSiteNameMultiple, getSiteNamePlusIcon,
+  getSiteName,
+  getSiteNameMultiple,
+  getSiteNamePlusIcon,
   getSiteStatus,
-  getSponsorName, getSponsorNameMultiple, getSponsorNamePlusIcon, getSubGroup,
+  getSponsorName,
+  getSponsorNameMultiple,
+  getSponsorNamePlusIcon,
+  getSubGroup,
   getSwitchGroupOperator,
   getTrialId,
+  getTrialInformationStatus,
   getTrialNickname,
   getTruncateButton,
   getVariantCategory,
   getVariantClassification,
-  selectDraftCtmlStatus, trialEditorBackButton,
+  selectDraftCtmlStatus,
+  trialEditorBackButton,
   trialEditorExportCtml,
   trialEditorHeaderButtons,
   trialEditorLeftPanelList,
-  trialEditorRadioButtons, trialEditorSave, trialTableDelete, trialTableDialogueDeleteBtn, trialTableDots
-} from '../../support/app.po';
-import {NCT02503722_Osimertinib} from "../../fixtures/NCT02503722_Osimertinib"
-import baseClass from "../Base/baseClass.cy"
-import dateClass from "../Base/dateClass.cy";
-
+  trialEditorRadioButtons,
+  trialEditorSave,
+  trialTableDelete,
+  trialTableDialogueDeleteBtn,
+  trialTableDots,
+  trialTableEdit
+} from '../../../support/app.po';
+import {NCT02503722_Osimertinib} from "../../../fixtures/NCT02503722_Osimertinib"
+import baseClass from "../../Base/baseClass.cy"
+import dateClass from "../../Base/dateClass.cy";
 const { deleteDownloadsFolderBeforeAll } = require('cypress-delete-downloads-folder');
 import * as yaml from 'js-yaml';
 let exportJsonFile = 'NCT02503722_2023-05-12.json';
@@ -85,23 +112,37 @@ let yamlFile = split.concat('_', dateClass.currentDate()).concat('.yaml');
 
 describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false }, () => {
   baseClass.beforeClass()
- // deleteDownloadsFolderBeforeAll()
+  // deleteDownloadsFolderBeforeAll()
   const ctmlTestData = NCT02503722_Osimertinib
   const ctmlJson = `./cypress/downloads/${jsonFile}`
   const ctmlYaml = `./cypress/downloads/${yamlFile}`
-  it('should enter values into the "Trial Editor Form"', () => {
-    cy.get('tbody>tr>td').should('contain','No CTML files. Select the \'Create\' button to start.')
-   /* createCTMLButton().click()
-     cy.title().should('contain', 'CTIMS')
-     trialEditorLeftPanelList().should('have.length', '9')
-    getTrialId().type('NCT001')
-    trialEditorSave().click()*/
-    //trialEditorBackButton().click({force:true})
-    cy.get('.trials_trialsText__0DJhD').should('contain','Trials')
-    trialTableDots().trigger('mouseover').invoke('addClass', 'p-button').click()
-    //  getLeftMenuComponent().eq(indexNum).trigger('mouseover').invoke('addClass', 'p-menuitem-active').click()
-   trialTableDelete().click()
-    trialTableDialogueDeleteBtn().click()
+  it('should enter values into the "Trial Information" section fields', () => {
+    cy.get('tbody>tr>td').should('contain', 'No CTML files. Select the \'Create\' button to start.')
+    createCTMLButton().click()
+    cy.title().should('contain', 'CTIMS')
+    trialEditorLeftPanelList().should('have.length', '9')
+    getTrialId().type(ctmlTestData.nct_id)
+    getTrialNickname().type('My Trial')
+    getPrincipalInvestigator().clear().type('John Doe');
+    //ctml status
+    getCtmlStatusDropdown().click()
+    // cy.wait(1000)
+    getCtmlStatusDropdownList().contains('Draft').click()
+    getLongTitle().clear().type(ctmlTestData.long_title)
+    getShortTitle().clear().type(ctmlTestData.short_title)
+    //Phase
+    getClickPhase().click()
+    getPhaseDropdownList().contains(ctmlTestData.phase).click()
+    getProtocolNumber().clear().type(ctmlTestData.protocol_no)
+    getNCTPurpose().clear().type(ctmlTestData.nct_purpose)
+    //getTrialInformationStatus().click()
+    //getDefaultTrialEditorDropDown().contains(status).click()
+    // trialEditorSave().click()
+    //trialEditorBackButton().click()
+    //trialTableDots().trigger('mouseover').invoke('addClass', 'p-button').click()
+    //trialTableEdit().click()
+    //trialTableDelete().click()
+    //trialTableDialogueDeleteBtn().click()
     //default message
 
     /* cy.trialInformation(ctmlTestData.nct_id,
@@ -114,20 +155,26 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
        ctmlTestData.protocol_no,
        ctmlTestData.nct_purpose,
        ctmlTestData.status
-     )
-
-     // Prior treatment requirements
-     cy.clickMultipleFunction(getPriorTreatmentRequirementPlusIconMultiple(),ctmlTestData.prior_treatment_requirements.length)
+     )*/
+    cy.saveAndEdit()
+  })
+  it('should enter values into the "Prior Treatment Requirement" section fields', () => {
+    // Prior treatment requirements
+    /* cy.clickMultipleFunction(getPriorTreatmentRequirementPlusIconMultiple(),ctmlTestData.prior_treatment_requirements.length)
      getPriorTreatmentRequirementMultiple().each((input, index) => {
        // check if there is a corresponding value in the array
        if (ctmlTestData.prior_treatment_requirements[index]) {
          cy.wrap(input).type(ctmlTestData.prior_treatment_requirements[index]);
        }
-     })
-
+     })*/
+    cy.saveAndEdit()
+  })
+  it('should enter values into the "Age" section', () => {
     //Age
     cy.age(ctmlTestData.age)
-
+    cy.saveAndEdit()
+  })
+  it('should enter values into the "Drug List" section fields', () => {
     //Drug List
     cy.clickMultipleFunction(getDrugNamePlusIcon(), ctmlTestData.drug_list.drug.length - 1)
 
@@ -136,36 +183,47 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
         cy.wrap(input).type(ctmlTestData.drug_list.drug[index].drug_name);
       }
     })
+    cy.saveAndEdit()
+  })
+  it('should enter values into the "Management Group List" section fields', () => {
     //Management Group List
     cy.clickMultipleFunction(getPrimaryManagementGroupPlusIcon(), ctmlTestData.management_group_list.management_group.length - 1)
     getManagementGroupNameTextBoxMultiple().each(($input, index) => {
       cy.wrap($input).find('.p-dropdown').click().contains(ctmlTestData.management_group_list.management_group[index].management_group_name).click();
       cy.wrap($input).find('.p-selectbutton').contains(ctmlTestData.management_group_list.management_group[index].is_primary).click();
     });
-
+    cy.saveAndEdit()
+  })
+  it('should enter values into the "Site List" section fields', () => {
     //Site List
     cy.clickMultipleFunction(getSiteNamePlusIcon(), ctmlTestData.site_list.site.length - 1)
     getSiteNameMultiple().each(($input, index) => {
       const site = ctmlTestData.site_list.site[index]
       cy.fillSiteDetails($input, site)
     })
-
+    cy.saveAndEdit()
+  })
+  it('should enter values into the "Sponsor List" section fields', () => {
     //Sponsor List
     cy.clickMultipleFunction(getSponsorNamePlusIcon(), ctmlTestData.sponsor_list.sponsor.length - 1)
     getSponsorNameMultiple().each(($input, index) => {
       cy.wrap($input).find('.p-inputtext').type(ctmlTestData.sponsor_list.sponsor[index].sponsor_name)
       cy.wrap($input).find('.p-selectbutton').contains(ctmlTestData.sponsor_list.sponsor[index].is_principal_sponsor).click();
     });
-
+    cy.saveAndEdit()
+  })
+  it('should enter values into the "Staff List" section fields', () => {
     //Staff List
     cy.clickMultipleFunction(getProtocolStaffPlusIcon(), ctmlTestData.staff_list.protocol_staff.length - 1);
     getProtocolStaffMultiple().each(($input, index) => {
       const staff = ctmlTestData.staff_list.protocol_staff[index]
       cy.fillProtocolStaffDetails($input, staff)
     });
-  })
+  cy.saveAndEdit()
+})
+
 //!************ Arm 1  *****************
-    it('should enter the values in "Treatment List and Matching criteria modal" for Arm 1', () => {
+   it('should enter the values in "Treatment List and Matching criteria modal" for Arm 1', () => {
       trialEditorLeftPanelList().eq(8).should('contain', 'Treatment List').click()
      //delete the dose level
       cy.wait(2000)
@@ -208,6 +266,7 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
                   cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
                 }
            });
+           cy.saveAndEdit()
 
            //click first matching criteria link of each arm
            getEditMatchingCriteriaMultiple().eq(index).click()
@@ -267,9 +326,8 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
          }
            });
       getSaveMatchingCriteria().click()
-    })
-
-
+     cy.saveAndEdit()
+   })
   it('should validate the match between "Json preview window text" and "ctmlTestData"', () => {
     ctmlTestData.treatment_list.step[0].arm.forEach((arm,armIndex) => {
       const matchCriteria = arm.match
@@ -289,6 +347,7 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
         }
       })
     })
+    cy.saveAndEdit()
   });
   it('should validate the match between "JSON preview window text" and "YAML preview window text" ',  () => {
     getMatchingCriteriaTableHeader().contains('YAML').click()
@@ -302,6 +361,7 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
         cy.compareArrays(yamlMatchCriteria.split(','),jsonMatchCriteria.split(','))
       })
     })
+    cy.saveAndEdit()
   })
   //!************Export Ctml***************
   it('should click on Export button, "Export as JSON" file ', () => {
@@ -464,8 +524,9 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
           }
         });
       });
-    });*/
+    });
   });
+  //baseClass.afterClass()
 })
 
 
