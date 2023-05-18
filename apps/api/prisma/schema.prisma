@@ -38,6 +38,7 @@ model trial {
   nct_id                 String
   nickname               String?
   principal_investigator String?
+  // This status refers to the CTML status
   status                 status?       @default(DRAFT)
   // Many trials to many ctml_schema records
   ctml_schemas           ctml_schema[]

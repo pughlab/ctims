@@ -88,7 +88,7 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
         nct_id: ctmlModel.trialInformation.trial_id,
         nickname: ctmlModel.trialInformation.nickname,
         principal_investigator: ctmlModel.trialInformation.principal_investigator,
-        status: ctmlModel.trialInformation.status,
+        status: ctmlModel.trialInformation.ctml_status
       }
     }
 

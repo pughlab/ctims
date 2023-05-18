@@ -22,8 +22,8 @@ export class TrialService {
         nickname,
         principal_investigator,
         status,
-        userId: creatingUser.id,
-        modifiedById: creatingUser.id
+        user: { connect: {id: creatingUser.id } },
+        modifiedBy: { connect: {id: creatingUser.id } }
       }
     });
     return newTrial;
@@ -68,7 +68,13 @@ export class TrialService {
                user: user
   ): Promise<trial> {
 
-    const { status, principal_investigator, nickname, ctml_schema_version, nct_id } = updateTrialDto;
+    const {
+      status,
+      principal_investigator,
+      nickname,
+      ctml_schema_version,
+      nct_id
+    } = updateTrialDto;
     const existing_trial = await this.prismaService.trial.findUnique({
       where: {
         id
@@ -76,7 +82,7 @@ export class TrialService {
     });
 
     if (existing_trial) {
-      return await this.prismaService.trial.update({
+      return this.prismaService.trial.update({
         where: { id: existing_trial.id },
         data: {
           status,
@@ -92,14 +98,14 @@ export class TrialService {
       });
     }
 
-    return await this.prismaService.trial.create({
+    return this.prismaService.trial.create({
       data: {
         nct_id,
         nickname,
         principal_investigator,
         status,
-        userId: user.id,
-        modifiedById: user.id,
+        user: { connect: { id: user.id } },
+        modifiedBy: { connect: { id: user.id } },
         ctml_schemas: {
           connect: {
             version: ctml_schema_version
