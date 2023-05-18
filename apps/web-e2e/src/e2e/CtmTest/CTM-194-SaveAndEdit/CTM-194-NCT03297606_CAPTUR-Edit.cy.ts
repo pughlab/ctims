@@ -288,7 +288,7 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
           cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
           cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
         });
-        cy.saveAndEdit()
+        //cy.saveAndEdit()
         //click first matching criteria link of each arm
         getEditMatchingCriteriaMultiple().eq(index).click()
         //Validate the header

@@ -160,13 +160,13 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
   })
   it('should enter values into the "Prior Treatment Requirement" section fields', () => {
     // Prior treatment requirements
-    /* cy.clickMultipleFunction(getPriorTreatmentRequirementPlusIconMultiple(),ctmlTestData.prior_treatment_requirements.length)
+     cy.clickMultipleFunction(getPriorTreatmentRequirementPlusIconMultiple(),ctmlTestData.prior_treatment_requirements.length)
      getPriorTreatmentRequirementMultiple().each((input, index) => {
        // check if there is a corresponding value in the array
        if (ctmlTestData.prior_treatment_requirements[index]) {
          cy.wrap(input).type(ctmlTestData.prior_treatment_requirements[index]);
        }
-     })*/
+     })
     cy.saveAndEdit()
   })
   it('should enter values into the "Age" section', () => {
@@ -266,7 +266,7 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
                   cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
                 }
            });
-           cy.saveAndEdit()
+          // cy.saveAndEdit()
 
            //click first matching criteria link of each arm
            getEditMatchingCriteriaMultiple().eq(index).click()
