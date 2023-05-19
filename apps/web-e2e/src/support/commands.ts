@@ -416,7 +416,7 @@ Cypress.Commands.add('saveAndDelete', () => {
   trialEditorSave().click()
   cy.get('.p-toast-message-content').should('contain','Trial saved')
   cy.get('.p-toast-icon-close').click()
-  cy.go(-1)
+//  cy.go(-1)
   trialEditorBackButton().should('be.visible').trigger("click")
   cy.get('.trials_trialsText__0DJhD').should('contain','Trials')
   trialTableDots().trigger('mouseover').invoke('addClass', 'p-button').click()

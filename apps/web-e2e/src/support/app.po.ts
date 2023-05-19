@@ -4,6 +4,7 @@ export const getPassword = () => cy.get('.Login_passwordInputText__E6Ybu')
 
 export const signInButton = () => cy.get('.p-button')
 export const createCTMLButton = () => cy.get('.trials_createCtmlButton__JBdrd')
+export const trialTableUsername = () => cy.get('.TopBar_userContainer__Dcaw3')
 
 //TrialEditor Header
 export const trialEditorHeader = () => cy.get('.EditorTopBar_title__kDE8R')

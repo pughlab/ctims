@@ -109,43 +109,18 @@ let split = exportJsonFile.substring(0,11); //grab only NCT id
 let jsonFile = split.concat('_', dateClass.currentDate()).concat('.json');
 let yamlFile = split.concat('_', dateClass.currentDate()).concat('.yaml');
 
-
-describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false }, () => {
+describe('Validate Save and Edit functionality of CTML file NCT02503722_Osimertinib', { testIsolation: false }, () => {
   baseClass.beforeClass()
-  // deleteDownloadsFolderBeforeAll()
+   deleteDownloadsFolderBeforeAll()
   const ctmlTestData = NCT02503722_Osimertinib
   const ctmlJson = `./cypress/downloads/${jsonFile}`
   const ctmlYaml = `./cypress/downloads/${yamlFile}`
-  it('should enter values into the "Trial Information" section fields', () => {
-    cy.get('tbody>tr>td').should('contain', 'No CTML files. Select the \'Create\' button to start.')
+  it('should enter values into the "Trial Information" section fields, re-enter by clicking Save and Edit', () => {
+    //cy.get('tbody>tr>td').should('contain', 'No CTML files. Select the \'Create\' button to start.')
     createCTMLButton().click()
     cy.title().should('contain', 'CTIMS')
     trialEditorLeftPanelList().should('have.length', '9')
-    getTrialId().type(ctmlTestData.nct_id)
-    getTrialNickname().type('My Trial')
-    getPrincipalInvestigator().clear().type('John Doe');
-    //ctml status
-    getCtmlStatusDropdown().click()
-    // cy.wait(1000)
-    getCtmlStatusDropdownList().contains('Draft').click()
-    getLongTitle().clear().type(ctmlTestData.long_title)
-    getShortTitle().clear().type(ctmlTestData.short_title)
-    //Phase
-    getClickPhase().click()
-    getPhaseDropdownList().contains(ctmlTestData.phase).click()
-    getProtocolNumber().clear().type(ctmlTestData.protocol_no)
-    getNCTPurpose().clear().type(ctmlTestData.nct_purpose)
-    //getTrialInformationStatus().click()
-    //getDefaultTrialEditorDropDown().contains(status).click()
-    // trialEditorSave().click()
-    //trialEditorBackButton().click()
-    //trialTableDots().trigger('mouseover').invoke('addClass', 'p-button').click()
-    //trialTableEdit().click()
-    //trialTableDelete().click()
-    //trialTableDialogueDeleteBtn().click()
-    //default message
-
-    /* cy.trialInformation(ctmlTestData.nct_id,
+     cy.trialInformation(ctmlTestData.nct_id,
        "My Trial",
        "John Doe",
        "Draft",
@@ -155,10 +130,10 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
        ctmlTestData.protocol_no,
        ctmlTestData.nct_purpose,
        ctmlTestData.status
-     )*/
+     )
     cy.saveAndEdit()
   })
-  it('should enter values into the "Prior Treatment Requirement" section fields', () => {
+  it('should enter values into the "Prior Treatment Requirement" section fields, re-enter by clicking Save and Edit', () => {
     // Prior treatment requirements
      cy.clickMultipleFunction(getPriorTreatmentRequirementPlusIconMultiple(),ctmlTestData.prior_treatment_requirements.length)
      getPriorTreatmentRequirementMultiple().each((input, index) => {
@@ -169,12 +144,12 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
      })
     cy.saveAndEdit()
   })
-  it('should enter values into the "Age" section', () => {
+  it('should enter values into the "Age" section, re-enter by clicking Save and Edit', () => {
     //Age
     cy.age(ctmlTestData.age)
     cy.saveAndEdit()
   })
-  it('should enter values into the "Drug List" section fields', () => {
+  it('should enter values into the "Drug List" section fields, re-enter by clicking Save and Edit', () => {
     //Drug List
     cy.clickMultipleFunction(getDrugNamePlusIcon(), ctmlTestData.drug_list.drug.length - 1)
 
@@ -185,7 +160,7 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
     })
     cy.saveAndEdit()
   })
-  it('should enter values into the "Management Group List" section fields', () => {
+  it('should enter values into the "Management Group List" section fields, re-enter by clicking Save and Edit', () => {
     //Management Group List
     cy.clickMultipleFunction(getPrimaryManagementGroupPlusIcon(), ctmlTestData.management_group_list.management_group.length - 1)
     getManagementGroupNameTextBoxMultiple().each(($input, index) => {
@@ -194,7 +169,7 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
     });
     cy.saveAndEdit()
   })
-  it('should enter values into the "Site List" section fields', () => {
+  it('should enter values into the "Site List" section fields, re-enter by clicking Save and Edit', () => {
     //Site List
     cy.clickMultipleFunction(getSiteNamePlusIcon(), ctmlTestData.site_list.site.length - 1)
     getSiteNameMultiple().each(($input, index) => {
@@ -203,7 +178,7 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
     })
     cy.saveAndEdit()
   })
-  it('should enter values into the "Sponsor List" section fields', () => {
+  it('should enter values into the "Sponsor List" section fields, re-enter by clicking Save and Edit', () => {
     //Sponsor List
     cy.clickMultipleFunction(getSponsorNamePlusIcon(), ctmlTestData.sponsor_list.sponsor.length - 1)
     getSponsorNameMultiple().each(($input, index) => {
@@ -212,7 +187,7 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
     });
     cy.saveAndEdit()
   })
-  it('should enter values into the "Staff List" section fields', () => {
+  it('should enter values into the "Staff List" section fields, re-enter by clicking Save and Edit', () => {
     //Staff List
     cy.clickMultipleFunction(getProtocolStaffPlusIcon(), ctmlTestData.staff_list.protocol_staff.length - 1);
     getProtocolStaffMultiple().each(($input, index) => {
@@ -223,7 +198,7 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
 })
 
 //!************ Arm 1  *****************
-   it('should enter the values in "Treatment List and Matching criteria modal" for Arm 1', () => {
+   it('should enter the values in "Treatment List and Matching criteria modal" for Arm 1, re-enter by clicking Save and Edit', () => {
       trialEditorLeftPanelList().eq(8).should('contain', 'Treatment List').click()
      //delete the dose level
       cy.wait(2000)
@@ -266,7 +241,6 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
                   cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
                 }
            });
-          // cy.saveAndEdit()
 
            //click first matching criteria link of each arm
            getEditMatchingCriteriaMultiple().eq(index).click()
@@ -328,7 +302,7 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
       getSaveMatchingCriteria().click()
      cy.saveAndEdit()
    })
-  it('should validate the match between "Json preview window text" and "ctmlTestData"', () => {
+  it('should validate the match between "Json preview window text" and "ctmlTestData", re-enter by clicking Save and Edit', () => {
     ctmlTestData.treatment_list.step[0].arm.forEach((arm,armIndex) => {
       const matchCriteria = arm.match
       getPreviewWindow().each(($el, index) => {
@@ -347,9 +321,9 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
         }
       })
     })
-    cy.saveAndEdit()
+    //cy.saveAndEdit()
   });
-  it('should validate the match between "JSON preview window text" and "YAML preview window text" ',  () => {
+  it('should validate the match between "JSON preview window text" and "YAML preview window text", re-enter by clicking Save and Edit ',  () => {
     getMatchingCriteriaTableHeader().contains('YAML').click()
     getPreviewTextWindow().invoke("text").then((yamlText) => {
       const yamlObject = yaml.load(yamlText)
@@ -361,7 +335,7 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
         cy.compareArrays(yamlMatchCriteria.split(','),jsonMatchCriteria.split(','))
       })
     })
-    cy.saveAndEdit()
+    //cy.saveAndEdit()
   })
   //!************Export Ctml***************
   it('should click on Export button, "Export as JSON" file ', () => {
@@ -526,7 +500,11 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
       });
     });
   });
-  //baseClass.afterClass()
+
+  it('should Delete the existing ctml file', () => {
+    cy.saveAndDelete()
+  });
+  baseClass.afterClass()
 })
 
 
