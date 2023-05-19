@@ -89,14 +89,14 @@ let split = exportJsonFile.substring(0,11); //grab only NCT id
 let jsonFile = split.concat('_', dateClass.currentDate()).concat('.json');
 let yamlFile = split.concat('_', dateClass.currentDate()).concat('.yaml');
 
-describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() => {
+describe('Validate Save and Edit functionality of CTML file "NCT03297606_CAPTUR',{ testIsolation: false },() => {
   baseClass.beforeClass()
   deleteDownloadsFolderBeforeAll()
   const ctmlTestData = NCT03297606_CAPTUR
   const ctmlJson = `./cypress/downloads/${jsonFile}`
   const ctmlYaml = `./cypress/downloads/${yamlFile}`
 
-  it.skip('should enter values into the "Trial Information" section fields', () => {
+  it('should enter values into the "Trial Information" section fields, re-enter by clicking Save and Edit', () => {
     createCTMLButton().click()
     cy.title().should('contain', 'CTIMS')
     trialEditorLeftPanelList().should('have.length', '9')
@@ -112,8 +112,7 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
       ctmlTestData.status)
     cy.saveAndEdit()
   })
-  it('should enter values into the "Prior Treatment Requirement" section fields', () => {
-    createCTMLButton().click()
+  it('should enter values into the "Prior Treatment Requirement" section fields, re-enter by clicking Save and Edit', () => {
     // Prior treatment requirements
     cy.clickMultipleFunction(getPriorTreatmentRequirementPlusIconMultiple(), ctmlTestData.prior_treatment_requirements.length)
     getPriorTreatmentRequirementMultiple().each((input, index) => {
@@ -123,12 +122,12 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
     })
     cy.saveAndEdit()
   })
-  it('should enter values into the "Age" section', () => {
+  it('should enter values into the "Age" section, re-enter by clicking Save and Edit', () => {
     //Age
     cy.age(ctmlTestData.age)
     cy.saveAndEdit()
   })
-  it('should enter values into the "Drug List" section fields', () => {
+  it('should enter values into the "Drug List" section fields, re-enter by clicking Save and Edit', () => {
     //Drug List
     cy.clickMultipleFunction(getDrugNamePlusIcon(), ctmlTestData.drug_list.drug.length - 1)
     cy.saveAndEdit()
@@ -140,7 +139,7 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
     })
     cy.saveAndEdit()
   })
-  it('should enter values into the "Management Group List" section fields', () => {
+  it('should enter values into the "Management Group List" section fields, re-enter by clicking Save and Edit', () => {
     //Management Group List
     cy.clickMultipleFunction(getPrimaryManagementGroupPlusIcon(), ctmlTestData.management_group_list.management_group.length - 1)
     getManagementGroupNameTextBoxMultiple().each(($input, index) => {
@@ -149,7 +148,7 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
     });
     cy.saveAndEdit()
   })
-  it('should enter values into the "Site List" section fields', () => {
+  it('should enter values into the "Site List" section fields, re-enter by clicking Save and Edit', () => {
     //Site List - done
     cy.clickMultipleFunction(getSiteNamePlusIcon(), ctmlTestData.site_list.site.length - 1)
     getSiteNameMultiple().each(($input, index) => {
@@ -160,7 +159,7 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
     });
     cy.saveAndEdit()
   })
-  it('should enter values into the "Sponsor List" section fields', () => {
+  it('should enter values into the "Sponsor List" section fields, re-enter by clicking Save and Edit', () => {
     //Sponsor List array of 5 values - done
     cy.clickMultipleFunction(getSponsorNamePlusIcon(), ctmlTestData.sponsor_list.sponsor.length - 1)
     getSponsorNameMultiple().each(($input, index) => {
@@ -169,7 +168,7 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
     });
     cy.saveAndEdit()
   })
-  it('should enter values into the "Staff List" section fields', () => {
+  it('should enter values into the "Staff List" section fields, re-enter by clicking Save and Edit', () => {
     //Staff List - Done
     cy.clickMultipleFunction(getProtocolStaffPlusIcon,
       ctmlTestData.staff_list.protocol_staff.length - 1);
@@ -184,7 +183,7 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
   cy.saveAndEdit()
 })
 //!************ Arm 1  *****************
-  it('should enter the values in "Treatment List and Matching criteria modal" for Arm 1', () => {
+  it('should enter the values in "Treatment List and Matching criteria modal" for Arm 1, re-enter by clicking Save and Edit', () => {
     trialEditorLeftPanelList().eq(8).should('contain', 'Treatment List').click()
     cy.clickMultipleFunction(getAddArmPlusIcon(), ctmlTestData.treatment_list.step[0].arm.length - 1)
     const treatmentList = ctmlTestData.treatment_list.step[0].arm;
@@ -212,10 +211,7 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
         getEditMatchingCriteriaMultiple().eq(index).click()
         //Validate the header
         getMatchCriteriaHeader().should('contain', treatmentList[index].arm_code);
-        //}
-        // });
         getAddCriteriaGroup().click()
-        //})
 
         //******** OR ********************
         cy.clickParentAnd()
@@ -260,13 +256,14 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
         getClinicalOncotreePrimaryDiagnosis().type(ctmlTestData.treatment_list.step[0].arm[0].match[0].and[1].clinical.oncotree_primary_diagnosis)
         getSaveMatchingCriteria().click()
       }
-      cy.saveAndEdit()
     })
+    cy.saveAndEdit()
   })
 
   //!************ Arm 7  *****************
 
-  it('should enter the values in "Treatment List and Matching criteria modal" for Arm 7', () => {
+  it('should enter the values in "Treatment List and Matching criteria modal" for Arm 7, re-enter by clicking Save and Edit', () => {
+
     const treatmentList = ctmlTestData.treatment_list.step[0].arm;
     const doseLevels = treatmentList[1].dose_level;
 
@@ -278,17 +275,16 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
         cy.wrap($input).find('.p-inputtext').eq(1).type(arm.arm_description);
         cy.wrap($input).find('.p-inputtext').eq(2).type(arm.arm_internal_id.toString());
         cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click();
-        cy.saveAndEdit()
         cy.get(`#array-item-list-root_treatment_list_step_0_arm_${index}_dose_level`).contains('Add Dose Level').click()
 
         cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]`).each(($input, doseIndex) => {
           const dose = arm.dose_level[doseIndex]
-        cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
+          cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
           cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
           cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
           cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
         });
-        //cy.saveAndEdit()
+
         //click first matching criteria link of each arm
         getEditMatchingCriteriaMultiple().eq(index).click()
         //Validate the header
@@ -369,8 +365,8 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
           })
         getSaveMatchingCriteria().click()
       }
-      cy.saveAndEdit()
     })
+    cy.saveAndEdit()
   })
 
   //******** Matching criteria Preview ********************
@@ -446,14 +442,12 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
     trialEditorRadioButtons().eq(0).should('contain.html', 'json')
     cy.get('[type="radio"]').first().check({force: true}).should('be.checked')
     trialEditorExportCtml().eq(1).should('contain', 'Export CTML').click()
-    cy.saveAndEdit()
   });
 
   it('should click on Export button, "Export as YAML" file ', () => {
     trialEditorHeaderButtons().eq(1).should('contain', 'Export').click()
     trialEditorRadioButtons().eq(1).click({force: true})
     trialEditorExportCtml().eq(1).should('contain', 'Export CTML').click()
-    cy.saveAndEdit()
   });
 
   it('should validate the match between "Export JSON" and "Export YAML" file', () => {
@@ -610,4 +604,9 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
       });
     });
   });
+
+  it('should Delete the existing ctml file', () => {
+    cy.saveAndDelete()
+  });
+baseClass.afterClass()
 })
