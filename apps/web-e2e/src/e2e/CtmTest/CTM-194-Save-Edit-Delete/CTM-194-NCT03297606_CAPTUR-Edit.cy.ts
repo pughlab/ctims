@@ -96,7 +96,7 @@ describe('Validate Save and Edit functionality of CTML file "NCT03297606_CAPTUR'
   const ctmlJson = `./cypress/downloads/${jsonFile}`
   const ctmlYaml = `./cypress/downloads/${yamlFile}`
 
-  it('should enter values into the "Trial Information" section fields, re-enter by clicking Save and Edit', () => {
+  it('should enter values into the "Trial Information" section fields, re-enter by clicking Save and Edit NCT03297606_CAPTUR', () => {
     createCTMLButton().click()
     cy.title().should('contain', 'CTIMS')
     trialEditorLeftPanelList().should('have.length', '9')
@@ -112,7 +112,7 @@ describe('Validate Save and Edit functionality of CTML file "NCT03297606_CAPTUR'
       ctmlTestData.status)
     cy.saveAndEdit()
   })
-  it('should enter values into the "Prior Treatment Requirement" section fields, re-enter by clicking Save and Edit', () => {
+  it('should enter values into the "Prior Treatment Requirement" section fields, re-enter by clicking Save and Edit NCT03297606_CAPTUR', () => {
     // Prior treatment requirements
     cy.clickMultipleFunction(getPriorTreatmentRequirementPlusIconMultiple(), ctmlTestData.prior_treatment_requirements.length)
     getPriorTreatmentRequirementMultiple().each((input, index) => {
@@ -122,12 +122,12 @@ describe('Validate Save and Edit functionality of CTML file "NCT03297606_CAPTUR'
     })
     cy.saveAndEdit()
   })
-  it('should enter values into the "Age" section, re-enter by clicking Save and Edit', () => {
+  it('should enter values into the "Age" section, re-enter by clicking Save and Edit NCT03297606_CAPTUR', () => {
     //Age
     cy.age(ctmlTestData.age)
     cy.saveAndEdit()
   })
-  it('should enter values into the "Drug List" section fields, re-enter by clicking Save and Edit', () => {
+  it('should enter values into the "Drug List" section fields, re-enter by clicking Save and Edit NCT03297606_CAPTUR', () => {
     //Drug List
     cy.clickMultipleFunction(getDrugNamePlusIcon(), ctmlTestData.drug_list.drug.length - 1)
     cy.saveAndEdit()
@@ -139,7 +139,7 @@ describe('Validate Save and Edit functionality of CTML file "NCT03297606_CAPTUR'
     })
     cy.saveAndEdit()
   })
-  it('should enter values into the "Management Group List" section fields, re-enter by clicking Save and Edit', () => {
+  it('should enter values into the "Management Group List" section fields, re-enter by clicking Save and Edit NCT03297606_CAPTUR', () => {
     //Management Group List
     cy.clickMultipleFunction(getPrimaryManagementGroupPlusIcon(), ctmlTestData.management_group_list.management_group.length - 1)
     getManagementGroupNameTextBoxMultiple().each(($input, index) => {
@@ -148,7 +148,7 @@ describe('Validate Save and Edit functionality of CTML file "NCT03297606_CAPTUR'
     });
     cy.saveAndEdit()
   })
-  it('should enter values into the "Site List" section fields, re-enter by clicking Save and Edit', () => {
+  it('should enter values into the "Site List" section fields, re-enter by clicking Save and Edit NCT03297606_CAPTUR', () => {
     //Site List - done
     cy.clickMultipleFunction(getSiteNamePlusIcon(), ctmlTestData.site_list.site.length - 1)
     getSiteNameMultiple().each(($input, index) => {
@@ -159,7 +159,7 @@ describe('Validate Save and Edit functionality of CTML file "NCT03297606_CAPTUR'
     });
     cy.saveAndEdit()
   })
-  it('should enter values into the "Sponsor List" section fields, re-enter by clicking Save and Edit', () => {
+  it('should enter values into the "Sponsor List" section fields, re-enter by clicking Save and Edit NCT03297606_CAPTUR', () => {
     //Sponsor List array of 5 values - done
     cy.clickMultipleFunction(getSponsorNamePlusIcon(), ctmlTestData.sponsor_list.sponsor.length - 1)
     getSponsorNameMultiple().each(($input, index) => {
@@ -168,7 +168,7 @@ describe('Validate Save and Edit functionality of CTML file "NCT03297606_CAPTUR'
     });
     cy.saveAndEdit()
   })
-  it('should enter values into the "Staff List" section fields, re-enter by clicking Save and Edit', () => {
+  it('should enter values into the "Staff List" section fields, re-enter by clicking Save and Edit NCT03297606_CAPTUR', () => {
     //Staff List - Done
     cy.clickMultipleFunction(getProtocolStaffPlusIcon,
       ctmlTestData.staff_list.protocol_staff.length - 1);
@@ -183,7 +183,8 @@ describe('Validate Save and Edit functionality of CTML file "NCT03297606_CAPTUR'
   cy.saveAndEdit()
 })
 //!************ Arm 1  *****************
-  it('should enter the values in "Treatment List and Matching criteria modal" for Arm 1, re-enter by clicking Save and Edit', () => {
+  it('should enter the values in "Treatment List and Matching criteria modal" for Arm 1, re-enter by clicking Save' +
+    ' and Edit NCT03297606_CAPTUR', () => {
     trialEditorLeftPanelList().eq(8).should('contain', 'Treatment List').click()
     cy.clickMultipleFunction(getAddArmPlusIcon(), ctmlTestData.treatment_list.step[0].arm.length - 1)
     const treatmentList = ctmlTestData.treatment_list.step[0].arm;
@@ -262,7 +263,8 @@ describe('Validate Save and Edit functionality of CTML file "NCT03297606_CAPTUR'
 
   //!************ Arm 7  *****************
 
-  it('should enter the values in "Treatment List and Matching criteria modal" for Arm 7, re-enter by clicking Save and Edit', () => {
+  it('should enter the values in "Treatment List and Matching criteria modal" for Arm 7, re-enter by clicking Save' +
+    ' and Edit NCT03297606_CAPTUR', () => {
 
     const treatmentList = ctmlTestData.treatment_list.step[0].arm;
     const doseLevels = treatmentList[1].dose_level;
@@ -370,7 +372,7 @@ describe('Validate Save and Edit functionality of CTML file "NCT03297606_CAPTUR'
   })
 
   //******** Matching criteria Preview ********************
-  it('should validate Arm 1 & Arm 7 "Json preview window text" matches with "ctmlTestData"', () => {
+  it('should validate Arm 1 & Arm 7 "Json preview window text" matches with "NCT03297606_CAPTUR"', () => {
     ctmlTestData.treatment_list.step[0].arm.forEach((arm,armIndex) => {
       const matchCriteria = arm.match
       getPreviewWindow().each(($el, index) => {
@@ -403,7 +405,7 @@ describe('Validate Save and Edit functionality of CTML file "NCT03297606_CAPTUR'
     })
   });
 
-  it('should validate the match between "JSON preview window text" and "YAML preview window text" ',  () => {
+  it('should validate the match between "JSON preview window text" and "YAML preview window text" NCT03297606_CAPTUR',  () => {
     ctmlTestData.treatment_list.step[0].arm.forEach((arm,armIndex) => {
       getPreviewWindow().each(($el, index) => {
         if (index === 0) {
@@ -437,20 +439,20 @@ describe('Validate Save and Edit functionality of CTML file "NCT03297606_CAPTUR'
   })
 
   //************Export Ctml***************
-  it('should click on Export button, "Export as JSON" file ', () => {
+  it('should click on Export button, "Export as JSON" file NCT03297606_CAPTUR', () => {
     trialEditorHeaderButtons().eq(1).should('contain', 'Export').click()
     trialEditorRadioButtons().eq(0).should('contain.html', 'json')
     cy.get('[type="radio"]').first().check({force: true}).should('be.checked')
     trialEditorExportCtml().eq(1).should('contain', 'Export CTML').click()
   });
 
-  it('should click on Export button, "Export as YAML" file ', () => {
+  it('should click on Export button, "Export as YAML" file NCT03297606_CAPTUR', () => {
     trialEditorHeaderButtons().eq(1).should('contain', 'Export').click()
     trialEditorRadioButtons().eq(1).click({force: true})
     trialEditorExportCtml().eq(1).should('contain', 'Export CTML').click()
   });
 
-  it('should validate the match between "Export JSON" and "Export YAML" file', () => {
+  it('should validate the match between "Export JSON" and "Export YAML" file NCT03297606_CAPTUR', () => {
     cy.readFile(ctmlJson).then((exportedCtmlModelJson) => {
       const json = JSON.stringify(exportedCtmlModelJson);
       cy.readFile(ctmlYaml).then((exportedCtmlModelYaml) => {
@@ -462,7 +464,7 @@ describe('Validate Save and Edit functionality of CTML file "NCT03297606_CAPTUR'
   })
 //!**************** Match Export Json file with Test Data
 
-  it('should validate exported "Trial Information" matches "ctmlTestData" ', () => {
+  it('should validate exported "Trial Information" matches "NCT03297606_CAPTUR" ', () => {
     cy.readFile(ctmlJson).then((exportedCtmlModel) => {
       const exportedAttributeNames = ['trial_id', 'long_title', 'short_title', 'phase', 'protocol_no', 'nct_purpose', 'status'];
       const testDataAttributeNames = ['nct_id', 'long_title', 'short_title', 'phase', 'protocol_no', 'nct_purpose', 'status'];
@@ -474,7 +476,7 @@ describe('Validate Save and Edit functionality of CTML file "NCT03297606_CAPTUR'
     });
   });
 
-  it('should validate exported "Age" matches "ctmlTestData"', () => {
+  it('should validate exported "Age" matches "NCT03297606_CAPTUR"', () => {
     cy.readFile(ctmlJson).then((exportedCtmlModel) => {
       const exportData = exportedCtmlModel.age
       let testData = ctmlTestData.age
@@ -482,7 +484,7 @@ describe('Validate Save and Edit functionality of CTML file "NCT03297606_CAPTUR'
     })
   });
 
-  it('should validate exported "Prior treatment requirement" match "ctmlTestData"', () => {
+  it('should validate exported "Prior treatment requirement" match "NCT03297606_CAPTUR"', () => {
     cy.readFile(ctmlJson).then((exportedCtmlModel) => {
       const exportData = exportedCtmlModel.prior_treatment_requirements
       let testData = ctmlTestData.prior_treatment_requirements
@@ -490,7 +492,7 @@ describe('Validate Save and Edit functionality of CTML file "NCT03297606_CAPTUR'
     })
   });
 
-  it('should validate exported "Drug list" match "ctmlTestData"', () => {
+  it('should validate exported "Drug list" match "NCT03297606_CAPTUR"', () => {
     let rawData = ctmlTestData.drug_list.drug
 
     cy.drugListAttributes(rawData).then(testDataMatchingCriteria => {
@@ -503,7 +505,7 @@ describe('Validate Save and Edit functionality of CTML file "NCT03297606_CAPTUR'
       });
     });
   });
-  it('should validate exported "Management Group list" matches "ctmlTestData"', () => {
+  it('should validate exported "Management Group list" matches "NCT03297606_CAPTUR"', () => {
     let rawData = ctmlTestData.management_group_list.management_group;
 
     cy.managementGroupListAttributes(rawData).then(testDataMatchingCriteria => {
@@ -517,7 +519,7 @@ describe('Validate Save and Edit functionality of CTML file "NCT03297606_CAPTUR'
     });
   });
 
-  it('should validate exported "Site Group list" matches "ctmlTestData"', () => {
+  it('should validate exported "Site Group list" matches "NCT03297606_CAPTUR"', () => {
     let rawData = ctmlTestData.site_list.site
 
     cy.siteListAttributes(rawData).then(testDataMatchingCriteria => {
@@ -531,7 +533,7 @@ describe('Validate Save and Edit functionality of CTML file "NCT03297606_CAPTUR'
     });
   });
 
-  it('should validate exported "Sponsor list" matches "ctmlTestData"', () => {
+  it('should validate exported "Sponsor list" matches "NCT03297606_CAPTUR"', () => {
     let rawData = ctmlTestData.sponsor_list.sponsor
 
     cy.sponsorListAttributes(rawData).then(testDataMatchingCriteria => {
@@ -545,7 +547,7 @@ describe('Validate Save and Edit functionality of CTML file "NCT03297606_CAPTUR'
     });
   });
 
-  it('should validate exported "Staff list" matches "ctmlTestData"', () => {
+  it('should validate exported "Staff list" matches "NCT03297606_CAPTUR"', () => {
     let rawData = ctmlTestData.staff_list.protocol_staff
 
     cy.staffListAttributes(rawData).then(testDataMatchingCriteria => {
@@ -559,7 +561,7 @@ describe('Validate Save and Edit functionality of CTML file "NCT03297606_CAPTUR'
     });
   })
 
-  it('should validate "Treatment list" with multiple arm/matching criteria matches with "ctmlTestData"',() =>{
+  it('should validate "Treatment list" with multiple arm/matching criteria matches with "NCT03297606_CAPTUR"',() =>{
     //Arm and dose level validation
     const matchAndT = ctmlTestData.treatment_list.step[0].arm;
     cy.readFile(ctmlJson).then((exportedCtmlModel) => {
@@ -605,7 +607,7 @@ describe('Validate Save and Edit functionality of CTML file "NCT03297606_CAPTUR'
     });
   });
 
-  it('should Delete the existing ctml file', () => {
+  it('should Delete the existing ctml file NCT03297606_CAPTUR', () => {
     cy.saveAndDelete()
   });
 baseClass.afterClass()
