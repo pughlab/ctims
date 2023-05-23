@@ -53,7 +53,6 @@ module.exports = defineConfig({
     snapshotOnly: true,
     testIsolation: false,
     experimentalSessionSupport: true,
-
   },
   e2e: {
     ...nxE2EPreset(__dirname),
