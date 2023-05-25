@@ -72,12 +72,12 @@ model user {
 }
 
 model event {
-  id          Int      @id @default(autoincrement())
-  timestamp   DateTime @default(now())
-  title       String
+  id          Int        @id @default(autoincrement())
+  timestamp   DateTime   @default(now())
+  type        event_type
   description String?
   userId      Int?
-  user        user?    @relation(fields: [userId], references: [id])
+  user        user?      @relation(fields: [userId], references: [id])
   metadata    Json?
 }
 
@@ -85,4 +85,8 @@ enum status {
   DRAFT
   IN_REVIEW
   COMPLETED
+}
+
+enum event_type {
+  Login
 }
