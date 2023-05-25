@@ -8,6 +8,7 @@ import { CtmlSchemaModule } from './schema-ctml/ctml-schema.module';
 import { TrialModule } from './trial/trial.module';
 import { UserModule } from './user/user.module';
 import {AuthModule} from "./auth/auth.module";
+import { EventModule } from "./event/event.module";
 
 @Global()
 @Module({
@@ -16,7 +17,8 @@ import {AuthModule} from "./auth/auth.module";
     CtmlJsonModule,
     CtmlSchemaModule,
     TrialModule,
-    UserModule
+    UserModule,
+    EventModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
