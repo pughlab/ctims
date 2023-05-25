@@ -7,6 +7,8 @@ import {UserService} from "../user/user.service";
 import {ModuleRef} from "@nestjs/core";
 import {KeycloakUser} from "../user/dto/IKeycloadUser";
 import jwt_decode from "jwt-decode";
+import { EventService } from "../event/event.service";
+import { event_type } from "@prisma/client";
 
 
 const keycloakConfig = {
@@ -26,7 +28,10 @@ export class KeycloakPasswordStrategy extends PassportStrategy(KeycloakBearerStr
   private readonly keycloak: KeycloakConnect.Keycloak;
   private userService: UserService;
 
-  constructor(public moduleRef: ModuleRef) {
+  constructor(
+    public moduleRef: ModuleRef,
+    private eventService: EventService
+  ) {
     super({
       realm: keycloakConfig['realm'],
       url: `https://cbioportal.pmgenomics.ca/newauth`,
@@ -35,7 +40,25 @@ export class KeycloakPasswordStrategy extends PassportStrategy(KeycloakBearerStr
   }
 
   async login(username: string, password: string): Promise<any> {
-    const grant: Grant = await this.keycloak.grantManager.obtainDirectly(username, password);
+    let grant: Grant = null;
+    try {
+      grant = await this.keycloak.grantManager.obtainDirectly(username, password);
+    } catch (e) {
+      // Login failed, output to audit log
+      await this.eventService.createEvent({
+        type: event_type.Login,
+        description: e.message,
+        metadata: {
+          loginSuccessful: false,
+          errorMessage: e.message,
+          input: {
+            username,
+            password: true
+          }
+        }
+      });
+      throw e;
+    }
     const userInfo: KeycloakUser = await this.keycloak.grantManager.userInfo<KeycloakConnect.Token, KeycloakUser>(grant.access_token)
 
     const keycloakToken: KeycloakConnect.Token = grant.access_token;
@@ -45,6 +68,21 @@ export class KeycloakPasswordStrategy extends PassportStrategy(KeycloakBearerStr
     if (!user) {
       user = await this.userService.createUserFromKeycloak(userInfo, refreshToken['token'])
     }
+
+    // Login successful, output to audit log
+    await this.eventService.createEvent({
+      type: event_type.Login,
+      description: "Success",
+      user,
+      metadata: {
+        loginSuccessful: true,
+        input: {
+          username,
+          password: true
+        }
+      }
+    });
+
     await this.userService.updateRefreshToken(userInfo.sub, refreshToken['token'])
 
     return {accessToken: keycloakToken['token'],
