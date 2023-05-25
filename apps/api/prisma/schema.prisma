@@ -66,8 +66,19 @@ model user {
   modified_trials trial[]  @relation("ModifiedBy")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  events          event[]
 
   @@index(fields: [keycloak_id])
+}
+
+model event {
+  id          Int      @id @default(autoincrement())
+  timestamp   DateTime @default(now())
+  title       String
+  description String?
+  userId      Int?
+  user        user?    @relation(fields: [userId], references: [id])
+  metadata    Json?
 }
 
 enum status {
