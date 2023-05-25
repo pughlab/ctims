@@ -310,6 +310,12 @@ Cypress.Commands.add('clickOr',() => {
   getMenuItemOr().click()
 })
 
+Cypress.Commands.add('switchGroupOperator',() => {
+  getTruncateButton().click()
+  getSwitchGroupOperator().click()
+  //getAddCriteriaToSubGroup().invoke('addClass', 'p-menuitem-active')
+  //getMenuItemOr().click()
+})
 Cypress.Commands.add('clickChildToggleArrowButton',(indexNumber) => {
   cy.get(`.p-tree-container>li>ul>li:nth-child(${indexNumber})>div>button`).click()
 })
