@@ -46,7 +46,7 @@ declare namespace Cypress {
     compareMultiple(data: any,testData: any[][])
     saveAndEdit()
     saveAndDelete()
-
+    switchGroupOperator()
 
   }
 }
