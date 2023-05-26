@@ -1,4 +1,15 @@
-import {Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, UseGuards} from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  OnModuleInit,
+  Param,
+  Patch,
+  Post,
+  UseGuards
+} from '@nestjs/common';
 import {TrialService} from './trial.service';
 import {CreateTrialDto} from './dto/create-trial.dto';
 import {UpdateTrialDto} from './dto/update-trial.dto';
@@ -17,14 +28,22 @@ import {KeycloakPasswordGuard} from "../auth/KeycloakPasswordGuard";
 import {CurrentUser} from "../auth/CurrentUser";
 import {UpdateTrialSchemasDto} from "./dto/update-trial-schemas.dto";
 import { EventService } from "../event/event.service";
+import { ModuleRef } from "@nestjs/core";
 
 @Controller('trials')
 @ApiTags("Trial")
-export class TrialController {
+export class TrialController implements OnModuleInit{
+
+  private eventService: EventService;
+
   constructor(
-    private readonly trialService: TrialService,
-    private eventService: EventService
+    private readonly moduleRef: ModuleRef,
+    private readonly trialService: TrialService
     ) { }
+
+  onModuleInit(): any {
+    this.eventService = this.moduleRef.get(EventService, { strict: false });
+  }
 
   @Post()
   @UseGuards(KeycloakPasswordGuard)

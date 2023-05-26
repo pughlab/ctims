@@ -26,10 +26,10 @@ const keycloakConfig = {
 export class KeycloakPasswordStrategy extends PassportStrategy(KeycloakBearerStrategy, 'keycloak')  implements OnModuleInit {
   private readonly keycloak: KeycloakConnect.Keycloak;
   private userService: UserService;
+  private eventService: EventService;
 
   constructor(
-    public moduleRef: ModuleRef,
-    private eventService: EventService
+    public moduleRef: ModuleRef
   ) {
     super({
       realm: keycloakConfig['realm'],
@@ -113,5 +113,6 @@ export class KeycloakPasswordStrategy extends PassportStrategy(KeycloakBearerStr
 
   onModuleInit(): any {
     this.userService = this.moduleRef.get(UserService, {strict: false});
+    this.eventService = this.moduleRef.get(EventService, { strict: false });
   }
 }
