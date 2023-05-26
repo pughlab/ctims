@@ -36,7 +36,7 @@ export class TrialController {
     @Body() createTrialDto: CreateTrialDto
   ): Promise<trial> {
     const newTrial = await this.trialService.createTrial(createTrialDto, user);
-    await this.eventService.createEvent({
+    this.eventService.createEvent({
       type: event_type.TrialCreated,
       description: "Trial created via Post to /trials",
       user,
@@ -56,7 +56,7 @@ export class TrialController {
   @ApiOperation({ summary: "Get all trials" })
   @ApiOkResponse({ description: "List of trials found." })
   async findAll(@CurrentUser() user: user) {
-    await this.eventService.createEvent({
+    this.eventService.createEvent({
       type: event_type.TrialReadMany,
       description: "Trials read via Get to /trials",
       user
@@ -76,7 +76,7 @@ export class TrialController {
     const trial = await this.trialService.findOne(+id);
 
     // Add event
-    await this.eventService.createEvent({
+    this.eventService.createEvent({
       type: event_type.TrialRead,
       description: "Trial read via Get to /trials/:id",
       user,
@@ -104,7 +104,7 @@ export class TrialController {
     const result = await this.trialService.findSchemasByTrial(+id);
 
     // Add event
-    await this.eventService.createEvent({
+    this.eventService.createEvent({
       type: event_type.CtmlSchemaReadMany,
       description: "CTML Schemas read via Get to /trials/:id/ctml-schemas",
       user,
@@ -116,7 +116,7 @@ export class TrialController {
 
     if (!result) {
       // Add event
-      await this.eventService.createEvent({
+      this.eventService.createEvent({
         type: event_type.TrialDoesNotExist,
         description: "Trial could not be found via Get to /trials/:id/ctml-schemas",
         user,
@@ -141,7 +141,7 @@ export class TrialController {
 
     const updated = this.trialService.update(+id, updateTrialDto, user);
     // Add event
-    await this.eventService.createEvent({
+    this.eventService.createEvent({
       type: event_type.TrialUpdated,
       description: "Trial updated via Patch to /trials",
       user,
@@ -169,7 +169,7 @@ export class TrialController {
     @Body() updateTrialSchemasDto: UpdateTrialSchemasDto
   ) {
     // Add event
-    await this.eventService.createEvent({
+    this.eventService.createEvent({
       type: event_type.TrialUpdated,
       description: "Trial schema list updated via Patch to /trials/:id/ctml-schemas",
       user,
@@ -192,7 +192,7 @@ export class TrialController {
   @ApiNotFoundResponse({ description: "Trial with the requested ID could not be found." })
   async delete(@CurrentUser() user: user, @Param('id') id: string) {
     // Add event
-    await this.eventService.createEvent({
+    this.eventService.createEvent({
       type: event_type.TrialDeleted,
       description: "Trial deleted via Delete to /trials/:id",
       user,
