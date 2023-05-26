@@ -46,10 +46,9 @@ export class KeycloakPasswordStrategy extends PassportStrategy(KeycloakBearerStr
     } catch (e) {
       // Login failed, output to audit log
       await this.eventService.createEvent({
-        type: event_type.Login,
+        type: event_type.LoginFailed,
         description: e.message,
         metadata: {
-          loginSuccessful: false,
           errorMessage: e.message,
           input: {
             username,
@@ -71,11 +70,9 @@ export class KeycloakPasswordStrategy extends PassportStrategy(KeycloakBearerStr
 
     // Login successful, output to audit log
     await this.eventService.createEvent({
-      type: event_type.Login,
-      description: "Success",
+      type: event_type.LoginSuccessful,
       user,
       metadata: {
-        loginSuccessful: true,
         input: {
           username,
           password: true
