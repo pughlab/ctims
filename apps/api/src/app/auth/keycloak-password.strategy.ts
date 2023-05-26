@@ -44,7 +44,7 @@ export class KeycloakPasswordStrategy extends PassportStrategy(KeycloakBearerStr
       grant = await this.keycloak.grantManager.obtainDirectly(username, password);
     } catch (e) {
       // Login failed, output to audit log
-      await this.eventService.createEvent({
+      this.eventService.createEvent({
         type: event_type.LoginFailed,
         description: e.message,
         metadata: {
@@ -68,7 +68,7 @@ export class KeycloakPasswordStrategy extends PassportStrategy(KeycloakBearerStr
     }
 
     // Login successful, output to audit log
-    await this.eventService.createEvent({
+    this.eventService.createEvent({
       type: event_type.LoginSuccessful,
       user,
       metadata: {
