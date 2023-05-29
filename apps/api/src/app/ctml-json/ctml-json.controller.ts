@@ -45,7 +45,7 @@ export class CtmlJsonController implements OnModuleInit {
       type: event_type.CtmlJsonCreated,
       description: "CTML JSON created via Post to /ctml-jsons",
       user,
-      trial: newCtmlJson,
+      ctml_json: newCtmlJson,
       metadata: {
         input: {
           createCtmlJsonDto: { ...createCtmlJsonDto }
