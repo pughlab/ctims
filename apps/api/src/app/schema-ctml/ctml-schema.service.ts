@@ -26,10 +26,10 @@ export class CtmlSchemaService {
     return this.prismaService.ctml_schema.findUnique({ where: { id } });
   }
 
-  async findBySchemaVersion(schemaVersion: number): Promise<any> {
+  async findBySchemaVersion(schemaVersion: number): Promise<{ schema: any, version:number, id: number }> {
     const result = await this.prismaService.ctml_schema.findUnique({ where: { version: schemaVersion } });
     const schema = JSON.parse(result.schema);
-    return {schema: schema, version: result.version, id: result.id};
+    return { schema: schema, version: result.version, id: result.id };
   }
 
   update(id: number, updateSchemaCtmlDto: UpdateCtmlSchemaDto): PrismaPromise<ctml_schema> {
