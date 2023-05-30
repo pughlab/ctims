@@ -121,7 +121,7 @@ export class CtmlJsonController implements OnModuleInit {
 
   }
 
-  @Patch()
+  @Patch(':id')
   @UseGuards(KeycloakPasswordGuard)
   @ApiBearerAuth("KeycloakPasswordGuard")
   @ApiOperation({ summary: "Update or create CTML JSON record" })
@@ -131,22 +131,22 @@ export class CtmlJsonController implements OnModuleInit {
     @Body() updateCtmlJsonDto: UpdateCtmlJsonDto
   ): Promise<ctml_json> {
 
-    const ctmlJson = await this.ctmlJsonService.update(updateCtmlJsonDto);
+    const ctmlJsons = await this.ctmlJsonService.update(updateCtmlJsonDto);
 
     // Add event
     this.eventService.createEvent({
-      type: event_type.CtmlJsonUpdated,
-      description: "CTML JSON updated via Patch to /ctml-jsons",
+      type: event_type.CtmlJsonUpdatedMany,
+      description: "CTML JSONs updated via Patch to /ctml-jsons",
       user,
-      ctml_json: ctmlJson,
       metadata: {
         input: {
           updateCtmlJsonDto: { ...updateCtmlJsonDto }
-        }
+        },
+        affected_records: ctmlJsons.map(record => record.id)
       }
     });
 
-    return ctmlJson;
+    return ctmlJsons[0];
   }
 
   @Delete(':id')
