@@ -86,6 +86,7 @@ export class CtmlSchemaController implements OnModuleInit {
         });
         throw new BadRequestException("A schema with this version name already exists.");
       }
+      throw e;
     }
   }
 
