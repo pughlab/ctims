@@ -9,6 +9,7 @@ import {RootState} from "../../store/store";
 import {RJSFValidationError, ValidationData} from "@rjsf/utils";
 import {extractErrors, isObjectEmpty} from "../../../../libs/ui/src/lib/components/helpers";
 import {stringify} from 'yaml'
+import axios from "axios";
 
 interface ExportCtmlDialogProps {
   isDialogVisible: boolean;
@@ -113,6 +114,18 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
       delete ctmlModelCopy.ctml_status;
       delete ctmlModelCopy.nickname;
       return ctmlModelCopy;
+    }
+
+    const recordExportEvent = (id: number) => {
+      const accessToken = localStorage.getItem('ctims-accessToken');
+      const headers = {
+        'Authorization': 'Bearer ' + accessToken,
+      }
+      axios.request({
+        method: 'get',
+        url: `/ctml-jsons/${id}`,
+        headers
+      });
     }
 
     const ctmlModelCopy = move();
