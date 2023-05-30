@@ -121,18 +121,6 @@ export class CtmlJsonController implements OnModuleInit {
 
   }
 
-  @Get(':id/export')
-  @UseGuards(KeycloakPasswordGuard)
-  @ApiBearerAuth("KeycloakPasswordGuard")
-  @ApiOperation({ summary: "Called when CTML has been exported on the front end." })
-  @ApiNoContentResponse()
-  async ctmlExported(
-    @CurrentUser() user: user,
-    @Param('id') id: string
-  ) {
-    this.ctmlJsonService.recordCtmlExported(+id, user);
-  }
-
   @Patch(':id')
   @UseGuards(KeycloakPasswordGuard)
   @ApiBearerAuth("KeycloakPasswordGuard")

@@ -94,14 +94,4 @@ export class CtmlJsonService {
     return this.prismaService.ctml_json.delete({ where: { id } });
   }
 
-  recordCtmlExported(id: number, user: user) {
-    this.prismaService.event.create({
-      data: {
-        type: event_type.CtmlJsonExported,
-        ctml_json: { connect: { id } },
-        user: { connect: { id: user.id } }
-      }
-    })
-  }
-
 }
