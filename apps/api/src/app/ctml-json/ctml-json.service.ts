@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCtmlJsonDto } from './dto/create-ctml-json.dto';
 import { UpdateCtmlJsonDto } from './dto/update-ctml-json.dto';
-import { ctml_json } from "@prisma/client";
+import { ctml_json, event_type, user } from "@prisma/client";
 import {PrismaService} from "../prisma.service";
 
 @Injectable()
@@ -93,4 +93,15 @@ export class CtmlJsonService {
   remove(id: number) {
     return this.prismaService.ctml_json.delete({ where: { id } });
   }
+
+  recordCtmlExported(id: number, user: user) {
+    this.prismaService.event.create({
+      data: {
+        type: event_type.CtmlJsonExported,
+        ctml_json: { connect: { id } },
+        user: { connect: { id: user.id } }
+      }
+    })
+  }
+
 }
