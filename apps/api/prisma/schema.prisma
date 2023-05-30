@@ -109,6 +109,7 @@ enum event_type {
   CtmlJsonRead
   CtmlJsonReadMany
   CtmlJsonUpdated
+  CtmlJsonUpdatedMany
   CtmlJsonDeleted
   CtmlJsonDoesNotExist
   CtmlSchemaCreated
