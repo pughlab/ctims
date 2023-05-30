@@ -17,7 +17,14 @@ EXPOSE ${PORT}
 FROM base as build
 COPY . .
 
+ARG NEXTAUTH_SECRET
+ARG REACT_APP_API_URL
+ARG NEXTAUTH_URL
+
 ENV NODE_ENV=production
+ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
+ENV REACT_APP_API_URL=$REACT_APP_API_URL
+ENV NEXTAUTH_URL=$NEXTAUTH_URL
 
 #RUN npx nx run-many --target=build --all
 RUN npx nx build web
@@ -27,10 +34,6 @@ FROM build as deploy
 WORKDIR /var/www/html
 COPY --from=build /app/dist/apps/web .
 RUN sh -c 'echo "[]" > /var/www/html/.next/server/next-font-manifest.json'
-
-ENV NEXTAUTH_SECRET=dAbxJF2DRzqwGYn+BWKdj8o9ieMri4FWsmIRn77r2F8=
-ENV REACT_APP_API_URL=http://205.210.128.25:3333/api
-ENV NEXTAUTH_URL=http://localhost:3000
 
 RUN yarn install --production
 
