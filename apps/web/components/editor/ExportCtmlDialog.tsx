@@ -25,6 +25,7 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
 
   const errorSchema: ValidationData<any> = useSelector((state: RootState) => state.finalModelAndErrors.errorSchema);
   const ctmlModel = useSelector((state: RootState) => state.finalModelAndErrors.ctmlModel);
+  const trialId = useSelector((state: RootState) => state.context.trialId);
 
   useEffect(() => {
     if(ctmlModel === null) {
@@ -116,14 +117,14 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
       return ctmlModelCopy;
     }
 
-    const recordExportEvent = (id: number) => {
+    const recordExportEvent = () => {
       const accessToken = localStorage.getItem('ctims-accessToken');
       const headers = {
         'Authorization': 'Bearer ' + accessToken,
       }
       axios.request({
-        method: 'get',
-        url: `/ctml-jsons/${id}`,
+        method: 'post',
+        url: `/trials/${trialId}/export`,
         headers
       });
     }
@@ -147,6 +148,7 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
     const link = document.createElement('a');
     link.setAttribute('href', url);
     link.setAttribute('download', fileName);
+    recordExportEvent()
     link.style.display = 'none';
     document.body.appendChild(link);
     link.click();
