@@ -147,6 +147,8 @@ export class CtmlSchemaController implements OnModuleInit {
         input: { id }
       }
     });
+
+    return result;
   }
 
   @Patch(':id')
