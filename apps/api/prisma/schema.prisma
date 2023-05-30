@@ -105,6 +105,7 @@ enum event_type {
   TrialUpdated
   TrialDeleted
   TrialDoesNotExist
+  TrialExported
   CtmlJsonCreated
   CtmlJsonRead
   CtmlJsonReadMany
@@ -112,7 +113,6 @@ enum event_type {
   CtmlJsonUpdatedMany
   CtmlJsonDeleted
   CtmlJsonDoesNotExist
-  CtmlJsonExported
   CtmlSchemaCreated
   CtmlSchemaRead
   CtmlSchemaReadMany
