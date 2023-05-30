@@ -16,7 +16,7 @@ import {UpdateTrialDto} from './dto/update-trial.dto';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
-  ApiFoundResponse,
+  ApiFoundResponse, ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -67,6 +67,18 @@ export class TrialController implements OnModuleInit{
       }
     });
     return newTrial;
+  }
+
+  @Post(':id/export')
+  @UseGuards(KeycloakPasswordGuard)
+  @ApiBearerAuth("KeycloakPasswordGuard")
+  @ApiOperation({ summary: "Called when trial has been exported on the front end." })
+  @ApiNoContentResponse()
+  async trialExported(
+    @CurrentUser() user: user,
+    @Param('id') id: string
+  ) {
+    this.trialService.recordTrialExported(+id, user);
   }
 
   @Get()
