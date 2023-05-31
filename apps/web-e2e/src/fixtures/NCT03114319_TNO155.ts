@@ -215,14 +215,14 @@ export const NCT03114319_TNO155: TNO155Interface =
                         "genomic": {
                           "hugo_symbol": "BRAF",
                           "variant_category": "WT",
-                          "wildtype": "true"
+                          "wildtype": "True"
                         }
                       },
                       {
                         "genomic": {
                           "hugo_symbol": "NRAS",
                           "variant_category": "WT",
-                          "wildtype": "true"
+                          "wildtype": "True"
                         }
                       }
                     ]
@@ -377,7 +377,7 @@ export const NCT03114319_TNO155: TNO155Interface =
                             "genomic": {
                               "hugo_symbol": "KRAS",
                               "variant_category": "WT",
-                              "wildtype": "true"
+                              "wildtype": "True"
                             }
                           }
                         ]
@@ -390,7 +390,7 @@ export const NCT03114319_TNO155: TNO155Interface =
                         "genomic": {
                           "hugo_symbol": "BRAF",
                           "variant_category": "WT",
-                          "wildtype": "true"
+                          "wildtype": "True"
                         }
                       },
                       {
@@ -437,14 +437,14 @@ export const NCT03114319_TNO155: TNO155Interface =
                             "genomic": {
                               "hugo_symbol": "BRAF",
                               "variant_category": "WT",
-                              "wildtype": "true"
+                              "wildtype": "True"
                             }
                           },
                           {
                             "genomic": {
                               "hugo_symbol": "KRAS",
                               "variant_category": "WT",
-                              "wildtype": "true"
+                              "wildtype": "True"
                             }
                           }
                         ]
@@ -465,14 +465,14 @@ export const NCT03114319_TNO155: TNO155Interface =
                             "genomic": {
                               "hugo_symbol": "BRAF",
                               "variant_category": "WT",
-                              "wildtype": "true"
+                              "wildtype": "True"
                             }
                           },
                           {
                             "genomic": {
                               "hugo_symbol": "KRAS",
                               "variant_category": "WT",
-                              "wildtype": "true"
+                              "wildtype": "True"
                             }
                           }
                         ]
@@ -493,14 +493,14 @@ export const NCT03114319_TNO155: TNO155Interface =
                             "genomic": {
                               "hugo_symbol": "BRAF",
                               "variant_category": "WT",
-                              "wildtype": "true"
+                              "wildtype": "True"
                             }
                           },
                           {
                             "genomic": {
                               "hugo_symbol": "NRAS",
                               "variant_category": "WT",
-                              "wildtype": "true"
+                              "wildtype": "True"
                             }
                           }
                         ]

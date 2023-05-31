@@ -86,7 +86,13 @@ import {
   getUserName,
   getPassword,
   signInButton,
-  trialTableDots, trialTableDelete, trialTableDialogueDeleteBtn, trialTableEdit, trialEditorSave, trialEditorBackButton
+  trialTableDots,
+  trialTableDelete,
+  trialTableDialogueDeleteBtn,
+  trialTableEdit,
+  trialEditorSave,
+  trialEditorBackButton,
+  getCNVCall, getProteinChange, getVariantClassification
 } from './app.po';
 import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib";
 import {NCT03297606_CAPTUR} from "../fixtures/NCT03297606_CAPTUR";
@@ -429,6 +435,28 @@ Cypress.Commands.add('saveAndDelete', () => {
   trialTableDelete().click()
   trialTableDialogueDeleteBtn().click()
 });
+Cypress.Commands.add('processGenomicCondition', (condition) => {
+  Object.entries(condition.genomic).map(([key, value]) => {
+    if (key === 'cnv_call') {
+      getCNVCall().type(value as string);
+    }
+    if (key === 'hugo_symbol') {
+      getHugoSymbol().type(value as string);
+    }
+    if (key === 'variant_category') {
+      getVariantCategory().click();
+      getGenomicDropDown().contains(value as string).click();
+    }
+    if (key === 'protein_change') {
+      getProteinChange().type(value as string);
+    }
+    if (key === 'variant_classification') {
+      getVariantClassification().click();
+      getGenomicDropDown().contains((value as string).replace(/_/g, ' ')).click();
+    }
+  });
+});
+
 //
 // -- This is a child command --
 // Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })
