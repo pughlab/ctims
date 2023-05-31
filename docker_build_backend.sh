@@ -9,4 +9,4 @@ set -a
 # unsets the export flag.
 set +a
 
-docker-compose build --no-cache backend
+docker compose build --no-cache backend

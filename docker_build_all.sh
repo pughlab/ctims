@@ -7,4 +7,4 @@ set -a
 . /etc/environment
 # unsets the export flag.
 set +a
-docker-compose build --no-cache
+docker compose build --no-cache
