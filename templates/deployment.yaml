@@ -39,6 +39,8 @@ spec:
               value: "https://ctims-api.{{ .Values.domain }}/api"
             - name: NEXTAUTH_URL
               value: "https://ctims-web.{{ .Values.domain }}"
+            - name: NEXTAUTH_API_URL
+              value: "http://localhost:3333/api"
         - image: "{{ .Values.docker.apiImage }}:{{ .Values.git.ref }}"
           name: ctimsapi
           imagePullPolicy: IfNotPresent
