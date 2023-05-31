@@ -9,6 +9,7 @@ services:
         NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
         REACT_APP_API_URL: ${REACT_APP_API_URL}
         NEXTAUTH_URL: ${NEXTAUTH_URL}
+        NEXTAUTH_API_URL: ${NEXTAUTH_API_URL}
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
