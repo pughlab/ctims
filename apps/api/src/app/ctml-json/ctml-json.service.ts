@@ -31,6 +31,14 @@ export class CtmlJsonService {
     return this.prismaService.ctml_json.findUnique({ where: { id: id } });
   }
 
+  findByTrialId(trialId: number): Promise<ctml_json[]> {
+    return this.prismaService.ctml_json.findMany({
+      where: {
+        trialId: trialId
+      }
+    });
+  }
+
   async update(updateCtmlJsonDto: UpdateCtmlJsonDto): Promise<ctml_json> {
     const { data, version, trialId } = updateCtmlJsonDto;
 

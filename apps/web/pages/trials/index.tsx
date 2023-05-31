@@ -26,6 +26,10 @@ const Trials = () => {
     deleteTrialOperation
   } = useDeleteTrial();
 
+  useEffect(() => {
+    getAllTrialsOperation();
+  }, [])
+
   const {data} = useSession()
   // console.log('session', data);
   // const { accessToken } = data
@@ -70,12 +74,17 @@ const Trials = () => {
     router.push('/trials/create');
   }
 
+  const trialEditClick = () => {
+    router.push(`/trials/edit/${rowClicked.id}`).catch(err => console.log(err));
+  }
+
   const trialMenuItems = [
     {
       label: 'Edit',
       icon: 'pi pi-pencil',
       command: () => {
         console.log('Edit');
+        router.push(`/trials/edit/${rowClicked.id}`);
       }
     },
     {
@@ -170,7 +179,7 @@ const Trials = () => {
             <Column field="id" header="" body={subMenuTemplate}></Column>
             <Column field="nickname" header="Nickname"></Column>
             <Column field="principal_investigator" header="Principal Investigator" ></Column>
-            <Column field="status" header="Status" sortable></Column>
+            <Column field="ctml_status_label" header="CTML Status" sortable></Column>
             <Column field="createdAt" header="Created on" dataType="date"></Column>
             <Column field="updatedAt" header="Modified on" dataType="date"></Column>
           </DataTable>

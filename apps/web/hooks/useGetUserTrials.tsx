@@ -3,6 +3,7 @@ import {useSession} from "next-auth/react";
 import {useEffect, useState} from "react";
 import {useRouter} from "next/router";
 import getConfig from 'next/config';
+import { getCtmlStatusLabel } from "../../../libs/types/src/CtmlStatusLabels";
 
 const useGetUserTrials = () => {
   const { publicRuntimeConfig } = getConfig();
@@ -52,10 +53,12 @@ const useGetUserTrials = () => {
           hour: 'numeric',
           minute: 'numeric'
         });
+        const ctml_status_label = getCtmlStatusLabel(trial.status);
         return {
           ...trial,
           createdAt: createdAtFormatted,
-          updatedAt: updatedAtFormatted
+          updatedAt: updatedAtFormatted,
+          ctml_status_label
         }
       })
       setResponse(mapped)

@@ -7,15 +7,16 @@ import {UserService} from "../user/user.service";
 import {ModuleRef} from "@nestjs/core";
 import {KeycloakUser} from "../user/dto/IKeycloadUser";
 import jwt_decode from "jwt-decode";
+import * as process from 'process';
 
 
 const keycloakConfig = {
-  "realm": "UHN",
-  "auth-server-url": "https://cbioportal.pmgenomics.ca/newauth",
+  "realm": process.env.KEYCLOAK_REALM,
+  "auth-server-url": process.env.KEYCLOAK_URL,
   "ssl-required": "external",
-  "resource": "ctims",
+  "resource": process.env.KEYCLOAK_CLIENT_ID,
   "credentials": {
-    "secret": "yEV5YAWsE7XbhBEwUDHLRqXrR5jMhEwm"
+    "secret": process.env.KEYCLOAK_CLIENT_SECRET
   },
   "confidential-port": 0
 }
@@ -29,7 +30,7 @@ export class KeycloakPasswordStrategy extends PassportStrategy(KeycloakBearerStr
   constructor(public moduleRef: ModuleRef) {
     super({
       realm: keycloakConfig['realm'],
-      url: `https://cbioportal.pmgenomics.ca/newauth`,
+      url: keycloakConfig['auth-server-url'],
     });
     this.keycloak = new KeycloakConnect({}, keycloakConfig);
   }

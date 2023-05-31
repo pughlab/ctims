@@ -10,7 +10,7 @@ import {Toast} from "primereact/toast";
 import useSaveTrial from "../../hooks/useSaveTrial";
 
 
-const EditorTopBar = () => {
+const EditorTopBar = (props: {isEditMode?: boolean}) => {
 
   const [isDialogVisible, setIsDialogVisible] = useState<boolean>(false);
   const {
@@ -47,7 +47,7 @@ const EditorTopBar = () => {
 
   const backClick = (e) => {
     e.preventDefault();
-    router.back();
+    router.push('/trials');
   }
 
   const onExportClick = () => {
@@ -88,7 +88,7 @@ const EditorTopBar = () => {
         nct_id: ctmlModel.trialInformation.trial_id,
         nickname: ctmlModel.trialInformation.nickname,
         principal_investigator: ctmlModel.trialInformation.principal_investigator,
-        status: ctmlModel.trialInformation.status,
+        status: ctmlModel.trialInformation.ctml_status
       }
     }
 
@@ -102,7 +102,6 @@ const EditorTopBar = () => {
       });
       return;
     }
-
     saveTrialOperation(getTrialModelOnly(), getCtmlJsonOnly());
   }
 
@@ -123,7 +122,7 @@ const EditorTopBar = () => {
           <div className={styles.backBtn} onClick={(e) => backClick(e)}>
             <i className="pi pi-arrow-left"></i>
           </div>
-          <div className={styles.title}>New CTML</div>
+          <div className={styles.title}>{props.isEditMode ? 'Edit CTML' : 'New CTML'}</div>
         </div>
         <div className={styles.menuBtnGroup}>
           <Button label="Discard" className="p-button-text p-button-plain" />

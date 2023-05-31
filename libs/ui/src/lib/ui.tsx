@@ -26,6 +26,7 @@ const containerStyle: CSSProperties = {
 /* eslint-disable-next-line */
 export interface UiProps {
   ctml_schema: {schema: any, version: any};
+  formData?: any;
 }
 
 export const Ui = (props: UiProps) => {
@@ -39,7 +40,10 @@ export const Ui = (props: UiProps) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(setTrialId(0))
+    const currentURL = window.location.href;
+    if (currentURL.includes('/trials/create')) {
+      dispatch(setTrialId(0))
+    }
   }, []);
 
   const handleSpecialClick = (formD: any, id: string) => {
@@ -87,6 +91,7 @@ export const Ui = (props: UiProps) => {
         schema={props.ctml_schema.schema}
         onSpecialButtonClick={handleSpecialClick}
         onRjsfFormChange={onFormChange}
+        formData={props.formData}
       />
       <CtimsMatchDialog
                       onDialogHide={onDialogHideCallback}

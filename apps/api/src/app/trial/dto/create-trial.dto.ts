@@ -1,5 +1,5 @@
 import {ApiProperty, ApiPropertyOptional} from "@nestjs/swagger";
-import {status} from "@prisma/client";
+import { status } from "@prisma/client";
 
 export class CreateTrialDto {
   @ApiProperty()

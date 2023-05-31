@@ -2,3 +2,6 @@ node_modules
 tmp
 .vscode
 dist
+apps/api/.env
+app/web/.env
+apps/web/.env.locald
