@@ -47,6 +47,6 @@ declare namespace Cypress {
     saveAndEdit()
     saveAndDelete()
     switchGroupOperator()
-
+    processGenomicCondition(condition: any)
   }
 }
