@@ -7,8 +7,6 @@ import {UserService} from "../user/user.service";
 import {ModuleRef} from "@nestjs/core";
 import {KeycloakUser} from "../user/dto/IKeycloadUser";
 import jwt_decode from "jwt-decode";
-import * as process from 'process';
-
 
 const keycloakConfig = {
   "realm": process.env.KEYCLOAK_REALM,
