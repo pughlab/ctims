@@ -63,6 +63,9 @@ export class TrialController implements OnModuleInit{
       metadata: {
         input: {
           createTrialDto: { ...createTrialDto }
+        },
+        output: {
+          id: newTrial.id
         }
       }
     });
@@ -179,7 +182,8 @@ export class TrialController implements OnModuleInit{
       trial: updated,
       metadata: {
         input: {
-          updateTrialDto: { ...updateTrialDto }
+          updateTrialDto: { ...updateTrialDto },
+          id
         }
       }
     });
@@ -207,7 +211,8 @@ export class TrialController implements OnModuleInit{
       trial: { id: +id },
       metadata: {
         input: {
-          updateTrialDto: { ...updateTrialSchemasDto }
+          updateTrialDto: { ...updateTrialSchemasDto },
+          id
         }
       }
     });

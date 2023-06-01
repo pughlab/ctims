@@ -49,6 +49,9 @@ export class CtmlJsonController implements OnModuleInit {
       metadata: {
         input: {
           createCtmlJsonDto: { ...createCtmlJsonDto }
+        },
+        output: {
+          id: newCtmlJson.id
         }
       }
     });
