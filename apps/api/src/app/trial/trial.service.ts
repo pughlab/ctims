@@ -1,17 +1,26 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
+import { Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { CreateTrialDto } from './dto/create-trial.dto';
 import { UpdateTrialDto } from './dto/update-trial.dto';
 import {PrismaService} from "../prisma.service";
-import { ctml_json, ctml_schema, event_type, prisma, trial, user } from "@prisma/client";
+import { ctml_schema, event_type, trial, user } from "@prisma/client";
 import {PrismaExceptionTools} from "../utils/prisma-exception-tools";
 import { UpdateTrialSchemasDto } from "./dto/update-trial-schemas.dto";
+import { EventService } from "../event/event.service";
+import { ModuleRef } from "@nestjs/core";
 
 @Injectable()
-export class TrialService {
+export class TrialService implements OnModuleInit {
+
+  private eventService: EventService;
 
   constructor(
-    private readonly prismaService: PrismaService
+    private readonly prismaService: PrismaService,
+    private readonly moduleRef: ModuleRef
   ) { }
+
+  onModuleInit(): any {
+    this.eventService = this.moduleRef.get(EventService, { strict: false });
+  }
 
   async createTrial(createTrialDto: CreateTrialDto, creatingUser: user) {
     const { nct_id, nickname, principal_investigator, status } = createTrialDto;
@@ -82,7 +91,7 @@ export class TrialService {
     });
 
     if (existing_trial) {
-      return this.prismaService.trial.update({
+      const updatedTrial = await this.prismaService.trial.update({
         where: { id: existing_trial.id },
         data: {
           status,
@@ -96,9 +105,23 @@ export class TrialService {
           }
         }
       });
+
+      // Add updated event
+      this.eventService.createEvent({
+        type: event_type.TrialUpdated,
+        user,
+        trial: updatedTrial,
+        metadata: {
+          input: {
+            updateTrialDto: { ...updateTrialDto },
+            id
+          }
+        }
+      });
+      return updatedTrial;
     }
 
-    return this.prismaService.trial.create({
+    const createdTrial = await this.prismaService.trial.create({
       data: {
         nct_id,
         nickname,
@@ -113,6 +136,20 @@ export class TrialService {
         }
       }
     });
+
+    // Add created event
+    this.eventService.createEvent({
+      type: event_type.TrialCreated,
+      user,
+      trial: createdTrial,
+      metadata: {
+        input: {
+          updateTrialDto: { ...updateTrialDto },
+          id
+        }
+      }
+    });
+    return createdTrial;
 
   }
 

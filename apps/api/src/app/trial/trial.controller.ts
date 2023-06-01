@@ -169,43 +169,11 @@ export class TrialController implements OnModuleInit{
   @ApiParam({ name: "id", description: "ID of the trial to update." })
   @ApiOkResponse({ description: "Object updated." })
   @ApiNotFoundResponse({ description: "Trial with the requested ID could not be found." })
-  async update(@Param('id') id: string,
+  update(@Param('id') id: string,
          @CurrentUser() user: user,
          @Body() updateTrialDto: UpdateTrialDto) {
 
-    const updated = await this.trialService.update(+id, updateTrialDto, user);
-    if (+id !== updated.id) {
-      // Add created event
-      this.eventService.createEvent({
-        type: event_type.TrialCreated,
-        description: "Trial created via Patch to /trials",
-        user,
-        trial: updated,
-        metadata: {
-          input: {
-            updateTrialDto: { ...updateTrialDto },
-            id
-          }
-        }
-      });
-    } else {
-      // Add update event
-      this.eventService.createEvent({
-        type: event_type.TrialUpdated,
-        description: "Trial updated via Patch to /trials",
-        user,
-        trial: updated,
-        metadata: {
-          input: {
-            updateTrialDto: { ...updateTrialDto },
-            id
-          }
-        }
-      });
-
-    }
-
-    return updated
+    return this.trialService.update(+id, updateTrialDto, user);
   }
 
   @Patch(':id/ctml-schemas')
