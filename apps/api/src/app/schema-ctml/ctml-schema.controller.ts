@@ -59,9 +59,12 @@ export class CtmlSchemaController implements OnModuleInit {
         ctml_json: ctmlJson,
         metadata: {
           input: {
-            createSchemaCtmlDto: { ...createSchemaCtmlDto }
+            createSchemaCtmlDto: { ...createSchemaCtmlDto },
           },
-          success: true
+          success: true,
+          output: {
+            id: ctmlJson.id
+          }
         }
       });
 
@@ -170,7 +173,8 @@ export class CtmlSchemaController implements OnModuleInit {
       ctml_schema: ctmlSchema,
       metadata: {
         input: {
-          updateSchemaCtmlDto: { ...updateSchemaCtmlDto }
+          updateSchemaCtmlDto: { ...updateSchemaCtmlDto },
+          id
         }
       }
     });

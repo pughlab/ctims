@@ -49,6 +49,9 @@ export class CtmlJsonController implements OnModuleInit {
       metadata: {
         input: {
           createCtmlJsonDto: { ...createCtmlJsonDto }
+        },
+        output: {
+          id: newCtmlJson.id
         }
       }
     });
@@ -121,7 +124,7 @@ export class CtmlJsonController implements OnModuleInit {
 
   }
 
-  @Patch(':id')
+  @Patch()
   @UseGuards(KeycloakPasswordGuard)
   @ApiBearerAuth("KeycloakPasswordGuard")
   @ApiOperation({ summary: "Update or create CTML JSON record" })
