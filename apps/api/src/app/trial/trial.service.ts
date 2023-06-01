@@ -2,7 +2,7 @@ import {Injectable, NotFoundException} from '@nestjs/common';
 import { CreateTrialDto } from './dto/create-trial.dto';
 import { UpdateTrialDto } from './dto/update-trial.dto';
 import {PrismaService} from "../prisma.service";
-import { ctml_json, ctml_schema, prisma, trial, user } from "@prisma/client";
+import { ctml_json, ctml_schema, event_type, prisma, trial, user } from "@prisma/client";
 import {PrismaExceptionTools} from "../utils/prisma-exception-tools";
 import { UpdateTrialSchemasDto } from "./dto/update-trial-schemas.dto";
 
@@ -140,4 +140,15 @@ export class TrialService {
       throw e;
     }
   }
+
+  async recordTrialExported(id: number, user: user) {
+    await this.prismaService.event.create({
+      data: {
+        type: event_type.TrialExported,
+        trial: { connect: { id } },
+        user: { connect: { id: user.id } }
+      }
+    });
+  }
+
 }

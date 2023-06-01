@@ -16,6 +16,7 @@ model ctml_schema {
   // Many trials to many schema_ctml records
   trials     trial[]
   ctml_jsons ctml_json[]
+  event      event[]
 
   @@index(fields: [version])
 }
@@ -31,6 +32,7 @@ model ctml_json {
   // One trial to many ctml_json records
   trial     trial?       @relation(fields: [trialId], references: [id])
   trialId   Int?
+  event     event[]
 }
 
 model trial {
@@ -50,6 +52,7 @@ model trial {
   userId                 Int?
   // One trial to many ctml_json records
   ctml_jsons             ctml_json[]
+  event                  event[]
 }
 
 model user {
@@ -66,12 +69,54 @@ model user {
   modified_trials trial[]  @relation("ModifiedBy")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  events          event[]
 
   @@index(fields: [keycloak_id])
+}
+
+model event {
+  id            Int          @id @default(autoincrement())
+  timestamp     DateTime     @default(now())
+  type          event_type
+  description   String?
+  userId        Int?
+  user          user?        @relation(fields: [userId], references: [id])
+  metadata      Json?
+  trial         trial?       @relation(fields: [trialId], references: [id])
+  trialId       Int?
+  ctml_json     ctml_json?   @relation(fields: [ctml_jsonId], references: [id])
+  ctml_jsonId   Int?
+  ctml_schema   ctml_schema? @relation(fields: [ctml_schemaId], references: [id])
+  ctml_schemaId Int?
 }
 
 enum status {
   DRAFT
   IN_REVIEW
   COMPLETED
+}
+
+enum event_type {
+  LoginSuccessful
+  LoginFailed
+  TrialCreated
+  TrialRead
+  TrialReadMany
+  TrialUpdated
+  TrialDeleted
+  TrialDoesNotExist
+  TrialExported
+  CtmlJsonCreated
+  CtmlJsonRead
+  CtmlJsonReadMany
+  CtmlJsonUpdated
+  CtmlJsonUpdatedMany
+  CtmlJsonDeleted
+  CtmlJsonDoesNotExist
+  CtmlSchemaCreated
+  CtmlSchemaRead
+  CtmlSchemaReadMany
+  CtmlSchemaUpdated
+  CtmlSchemaDeleted
+  CtmlSchemaDoesNotExist
 }

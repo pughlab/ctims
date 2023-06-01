@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCtmlJsonDto } from './dto/create-ctml-json.dto';
 import { UpdateCtmlJsonDto } from './dto/update-ctml-json.dto';
-import { ctml_json, PrismaPromise } from "@prisma/client";
+import { ctml_json, event_type, user } from "@prisma/client";
 import {PrismaService} from "../prisma.service";
-import {NotFoundError} from "@prisma/client/runtime";
 
 @Injectable()
 export class CtmlJsonService {
@@ -11,16 +10,16 @@ export class CtmlJsonService {
   constructor(
     private readonly prismaService: PrismaService
   ) { }
-  create(createCtmlJsonDto: CreateCtmlJsonDto) {
-    const { data, version } = createCtmlJsonDto;
-    // const createdCtmlJson = this.prismaService.ctml_json.create({
-    //   data: {
-    //     data,
-    //     versionId: schemaVersionId,
-    //     trial_id: trialId
-    //   }
-    // });
-    return null;
+  async create(createCtmlJsonDto: CreateCtmlJsonDto) {
+    const { data, version, trialId } = createCtmlJsonDto;
+    const createdCtmlJson = await this.prismaService.ctml_json.create({
+      data: {
+        data,
+        version: { connect: { version } },
+        trial: { connect: { id: trialId } }
+      }
+    });
+    return createdCtmlJson;
   }
 
   findAll(): Promise<ctml_json[]> {
@@ -39,7 +38,7 @@ export class CtmlJsonService {
     });
   }
 
-  async update(updateCtmlJsonDto: UpdateCtmlJsonDto): Promise<ctml_json> {
+  async update(updateCtmlJsonDto: UpdateCtmlJsonDto): Promise<ctml_json[]> {
     const { data, version, trialId } = updateCtmlJsonDto;
 
     const ctml_schema_version = await this.prismaService.ctml_schema.findUnique({
@@ -68,21 +67,31 @@ export class CtmlJsonService {
             { versionId: ctml_schema_version.id }
           ]
         }
-      })
-      return r[0]
+      });
+      const affected = await this.prismaService.ctml_json.findMany({
+        where: {
+          AND: [
+            { trialId: trialId },
+            { versionId: ctml_schema_version.id }
+          ]
+        }
+      });
+      return affected;
 
     }
 
-    return await this.prismaService.ctml_json.create({
+    const newCtmlJson = await this.prismaService.ctml_json.create({
       data: {
         data,
         versionId: ctml_schema_version.id,
         trialId: trialId
       }
     });
+    return [newCtmlJson];
   }
 
   remove(id: number) {
     return this.prismaService.ctml_json.delete({ where: { id } });
   }
+
 }
