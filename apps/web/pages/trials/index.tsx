@@ -26,9 +26,6 @@ const Trials = () => {
     deleteTrialOperation
   } = useDeleteTrial();
 
-  useEffect(() => {
-    getAllTrialsOperation();
-  }, [])
 
   const {data} = useSession()
   // console.log('session', data);
@@ -40,11 +37,8 @@ const Trials = () => {
       return;
     }
     localStorage.setItem('ctims-accessToken', data['accessToken']);
-  }, [data])
-
-  useEffect(() => {
     getAllTrialsOperation();
-  }, []);
+  }, [data])
 
   useEffect(() => {
     if (response) {

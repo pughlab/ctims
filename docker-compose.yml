@@ -5,9 +5,16 @@ services:
     container_name: ctims-web
     build:
       context: ./
+      args:
+        NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+        REACT_APP_API_URL: ${REACT_APP_API_URL}
+        NEXTAUTH_URL: ${NEXTAUTH_URL}
+        NEXTAUTH_API_URL: ${NEXTAUTH_API_URL}
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
     restart: on-failure
     networks:
         - my-network
@@ -17,8 +24,15 @@ services:
     build:
       context: ./
       dockerfile: ./apps/api/Dockerfile
+      args:
+        KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+        KEYCLOAK_URL: ${KEYCLOAK_URL}
+        KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
+        KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
+    environment:
+      DATABASE_URL: mysql://ctims:ctims@database:3306/ctims
     ports:
-      - "3000:3000"
+      - "3333:3333"
     restart: on-failure
     networks:
         - my-network

@@ -1,6 +1,8 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-
+console.log('process.env.NEXTAUTH_SECRET', process.env.NEXTAUTH_SECRET)
+console.log('process.env.REACT_APP_API_URL', process.env.REACT_APP_API_URL)
+console.log('process.env.NEXTAUTH_URL', process.env.NEXTAUTH_URL)
 export default NextAuth({
   // Configure one or more authentication providers
   session: {
@@ -25,7 +27,8 @@ export default NextAuth({
 
     authorize: async  (credentials: any) => {
       // console.log('credentials', credentials, req);
-      const api_url = process.env.REACT_APP_API_URL || 'http://localhost:3333/api';
+      // const api_url = process.env.REACT_APP_API_URL || 'http://localhost:3333/api';
+      const api_url = process.env.NEXTAUTH_API_URL || 'http://localhost:3333/api';
       console.log('api_url', api_url)
 
       try {
@@ -49,6 +52,8 @@ export default NextAuth({
           throw new Error('Invalid credentials');
         }
       } catch (error) {
+        console.log(error)
+        console.log(JSON.stringify(error))
         throw new Error('Failed to authorize');
       }
     }
