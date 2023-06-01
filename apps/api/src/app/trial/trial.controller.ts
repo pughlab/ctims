@@ -170,13 +170,13 @@ export class TrialController implements OnModuleInit{
          @CurrentUser() user: user,
          @Body() updateTrialDto: UpdateTrialDto) {
 
-    const updated = this.trialService.update(+id, updateTrialDto, user);
+    const updated = await this.trialService.update(+id, updateTrialDto, user);
     // Add event
     this.eventService.createEvent({
       type: event_type.TrialUpdated,
       description: "Trial updated via Patch to /trials",
       user,
-      trial: { id: +id },
+      trial: updated,
       metadata: {
         input: {
           updateTrialDto: { ...updateTrialDto }
