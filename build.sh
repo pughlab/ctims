@@ -12,7 +12,7 @@ echo "COMMIT_ISH: $COMMIT_ISH"
 docker build --no-cache  \
 	--build-arg CTIMS_WEB_PORT=3000 \
     --build-arg NEXTAUTH_SECRET=dAbxJF2DRzqwGYn+BWKdj8o9ieMri4FWsmIRn77r2F8= \
-    --build-arg REACT_APP_API_URL=http://localhost:3333/api \
+    --build-arg REACT_APP_API_URL=https://ctims-web.qa02.technainstitute.net/trials/api \
     --build-arg NEXTAUTH_URL=http://localhost:3000 \
     --build-arg NEXTAUTH_API_URL=http://localhost:3333/api \
 	-t $CTIMS_WEB_CONTAINER_IMAGE_LOCATION:latest \
