@@ -121,7 +121,7 @@ export class CtmlJsonController implements OnModuleInit {
 
   }
 
-  @Patch(':id')
+  @Patch()
   @UseGuards(KeycloakPasswordGuard)
   @ApiBearerAuth("KeycloakPasswordGuard")
   @ApiOperation({ summary: "Update or create CTML JSON record" })
