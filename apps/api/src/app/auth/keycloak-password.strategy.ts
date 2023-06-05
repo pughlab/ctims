@@ -59,8 +59,10 @@ export class KeycloakPasswordStrategy extends PassportStrategy(KeycloakBearerStr
     }
     const userInfo: KeycloakUser = await this.keycloak.grantManager.userInfo<KeycloakConnect.Token, KeycloakUser>(grant.access_token)
 
-    const keycloakToken: KeycloakConnect.Token = grant.access_token;
+    const keycloakToken = grant.access_token;
     const refreshToken: KeycloakConnect.Token = grant.refresh_token;
+
+    const roles = (keycloakToken as unknown as any).content.resource_access['ctims'].roles;
 
     let user = await this.userService.findUserBySub(userInfo.sub)
     if (!user) {
@@ -81,9 +83,13 @@ export class KeycloakPasswordStrategy extends PassportStrategy(KeycloakBearerStr
 
     await this.userService.updateRefreshToken(userInfo.sub, refreshToken['token'])
 
-    return {accessToken: keycloakToken['token'],
-    user};
-    // return grant;
+    delete user['refresh_token'];
+    user['roles'] = roles;
+
+    return {
+      accessToken: keycloakToken['token'],
+      user
+    };
   }
 
   async refreshToken(access_token: Token): Promise<any> {

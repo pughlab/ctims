@@ -1,4 +1,4 @@
-import { Controller, Get, OnModuleInit } from '@nestjs/common';
+import { Controller, Get, OnModuleInit, Param } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { TrialGroupService } from './trial-group.service';
 
@@ -15,5 +15,10 @@ export class TrialGroupController implements OnModuleInit {
   @Get()
   async getTrialGroups(): Promise<any> {
     return this.trialGroupService.getTrialGroups();
+  }
+
+  @Get(':groupId')
+  async getTrialsForUsersInGroup(@Param('groupId') groupId: string): Promise<any> {
+    return this.trialGroupService.getTrialsForUsersInGroup(groupId);
   }
 }

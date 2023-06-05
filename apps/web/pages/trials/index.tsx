@@ -14,6 +14,7 @@ import useGetUserTrials from "../../hooks/useGetUserTrials";
 import { ConfirmDialog } from 'primereact/confirmdialog';
 import { confirmDialog } from 'primereact/confirmdialog';
 import useDeleteTrial from '../../hooks/useDeleteTrial';
+import TrialGroupsDropdown from '../../components/trials/TrialGroupsDropdown';
 
 
 const Trials = () => {
@@ -38,6 +39,7 @@ const Trials = () => {
     }
     localStorage.setItem('ctims-accessToken', data['accessToken']);
     getAllTrialsOperation();
+    console.log('data', data)
   }, [data])
 
   useEffect(() => {
@@ -144,13 +146,17 @@ const Trials = () => {
     setRowEntered(null);
   }
 
+  const onTrialGroupSelected = (e) => {
+    console.log('onTrialGroupSelected', e);
+  }
+
   return (
     <>
       <ConfirmDialog />
       {data && <>
         <TopBar />
-        {/*<div>Access Token: {data['accessToken']}</div>*/}
         <div className={styles.pageContainer}>
+          <TrialGroupsDropdown roles={(data as any).roles} onTrialGroupSelected={onTrialGroupSelected} />
           <div className={styles.titleAndButtonsContainer}>
             <span className={styles.trialsText}>Trials</span>
             <div className={styles.buttonsContainer}>
