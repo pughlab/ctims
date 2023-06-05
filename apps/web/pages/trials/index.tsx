@@ -15,6 +15,7 @@ import { ConfirmDialog } from 'primereact/confirmdialog';
 import { confirmDialog } from 'primereact/confirmdialog';
 import useDeleteTrial from '../../hooks/useDeleteTrial';
 import TrialGroupsDropdown from '../../components/trials/TrialGroupsDropdown';
+import useGetTrialsForUsersInGroup from '../../hooks/useGetTrialsForUsersInGroup';
 
 
 const Trials = () => {
@@ -26,6 +27,12 @@ const Trials = () => {
     loading: deleteTrial,
     deleteTrialOperation
   } = useDeleteTrial();
+  const {
+    response: getTrialsForUsersInGroupResponse,
+    error: getTrialsForUsersInGroupError,
+    loading: getTrialsForUsersInGroupLoading,
+    getTrialsForUsersInGroupOperation
+  } = useGetTrialsForUsersInGroup();
 
 
   const {data} = useSession()
@@ -44,10 +51,10 @@ const Trials = () => {
 
   useEffect(() => {
     if (response) {
-      setTrials(response);
-      console.log('response', response);
+      setTrials(getTrialsForUsersInGroupResponse);
+      console.log('response', getTrialsForUsersInGroupResponse);
     }
-  }, [response]);
+  }, [getTrialsForUsersInGroupResponse]);
 
   useEffect(() => {
     if (deleteTrialResponse) {
@@ -148,6 +155,7 @@ const Trials = () => {
 
   const onTrialGroupSelected = (e) => {
     console.log('onTrialGroupSelected', e);
+    getTrialsForUsersInGroupOperation(e.code);
   }
 
   return (

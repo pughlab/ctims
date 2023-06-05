@@ -21,6 +21,7 @@ export const TrialGroupsDropdown = (props: {roles?: string[], onTrialGroupSelect
     }, [props.roles]);
 
     const onTrialGroupSelected = (selectedTrialGroup: string) => {
+      setSelectedTrialGroup(selectedTrialGroup);
       props.onTrialGroupSelected(selectedTrialGroup);
     }
 
