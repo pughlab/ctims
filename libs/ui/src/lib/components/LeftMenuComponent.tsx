@@ -1,5 +1,5 @@
 import styles from "./LeftMenuComponent.module.scss";
-import {Tree, TreeEventNodeParams, TreeTogglerTemplateOptions} from "primereact/tree";
+import { Tree, TreeEventNodeParams, TreeExpandedKeysType, TreeTogglerTemplateOptions } from "primereact/tree";
 import React, {memo, useContext, useEffect, useRef, useState} from "react";
 import TreeNode from "primereact/treenode";
 import {Button} from "primereact/button";
@@ -48,7 +48,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   const [rootNodes, setRootNodes] = useState<TreeNode[]>([]);
   const [selectedNode, setSelectedNode] = useState<any>(null);
   const [selectedKeys, setSelectedKeys] = useState<any>(null);
-  const [expandedKeys, setExpandedKeys] = useState({0: true});
+  const [expandedKeys, setExpandedKeys] = useState<TreeExpandedKeysType>({0: true});
 
   const newNodeValue: IAddCriteria = useSelector((state: RootState) => state.modalActions.addCriteria);
   const nodeKeyToBeDeleted: IDeleteCriteria = useSelector((state: RootState) => state.modalActions.deleteCriteria);
@@ -88,6 +88,27 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     }
   }
 
+  // Function to collect all keys recursively
+  const expandAllNodes = (nodes: TreeNode[]) => {
+    const _expandedKeys: TreeExpandedKeysType = { };
+
+    for (const node of nodes) {
+      expandNode(node, _expandedKeys);
+    }
+
+    setExpandedKeys(_expandedKeys);
+  };
+  const expandNode = (node: TreeNode, _expandedKeys: TreeExpandedKeysType) => {
+    if (node.children && node.children.length && node.key) {
+      const key = node.key;
+      _expandedKeys[key] = true;
+
+      for (const child of node.children) {
+        expandNode(child, _expandedKeys);
+      }
+    }
+  };
+
   useEffect(() => {
     const state = store.getState();
     const currentCtmlMatchModel: any = state.matchViewModelActions.ctmlMatchModel;
@@ -100,7 +121,8 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         // console.log('currentCtmlMatchModel.match', currentCtmlMatchModel.match)
         if (rootNodes.length === 0) {
           const newViewModel = convertCtimsFormatToTreeNodeArray({match: currentCtmlMatchModel.match});
-          setRootNodesState(newViewModel)
+          setRootNodesState(newViewModel);
+          expandAllNodes(newViewModel);
         }
       } else {
         setSaveBtnState(true);
