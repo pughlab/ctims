@@ -76,11 +76,10 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
     const exportBtn = `${styles['export-btn']}`
     return (
       <div>
-        <Button label="Cancel" className={cancelBtn} onClick={onDialogHide} />
+        {/*<Button label="Cancel" className={cancelBtn} onClick={onDialogHide} />*/}
         <Button
-          label="Export CTML"
-          disabled={false}
-          onClick={exportCtmlClicked}
+          label="OK"
+          onClick={onDialogHide}
           className={exportBtn}
         />
       </div>
@@ -157,7 +156,7 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
   }
 
   return (
-    <Dialog header="Export CTML"
+    <Dialog header="Validate CTML"
             footer={() => footer({exportCtmlClicked: doExport})}
             visible={isDialogVisible}
             style={{width: '700px', minHeight: '200px'}}
@@ -174,24 +173,24 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
         />)}
 
       </div>
-      <div style={{marginLeft: '30px'}}>
-        <h2>Export As</h2>
-        <div className="field-radiobutton">
-          <RadioButton inputId="json" name="json" value="JSON" onChange={(e) => setFormat(e.value)} checked={format === 'JSON'} />
-          <label htmlFor="json" className={styles['radio-btn']}>JSON</label>
-        </div>
-        <div className="field-radiobutton">
-          <RadioButton
-            inputId="yaml"
-            name="json"
-            value="YAML"
-            onChange={(e) => setFormat(e.value)}
-            checked={format === 'YAML'}
-            style={{marginTop: '8px'}}
-          />
-          <label htmlFor="yaml" className={styles['radio-btn']}>YAML</label>
-        </div>
-      </div>
+      {/*<div style={{marginLeft: '30px'}}>*/}
+      {/*  <h2>Export As</h2>*/}
+      {/*  <div className="field-radiobutton">*/}
+      {/*    <RadioButton inputId="json" name="json" value="JSON" onChange={(e) => setFormat(e.value)} checked={format === 'JSON'} />*/}
+      {/*    <label htmlFor="json" className={styles['radio-btn']}>JSON</label>*/}
+      {/*  </div>*/}
+      {/*  <div className="field-radiobutton">*/}
+      {/*    <RadioButton*/}
+      {/*      inputId="yaml"*/}
+      {/*      name="json"*/}
+      {/*      value="YAML"*/}
+      {/*      onChange={(e) => setFormat(e.value)}*/}
+      {/*      checked={format === 'YAML'}*/}
+      {/*      style={{marginTop: '8px'}}*/}
+      {/*    />*/}
+      {/*    <label htmlFor="yaml" className={styles['radio-btn']}>YAML</label>*/}
+      {/*  </div>*/}
+      {/*</div>*/}
     </Dialog>
   )
 }

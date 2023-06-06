@@ -39,20 +39,22 @@ const useGetTrialsForUsersInGroup = () => {
       const mapped = userTrials.data.map((trial) => {
         let createdAtDate = new Date(trial.createdAt)
         let updatedAtDate = new Date(trial.updatedAt)
-        const createdAtFormatted = createdAtDate.toLocaleString(undefined, {
+        let createdAtFormatted = createdAtDate.toLocaleString(undefined, {
           month: 'short',
           day: 'numeric',
           year: 'numeric',
           hour: 'numeric',
           minute: 'numeric'
         });
-        const updatedAtFormatted = updatedAtDate.toLocaleString(undefined, {
+        createdAtFormatted += ` by ${trial.user.first_name} ${trial.user.last_name}`
+        let updatedAtFormatted = updatedAtDate.toLocaleString(undefined, {
           month: 'short',
           day: 'numeric',
           year: 'numeric',
           hour: 'numeric',
           minute: 'numeric'
         });
+        updatedAtFormatted += ` by ${trial.modifiedBy.first_name} ${trial.user.last_name}`
         const ctml_status_label = getCtmlStatusLabel(trial.status);
         return {
           ...trial,

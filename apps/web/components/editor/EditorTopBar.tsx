@@ -51,13 +51,7 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
   }
 
   const onExportClick = () => {
-    const state = store.getState();
-    const ctmlModel = state.finalModelAndErrors.ctmlModel;
-    const formErrors: ValidationData<any> = state.finalModelAndErrors.errorSchema;
-    const ctmlModelString = JSON.stringify(ctmlModel, null, 2);
-    // setErrorViewModel(viewModelErrors)
     setIsDialogVisible(true);
-    console.log('onExportClick', formErrors);
   }
 
   const getValidationErrors = () => {
@@ -126,7 +120,7 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
         </div>
         <div className={styles.menuBtnGroup}>
           <Button label="Discard" className="p-button-text p-button-plain" />
-          <Button label="Export"
+          <Button label="Validate"
                   onClick={onExportClick}
                   className="p-button-text p-button-plain" />
           <Button label="Save" className={styles.saveBtn} onClick={onSaveClick} />

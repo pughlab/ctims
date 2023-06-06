@@ -1,14 +1,14 @@
 import styles from './index.module.scss';
 import { Button } from 'primereact/button';
-import {DataTable, DataTableRowMouseEventParams} from 'primereact/datatable';
+import { DataTable, DataTableRowMouseEventParams } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 
 import TopBar from "../../components/trials/TopBar";
-import {useEffect, useRef, useState} from "react";
-import {useRouter} from "next/router";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/router";
 import React from 'react';
-import {Menu} from "primereact/menu";
-import {useSession} from "next-auth/react";
+import { Menu } from "primereact/menu";
+import { useSession } from "next-auth/react";
 import useGetUserTrials from "../../hooks/useGetUserTrials";
 
 import { ConfirmDialog } from 'primereact/confirmdialog';
@@ -40,7 +40,7 @@ const Trials = () => {
   // const { accessToken } = data
 
   useEffect(() => {
-    if(!data) {
+    if (!data) {
       router.push('/');
       return;
     }
@@ -67,7 +67,7 @@ const Trials = () => {
   const [trials, setTrials] = useState<any>([]);
   const [rowEntered, setRowEntered] = useState<DataTableRowMouseEventParams>(null);
   const [rowClicked, setRowClicked] = useState<any>(null);
-  const [selectedTrialGroup, setSelectedTrialGroup] = useState<any>(null);
+  const [selectedTrialGroup, setSelectedTrialGroup] = useState<{ plainRole: string, isAdmin: boolean }>(null);
 
   const router = useRouter();
 
@@ -75,7 +75,7 @@ const Trials = () => {
 
   const createCtmlClick = (e) => {
     e.preventDefault();
-    router.push(`/trials/create/${selectedTrialGroup}`);
+    router.push(`/trials/create/${selectedTrialGroup.plainRole}`);
   }
 
   const trialEditClick = () => {
@@ -113,6 +113,7 @@ const Trials = () => {
     {
       label: 'Export',
       icon: 'pi pi-upload',
+      disabled: !selectedTrialGroup.isAdmin,
       command: () => {
         console.log('Edit');
       }
@@ -135,12 +136,13 @@ const Trials = () => {
       isShown = rowData.id === rowClicked.id;
     }
     return (
-    <div className={styles.trailsEllipseBtn}>
-        { isShown ?
-          <Button icon="pi pi-ellipsis-h" iconPos="right" className="p-button-text p-button-plain" style={ menuButtonStyle }
-            onClick={(event) => myClick(event, rowData)} ></Button>
-          : <div></div> }
-    </div>
+      <div className={styles.trailsEllipseBtn}>
+        {isShown ?
+          <Button icon="pi pi-ellipsis-h" iconPos="right" className="p-button-text p-button-plain"
+                  style={menuButtonStyle}
+                  onClick={(event) => myClick(event, rowData)}></Button>
+          : <div></div>}
+      </div>
     );
   }
 
@@ -154,48 +156,50 @@ const Trials = () => {
     setRowEntered(null);
   }
 
-  const onTrialGroupSelected = (e: {role: string, code: string}) => {
+  const onTrialGroupSelected = (e: { role: string, code: string }) => {
     console.log('onTrialGroupSelected', e);
-    setSelectedTrialGroup(e.code);
-    getTrialsForUsersInGroupOperation(e.code);
+    const plainRole = e.code.replace('-admin', '');
+    setSelectedTrialGroup({plainRole, isAdmin: e.code.includes('admin')});
+    getTrialsForUsersInGroupOperation(plainRole);
   }
 
   return (
     <>
-      <ConfirmDialog />
+      <ConfirmDialog/>
       {data && <>
-        <TopBar />
+        <TopBar/>
         <div className={styles.pageContainer}>
-          <TrialGroupsDropdown roles={(data as any).roles} onTrialGroupSelected={onTrialGroupSelected} />
+          <TrialGroupsDropdown roles={(data as any).roles} onTrialGroupSelected={onTrialGroupSelected}/>
           <div className={styles.titleAndButtonsContainer}>
             <span className={styles.trialsText}>Trials</span>
             <div className={styles.buttonsContainer}>
-              <Button label="Import" className="p-button-text p-button-plain" />
-              <Button label="Create CTML" className={styles.createCtmlButton} onClick={(e) => createCtmlClick(e)} />
+              <Button label="Import" className="p-button-text p-button-plain"/>
+              <Button label="Create CTML" className={styles.createCtmlButton} onClick={(e) => createCtmlClick(e)}/>
             </div>
           </div>
 
           <Menu model={trialMenuItems} ref={menu} popup id="popup_menu" className={styles.menu} appendTo={'self'}
                 onHide={() => clearRowClicked()}/>
 
-        <div className={styles.tableContainer}>
-          <DataTable value={trials} rowHover={true}
-                     onRowMouseEnter={(event) => setRowEntered(event.data) }
-                     onRowMouseLeave={() => setRowEntered(null) }
-                     sortField="createdOn" sortOrder={-1}
-                     emptyMessage="No CTML files. Select the 'Create' button to start."
-          >
-            <Column field="nct_id" header="ID" ></Column>
-            <Column field="id" header="" body={subMenuTemplate}></Column>
-            <Column field="nickname" header="Nickname"></Column>
-            <Column field="principal_investigator" header="Principal Investigator" ></Column>
-            <Column field="ctml_status_label" header="CTML Status" sortable></Column>
-            <Column field="createdAt" header="Created on" dataType="date"></Column>
-            <Column field="updatedAt" header="Modified on" dataType="date"></Column>
-          </DataTable>
-        </div>
+          <div className={styles.tableContainer}>
+            <DataTable value={trials} rowHover={true}
+                       onRowMouseEnter={(event) => setRowEntered(event.data)}
+                       onRowMouseLeave={() => setRowEntered(null)}
+                       sortField="createdOn" sortOrder={-1}
+                       emptyMessage="No CTML files. Select the 'Create' button to start."
+            >
+              <Column field="nct_id" header="ID"></Column>
+              <Column field="id" header="" body={subMenuTemplate}></Column>
+              <Column field="nickname" header="Nickname"></Column>
+              <Column field="principal_investigator" header="Principal Investigator"></Column>
+              <Column field="ctml_status_label" header="CTML Status" sortable></Column>
+              <Column field="createdAt" header="Created on" dataType="date"></Column>
+              <Column field="updatedAt" header="Modified on" dataType="date"></Column>
+            </DataTable>
+          </div>
 
-        </div></>}
+        </div>
+      </>}
 
     </>
 
