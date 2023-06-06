@@ -22,6 +22,7 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
   } = useSaveTrial();
 
   const isGroupAdmin = useSelector((state: RootState) => state.context.isTrialGroupAdmin);
+  const isFormDisabled = useSelector((state: RootState) => state.context.isFormDisabled);
 
 
   const router = useRouter();
@@ -126,7 +127,7 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
           <Button label={isGroupAdmin ? 'Export' : 'Validate'}
                   onClick={onExportClick}
                   className="p-button-text p-button-plain" />
-          <Button label="Save" className={styles.saveBtn} onClick={onSaveClick} />
+          <Button disabled={isFormDisabled} label="Save" className={styles.saveBtn} onClick={onSaveClick} />
         </div>
 
       </div>
