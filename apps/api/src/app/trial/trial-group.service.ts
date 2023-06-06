@@ -137,12 +137,14 @@ export class TrialGroupService {
             select: {
               first_name: true,
               last_name: true,
+              email: true,
             }
           },
           modifiedBy: {
             select: {
               first_name: true,
               last_name: true,
+              email: true,
             }
           }
         }

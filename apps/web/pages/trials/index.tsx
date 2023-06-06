@@ -94,6 +94,7 @@ const Trials = () => {
     {
       label: 'Delete',
       icon: 'pi pi-trash',
+      disabled: rowClicked?.user.email !== data.user.email,
       command: () => {
         confirmDialog({
           header: 'Are you sure you want to delete?',
@@ -102,7 +103,7 @@ const Trials = () => {
           acceptLabel: 'Delete',
           accept: () => {
             console.log('accept', rowClicked);
-            deleteTrialOperation(rowClicked.id);
+            // deleteTrialOperation(rowClicked.id);
           },
           reject: () => {
             console.log('reject');

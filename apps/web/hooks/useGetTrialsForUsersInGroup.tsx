@@ -60,7 +60,8 @@ const useGetTrialsForUsersInGroup = () => {
           ...trial,
           createdAt: createdAtFormatted,
           updatedAt: updatedAtFormatted,
-          ctml_status_label
+          ctml_status_label,
+          user: trial.user
         }
       })
       setResponse(mapped)
