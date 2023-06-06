@@ -1,13 +1,14 @@
 import styles from './EditorTopBar.module.scss';
 import {useRouter} from "next/router";
 import {Button} from 'primereact/button';
-import {store} from "../../store/store";
+import { RootState, store } from "../../store/store";
 import {ValidationData} from "@rjsf/utils";
 import {useEffect, useRef, useState} from "react";
 import ExportCtmlDialog from "./ExportCtmlDialog";
 import {signOut} from "next-auth/react";
 import {Toast} from "primereact/toast";
 import useSaveTrial from "../../hooks/useSaveTrial";
+import { useSelector } from 'react-redux';
 
 
 const EditorTopBar = (props: {isEditMode?: boolean}) => {
@@ -19,6 +20,8 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
     loading: saveTrialLoading,
     saveTrialOperation
   } = useSaveTrial();
+
+  const isGroupAdmin = useSelector((state: RootState) => state.context.isTrialGroupAdmin);
 
 
   const router = useRouter();
@@ -120,7 +123,7 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
         </div>
         <div className={styles.menuBtnGroup}>
           <Button label="Discard" className="p-button-text p-button-plain" />
-          <Button label="Validate"
+          <Button label={isGroupAdmin ? 'Export' : 'Validate'}
                   onClick={onExportClick}
                   className="p-button-text p-button-plain" />
           <Button label="Save" className={styles.saveBtn} onClick={onSaveClick} />

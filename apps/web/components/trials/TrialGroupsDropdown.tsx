@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Dropdown } from 'primereact/dropdown';
 import { useDispatch } from 'react-redux';
-import { selectedTrialGroupId } from './../../store/slices/contextSlice';
+import { selectedTrialGroupId, setIsTrialGroupAdmin } from './../../store/slices/contextSlice';
 export const TrialGroupsDropdown = (props: {roles?: string[], onTrialGroupSelected: (selectedTrialGroup: {role: string, code: string}) => void}) => {
 
     const [trialGroups, setTrialGroups] = useState<any>([]);
@@ -28,6 +28,7 @@ export const TrialGroupsDropdown = (props: {roles?: string[], onTrialGroupSelect
       const plainRole = selectedTrialGroup.code.replace('-admin', '');
       dispatch(selectedTrialGroupId(plainRole))
       setSelectedTrialGroup(selectedTrialGroup);
+      setIsTrialGroupAdmin(selectedTrialGroup.code.includes('admin'));
       props.onTrialGroupSelected(selectedTrialGroup);
     }
 

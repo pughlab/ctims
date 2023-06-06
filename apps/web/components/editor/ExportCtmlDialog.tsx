@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Dialog} from "primereact/dialog";
 import {Button} from "primereact/button";
-import { RadioButton } from 'primereact/radiobutton'
 import styles from './ExportCtmlDialog.module.scss';
 import {Message} from "primereact/message";
 import {useSelector} from "react-redux";
@@ -10,6 +9,7 @@ import {RJSFValidationError, ValidationData} from "@rjsf/utils";
 import {extractErrors, isObjectEmpty} from "../../../../libs/ui/src/lib/components/helpers";
 import {stringify} from 'yaml'
 import axios from "axios";
+import { RadioButton } from 'primereact/radiobutton';
 
 interface ExportCtmlDialogProps {
   isDialogVisible: boolean;
@@ -26,6 +26,8 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
   const errorSchema: ValidationData<any> = useSelector((state: RootState) => state.finalModelAndErrors.errorSchema);
   const ctmlModel = useSelector((state: RootState) => state.finalModelAndErrors.ctmlModel);
   const trialId = useSelector((state: RootState) => state.context.trialId);
+  const isGroupAdmin = useSelector((state: RootState) => state.context.isTrialGroupAdmin);
+
 
   useEffect(() => {
     if(ctmlModel === null) {
@@ -76,10 +78,11 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
     const exportBtn = `${styles['export-btn']}`
     return (
       <div>
-        {/*<Button label="Cancel" className={cancelBtn} onClick={onDialogHide} />*/}
+        {isGroupAdmin ? <Button label="Cancel" className={cancelBtn} onClick={onDialogHide} /> : null}
         <Button
           label="OK"
-          onClick={onDialogHide}
+          disabled={exportButtonDisabled}
+          onClick={isGroupAdmin ? exportCtmlClicked : onDialogHide}
           className={exportBtn}
         />
       </div>
@@ -173,24 +176,25 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
         />)}
 
       </div>
-      {/*<div style={{marginLeft: '30px'}}>*/}
-      {/*  <h2>Export As</h2>*/}
-      {/*  <div className="field-radiobutton">*/}
-      {/*    <RadioButton inputId="json" name="json" value="JSON" onChange={(e) => setFormat(e.value)} checked={format === 'JSON'} />*/}
-      {/*    <label htmlFor="json" className={styles['radio-btn']}>JSON</label>*/}
-      {/*  </div>*/}
-      {/*  <div className="field-radiobutton">*/}
-      {/*    <RadioButton*/}
-      {/*      inputId="yaml"*/}
-      {/*      name="json"*/}
-      {/*      value="YAML"*/}
-      {/*      onChange={(e) => setFormat(e.value)}*/}
-      {/*      checked={format === 'YAML'}*/}
-      {/*      style={{marginTop: '8px'}}*/}
-      {/*    />*/}
-      {/*    <label htmlFor="yaml" className={styles['radio-btn']}>YAML</label>*/}
-      {/*  </div>*/}
-      {/*</div>*/}
+      {isGroupAdmin ? <div style={{marginLeft: '30px'}}>
+        <h2>Export As</h2>
+        <div className="field-radiobutton">
+          <RadioButton inputId="json" name="json" value="JSON" onChange={(e) => setFormat(e.value)} checked={format === 'JSON'} />
+          <label htmlFor="json" className={styles['radio-btn']}>JSON</label>
+        </div>
+        <div className="field-radiobutton">
+          <RadioButton
+            inputId="yaml"
+            name="json"
+            value="YAML"
+            onChange={(e) => setFormat(e.value)}
+            checked={format === 'YAML'}
+            style={{marginTop: '8px'}}
+          />
+          <label htmlFor="yaml" className={styles['radio-btn']}>YAML</label>
+        </div>
+      </div> : null}
+
     </Dialog>
   )
 }

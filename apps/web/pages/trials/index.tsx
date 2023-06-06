@@ -110,14 +110,6 @@ const Trials = () => {
         });
       }
     },
-    {
-      label: 'Export',
-      icon: 'pi pi-upload',
-      disabled: !selectedTrialGroup.isAdmin,
-      command: () => {
-        console.log('Edit');
-      }
-    }
   ]
 
   const menuButtonStyle = {
