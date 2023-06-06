@@ -16,6 +16,8 @@ import { confirmDialog } from 'primereact/confirmdialog';
 import useDeleteTrial from '../../hooks/useDeleteTrial';
 import TrialGroupsDropdown from '../../components/trials/TrialGroupsDropdown';
 import useGetTrialsForUsersInGroup from '../../hooks/useGetTrialsForUsersInGroup';
+import {setIsFormDisabled} from "./../../store/slices/contextSlice";
+import { useDispatch } from 'react-redux';
 
 
 const Trials = () => {
@@ -71,6 +73,8 @@ const Trials = () => {
 
   const router = useRouter();
 
+  const dispatch = useDispatch();
+
   const menu = useRef(null);
 
   const createCtmlClick = (e) => {
@@ -88,13 +92,14 @@ const Trials = () => {
       icon: 'pi pi-pencil',
       command: () => {
         console.log('Edit');
+        dispatch(setIsFormDisabled(rowClicked?.user.email !== data.user.email));
         router.push(`/trials/edit/${rowClicked.id}`);
       }
     },
     {
       label: 'Delete',
       icon: 'pi pi-trash',
-      disabled: rowClicked?.user.email !== data.user.email,
+      disabled: rowClicked?.user.email !== data?.user.email,
       command: () => {
         confirmDialog({
           header: 'Are you sure you want to delete?',
@@ -103,7 +108,7 @@ const Trials = () => {
           acceptLabel: 'Delete',
           accept: () => {
             console.log('accept', rowClicked);
-            // deleteTrialOperation(rowClicked.id);
+            deleteTrialOperation(rowClicked.id);
           },
           reject: () => {
             console.log('reject');

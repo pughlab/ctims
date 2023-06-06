@@ -19,6 +19,8 @@ import DoseLevelObjectFieldTemplate from "../custom-rjsf-templates/DoseLevelObje
 import CtimsArrayFieldSingleTemplate from "../custom-rjsf-templates/CtimsArrayFieldSingleTemplate";
 import CtimsArmItemObjectFieldTemplate from "../custom-rjsf-templates/CtimsArmItemObjectFieldTemplate";
 import CtimsSelectButton from "../custom-rjsf-templates/CtimsSelectButton";
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../../apps/web/store/store';
 
 const Form = withTheme(PrimeTheme)
 
@@ -433,6 +435,8 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
 
   const [formData, setFormData] = useState<any>(props.formData ? props.formData : initialFormData);
 
+  const isFormDisabled = useSelector((state: RootState) => state.context.isFormDisabled);
+
   const handleSubmit = (e: any) => {
     console.log(e);
   };
@@ -451,6 +455,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
               FieldTemplate: CtimsFieldTemplate,
               ErrorListTemplate: CtimsErrorListTemplate,
             }}
+            disabled={isFormDisabled}
             // liveValidate
             onChange={(data) => {
               // onChangeTest(data)
