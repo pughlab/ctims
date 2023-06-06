@@ -120,13 +120,16 @@ export class TrialGroupService {
     }
   }
 
-  async getTrialsForUsers(keyCloakIds: string[]) {
+  async getTrialsForUsers(keyCloakIds: string[], trialGroupId: string) {
     let trials: trial[] = [];
     for (const keyCloakId of keyCloakIds) {
       const result = await this.prismaService.trial.findMany({
         where: {
           user: {
             keycloak_id: keyCloakId
+          },
+          trial_group: {
+            name: trialGroupId
           }
         },
         include: {
@@ -152,7 +155,7 @@ export class TrialGroupService {
   async getTrialsForUsersInGroup(trialGroupId: string) {
     const usersInTrialGroup = await this.getUsersInTrialGroup(trialGroupId);
     const keyCloakIds = usersInTrialGroup.map((user: any) => user.id);
-    return this.getTrialsForUsers(keyCloakIds);
+    return this.getTrialsForUsers(keyCloakIds, trialGroupId);
   }
 
 }

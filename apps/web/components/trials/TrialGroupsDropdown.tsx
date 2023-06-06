@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 import { Dropdown } from 'primereact/dropdown';
-export const TrialGroupsDropdown = (props: {roles?: string[], onTrialGroupSelected: (selectedTrialGroup: string) => void}) => {
+import { useDispatch } from 'react-redux';
+import { selectedTrialGroupId } from './../../store/slices/contextSlice';
+export const TrialGroupsDropdown = (props: {roles?: string[], onTrialGroupSelected: (selectedTrialGroup: {role: string, code: string}) => void}) => {
 
     const [trialGroups, setTrialGroups] = useState<any>([]);
     const [selectedTrialGroup, setSelectedTrialGroup] = useState<any>(null);
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
       const tg = props.roles.map((role) => {
@@ -20,7 +24,8 @@ export const TrialGroupsDropdown = (props: {roles?: string[], onTrialGroupSelect
       setTrialGroups(tg)
     }, [props.roles]);
 
-    const onTrialGroupSelected = (selectedTrialGroup: string) => {
+    const onTrialGroupSelected = (selectedTrialGroup: {role: string, code: string}) => {
+      dispatch(selectedTrialGroupId(selectedTrialGroup.code))
       setSelectedTrialGroup(selectedTrialGroup);
       props.onTrialGroupSelected(selectedTrialGroup);
     }

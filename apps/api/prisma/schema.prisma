@@ -53,6 +53,18 @@ model trial {
   // One trial to many ctml_json records
   ctml_jsons             ctml_json[]
   event                  event[]
+  trial_group            trial_group?  @relation(fields: [trial_groupId], references: [id])
+  trial_groupId          Int?
+}
+
+model trial_group {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  trials    trial[]
+
+  @@index(fields: [name])
 }
 
 model user {

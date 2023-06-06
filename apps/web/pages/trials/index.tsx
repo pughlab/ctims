@@ -67,6 +67,7 @@ const Trials = () => {
   const [trials, setTrials] = useState<any>([]);
   const [rowEntered, setRowEntered] = useState<DataTableRowMouseEventParams>(null);
   const [rowClicked, setRowClicked] = useState<any>(null);
+  const [selectedTrialGroup, setSelectedTrialGroup] = useState<any>(null);
 
   const router = useRouter();
 
@@ -74,7 +75,7 @@ const Trials = () => {
 
   const createCtmlClick = (e) => {
     e.preventDefault();
-    router.push('/trials/create');
+    router.push(`/trials/create/${selectedTrialGroup}`);
   }
 
   const trialEditClick = () => {
@@ -153,8 +154,9 @@ const Trials = () => {
     setRowEntered(null);
   }
 
-  const onTrialGroupSelected = (e) => {
+  const onTrialGroupSelected = (e: {role: string, code: string}) => {
     console.log('onTrialGroupSelected', e);
+    setSelectedTrialGroup(e.code);
     getTrialsForUsersInGroupOperation(e.code);
   }
 
