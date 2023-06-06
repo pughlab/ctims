@@ -178,10 +178,10 @@ export const convertCtimsFormatToTreeNodeArray = (output: any, isParent = true):
     let current: any = {};
     switch (Object.keys(item)[0]) {
       case "and":
-        current = { key: parentKey, label: "And", data: { and: [] }, children: [], icon: 'and-icon' };
+        current = { key: uuidv4(), label: "And", data: { and: [] }, children: [], icon: 'and-icon' };
         break;
       case "or":
-        current = { key: parentKey, label: "Or", data: {}, children: [], icon: 'or-icon' };
+        current = { key: uuidv4(), label: "Or", data: {}, children: [], icon: 'or-icon' };
         break;
       case "clinical":
         current = { key: uuidv4(), label: "Clinical", data: { type: EComponentType.ClinicalForm, formData: item.clinical }, icon: 'clinical-icon in-tree' };
