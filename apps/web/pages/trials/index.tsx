@@ -17,12 +17,13 @@ import useDeleteTrial from '../../hooks/useDeleteTrial';
 import TrialGroupsDropdown from '../../components/trials/TrialGroupsDropdown';
 import useGetTrialsForUsersInGroup from '../../hooks/useGetTrialsForUsersInGroup';
 import {setIsFormDisabled} from "./../../store/slices/contextSlice";
-import { useDispatch } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from "../../store/store";
 
 
 const Trials = () => {
 
-  const {response, error, loading, getAllTrialsOperation} = useGetUserTrials();
+  // const {response, error, loading, getAllTrialsOperation} = useGetUserTrials();
   const {
     response: deleteTrialResponse,
     error: deleteTrialError,
@@ -36,6 +37,8 @@ const Trials = () => {
     getTrialsForUsersInGroupOperation
   } = useGetTrialsForUsersInGroup();
 
+  const isTrialGroupAdmin = useSelector((state: RootState) => state.context.isTrialGroupAdmin);
+
 
   const {data} = useSession()
   // console.log('session', data);
@@ -47,12 +50,11 @@ const Trials = () => {
       return;
     }
     localStorage.setItem('ctims-accessToken', data['accessToken']);
-    getAllTrialsOperation();
     console.log('data', data)
   }, [data])
 
   useEffect(() => {
-    if (response) {
+    if (getTrialsForUsersInGroupResponse) {
       setTrials(getTrialsForUsersInGroupResponse);
       console.log('response', getTrialsForUsersInGroupResponse);
     }
@@ -61,7 +63,7 @@ const Trials = () => {
   useEffect(() => {
     if (deleteTrialResponse) {
       // console.log('deleteTrialResponse', deleteTrialResponse);
-      getAllTrialsOperation();
+      getTrialsForUsersInGroupOperation(selectedTrialGroup.plainRole);
     }
   }, [deleteTrialResponse]);
 
@@ -82,24 +84,20 @@ const Trials = () => {
     router.push(`/trials/create/${selectedTrialGroup.plainRole}`);
   }
 
-  const trialEditClick = () => {
-    router.push(`/trials/edit/${rowClicked.id}`).catch(err => console.log(err));
-  }
-
   const trialMenuItems = [
     {
       label: 'Edit',
       icon: 'pi pi-pencil',
       command: () => {
         console.log('Edit');
-        dispatch(setIsFormDisabled(rowClicked?.user.email !== data.user.email));
+        dispatch(setIsFormDisabled((rowClicked?.user.email !== data.user.email) && !isTrialGroupAdmin));
         router.push(`/trials/edit/${rowClicked.id}`);
       }
     },
     {
       label: 'Delete',
       icon: 'pi pi-trash',
-      disabled: rowClicked?.user.email !== data?.user.email,
+      disabled: (rowClicked?.user.email !== data?.user.email) && !isTrialGroupAdmin,
       command: () => {
         confirmDialog({
           header: 'Are you sure you want to delete?',
