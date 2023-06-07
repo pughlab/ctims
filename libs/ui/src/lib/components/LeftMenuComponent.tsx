@@ -88,7 +88,11 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     }
   }
 
-  // Function to collect all keys recursively
+
+  /**
+   * Expands all nodes in the tree.
+   * @param nodes -  Root nodes to begin the expansion on.
+   */
   const expandAllNodes = (nodes: TreeNode[]) => {
     const _expandedKeys: TreeExpandedKeysType = { };
 
@@ -98,7 +102,14 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
     setExpandedKeys(_expandedKeys);
   };
+
+  /**
+   * Given a node and a carry over value, expand the node and all its children.
+   * @param node -  Node to expand
+   * @param _expandedKeys - Carryover value of node keys to expand. Acts as a hash map where the key is the node key, and the value is true to represent that it should be expanded.
+   */
   const expandNode = (node: TreeNode, _expandedKeys: TreeExpandedKeysType) => {
+    // if the node has children, add the key to the carryover and recurse on the children
     if (node.children && node.children.length && node.key) {
       const key = node.key;
       _expandedKeys[key] = true;
@@ -108,6 +119,30 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       }
     }
   };
+
+  /**
+   * Gets the key of the last node vertically from the visual perspective
+   * For example, in the tree below seven is selected because it is the last element in the tree vertically
+   * ```
+   * one
+   *  - two
+   *  - three
+   *    - five
+   *  - four
+   *    - six
+   *      - ***seven***
+   * ```
+   * @param nodes - List of root nodes
+   */
+  const getLastVerticalNodeKey = (nodes: TreeNode[]): string | number | undefined => {
+    // Look for the last node in the children list, recurse on that node
+    const lastNode = nodes[nodes.length - 1];
+    if(lastNode.children && lastNode.children!.length > 0) {
+      return getLastVerticalNodeKey(lastNode.children!);
+    }
+    return lastNode.key;
+  }
+
 
   useEffect(() => {
     const state = store.getState();
@@ -123,6 +158,9 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           const newViewModel = convertCtimsFormatToTreeNodeArray({match: currentCtmlMatchModel.match});
           setRootNodesState(newViewModel);
           expandAllNodes(newViewModel);
+          // Select the last node (visually vertically)
+          const lastVerticalNodeKey = getLastVerticalNodeKey(newViewModel);
+          setSelectedKeys(lastVerticalNodeKey);
         }
       } else {
         setSaveBtnState(true);
