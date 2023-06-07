@@ -134,13 +134,13 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
    * ```
    * @param nodes - List of root nodes
    */
-  const getLastVerticalNodeKey = (nodes: TreeNode[]): string | number | undefined => {
+  const getLastVerticalNodeKey = (nodes: TreeNode[]): TreeNode => {
     // Look for the last node in the children list, recurse on that node
     const lastNode = nodes[nodes.length - 1];
     if(lastNode.children && lastNode.children!.length > 0) {
       return getLastVerticalNodeKey(lastNode.children!);
     }
-    return lastNode.key;
+    return lastNode;
   }
 
 
@@ -159,8 +159,10 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           setRootNodesState(newViewModel);
           expandAllNodes(newViewModel);
           // Select the last node (visually vertically)
-          const lastVerticalNodeKey = getLastVerticalNodeKey(newViewModel);
-          setSelectedKeys(lastVerticalNodeKey);
+          const lastVerticalNode = getLastVerticalNodeKey(newViewModel);
+          setSelectedKeys(lastVerticalNode.key);
+          setSelectedNode(lastVerticalNode);
+
         }
       } else {
         setSaveBtnState(true);
