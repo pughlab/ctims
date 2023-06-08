@@ -27,4 +27,7 @@ export class CreateTrialDto {
   })
   ctml_schema_version: number;
 
+  @ApiProperty({description: 'Group Id of the trial'})
+  group_id: string;
+
 }

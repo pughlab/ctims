@@ -1,13 +1,14 @@
 import styles from './EditorTopBar.module.scss';
 import {useRouter} from "next/router";
 import {Button} from 'primereact/button';
-import {store} from "../../store/store";
+import { RootState, store } from "../../store/store";
 import {ValidationData} from "@rjsf/utils";
 import {useEffect, useRef, useState} from "react";
 import ExportCtmlDialog from "./ExportCtmlDialog";
 import {signOut} from "next-auth/react";
 import {Toast} from "primereact/toast";
 import useSaveTrial from "../../hooks/useSaveTrial";
+import { useSelector } from 'react-redux';
 
 
 const EditorTopBar = (props: {isEditMode?: boolean}) => {
@@ -19,6 +20,9 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
     loading: saveTrialLoading,
     saveTrialOperation
   } = useSaveTrial();
+
+  const isGroupAdmin = useSelector((state: RootState) => state.context.isTrialGroupAdmin);
+  const isFormDisabled = useSelector((state: RootState) => state.context.isFormDisabled);
 
 
   const router = useRouter();
@@ -51,13 +55,7 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
   }
 
   const onExportClick = () => {
-    const state = store.getState();
-    const ctmlModel = state.finalModelAndErrors.ctmlModel;
-    const formErrors: ValidationData<any> = state.finalModelAndErrors.errorSchema;
-    const ctmlModelString = JSON.stringify(ctmlModel, null, 2);
-    // setErrorViewModel(viewModelErrors)
     setIsDialogVisible(true);
-    console.log('onExportClick', formErrors);
   }
 
   const getValidationErrors = () => {
@@ -126,10 +124,10 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
         </div>
         <div className={styles.menuBtnGroup}>
           <Button label="Discard" className="p-button-text p-button-plain" />
-          <Button label="Export"
+          <Button label={isGroupAdmin ? 'Export' : 'Validate'}
                   onClick={onExportClick}
                   className="p-button-text p-button-plain" />
-          <Button label="Save" className={styles.saveBtn} onClick={onSaveClick} />
+          <Button disabled={isFormDisabled} label="Save" className={styles.saveBtn} onClick={onSaveClick} />
         </div>
 
       </div>

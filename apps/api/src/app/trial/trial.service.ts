@@ -102,6 +102,16 @@ export class TrialService implements OnModuleInit {
             connect: {
               version: ctml_schema_version
             }
+          },
+          trial_group: {
+            connectOrCreate: {
+              where: {
+                name: updateTrialDto.group_id
+              },
+              create: {
+                name: updateTrialDto.group_id
+              }
+            }
           }
         }
       });
@@ -132,6 +142,16 @@ export class TrialService implements OnModuleInit {
         ctml_schemas: {
           connect: {
             version: ctml_schema_version
+          }
+        },
+        trial_group: {
+          connectOrCreate: {
+            where: {
+              name: updateTrialDto.group_id
+            },
+            create: {
+              name: updateTrialDto.group_id
+            }
           }
         }
       }

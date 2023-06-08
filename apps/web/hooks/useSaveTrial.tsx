@@ -7,6 +7,8 @@ import {useRouter} from "next/router";
 import {setTrialId} from "../store/slices/contextSlice";
 import getConfig from 'next/config';
 import {v4 as uuidv4} from "uuid";
+import {store} from "../store/store";
+
 
 const useSaveTrial = () => {
 
@@ -34,6 +36,8 @@ const useSaveTrial = () => {
   }, [data])
 
   const saveTrialOperation = async (trialModel: any, ctmlJson: any) => {
+    const state = store.getState();
+    const group_id = state.context.seletedTrialGroupId;
     const accessToken = localStorage.getItem('ctims-accessToken');
     const headers = {
       'Authorization': 'Bearer ' + accessToken,
@@ -44,7 +48,7 @@ const useSaveTrial = () => {
         method: 'patch',
         url: `/trials/${trialId}`,
         headers,
-        data: {ctml_schema_version: schemaVersion, ...trialModel}
+        data: {ctml_schema_version: schemaVersion, group_id, ...trialModel}
       });
 
       dispatch(setTrialId(trialResponse.data.id));
