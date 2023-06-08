@@ -289,6 +289,10 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         const payload = {[key]: true};
         dispatch(setMatchDialogErrors(payload))
         parentNode.children!.push(newNode);
+        // Ensure the parent node of this new leaf is expanded
+        expandedKeys[parentNode.key] = true;
+        setExpandedKeys(expandedKeys);
+
         setSelectedNode(newNode);
         setSelectedKeys(newNode.key as string)
         onTreeNodeClick(newNode.data.type, newNode);
