@@ -271,8 +271,11 @@ describe('CTIMS Trial Editor "NCT03114319_TN)155',{ testIsolation: false },() =>
                 if (key === 'wildtype') {
                   getWildType().click()
                   getGenomicDropDown().contains(value.replace('true', 'True')).click()
+                } else {
+                  return false;
                 }
               })
+
         //click the 3rd genomic child to enter value
         getLeftMenuComponent().eq(5).click()
         let thirdGenomicChild = ctmlTestData.treatment_list.step[0].arm[0].match[0].or[1].and[2]
@@ -288,10 +291,14 @@ describe('CTIMS Trial Editor "NCT03114319_TN)155',{ testIsolation: false },() =>
             getWildType().click()
             getGenomicDropDown().contains(value.replace('true', 'True')).click()
           }
+          else {
+            return false;
+          }
         })
         getSaveMatchingCriteria().click()
         }
     })
+    cy.saveAndEdit()
   })
 
   //!************ Arm 2  *****************
@@ -308,14 +315,27 @@ describe('CTIMS Trial Editor "NCT03114319_TN)155',{ testIsolation: false },() =>
         cy.wrap($input).find('.p-inputtext').eq(1).type(arm.arm_description);
         cy.wrap($input).find('.p-inputtext').eq(2).type(arm.arm_internal_id.toString());
         cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click();
-        cy.get(`#array-item-list-root_treatment_list_step_0_arm_${index}_dose_level`).contains('Add Dose Level').click()
-
-        cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]`).each(($input, doseIndex) => {
-          const dose = arm.dose_level[doseIndex]
-        cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
-          cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
-          cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
-          cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
+        //click multiple dose
+        cy.clickMultiple(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]>div>.pi-plus-circle`, doseLevels.length)
+        cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]>div>div>div>div>#panel-children`).each(($input, doseIndex) => {
+          const dose = doseLevels[doseIndex];
+          cy.log(doseIndex.toString())
+          cy.log(JSON.stringify(doseLevels))
+          cy.log(JSON.stringify(doseLevels[doseIndex]));
+          cy.wait(1000)
+          if(doseIndex === 0) {
+            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
+            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
+            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
+            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
+          }
+          if(doseIndex === 1) {
+            cy.log(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`);
+            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
+            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
+            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
+            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
+          }
         });
 
         //click matching criteria link of each arm
@@ -367,6 +387,7 @@ describe('CTIMS Trial Editor "NCT03114319_TN)155',{ testIsolation: false },() =>
          getSaveMatchingCriteria().click()
       }
     })
+    cy.saveAndEdit()
   })
 
 
@@ -480,6 +501,9 @@ describe('CTIMS Trial Editor "NCT03114319_TN)155',{ testIsolation: false },() =>
           if (key === 'wildtype') {
             getWildType().click()
             getGenomicDropDown().contains(value.replace('true', 'True')).click()
+          }
+          else {
+            return false;
           }
         })
 
@@ -685,6 +709,7 @@ describe('CTIMS Trial Editor "NCT03114319_TN)155',{ testIsolation: false },() =>
         getSaveMatchingCriteria().click()
       }
     })
+    cy.saveAndEdit()
   })
 
   //!************ Arm 4  *****************
@@ -777,6 +802,7 @@ describe('CTIMS Trial Editor "NCT03114319_TN)155',{ testIsolation: false },() =>
         getSaveMatchingCriteria().click()
       }
     })
+    cy.saveAndEdit()
   })
 
 
@@ -999,4 +1025,10 @@ describe('CTIMS Trial Editor "NCT03114319_TN)155',{ testIsolation: false },() =>
       });
     });
   });
+
+  it('should Delete the existing ctml file', () => {
+    cy.saveAndDelete()
+  });
+
+  baseClass.afterClass()
 })
