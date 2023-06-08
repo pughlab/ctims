@@ -56,8 +56,16 @@ spec:
               value: "{{ .Values.ctimsapi.keycloak.realm }}"
             - name: KEYCLOAK_CLIENT_ID
               value: "{{ .Values.ctimsapi.keycloak.clientId }}"
+            - name: KEYCLOAK_CLIENT_UUID
+              value: "{{ .Values.ctimsapi.keycloak.clientUUID }}"
             - name: KEYCLOAK_CLIENT_SECRET
               value: "{{ .Values.ctimsapi.keycloak.clientSecret }}"
+            - name: KEYCLOAK_ADMIN_CLIENT_ID
+              value: "{{ .Values.ctimsapi.keycloak.adminClientId }}"
+            - name: KEYCLOAK_ADMIN_CLIENT_SECRET
+              value: "{{ .Values.ctimsapi.keycloak.adminClientSecret }}"
+            - name: KEYCLOAK_TOKEN_ENDPOINT
+              value: "{{ .Values.ctimsapi.keycloak.tokenEndpoint }}"
         - image: "{{ .Values.docker.dbImage }}:latest"
           name: ctimsdb
           ports:

@@ -23,4 +23,8 @@ ctimsapi:
     url: null
     realm: null
     clientId: null
+    clientUUID: null
     clientSecret: null
+    adminClientId: null
+    adminClientSecret: null
+    tokenEndpoint: null

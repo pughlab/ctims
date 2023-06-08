@@ -14,7 +14,11 @@ eval "helm upgrade --debug \
 --set ctimsapi.keycloak.url=$KEYCLOAK_URL \
 --set ctimsapi.keycloak.realm=$KEYCLOAK_REALM \
 --set ctimsapi.keycloak.clientId=$KEYCLOAK_CLIENT_ID \
+--set ctimsapi.keycloak.clientUUID=$KEYCLOAK_CLIENT_UUID \
 --set ctimsapi.keycloak.clientSecret=$KEYCLOAK_CLIENT_SECRET \
+--set ctimsapi.keycloak.adminClientId=$KEYCLOAK_ADMIN_CLIENT_ID \
+--set ctimsapi.keycloak.adminClientSecret=$KEYCLOAK_ADMIN_CLIENT_SECRET \
+--set ctimsapi.keycloak.tokenEndpoint=$KEYCLOAK_TOKEN_ENDPOINT \
 --set git.branch=$GIT_COMMIT_ISH \
 --set git.ref=$GIT_REF \
 --set git.is_clean=$GIT_IS_CLEAN \
