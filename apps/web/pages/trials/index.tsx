@@ -81,6 +81,7 @@ const Trials = () => {
 
   const createCtmlClick = (e) => {
     e.preventDefault();
+    dispatch(setIsFormDisabled(false));
     router.push(`/trials/create/${selectedTrialGroup.plainRole}`);
   }
 
