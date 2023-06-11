@@ -108,7 +108,14 @@ export class TrialGroupService {
         getUsersInTrialGroupConfig
       );
 
-      return usersInTrialGroupResponse.data.map((user: IKeycloakUser) => {
+      const usersInTrialGroupAdminResponse: AxiosResponse<IKeycloakUser[]> = await axios.get(
+        `${process.env.KEYCLOAK_URL}/admin/realms/${process.env.KEYCLOAK_REALM}/clients/${process.env.KEYCLOAK_CLIENT_UUID}/roles/${trialGroupId}-admin/users`,
+        getUsersInTrialGroupConfig
+      );
+
+      const usersInTrialGroup: IKeycloakUser[] = usersInTrialGroupResponse.data.concat(usersInTrialGroupAdminResponse.data);
+
+      return usersInTrialGroup.map((user: IKeycloakUser) => {
         return {
           id: user.id,
         }
