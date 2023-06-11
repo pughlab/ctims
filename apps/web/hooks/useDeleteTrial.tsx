@@ -24,13 +24,13 @@ const useDeleteTrial = () => {
   }, [data])
 
   const deleteTrialOperation = async (trialId: number) => {
+    setLoading(true);
     const accessToken = localStorage.getItem('ctims-accessToken');
     const headers = {
       'Authorization': 'Bearer ' + accessToken,
     }
 
     try {
-      setLoading(true);
       const response = await axios.request({
         method: 'delete',
         url: `/trials/${trialId}`,
@@ -39,6 +39,7 @@ const useDeleteTrial = () => {
       setResponse(uuidv4());
     }
     catch (error) {
+      setLoading(false)
       if(error.response) {
         setError(error.response.data);
       } else {

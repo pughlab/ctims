@@ -24,12 +24,13 @@ const useGetTrialsForUsersInGroup = () => {
   }, [data])
 
   const getTrialsForUsersInGroupOperation = async (groupId) => {
+    setLoading(true)
     const accessToken = localStorage.getItem('ctims-accessToken');
     const headers = {
       'Authorization': 'Bearer ' + accessToken,
     }
-
     try {
+
       const userTrials = await axios.request({
         method: 'get',
         url: `/trial-group/${groupId}`,
@@ -67,6 +68,7 @@ const useGetTrialsForUsersInGroup = () => {
       setResponse(mapped)
     }
     catch (error) {
+      setLoading(false)
       if(error.response) {
         setError(error.response.data);
       } else {

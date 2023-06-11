@@ -27,7 +27,7 @@ const Trials = () => {
   const {
     response: deleteTrialResponse,
     error: deleteTrialError,
-    loading: deleteTrial,
+    loading: deleteTrialLoading,
     deleteTrialOperation
   } = useDeleteTrial();
   const {
@@ -171,7 +171,7 @@ const Trials = () => {
             <span className={styles.trialsText}>Trials</span>
             <div className={styles.buttonsContainer}>
               <Button label="Import" className="p-button-text p-button-plain"/>
-              <Button label="Create CTML" className={styles.createCtmlButton} onClick={(e) => createCtmlClick(e)}/>
+              <Button disabled={!selectedTrialGroup} label="Create CTML" className={styles.createCtmlButton} onClick={(e) => createCtmlClick(e)}/>
             </div>
           </div>
 
@@ -180,10 +180,11 @@ const Trials = () => {
 
           <div className={styles.tableContainer}>
             <DataTable value={trials} rowHover={true}
+                       loading={getTrialsForUsersInGroupLoading || deleteTrialLoading}
                        onRowMouseEnter={(event) => setRowEntered(event.data)}
                        onRowMouseLeave={() => setRowEntered(null)}
                        sortField="createdOn" sortOrder={-1}
-                       emptyMessage="No CTML files. Select the 'Create' button to start."
+                       emptyMessage={!selectedTrialGroup ? 'Please select a trial group' : 'No CTML files. Select the \'Create\' button to start.'}
             >
               <Column field="nct_id" header="ID"></Column>
               <Column field="id" header="" body={subMenuTemplate}></Column>
