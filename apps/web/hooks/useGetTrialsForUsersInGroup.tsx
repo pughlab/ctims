@@ -54,7 +54,7 @@ const useGetTrialsForUsersInGroup = () => {
           hour: 'numeric',
           minute: 'numeric'
         });
-        updatedAtFormatted += ` by ${trial.modifiedBy.first_name} ${trial.user.last_name}`
+        updatedAtFormatted += ` by ${trial.modifiedBy.first_name} ${trial.modifiedBy.last_name}`
         const ctml_status_label = getCtmlStatusLabel(trial.status);
         return {
           ...trial,

@@ -103,6 +103,7 @@ export class TrialService implements OnModuleInit {
               version: ctml_schema_version
             }
           },
+          modifiedBy: { connect: { id: user.id } },
           trial_group: {
             connectOrCreate: {
               where: {
