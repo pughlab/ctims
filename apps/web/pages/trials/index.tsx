@@ -184,7 +184,7 @@ const Trials = () => {
                        onRowMouseEnter={(event) => setRowEntered(event.data)}
                        onRowMouseLeave={() => setRowEntered(null)}
                        sortField="createdOn" sortOrder={-1}
-                       emptyMessage={!selectedTrialGroup ? 'Please select a trial group' : 'No CTML files. Select the \'Create\' button to start.'}
+                       emptyMessage={!selectedTrialGroup ? 'Select a Trial Group to start' : 'No CTML files. Select the \'Create\' button to start.'}
             >
               <Column field="nct_id" header="ID"></Column>
               <Column field="id" header="" body={subMenuTemplate}></Column>
