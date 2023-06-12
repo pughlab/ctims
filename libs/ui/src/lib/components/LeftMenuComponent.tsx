@@ -61,16 +61,11 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   const setRootNodesState = (newRootNodes: TreeNode[]) => {
     setRootNodes(newRootNodes);
     if (newRootNodes[0].children && newRootNodes[0].children.length > 0) {
-      const firstSelectedKey = newRootNodes[0].children![0].key;
-      setSelectedKeys(firstSelectedKey)
-      const r = jsonpath.query(newRootNodes, `$..[?(@.key=="${firstSelectedKey}")]`);
-      if(r.length > 0) {
-        setSelectedNode(r[0]);
-        onTreeNodeClick(r[0].data.type, r[0]);
-      }
+      const defaultSelectedNode = getLastVerticalNode(newRootNodes);
+      setSelectedNode(defaultSelectedNode);
+      setSelectedKeys(defaultSelectedNode.key);
+      onTreeNodeClick(defaultSelectedNode.data.type, defaultSelectedNode);
     } else {
-      // setSelectedKeys(null)
-      // setSelectedNode(null);
       onTreeNodeClick(EComponentType.None, newRootNodes[0]);
     }
   }
@@ -134,11 +129,11 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
    * ```
    * @param nodes - List of root nodes
    */
-  const getLastVerticalNodeKey = (nodes: TreeNode[]): TreeNode => {
+  const getLastVerticalNode = (nodes: TreeNode[]): TreeNode => {
     // Look for the last node in the children list, recurse on that node
     const lastNode = nodes[nodes.length - 1];
     if(lastNode.children && lastNode.children!.length > 0) {
-      return getLastVerticalNodeKey(lastNode.children!);
+      return getLastVerticalNode(lastNode.children!);
     }
     return lastNode;
   }
@@ -159,9 +154,10 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           setRootNodesState(newViewModel);
           expandAllNodes(newViewModel);
           // Select the last node (visually vertically)
-          const lastVerticalNode = getLastVerticalNodeKey(newViewModel);
+          const lastVerticalNode = getLastVerticalNode(newViewModel);
           setSelectedKeys(lastVerticalNode.key);
           setSelectedNode(lastVerticalNode);
+          onTreeNodeClick(lastVerticalNode.data.type, lastVerticalNode);
 
         }
       } else {
@@ -191,8 +187,9 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       const newRootNodes = structuredClone(rootNodes);
       deleteNodeFromChildrenArrayByKey(newRootNodes[0], nodeKeyToBeDeleted.nodeKey);
       setRootNodesState(newRootNodes)
-      // after deleting a node we set the component to none
-      onTreeNodeClick(EComponentType.None, newRootNodes[0]);
+      // after deleting a node we set the display to the last vertical node
+      const newSelection = getLastVerticalNode(newRootNodes);
+      onTreeNodeClick(newSelection.data.type, newSelection);
       const state = store.getState();
       updateReduxViewModelAndCtmlModel(newRootNodes, state);
 
@@ -329,8 +326,11 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       const newRootNodes = structuredClone(rootNodes);
       deleteNodeFromChildrenArrayByKey(newRootNodes[0], nodeKey);
       setRootNodes(newRootNodes);
-      // after deleting a node we set the component to none
-      onTreeNodeClick(EComponentType.None, newRootNodes[0]);
+      // After deleting a node, the new selected node should be chosen vertically.
+      const defaultSelectedNode = getLastVerticalNode(newRootNodes);
+      setSelectedNode(defaultSelectedNode);
+      setSelectedKeys(defaultSelectedNode.key)
+      onTreeNodeClick(defaultSelectedNode.data.type, defaultSelectedNode);
       const state = store.getState();
       updateReduxViewModelAndCtmlModel(newRootNodes, state);
     }
