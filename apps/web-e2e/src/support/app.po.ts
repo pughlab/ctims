@@ -17,6 +17,13 @@ export const trialEditorSave = () => cy.get('.EditorTopBar_menuBtnGroup__dBNyO>b
 export const trialEditorBackButton = () => cy.get('.EditorTopBar_backBtn__Ivwqo')
 
 //Trial table
+export const selectTrialGroupButton = () => cy.get('div[aria-label="Select a Trial Group"]')
+export const ctimsUserTrialGroupxMember = () => cy.get('li[aria-label="trialgroupx"]')
+export const ctimsUserTapestryMember = () => cy.get('li[aria-label="tapestry"]')
+export const trialGroupxAdmin = () => cy.get('li[aria-label="trialgroupx (Admin)"]')
+export const validateButton = () => cy.get('button[aria-label="Validate"]')
+export const validateOkButton = () => cy.get('button[aria-label="OK"] span[class="p-button-label p-c"]')
+
 export const trialTableDots = () => cy.get('tbody>tr:nth-child(1)>td:nth-child(2)')
   //cy.get(':nth-child(1) > :nth-child(2) > .trials_trailsEllipseBtn__OHV_W')
   //cy.get('tbody>tr>td:nth-child(2)>div')
@@ -147,7 +154,9 @@ export const getEditMatchingCriteriaMultiple = () => cy.get('.CtimsMatchingCrite
 
 //Save Matching Criteria
 export const getSaveMatchingCriteria = () => cy.get('.p-dialog-footer>div>button:nth-child(2)')
-
+//div[aria-label="Select a Trial Group"]
+//Validate button Trial Editor
+export const getValidateButton = () => cy.get('button[aria-label="Validate"] span[class="p-button-label p-c"]')
 //******************* Match Modal Criteria ********************************************************//
 
 //Footer Buttons("Discard", "Save matching criteria")
