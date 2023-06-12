@@ -186,10 +186,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     if (nodeKeyToBeDeleted.nodeKey) {
       const newRootNodes = structuredClone(rootNodes);
       deleteNodeFromChildrenArrayByKey(newRootNodes[0], nodeKeyToBeDeleted.nodeKey);
-      setRootNodesState(newRootNodes)
-      // after deleting a node we set the display to the last vertical node
-      const newSelection = getLastVerticalNode(newRootNodes);
-      onTreeNodeClick(newSelection.data.type, newSelection);
+      setRootNodesState(newRootNodes);
       const state = store.getState();
       updateReduxViewModelAndCtmlModel(newRootNodes, state);
 
