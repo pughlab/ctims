@@ -308,6 +308,8 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           children: []
         };
         parentNode.children!.push(newNode);
+        expandedKeys[parentNode.key] = true;
+        setExpandedKeys(expandedKeys);
       }
       setRootNodes([...rootNodes]);
     }
