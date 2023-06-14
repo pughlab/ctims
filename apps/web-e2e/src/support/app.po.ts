@@ -15,6 +15,8 @@ export const trialEditorRadioButtons = () => cy.get('.field-radiobutton>.p-radio
 export const trialEditorExportCtml = () => cy.get('.p-dialog-footer>div>button') //2 buttons Cancel and Export CTML
 export const trialEditorSave = () => cy.get('.EditorTopBar_menuBtnGroup__dBNyO>button:nth-child(3)')
 export const trialEditorBackButton = () => cy.get('.EditorTopBar_backBtn__Ivwqo')
+export const validateCtmlCancelButton = () => cy.get('button[aria-label="Cancel"]')
+export const validateCtmlOkButton = () => cy.get('button[aria-label="OK"]')
 
 //Trial table
 export const selectTrialGroupButton = () => cy.get('div[aria-label="Select a Trial Group"]')
@@ -23,7 +25,6 @@ export const ctimsUserTapestryMember = () => cy.get('li[aria-label="tapestry"]')
 export const trialGroupxAdmin = () => cy.get('li[aria-label="trialgroupx (Admin)"]')
 export const validateButton = () => cy.get('button[aria-label="Validate"]')
 export const validateOkButton = () => cy.get('button[aria-label="OK"] span[class="p-button-label p-c"]')
-
 export const trialTableDots = () => cy.get('tbody>tr:nth-child(1)>td:nth-child(2)')
   //cy.get(':nth-child(1) > :nth-child(2) > .trials_trailsEllipseBtn__OHV_W')
   //cy.get('tbody>tr>td:nth-child(2)>div')
@@ -31,7 +32,7 @@ export const trialTableEdit = () => cy.get('#popup_menu>ul>li:nth-child(1)')
 export const trialTableDelete = () => cy.get('#popup_menu>ul>li:nth-child(2)')
 export const trialTableExport = () => cy.get('#popup_menu>ul>li:nth-child(3)')
 export const trialTableDialogueDeleteBtn = () => cy.get('.p-confirm-dialog-accept')
-
+export const trialTableIdColumn = () => cy.get('tbody tr td:nth-child(1)')
 
 
 //LeftPanel Trial Editor

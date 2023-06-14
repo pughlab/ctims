@@ -30,7 +30,9 @@ const cypressJsonConfig: EndToEndConfigOptions = {
   //specPattern: 'src/e2e/CtmTest/CTM-194-Save-Edit-Delete/CTM-194-NCT03297606_CAPTUR-Edit.cy.ts',
   //specPattern: 'src/e2e/Regression/E2E-RegressionTest.cy.ts',
   //specPattern: 'src/e2e/CtmTest/CTM-204/CTM-204-NCT03114319_TNO155.cy.ts',
-  specPattern: 'src/e2e/CtmTest/User-Roles/test-member.cy.ts',
+  specPattern: 'src/e2e/CtmTest/User-Roles/**.cy.ts',
+  //specPattern: 'src/e2e/CtmTest/User-Roles/member-NCT02503722_Osimertinib.cy.ts',
+  //specPattern: 'src/e2e/CtmTest/User-Roles/admin-NCT03114319_TNO155.cy.ts',
 
   defaultCommandTimeout: 10000,
   pageLoadTimeout: 30000,
@@ -47,8 +49,8 @@ module.exports = defineConfig({
   //viewportHeight: 1080,
   "env": {
     //"baseUrl": "http://localhost:4200/",
-      baseUrl: 'http://localhost:3000',
-    //baseUrl: 'https://ctims-web.qa02.technainstitute.net',
+    //baseUrl: 'http://localhost:3000',
+   baseUrl: 'https://ctims-web.qa02.technainstitute.net',
     defaultCommandTimeout: 30000,
     allureReuseAfterSpec: true,
     allureResultsPath: "allure-results",
