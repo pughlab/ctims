@@ -1,3 +1,5 @@
+import {signInButton} from "../../support/app.po";
+
 class baseClass {
 
   beforeClass() {
@@ -7,6 +9,12 @@ class baseClass {
       // Cypress.config('experimentalSessionSupport', true)
     });
   }
+  adminTrialGroupx() {
+    before(() => {
+      cy.visit(Cypress.env('baseUrl'), {timeout: 10000})
+      cy.login('ctims-john-doe', 'ctims2023')
+    })
+    }
     afterClass() {
     after(()=> {
       cy.get('.TopBar_userContainer__Dcaw3>i').click()
