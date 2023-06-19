@@ -2,6 +2,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator fieldEncryptionMigrations {
+  provider = "prisma-field-encryption"
+}
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
@@ -25,8 +29,8 @@ model ctml_json {
   id        Int          @id @default(autoincrement())
   version   ctml_schema? @relation(fields: [versionId], references: [id])
   versionId Int?
-  // This should be encrypted
-  data      Json?
+  // The /// comment is an annotation added to the column to make it encrypted. See prisma-field-encryption package.
+  data      String?      @db.LongText /// @encrypted
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
   // One trial to many ctml_json records
