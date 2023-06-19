@@ -133,7 +133,7 @@ export class CtmlJsonController implements OnModuleInit {
     @CurrentUser() user: user,
     @Body() updateCtmlJsonDto: UpdateCtmlJsonDto
   ): Promise<ctml_json> {
-
+    updateCtmlJsonDto.data = JSON.stringify(updateCtmlJsonDto.data);
     const ctmlJsons = await this.ctmlJsonService.update(updateCtmlJsonDto);
 
     // Add event
