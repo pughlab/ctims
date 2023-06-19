@@ -3,6 +3,9 @@ SELFDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 PROJECT_DIR=$(cd ../.. && pwd)
 
+set -a
+. /etc/environment
+set +a
 
 TECHNA_REGISTRY_PORT=443
 TECHNA_REGISTRY_ENDPOINT=docker-registry.uhn.ca
@@ -18,6 +21,14 @@ CONTAINER_NAME=ctims-api
 
 echo $PROJECT_DIR
 docker build \
+--build-arg $KEYCLOAK_URL=$KEYCLOAK_URL \
+--build-arg $KEYCLOAK_REALM=$KEYCLOAK_REALM \
+--build-arg $KEYCLOAK_CLIENT_ID=$KEYCLOAK_CLIENT_ID \
+--build-arg $KEYCLOAK_CLIENT_SECRET=$KEYCLOAK_CLIENT_SECRET \
+--build-arg $KEYCLOAK_ADMIN_CLIENT_ID=$KEYCLOAK_ADMIN_CLIENT_ID \
+--build-arg $KEYCLOAK_ADMIN_CLIENT_SECRET=$KEYCLOAK_ADMIN_CLIENT_SECRET \
+--build-arg $KEYCLOAK_TOKEN_ENDPOINT=$KEYCLOAK_TOKEN_ENDPOINT \
+--build-arg $KEYCLOAK_CLIENT_UUID=$KEYCLOAK_CLIENT_UUID \
   -f ${PROJECT_DIR}/apps/api/Dockerfile \
   -t ${CTIMS_API_CONTAINER_IMAGE_LOCATION}:latest \
   -t ${CTIMS_API_CONTAINER_IMAGE_LOCATION}:${GIT_REF} \

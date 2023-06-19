@@ -19,3 +19,12 @@ ctimsweb:
 ctimsapi:
   port: 3000
   slug: api
+  keycloak:
+    url: null
+    realm: null
+    clientId: null
+    clientUUID: null
+    clientSecret: null
+    adminClientId: null
+    adminClientSecret: null
+    tokenEndpoint: null

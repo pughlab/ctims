@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Dialog} from "primereact/dialog";
 import {Button} from "primereact/button";
-import { RadioButton } from 'primereact/radiobutton'
 import styles from './ExportCtmlDialog.module.scss';
 import {Message} from "primereact/message";
 import {useSelector} from "react-redux";
@@ -9,6 +8,8 @@ import {RootState} from "../../store/store";
 import {RJSFValidationError, ValidationData} from "@rjsf/utils";
 import {extractErrors, isObjectEmpty} from "../../../../libs/ui/src/lib/components/helpers";
 import {stringify} from 'yaml'
+import axios from "axios";
+import { RadioButton } from 'primereact/radiobutton';
 
 interface ExportCtmlDialogProps {
   isDialogVisible: boolean;
@@ -24,6 +25,9 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
 
   const errorSchema: ValidationData<any> = useSelector((state: RootState) => state.finalModelAndErrors.errorSchema);
   const ctmlModel = useSelector((state: RootState) => state.finalModelAndErrors.ctmlModel);
+  const trialId = useSelector((state: RootState) => state.context.trialId);
+  const isGroupAdmin = useSelector((state: RootState) => state.context.isTrialGroupAdmin);
+
 
   useEffect(() => {
     if(ctmlModel === null) {
@@ -74,11 +78,11 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
     const exportBtn = `${styles['export-btn']}`
     return (
       <div>
-        <Button label="Cancel" className={cancelBtn} onClick={onDialogHide} />
+        {isGroupAdmin ? <Button label="Cancel" className={cancelBtn} onClick={onDialogHide} /> : null}
         <Button
-          label="Export CTML"
-          disabled={false}
-          onClick={exportCtmlClicked}
+          label="OK"
+          disabled={exportButtonDisabled}
+          onClick={isGroupAdmin ? exportCtmlClicked : onDialogHide}
           className={exportBtn}
         />
       </div>
@@ -115,6 +119,18 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
       return ctmlModelCopy;
     }
 
+    const recordExportEvent = () => {
+      const accessToken = localStorage.getItem('ctims-accessToken');
+      const headers = {
+        'Authorization': 'Bearer ' + accessToken,
+      }
+      axios.request({
+        method: 'post',
+        url: `/trials/${trialId}/export`,
+        headers
+      });
+    }
+
     const ctmlModelCopy = move();
 
     let ctmlModelString = JSON.stringify(ctmlModelCopy, null, 2);
@@ -134,6 +150,7 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
     const link = document.createElement('a');
     link.setAttribute('href', url);
     link.setAttribute('download', fileName);
+    recordExportEvent()
     link.style.display = 'none';
     document.body.appendChild(link);
     link.click();
@@ -142,7 +159,7 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
   }
 
   return (
-    <Dialog header="Export CTML"
+    <Dialog header="Validate CTML"
             footer={() => footer({exportCtmlClicked: doExport})}
             visible={isDialogVisible}
             style={{width: '700px', minHeight: '200px'}}
@@ -159,7 +176,7 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
         />)}
 
       </div>
-      <div style={{marginLeft: '30px'}}>
+      {isGroupAdmin ? <div style={{marginLeft: '30px'}}>
         <h2>Export As</h2>
         <div className="field-radiobutton">
           <RadioButton inputId="json" name="json" value="JSON" onChange={(e) => setFormat(e.value)} checked={format === 'JSON'} />
@@ -176,7 +193,8 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
           />
           <label htmlFor="yaml" className={styles['radio-btn']}>YAML</label>
         </div>
-      </div>
+      </div> : null}
+
     </Dialog>
   )
 }

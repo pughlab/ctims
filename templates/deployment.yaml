@@ -39,6 +39,8 @@ spec:
               value: "https://ctims-api.{{ .Values.domain }}/api"
             - name: NEXTAUTH_URL
               value: "https://ctims-web.{{ .Values.domain }}"
+            - name: NEXTAUTH_API_URL
+              value: "http://localhost:3333/api"
         - image: "{{ .Values.docker.apiImage }}:{{ .Values.git.ref }}"
           name: ctimsapi
           imagePullPolicy: IfNotPresent
@@ -48,6 +50,22 @@ spec:
           env:
             - name: DATABASE_URL
               value: "mysql://ctims:ctims@localhost:3306/ctims"
+            - name: KEYCLOAK_URL
+              value: "{{ .Values.ctimsapi.keycloak.url }}"
+            - name: KEYCLOAK_REALM
+              value: "{{ .Values.ctimsapi.keycloak.realm }}"
+            - name: KEYCLOAK_CLIENT_ID
+              value: "{{ .Values.ctimsapi.keycloak.clientId }}"
+            - name: KEYCLOAK_CLIENT_UUID
+              value: "{{ .Values.ctimsapi.keycloak.clientUUID }}"
+            - name: KEYCLOAK_CLIENT_SECRET
+              value: "{{ .Values.ctimsapi.keycloak.clientSecret }}"
+            - name: KEYCLOAK_ADMIN_CLIENT_ID
+              value: "{{ .Values.ctimsapi.keycloak.adminClientId }}"
+            - name: KEYCLOAK_ADMIN_CLIENT_SECRET
+              value: "{{ .Values.ctimsapi.keycloak.adminClientSecret }}"
+            - name: KEYCLOAK_TOKEN_ENDPOINT
+              value: "{{ .Values.ctimsapi.keycloak.tokenEndpoint }}"
         - image: "{{ .Values.docker.dbImage }}:latest"
           name: ctimsdb
           ports:

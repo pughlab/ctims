@@ -1,5 +1,5 @@
 import styles from "./LeftMenuComponent.module.scss";
-import {Tree, TreeEventNodeParams, TreeTogglerTemplateOptions} from "primereact/tree";
+import { Tree, TreeEventNodeParams, TreeExpandedKeysType, TreeTogglerTemplateOptions } from "primereact/tree";
 import React, {memo, useContext, useEffect, useRef, useState} from "react";
 import TreeNode from "primereact/treenode";
 import {Button} from "primereact/button";
@@ -48,7 +48,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   const [rootNodes, setRootNodes] = useState<TreeNode[]>([]);
   const [selectedNode, setSelectedNode] = useState<any>(null);
   const [selectedKeys, setSelectedKeys] = useState<any>(null);
-  const [expandedKeys, setExpandedKeys] = useState({0: true});
+  const [expandedKeys, setExpandedKeys] = useState<TreeExpandedKeysType>({0: true});
 
   const newNodeValue: IAddCriteria = useSelector((state: RootState) => state.modalActions.addCriteria);
   const nodeKeyToBeDeleted: IDeleteCriteria = useSelector((state: RootState) => state.modalActions.deleteCriteria);
@@ -61,16 +61,11 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   const setRootNodesState = (newRootNodes: TreeNode[]) => {
     setRootNodes(newRootNodes);
     if (newRootNodes[0].children && newRootNodes[0].children.length > 0) {
-      const firstSelectedKey = newRootNodes[0].children![0].key;
-      setSelectedKeys(firstSelectedKey)
-      const r = jsonpath.query(newRootNodes, `$..[?(@.key=="${firstSelectedKey}")]`);
-      if(r.length > 0) {
-        setSelectedNode(r[0]);
-        onTreeNodeClick(r[0].data.type, r[0]);
-      }
+      const defaultSelectedNode = getLastVerticalNode(newRootNodes);
+      setSelectedNode(defaultSelectedNode);
+      setSelectedKeys(defaultSelectedNode.key);
+      onTreeNodeClick(defaultSelectedNode.data.type, defaultSelectedNode);
     } else {
-      // setSelectedKeys(null)
-      // setSelectedNode(null);
       onTreeNodeClick(EComponentType.None, newRootNodes[0]);
     }
   }
@@ -88,6 +83,62 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     }
   }
 
+
+  /**
+   * Expands all nodes in the tree.
+   * @param nodes -  Root nodes to begin the expansion on.
+   */
+  const expandAllNodes = (nodes: TreeNode[]) => {
+    const _expandedKeys: TreeExpandedKeysType = { };
+
+    for (const node of nodes) {
+      expandNode(node, _expandedKeys);
+    }
+
+    setExpandedKeys(_expandedKeys);
+  };
+
+  /**
+   * Given a node and a carry over value, expand the node and all its children.
+   * @param node -  Node to expand
+   * @param _expandedKeys - Carryover value of node keys to expand. Acts as a hash map where the key is the node key, and the value is true to represent that it should be expanded.
+   */
+  const expandNode = (node: TreeNode, _expandedKeys: TreeExpandedKeysType) => {
+    // if the node has children, add the key to the carryover and recurse on the children
+    if (node.children && node.children.length && node.key) {
+      const key = node.key;
+      _expandedKeys[key] = true;
+
+      for (const child of node.children) {
+        expandNode(child, _expandedKeys);
+      }
+    }
+  };
+
+  /**
+   * Gets the key of the last node vertically from the visual perspective
+   * For example, in the tree below seven is selected because it is the last element in the tree vertically
+   * ```
+   * one
+   *  - two
+   *  - three
+   *    - five
+   *  - four
+   *    - six
+   *      - ***seven***
+   * ```
+   * @param nodes - List of root nodes
+   */
+  const getLastVerticalNode = (nodes: TreeNode[]): TreeNode => {
+    // Look for the last node in the children list, recurse on that node
+    const lastNode = nodes[nodes.length - 1];
+    if(lastNode.children && lastNode.children!.length > 0) {
+      return getLastVerticalNode(lastNode.children!);
+    }
+    return lastNode;
+  }
+
+
   useEffect(() => {
     const state = store.getState();
     const currentCtmlMatchModel: any = state.matchViewModelActions.ctmlMatchModel;
@@ -100,7 +151,14 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         // console.log('currentCtmlMatchModel.match', currentCtmlMatchModel.match)
         if (rootNodes.length === 0) {
           const newViewModel = convertCtimsFormatToTreeNodeArray({match: currentCtmlMatchModel.match});
-          setRootNodesState(newViewModel)
+          setRootNodesState(newViewModel);
+          expandAllNodes(newViewModel);
+          // Select the last node (visually vertically)
+          const lastVerticalNode = getLastVerticalNode(newViewModel);
+          setSelectedKeys(lastVerticalNode.key);
+          setSelectedNode(lastVerticalNode);
+          onTreeNodeClick(lastVerticalNode.data.type, lastVerticalNode);
+
         }
       } else {
         setSaveBtnState(true);
@@ -128,9 +186,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     if (nodeKeyToBeDeleted.nodeKey) {
       const newRootNodes = structuredClone(rootNodes);
       deleteNodeFromChildrenArrayByKey(newRootNodes[0], nodeKeyToBeDeleted.nodeKey);
-      setRootNodesState(newRootNodes)
-      // after deleting a node we set the component to none
-      onTreeNodeClick(EComponentType.None, newRootNodes[0]);
+      setRootNodesState(newRootNodes);
       const state = store.getState();
       updateReduxViewModelAndCtmlModel(newRootNodes, state);
 
@@ -227,6 +283,10 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         const payload = {[key]: true};
         dispatch(setMatchDialogErrors(payload))
         parentNode.children!.push(newNode);
+        // Ensure the parent node of this new leaf is expanded
+        expandedKeys[parentNode.key] = true;
+        setExpandedKeys(expandedKeys);
+
         setSelectedNode(newNode);
         setSelectedKeys(newNode.key as string)
         onTreeNodeClick(newNode.data.type, newNode);
@@ -248,6 +308,8 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           children: []
         };
         parentNode.children!.push(newNode);
+        expandedKeys[parentNode.key] = true;
+        setExpandedKeys(expandedKeys);
       }
       setRootNodes([...rootNodes]);
     }
@@ -263,8 +325,11 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       const newRootNodes = structuredClone(rootNodes);
       deleteNodeFromChildrenArrayByKey(newRootNodes[0], nodeKey);
       setRootNodes(newRootNodes);
-      // after deleting a node we set the component to none
-      onTreeNodeClick(EComponentType.None, newRootNodes[0]);
+      // After deleting a node, the new selected node should be chosen vertically.
+      const defaultSelectedNode = getLastVerticalNode(newRootNodes);
+      setSelectedNode(defaultSelectedNode);
+      setSelectedKeys(defaultSelectedNode.key)
+      onTreeNodeClick(defaultSelectedNode.data.type, defaultSelectedNode);
       const state = store.getState();
       updateReduxViewModelAndCtmlModel(newRootNodes, state);
     }

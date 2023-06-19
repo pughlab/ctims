@@ -230,6 +230,16 @@ export const GenomicForm = (props: IFormProps) => {
           "msi_l",
           "mss",
         ]
+      },
+      "molecular_function": {
+        "enumNames": [
+          "Activating",
+          "Inactivating"
+          ],
+        "enum": [
+          "Activating",
+          "Inactivating"
+        ]
       }
     },
     'type': 'object',
@@ -249,6 +259,11 @@ export const GenomicForm = (props: IFormProps) => {
         'type': 'string',
         'title': 'Protein Change',
         "description": "Curate a specific protein change (must be in the correct format ex. p.T70M)",
+      },
+      "molecular_function": {
+        "$ref": "#/definitions/molecular_function",
+        'title': 'Molecular Function',
+        "description": "Refers to tasks or activities characteristic of gene",
       },
       'variant_classification': {
         "$ref": "#/definitions/variant_classification",

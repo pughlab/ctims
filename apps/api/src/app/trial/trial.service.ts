@@ -1,17 +1,26 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
+import { Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { CreateTrialDto } from './dto/create-trial.dto';
 import { UpdateTrialDto } from './dto/update-trial.dto';
 import {PrismaService} from "../prisma.service";
-import { ctml_json, ctml_schema, prisma, trial, user } from "@prisma/client";
+import { ctml_schema, event_type, trial, user } from "@prisma/client";
 import {PrismaExceptionTools} from "../utils/prisma-exception-tools";
 import { UpdateTrialSchemasDto } from "./dto/update-trial-schemas.dto";
+import { EventService } from "../event/event.service";
+import { ModuleRef } from "@nestjs/core";
 
 @Injectable()
-export class TrialService {
+export class TrialService implements OnModuleInit {
+
+  private eventService: EventService;
 
   constructor(
-    private readonly prismaService: PrismaService
+    private readonly prismaService: PrismaService,
+    private readonly moduleRef: ModuleRef
   ) { }
+
+  onModuleInit(): any {
+    this.eventService = this.moduleRef.get(EventService, { strict: false });
+  }
 
   async createTrial(createTrialDto: CreateTrialDto, creatingUser: user) {
     const { nct_id, nickname, principal_investigator, status } = createTrialDto;
@@ -82,7 +91,7 @@ export class TrialService {
     });
 
     if (existing_trial) {
-      return this.prismaService.trial.update({
+      const updatedTrial = await this.prismaService.trial.update({
         where: { id: existing_trial.id },
         data: {
           status,
@@ -93,12 +102,37 @@ export class TrialService {
             connect: {
               version: ctml_schema_version
             }
+          },
+          modifiedBy: { connect: { id: user.id } },
+          trial_group: {
+            connectOrCreate: {
+              where: {
+                name: updateTrialDto.group_id
+              },
+              create: {
+                name: updateTrialDto.group_id
+              }
+            }
           }
         }
       });
+
+      // Add updated event
+      this.eventService.createEvent({
+        type: event_type.TrialUpdated,
+        user,
+        trial: updatedTrial,
+        metadata: {
+          input: {
+            updateTrialDto: { ...updateTrialDto },
+            id
+          }
+        }
+      });
+      return updatedTrial;
     }
 
-    return this.prismaService.trial.create({
+    const createdTrial = await this.prismaService.trial.create({
       data: {
         nct_id,
         nickname,
@@ -110,9 +144,33 @@ export class TrialService {
           connect: {
             version: ctml_schema_version
           }
+        },
+        trial_group: {
+          connectOrCreate: {
+            where: {
+              name: updateTrialDto.group_id
+            },
+            create: {
+              name: updateTrialDto.group_id
+            }
+          }
         }
       }
     });
+
+    // Add created event
+    this.eventService.createEvent({
+      type: event_type.TrialCreated,
+      user,
+      trial: createdTrial,
+      metadata: {
+        input: {
+          updateTrialDto: { ...updateTrialDto },
+          id
+        }
+      }
+    });
+    return createdTrial;
 
   }
 
@@ -140,4 +198,25 @@ export class TrialService {
       throw e;
     }
   }
+
+  async recordTrialExported(id: number, user: user) {
+    if (id) {
+      await this.prismaService.event.create({
+        data: {
+          type: event_type.TrialExported,
+          trial: { connect: { id } },
+          user: { connect: { id: user.id } }
+        }
+      });
+    } else {
+      await this.prismaService.event.create({
+        data: {
+          type: event_type.TrialExported,
+          description: "Trial exported as a draft (not yet saved)",
+          user: { connect: { id: user.id } }
+        }
+      });
+    }
+  }
+
 }

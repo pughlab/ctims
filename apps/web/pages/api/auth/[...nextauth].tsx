@@ -13,12 +13,14 @@ export default NextAuth({
       // console.log('jwt', token, user, account, profile, isNewUser);
       if (user) {
         token.accessToken = user['accessToken'];
+        token.roles = user['roles'];
       }
       return token
     },
     session: async ({session, token, user}) => {
       // console.log('session', session, token, user);
       session['accessToken'] = token.accessToken
+      session['roles'] = token.roles
       return session
     }
   },
@@ -47,6 +49,7 @@ export default NextAuth({
 
         if (data.accessToken && data.user) {
           data.user.accessToken = data.accessToken;
+          data.user['roles'] = data.user.roles;
           return data.user
         } else {
           throw new Error('Invalid credentials');

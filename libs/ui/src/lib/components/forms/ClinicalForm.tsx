@@ -20,6 +20,7 @@ import CtimsErrorListTemplate from "../../custom-rjsf-templates/CtimsErrorListTe
 import CtimsInput from "../../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../../custom-rjsf-templates/CtimsDropdown";
 import {CtimsDialogContext, CtimsDialogContextType} from "../CtimsMatchDialog";
+import CtimsInputWithExcludeToggle from '../../custom-rjsf-templates/CtimsInputWithExcludeToggle';
 
 const RjsfForm = withTheme(PrimeTheme)
 
@@ -126,6 +127,9 @@ export const ClinicalForm = (props: IFormProps) => {
     "ui:submitButtonOptions": {
       "norender": true,
     },
+    "oncotree_primary_diagnosis": {
+      "ui:widget": CtimsInputWithExcludeToggle,
+    }
   }
 
   const onFormChange = (data: any) => {
