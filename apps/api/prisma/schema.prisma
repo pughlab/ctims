@@ -4,6 +4,7 @@ generator client {
 
 generator fieldEncryptionMigrations {
   provider = "prisma-field-encryption"
+  output   = "./migrations/prisma-field-encryption-migrations"
 }
 
 datasource db {
