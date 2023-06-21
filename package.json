@@ -9,6 +9,7 @@
     "schema:push": "npx prisma db push --schema=./apps/api/prisma/schema.prisma",
     "schema:generate-client": "npx prisma generate --schema=./apps/api/prisma/schema.prisma",
     "prisma:migrate": "npx prisma migrate deploy --schema=./apps/api/prisma/schema.prisma",
+    "prisma:encrypt": "ts-node apps/api/prisma/prisma-field-encryption-migrations/index.ts",
     "start:prod": "node dist/apps/api/main.js",
     "build": "nx build",
     "test": "nx test",
