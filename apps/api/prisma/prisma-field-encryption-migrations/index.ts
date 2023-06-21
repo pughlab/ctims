@@ -2,6 +2,7 @@
 
 import { migrate as migratectml_json } from './ctml_json'
 import {PrismaClient} from "@prisma/client";
+import { fieldEncryptionMiddleware } from "prisma-field-encryption";
 
 export interface ProgressReport {
   model: string
@@ -60,5 +61,6 @@ export async function migrate(
 }
 
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
+prisma.$use(fieldEncryptionMiddleware());
 migrate(prisma).then(val => console.log(val));
