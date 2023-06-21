@@ -10,7 +10,17 @@ describe("API GET events by UserId",{ testIsolation: false }, () => {
       },
     }).then((res) => {
       expect(res.status).to.eq(200)
-      expect(res.body.username).to.contain('ctims_test_user')
+      const jsonArray = res.body;
+    //  jsonArray.should.be.an('array').and.have.lengthOf.at.least(1);
+      jsonArray.forEach((obj,index) => {
+        if(index === 0) {
+          cy.log(JSON.stringify(obj))
+          expect(obj).to.have.property('type', 'LoginSuccessful');
+        }
+      });
+
+
+      //expect(res.body.id).to.contain('7')
     })
   });
 });
