@@ -139,7 +139,7 @@ export interface AndGenomic {
   hugo_symbol:        string;
   molecular_function: string;
   variant_category:   string;
-  cnv_call: string
+ // cnv_call: string
 }
 
 export enum MolecularFunction {
@@ -156,6 +156,10 @@ export enum VariantCategory {
 export interface Or {
   genomic: OrGenomic;
 }
+export interface And {
+  genomic: AndGenomic;
+  clinical: PurpleClinical
+}
 
 export interface OrGenomic {
   cnv_call?:                   string;
@@ -168,6 +172,20 @@ export interface OrGenomic {
   variant_classification?:     string;
   wildcard_protein_change?:    string;
 }
+/*export interface AndGenomic {
+  //cnv_call?:                   string;
+  hugo_symbol:                 string;
+  variant_category:            string;
+ // display_name?:               string;
+  //fusion_partner_hugo_symbol?: string;
+  //molecular_function?:         string;
+ // protein_change?:             string;
+  //variant_classification?:     string;
+  //wildcard_protein_change?:    string;
+  molecular_function:            string;
+  age_numerical:                 string;
+}*/
+
 
 export enum CnvCall {
   HeterozygousDeletion = "Heterozygous Deletion",
