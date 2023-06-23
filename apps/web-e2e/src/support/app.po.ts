@@ -270,7 +270,8 @@ export const getMSStatus = () => cy.get('#root_ms_status')
 //genericDropdownList
 export const getGenomicDropDown = () => cy.get('.p-dropdown-panel>div>ul>li')
 
-
+//Molecular
+export const getMolecularFunction = () => cy.get('#root_molecular_function')
 //******************* Clinical ********************************************************//
 
 //Age
@@ -291,7 +292,7 @@ export const getClinicalERStatus = () => cy.get('#root_er_status')
 //PR Status
 export const getClinicalPRStatus = () => cy.get('#root_pr_status')
 
-
+export const getOncotreeExclamation = () => cy.get('.IOSSwitch_slider__MRBvX')
 
 
 

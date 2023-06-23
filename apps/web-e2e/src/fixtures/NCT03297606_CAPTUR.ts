@@ -242,6 +242,209 @@ export const NCT03297606_CAPTUR: Ctml3 =
             ]
           },
           {
+            "arm_code": "Group 2",
+            "arm_description": "Experimental: Group 2",
+            "arm_internal_id": 2,
+            "arm_suspended": "N",
+            "dose_level": [
+              {
+                "level_code": "Bosutinib",
+                "level_description": "500mg orally once daily",
+                "level_internal_id": 2,
+                "level_suspended": "N"
+              }
+            ],
+            "match": [
+              {
+                "and": [
+                  {
+                    "or": [
+                      {
+                        "genomic": {
+                          "fusion_partner_hugo_symbol": "ABL1",
+                          "hugo_symbol": "BCR",
+                          "molecular_function": "Activating",
+                          "variant_category": "SV"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "SRC",
+                          "molecular_function": "Activating",
+                          "variant_category": "Mutation"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "clinical": {
+                      "age_numerical": ">=18",
+                      "oncotree_primary_diagnosis": "!Chronic Myelogenous Leukemia"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "arm_code": "Group 3",
+            "arm_description": "Experimental: Group 3",
+            "arm_internal_id": 3,
+            "arm_suspended": "N",
+            "dose_level": [
+              {
+                "level_code": "Crizotinib",
+                "level_description": "250mg orally twice daily",
+                "level_internal_id": 3,
+                "level_suspended": "N"
+              }
+            ],
+            "match": [
+              {
+                "and": [
+                  {
+                    "or": [
+                      {
+                        "genomic": {
+                          "hugo_symbol": "ALK",
+                          "variant_category": "SV"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "ROS1",
+                          "variant_category": "Mutation",
+                          "molecular_function": "Activating"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "cnv_call": "High level amplification",
+                          "hugo_symbol": "MET",
+                          "variant_category": "CNV"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "MET",
+                          "variant_category": "Mutation",
+                          "molecular_function": "Activating"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "clinical": {
+                      "age_numerical": ">=18",
+                      "oncotree_primary_diagnosis": "!Non-Small Cell Lung Cancer"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "arm_code": "Group 4",
+            "arm_description": "Experimental: Group 4",
+            "arm_internal_id": 4,
+            "arm_suspended": "N",
+            "dose_level": [
+              {
+                "level_code": "Dasatinib",
+                "level_description": "100mg administered orally once daily",
+                "level_internal_id": 4,
+                "level_suspended": "N"
+              }
+            ],
+            "match": [
+              {
+                "and": [
+                  {
+                    "or": [
+                      {
+                        "genomic": {
+                          "hugo_symbol": "KIT",
+                          "molecular_function": "Activating",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "PDGFRA",
+                          "molecular_function": "Activating",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "PDGFRB",
+                          "molecular_function": "Activating",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "ABL1",
+                          "molecular_function": "Activating",
+                          "variant_category": "Mutation"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "and": [
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "!Chronic Myelogenous Leukemia"
+                        }
+                      },
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "!Gastrointestinal Stromal Tumor"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "arm_code": "Group 5",
+            "arm_description": "Experimental: Group 5",
+            "arm_internal_id": 5,
+            "arm_suspended": "N",
+            "dose_level": [
+              {
+                "level_code": "Erlotinib",
+                "level_description": "150mg orally, once daily",
+                "level_internal_id": 5,
+                "level_suspended": "N"
+              }
+            ],
+            "match": [
+              {
+                "and": [
+                  {
+                    "genomic": {
+                      "hugo_symbol": "EGFR",
+                      "molecular_function": "Activating",
+                      "variant_category": "Mutation"
+                    }
+                  },
+                  {
+                    "clinical": {
+                      "age_numerical": ">=18",
+                      "oncotree_primary_diagnosis": "!Non-Small Cell Lung Cancer"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
             "arm_code": "Group 7",
             "arm_description": "Experimental: Group 7",
             "arm_internal_id": 7,
@@ -300,6 +503,962 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         }
                       }
                     ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "arm_code": "Group 8",
+            "arm_description": "Experimental: Group 8",
+            "arm_internal_id": 8,
+            "arm_suspended": "N",
+            "dose_level": [
+              {
+                "level_code": "Palbociclib",
+                "level_description": "125mg orally once daily for 21 consecutive days followed by 7 days off treatment to comprise a complete cycle of 28 days",
+                "level_internal_id": 9,
+                "level_suspended": "N"
+              }
+            ],
+            "match": [
+              {
+                "and": [
+                  {
+                    "or": [
+                      {
+                        "genomic": {
+                          "cnv_call": "Heterozygous deletion",
+                          "hugo_symbol": "CDKN2A",
+                          "variant_category": "CNV"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "cnv_call": "High level amplification",
+                          "hugo_symbol": "CDK4",
+                          "variant_category": "CNV"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "cnv_call": "High level amplification",
+                          "hugo_symbol": "CCND1",
+                          "variant_category": "CNV"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "SMARCA4",
+                          "variant_category": "CNV",
+                          "cnv_call": "Heterozygous deletion"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "clinical": {
+                      "age_numerical": ">=18",
+                      "oncotree_primary_diagnosis": "!Breast",
+                      "er_status": "true"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "arm_code": "Group 9",
+            "arm_description": "Experimental: Group 9",
+            "arm_internal_id": 9,
+            "arm_suspended": "N",
+            "dose_level": [
+              {
+                "level_code": "Sunitinib",
+                "level_description": "50mg orally once daily on a schedule of 4 weeks on treatment followed by 2 weeks off",
+                "level_internal_id": 10,
+                "level_suspended": "N"
+              }
+            ],
+            "match": [
+              {
+                "and": [
+                  {
+                    "or": [
+                      {
+                        "genomic": {
+                          "hugo_symbol": "CSF1R",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "cnv_call": "High level amplification",
+                          "hugo_symbol": "CSF1R",
+                          "variant_category": "Copy Number Variation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "PDGFRA",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "cnv_call": "High level amplification",
+                          "hugo_symbol": "PDGFRA",
+                          "variant_category": "Copy Number Variation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "PDGFRB",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "cnv_call": "High level amplification",
+                          "hugo_symbol": "PDGFRB",
+                          "variant_category": "Copy Number Variation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "FLT1",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "cnv_call": "High level amplification",
+                          "hugo_symbol": "FLT1",
+                          "variant_category": "Copy Number Variation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "KDR",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "cnv_call": "High level amplification",
+                          "hugo_symbol": "KDR",
+                          "variant_category": "Copy Number Variation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "FLT4",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "cnv_call": "High level amplification",
+                          "hugo_symbol": "FLT4",
+                          "variant_category": "Copy Number Variation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "KIT",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "cnv_call": "High level amplification",
+                          "hugo_symbol": "KIT",
+                          "variant_category": "Copy Number Variation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "RET",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "cnv_call": "High level amplification",
+                          "hugo_symbol": "RET",
+                          "variant_category": "Copy Number Variation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "FGFR1",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "cnv_call": "High level amplification",
+                          "hugo_symbol": "FGFR1",
+                          "variant_category": "Copy Number Variation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "FGFR2",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "cnv_call": "High level amplification",
+                          "hugo_symbol": "FGFR2",
+                          "variant_category": "Copy Number Variation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "FGFR3",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "cnv_call": "High level amplification",
+                          "hugo_symbol": "FGFR3",
+                          "variant_category": "Copy Number Variation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "FLT3",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "cnv_call": "High level amplification",
+                          "hugo_symbol": "FLT3",
+                          "variant_category": "Copy Number Variation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "cnv_call": "Heterozygous Deletion",
+                          "hugo_symbol": "VHL",
+                          "variant_category": "Copy Number Variation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.L63P",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.R64P",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.S65L",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.S65W",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.S68W",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.R69C",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.F76del",
+                          "variant_category": "Mutation",
+                          "variant_classification": "In_Frame_Del"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.N78S",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.R82P",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.P86H",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.N90I",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.Q96P",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.S111C",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.S111R",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.H115R",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.W117C",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.Q145H",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.V155A",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.L158P",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.L158Q",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.L158V",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.C162F",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.Q164R",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.R167Q",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.R167W",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.H191D",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "VHL",
+                          "protein_change": "p.R200W",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "and": [
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "!Primitive Neuroectodermal Tumor"
+                        }
+                      },
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "!Renal Cell Carcinoma"
+                        }
+                      },
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "!Gastrointestinal Stromal Tumor"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "arm_code": "Group 10",
+            "arm_description": "Experimental: Group 10",
+            "arm_internal_id": 10,
+            "arm_suspended": "N",
+            "dose_level": [
+              {
+                "level_code": "Temsirolimus",
+                "level_description": "25mg infused over a 30-60 minute period once a week",
+                "level_internal_id": 11,
+                "level_suspended": "N"
+              }
+            ],
+            "match": [
+              {
+                "and": [
+                  {
+                    "or": [
+                      {
+                        "genomic": {
+                          "hugo_symbol": "AKT1",
+                          "variant_category": "Mutation",
+                          "molecular_function": "Activating"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "AKT2",
+                          "variant_category": "Mutation",
+                          "molecular_function": "Activating"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "AKT3",
+                          "variant_category": "Mutation",
+                          "molecular_function": "Activating"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "FBXW7",
+                          "variant_category": "Mutation",
+                          "molecular_function": "Inactivating"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "FLCN",
+                          "variant_category": "Mutation",
+                          "molecular_function": "Inactivating"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "MTOR",
+                          "variant_category": "Mutation",
+                          "molecular_function": "Activating"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "NF1",
+                          "variant_category": "Mutation",
+                          "molecular_function": "Inactivating"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "NF2",
+                          "variant_category": "Mutation",
+                          "molecular_function": "Inactivating"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "NTRK3",
+                          "variant_category": "Mutation",
+                          "molecular_function": "Inactivating"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "PTEN",
+                          "variant_category": "Mutation",
+                          "molecular_function": "Inactivating"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "RHEB",
+                          "variant_category": "Mutation",
+                          "molecular_function": "Activating"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "STK11",
+                          "variant_category": "Mutation",
+                          "molecular_function": "Inactivating"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "TSC1",
+                          "variant_category": "Mutation",
+                          "molecular_function": "Inactivating"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "TSC2",
+                          "variant_category": "Mutation",
+                          "molecular_function": "Inactivating"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "clinical": {
+                      "age_numerical": ">=18",
+                      "oncotree_primary_diagnosis": "!Renal Cell Carcinoma"
+                    }
+                  }
+                ]
+              },
+              {
+                "and": [
+                  {
+                    "or": [
+                      {
+                        "genomic": {
+                          "hugo_symbol": "PIK3CA",
+                          "variant_category": "Mutation",
+                          "molecular_function": "Activating"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "PIK3R1",
+                          "variant_category": "Mutation",
+                          "molecular_function": "Activating"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "clinical": {
+                      "age_numerical": ">=18",
+                      "oncotree_primary_diagnosis": "!Breast"
+                    }
+                  },
+                  {
+                    "clinical": {
+                      "age_numerical": ">=18",
+                      "oncotree_primary_diagnosis": "!Renal Cell Carcinoma"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "arm_code": "Group 11",
+            "arm_description": "Experimental: Group 11",
+            "arm_internal_id": 11,
+            "arm_suspended": "N",
+            "dose_level": [
+              {
+                "level_code": "Trastuzumab",
+                "level_description": "3-weekly dose schedule. The recommended initial loading dose is 8mg/kg administered as a 90-minute infusion followed by 3-weekly maintenance dose of 6mg/kg administered as 90-minute infusion.",
+                "level_internal_id": 12,
+                "level_suspended": "N"
+              },
+              {
+                "level_code": "Pertuzumab",
+                "level_description": "840mg administered as a 60-minute intravenous infusion, followed every 3 weeks thereafter by a dose of 420mg administered over a period of 30-60 minutes.",
+                "level_internal_id": 13,
+                "level_suspended": "N"
+              }
+            ],
+            "match": [
+              {
+                "and": [
+                  {
+                    "or": [
+                      {
+                        "genomic": {
+                          "hugo_symbol": "ERBB2",
+                          "variant_category": "Mutation",
+                          "molecular_function": "Activating"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "cnv_call": "High level amplification",
+                          "hugo_symbol": "ERBB2",
+                          "variant_category": "Copy Number Variation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "ERBB2",
+                          "protein_change": "p.G309A",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "ERBB2",
+                          "protein_change": "p.G309E",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "ERBB2",
+                          "protein_change": "p.S310F",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "ERBB2",
+                          "protein_change": "p.D769H",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "ERBB2",
+                          "protein_change": "p.D769Y",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "ERBB2",
+                          "protein_change": "p.V600E",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "ERBB2",
+                          "protein_change": "p.L755S",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "ERBB2",
+                          "protein_change": "p.V777L",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "ERBB2",
+                          "protein_change": "p.V842I",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "ERBB2",
+                          "protein_change": "p.E321G",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "ERBB2",
+                          "protein_change": "p.R896C",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "ERBB2",
+                          "protein_change": "p.P780ins",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "ERBB2",
+                          "protein_change": "p.L755_T75del",
+                          "variant_category": "Mutation",
+                          "variant_classification": "In_Frame_Del"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "and": [
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "!Breast"
+                        }
+                      },
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "!Esophagogastric Adenocarcinoma"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "arm_code": "Group 12",
+            "arm_description": "Experimental: Group 12",
+            "arm_internal_id": 12,
+            "arm_suspended": "N",
+            "dose_level": [
+              {
+                "level_code": "Vemurafenib",
+                "level_description": "960 mg orally every 12 hours.",
+                "level_internal_id": 14,
+                "level_suspended": "N"
+              },
+              {
+                "level_code": "Cobimetinib",
+                "level_description": "60 mg orally once daily for 21 days, followed by 7 days of rest",
+                "level_internal_id": 15,
+                "level_suspended": "N"
+              }
+            ],
+            "match": [
+              {
+                "and": [
+                  {
+                    "or": [
+                      {
+                        "genomic": {
+                          "hugo_symbol": "BRAF",
+                          "wildcard_protein_change": "p.V600D",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "BRAF",
+                          "wildcard_protein_change": "p.V600E",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "BRAF",
+                          "wildcard_protein_change": "p.V600G",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "BRAF",
+                          "wildcard_protein_change": "p.V600K",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "BRAF",
+                          "wildcard_protein_change": "p.V600M",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "BRAF",
+                          "wildcard_protein_change": "p.V600R",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Missense_Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "BRAF",
+                          "wildcard_protein_change": "p.V600_K601delinsE",
+                          "variant_category": "Mutation",
+                          "variant_classification": "Del_Ins"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "NRAS",
+                          "variant_category": "Mutation",
+                          "molecular_function": "Activating"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "and": [
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "!Melanoma"
+                        }
+                      },
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "!Colorectal Adenocarcinoma"
+                        }
+                      },
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "!Thyroid"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "arm_code": "Group 13",
+            "arm_description": "Experimental: Group 13",
+            "arm_internal_id": 13,
+            "arm_suspended": "N",
+            "dose_level": [
+              {
+                "level_code": "Vismodegib",
+                "level_description": "150mg taken orally, once daily",
+                "level_internal_id": 16,
+                "level_suspended": "N"
+              }
+            ],
+            "match": [
+              {
+                "and": [
+                  {
+                    "or": [
+                      {
+                        "genomic": {
+                          "hugo_symbol": "PTCH1",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "SMO",
+                          "variant_category": "Mutation",
+                          "molecular_function": "Activating"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "clinical": {
+                      "age_numerical": ">=18",
+                      "oncotree_primary_diagnosis": "!Basal Cell Carcinoma"
+                    }
                   }
                 ]
               }
