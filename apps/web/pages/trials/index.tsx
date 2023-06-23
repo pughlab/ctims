@@ -2,6 +2,7 @@ import styles from './index.module.scss';
 import { Button } from 'primereact/button';
 import { DataTable, DataTableRowMouseEventParams } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+
 import TopBar from "../../components/trials/TopBar";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
@@ -9,6 +10,7 @@ import React from 'react';
 import { Menu } from "primereact/menu";
 import { useSession } from "next-auth/react";
 import useGetUserTrials from "../../hooks/useGetUserTrials";
+
 import { ConfirmDialog } from 'primereact/confirmdialog';
 import { confirmDialog } from 'primereact/confirmdialog';
 import useDeleteTrial from '../../hooks/useDeleteTrial';

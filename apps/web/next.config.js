@@ -13,6 +13,7 @@ const nextConfig = {
   publicRuntimeConfig: {
     // Will be available on both server and client
     REACT_APP_API_URL: process.env.REACT_APP_API_URL,
+    REACT_APP_MM_API_URL: process.env.REACT_APP_MM_API_URL,
   },
   env: {
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
