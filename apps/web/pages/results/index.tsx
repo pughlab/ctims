@@ -5,11 +5,12 @@ import {router} from "next/client";
 import styles from "../trials/index.module.scss";
 import {DataTable, DataTableRowMouseEventParams} from "primereact/datatable";
 import {Column} from "primereact/column";
-import useGetTrialsForUsersInGroup from "../../hooks/useGetTrialsForUsersInGroup";
 import useGetMatchResults from "../../hooks/useGetMatchResults";
 import MatchResult from "../../model/MatchResult";
 import CondensedMatchResult from "../../model/CondensedMatchResult";
 import {classNames} from "primereact/utils";
+import axios from "axios";
+import useDownloadResults from "../../hooks/useDownloadResults";
 
 const Results = () => {
 
@@ -34,14 +35,29 @@ const Results = () => {
     getMatchResultsOperation
   } = useGetMatchResults();
 
+  // retrieve results csv
+  const {
+    response: getDownloadResultsResponse,
+    error: getDownloadResultsError,
+    loading: getDownloadResultsLoading,
+    getDownloadResultsOperation
+  } = useDownloadResults();
+
   useEffect(() => {
     if (getMatchResultsResponse) {
       postProcessResults(getMatchResultsResponse);
     }
   }, [getMatchResultsResponse])
 
+  useEffect(() => {
+    if (getDownloadResultsResponse) {
+      setDownloadResults(getDownloadResultsResponse);
+    }
+  }, [getDownloadResultsResponse])
+
   // match results use effects
   const [results, setResults] = useState<any>([]);
+  const [downloadResults, setDownloadResults] = useState<any>([]);
   const [rowEntered, setRowEntered] = useState<DataTableRowMouseEventParams>(null);
   const [rowClicked, setRowClicked] = useState<any>(null);
 
@@ -74,8 +90,44 @@ const Results = () => {
   }
 
   const downloadBodyTemplate = (rowData: CondensedMatchResult) => {
-    return <i className={classNames('pi', { 'true-icon pi-download': rowData.matchCCount > 0, '': rowData.matchCCount = 0 })}></i>;
+    return <i className={classNames('pi', { 'true-icon pi-download': rowData.matchCCount > 0, '': rowData.matchCCount = 0 })}
+              onClick={() => {
+                downloadClicked(rowData);
+              }}
+    ></i>;
   };
+
+  const downloadClicked = (e) => {
+
+    const recordDownloadEvent = () => {
+      const accessToken = localStorage.getItem('ctims-accessToken');
+      const headers = {
+        'Authorization': 'Bearer ' + accessToken,
+      }
+      axios.request({
+        method: 'post',
+        url: `/results/${e.trialId}/export`,
+        headers
+      });
+    }
+
+    const doDownloadResult = () => {
+      const blob = new Blob([getDownloadResultsResponse], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', e.trialId + '.csv');
+      recordDownloadEvent()
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    e.preventDefault();
+    doDownloadResult()
+  }
+
 
   return (
     <>
@@ -88,8 +140,8 @@ const Results = () => {
         <div className={styles.tableContainer}>
           <DataTable value={results} rowHover={true}
                      loading={getMatchResultsLoading}
-                     onRowMouseEnter={(event) => setRowEntered(event.data)}
-                     onRowMouseLeave={() => setRowEntered(null)}
+                     // onRowMouseEnter={(event) => setRowEntered(event.data)}
+                     // onRowMouseLeave={() => setRowEntered(null)}
                      sortField="createdOn" sortOrder={-1}
                      emptyMessage={'No match results.'}
           >
