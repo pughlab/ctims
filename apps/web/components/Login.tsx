@@ -20,8 +20,6 @@ const Login = () => {
 
   const loginErrorToast = useRef<Toast>();
 
-  const counterValue = useSelector((state: any) => state.counter.value);
-
   const dispatch = useDispatch();
 
   const router: NextRouter = useRouter();
@@ -65,7 +63,6 @@ const Login = () => {
       showInvalidLoginToast("Please enter your credentials to sign in.");
       return;
     }
-    console.log('Login');
     const result = await signIn('credentials', {username, password, redirect: false})
     console.log('result', result);
     if (result.ok) {
