@@ -55,7 +55,7 @@ const IdleComponent: React.FC = () => {
   return (
     <div>
       <Dialog header="Idle Warning" visible={showDialog} onHide={onHide} closable={false}>
-        <p>Time remaining: {remainingTime} seconds</p>
+        <p style={{margin: '10px'}}>You will timeout in {remainingTime} seconds. Please note, any unsaved work will be lost.</p>
       </Dialog>
     </div>
   );

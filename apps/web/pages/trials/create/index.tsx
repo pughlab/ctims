@@ -6,6 +6,7 @@ import LeftMenuEditorComponent from "../../../components/editor/LeftMenuEditorCo
 import {useSession} from "next-auth/react";
 import {useRouter} from "next/router";
 import useGetCtmlSchema from "../../../hooks/useGetCtmlSchema";
+import IdleComponent from "../../../components/IdleComponent";
 
 const EditorCreateCtml = () => {
 
@@ -38,7 +39,7 @@ const EditorCreateCtml = () => {
   return (
     <>
       <EditorTopBar />
-
+      <IdleComponent />
       <div style={containerStyle}>
         <LeftMenuEditorComponent />
         {response && <Ui ctml_schema={response}></Ui>}
