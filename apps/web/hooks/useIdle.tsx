@@ -7,11 +7,17 @@ export enum IdleState {
   Idle = 'Idle'
 }
 
+const convertMinutesToMilliseconds = (minutes) => {
+  return minutes * 60000;
+}
+
 const useIdle = () => {
   // Define state variables for the idle state, action count, and remaining time
   const [state, setState] = useState<IdleState>(IdleState.Active);
   const [count, setCount] = useState<number>(0);
   const [remaining, setRemaining] = useState<number>(0);
+
+  const TIMEOUT = convertMinutesToMilliseconds(13);
 
   // Define event handlers for idle, active, and action events
   const onIdle = () => {
@@ -36,7 +42,7 @@ const useIdle = () => {
     onActive,
     onAction,
     events: ['mousemove', 'keydown', 'mousedown', 'touchstart', 'click', 'mousewheel'],
-    timeout: 1000,
+    timeout: TIMEOUT,
     throttle: 500
   });
 

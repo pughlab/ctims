@@ -27,13 +27,13 @@ const useSaveTrial = () => {
 
   const dispatch = useDispatch();
 
-  const {data} = useSession()
+  const {data, status} = useSession()
 
   useEffect(() => {
-    if(!data) {
+    if(status === 'unauthenticated') {
       router.push('/');
     }
-  }, [data])
+  }, [status])
 
   const saveTrialOperation = async (trialModel: any, ctmlJson: any) => {
     const state = store.getState();

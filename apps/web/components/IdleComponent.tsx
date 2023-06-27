@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import useIdle, { IdleState } from "../hooks/useIdle";
 import { Dialog } from 'primereact/dialog';
 import {useRouter} from "next/router";
+import useRefreshToken from "../hooks/useRefreshToken";
 
 
 const IdleComponent: React.FC = () => {
@@ -9,9 +10,11 @@ const IdleComponent: React.FC = () => {
   const [showDialog, setShowDialog] = useState(false);
   const [remainingTime, setRemainingTime] = useState(0);
 
+  const { error, response, loading, refreshTokenOperation } = useRefreshToken();
+
   const router = useRouter();
 
-  const IDLE_TIMEOUT = 5;
+  const IDLE_TIMEOUT = 60;
 
   const onHide = () => {
     setShowDialog(false);
@@ -22,6 +25,7 @@ const IdleComponent: React.FC = () => {
       setShowDialog(true);
       setRemainingTime(IDLE_TIMEOUT);
     } else {
+      refreshTokenOperation();
       setShowDialog(false);
       setRemainingTime(0);
     }
