@@ -17,7 +17,7 @@ const useIdle = () => {
   const [count, setCount] = useState<number>(0);
   const [remaining, setRemaining] = useState<number>(0);
 
-  const TIMEOUT = convertMinutesToMilliseconds(13);
+  const TIMEOUT = convertMinutesToMilliseconds(14);
 
   // Define event handlers for idle, active, and action events
   const onIdle = () => {
