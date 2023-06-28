@@ -147,7 +147,7 @@ const Trials = () => {
   return (
     <>
       <ConfirmDialog />
-      <IdleComponent></IdleComponent>
+      <IdleComponent />
       {sessionStatus === 'loading' && <div>Loading...</div>}
       {sessionStatus === 'authenticated' && <>
         <TopBar />
