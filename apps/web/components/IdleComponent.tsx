@@ -5,50 +5,50 @@ import {useRouter} from "next/router";
 import useRefreshToken from "../hooks/useRefreshToken";
 
 const IdleComponent: React.FC = () => {
-  const { state: idleState, remaining, count } = useIdle();
-  const [showDialog, setShowDialog] = useState(false);
-  const [remainingTime, setRemainingTime] = useState(0);
+  const { state: idleState, remaining, count } = useIdle(); // Get the idle state, remaining time, and count from the useIdle hook
+  const [showDialog, setShowDialog] = useState(false); // Create a state variable for the dialog visibility
+  const [remainingTime, setRemainingTime] = useState(0); // Create a state variable for the remaining time
 
-  const { error, response, loading, refreshTokenOperation } = useRefreshToken();
+  const { error, response, loading, refreshTokenOperation } = useRefreshToken(); // Get the error, response, loading, and refreshTokenOperation from the useRefreshToken hook
 
-  const router = useRouter();
+  const router = useRouter(); // Get the router object from the useRouter hook
 
-  const IDLE_TIMEOUT = 60;
+  const IDLE_TIMEOUT = 60; // Set the idle timeout to 60 seconds
 
   const onHide = () => {
-    setShowDialog(false);
+    setShowDialog(false); // Hide the dialog
   };
 
   useEffect(() => {
-    if (idleState === IdleState.Idle) {
-      setShowDialog(true);
-      setRemainingTime(IDLE_TIMEOUT);
-    } else {
-      refreshTokenOperation();
-      setShowDialog(false);
-      setRemainingTime(0);
+    if (idleState === IdleState.Idle) { // If the idle state is Idle
+      setShowDialog(true); // Show the dialog
+      setRemainingTime(IDLE_TIMEOUT); // Set the remaining time to the idle timeout
+    } else { // If the idle state is not Idle
+      refreshTokenOperation(); // Refresh the access token
+      setShowDialog(false); // Hide the dialog
+      setRemainingTime(0); // Reset the remaining time
     }
-  }, [idleState]);
+  }, [idleState]); // Run the effect whenever the idle state changes
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
 
-    if (showDialog) {
+    if (showDialog) { // If the dialog is visible
       interval = setInterval(() => {
-        setRemainingTime((prevTime) => prevTime - 1);
+        setRemainingTime((prevTime) => prevTime - 1); // Decrement the remaining time by 1 second
       }, 1000);
     }
 
-    if (remainingTime === 0 && showDialog) {
-      clearInterval(interval)
-      localStorage.removeItem('ctims-accessToken')
-      router.push('/');
+    if (remainingTime === 0 && showDialog) { // If the remaining time is 0 and the dialog is visible
+      clearInterval(interval) // Clear the interval
+      localStorage.removeItem('ctims-accessToken') // Remove the access token from local storage
+      router.push('/'); // Redirect to the home page
     }
 
     return () => {
-      clearInterval(interval);
+      clearInterval(interval); // Clear the interval on unmount
     };
-  }, [showDialog, remainingTime]);
+  }, [showDialog, remainingTime]); // Run the effect whenever the dialog visibility or remaining time changes
 
   return (
     <div>
