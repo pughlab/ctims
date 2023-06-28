@@ -4,7 +4,6 @@ import { Dialog } from 'primereact/dialog';
 import {useRouter} from "next/router";
 import useRefreshToken from "../hooks/useRefreshToken";
 
-
 const IdleComponent: React.FC = () => {
   const { state: idleState, remaining, count } = useIdle();
   const [showDialog, setShowDialog] = useState(false);
