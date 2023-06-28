@@ -41,7 +41,6 @@ const IdleComponent: React.FC = () => {
     }
 
     if (remainingTime === 0 && showDialog) {
-      console.log("Time is up!");
       clearInterval(interval)
       localStorage.removeItem('ctims-accessToken')
       router.push('/');

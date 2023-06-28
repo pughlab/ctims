@@ -12,6 +12,9 @@ const useRefreshToken = () => {
 
   const refreshTokenOperation = async () => {
     const accessToken = localStorage.getItem('ctims-accessToken');
+    if (!accessToken) {
+      return;
+    }
     const headers = {
       'Authorization': 'Bearer ' + accessToken,
     }
