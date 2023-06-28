@@ -3,12 +3,11 @@ import axios from 'axios';
 import {useEffect, useState} from 'react';
 import {useRouter} from 'next/router';
 import {useSession} from 'next-auth/react';
-import MatchResult from "../model/MatchResult";
 import {getCtmlStatusLabel} from "../../../libs/types/src/CtmlStatusLabels";
 
 const useGetMatchResults = () => {
   const {publicRuntimeConfig} = getConfig();
-  axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_MM_API_URL || "http://localhost:5000/api"
+  axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
 
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
@@ -27,23 +26,67 @@ const useGetMatchResults = () => {
   const getMatchResultsOperation = async () => {
     setLoading(true);
     try {
-      const matchResults = await axios.request({
-        method: 'get',
-        url: `/trial_match`,
-      });
+      // const matchResults = await axios.request({
+      //   method: 'get',
+      //   url: `/trial_match`,
+      // });
+      //
+      // console.log(matchResults.data._items);
+      // const mapped = matchResults.data._items.map((result) => {
+      //   let val: MatchResult = {
+      //     trialId: result.protocol_no,
+      //     nickName: result.nickName,
+      //     pi: result.pi,
+      //     status: result.status,
+      //     createdOn: result.createdOn,
+      //     modifiedOn: result.modifiedOn,
+      //     matchDate: result._update
+      //   }
+      //   return val;
+      // });
 
-      console.log(matchResults.data._items);
-      const mapped = matchResults.data._items.map((result) => {
-        let val: MatchResult = {
-          trialId: result.protocol_no,
-          nickName: result.nickName,
-          pi: result.pi,
-          status: result.status,
-          createdOn: result.createdOn,
-          modifiedOn: result.modifiedOn,
-          matchDate: result._update
+      const accessToken = localStorage.getItem('ctims-accessToken');
+      const headers = {
+        'Authorization': 'Bearer ' + accessToken,
+      }
+      const trialsWithResults = await axios.request({
+        method: 'get',
+        url: `/trial-result`,
+        headers
+      })
+      const mapped = trialsWithResults.data.map((trial) => {
+        let createdAtDate = new Date(trial.createdAt)
+        let updatedAtDate = new Date(trial.updatedAt)
+        let matchedDate = new Date(trial.matchedDate);
+        const createdAtFormatted = createdAtDate.toLocaleString(undefined, {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric'
+        });
+        const updatedAtFormatted = updatedAtDate.toLocaleString(undefined, {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric'
+        });
+        const matchedDateFormatted = matchedDate.toLocaleString(undefined, {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric'
+        });
+        const ctml_status_label = getCtmlStatusLabel(trial.status);
+        return {
+          ...trial,
+          createdAt: createdAtFormatted,
+          updatedAt: updatedAtFormatted,
+          matchedDate: matchedDateFormatted,
+          ctml_status_label
         }
-        return val;
       });
       setResponse(mapped);
     } catch (error) {

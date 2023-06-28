@@ -6,7 +6,7 @@ import {useSession} from 'next-auth/react';
 
 const useDownloadResults = () => {
   const {publicRuntimeConfig} = getConfig();
-  axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_MM_API_URL || "http://localhost:5000/api"
+  axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
 
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
@@ -22,16 +22,20 @@ const useDownloadResults = () => {
     }
   }, [data])
 
-  const getDownloadResultsOperation = async () => {
+  const getDownloadResultsOperation = async (trialId, nct_id) => {
     setLoading(true);
+    const accessToken = localStorage.getItem('ctims-accessToken');
+    const headers = {
+      'Authorization': 'Bearer ' + accessToken,
+    }
+
     try {
       const csvBlob = await axios.request({
-        method: 'get',
-        url: `/trial_download`,
+        method: 'post',
+        url: `/trial-result/` + trialId + '/export',
+        headers,
       });
-
       console.log(csvBlob.data);
-
       setResponse(csvBlob.data);
     } catch (error) {
       setLoading(false)

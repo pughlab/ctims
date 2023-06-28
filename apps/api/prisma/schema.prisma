@@ -132,4 +132,5 @@ enum event_type {
   CtmlSchemaUpdated
   CtmlSchemaDeleted
   CtmlSchemaDoesNotExist
+  ResultDownloaded
 }

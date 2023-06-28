@@ -1,16 +1,14 @@
 import TopBar from "../../components/trials/TopBar";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useSession} from "next-auth/react";
 import {router} from "next/client";
 import styles from "../trials/index.module.scss";
 import {DataTable, DataTableRowMouseEventParams} from "primereact/datatable";
 import {Column} from "primereact/column";
 import useGetMatchResults from "../../hooks/useGetMatchResults";
-import MatchResult from "../../model/MatchResult";
-import CondensedMatchResult from "../../model/CondensedMatchResult";
 import {classNames} from "primereact/utils";
-import axios from "axios";
 import useDownloadResults from "../../hooks/useDownloadResults";
+import { CSVLink } from "react-csv";
 
 const Results = () => {
 
@@ -45,7 +43,7 @@ const Results = () => {
 
   useEffect(() => {
     if (getMatchResultsResponse) {
-      postProcessResults(getMatchResultsResponse);
+      setResults(getMatchResultsResponse);
     }
   }, [getMatchResultsResponse])
 
@@ -55,79 +53,59 @@ const Results = () => {
     }
   }, [getDownloadResultsResponse])
 
+  const [downloadResults, setDownloadResults] = useState<any>([]);
+  useEffect(() => {
+    if (downloadResults.length > 0) {
+      // @ts-ignore
+      csvLink.current.link.click();
+    }
+  }, [downloadResults])
+
   // match results use effects
   const [results, setResults] = useState<any>([]);
-  const [downloadResults, setDownloadResults] = useState<any>([]);
-  const [rowEntered, setRowEntered] = useState<DataTableRowMouseEventParams>(null);
-  const [rowClicked, setRowClicked] = useState<any>(null);
+  // const [rowEntered, setRowEntered] = useState<DataTableRowMouseEventParams>(null);
+  // const [rowClicked, setRowClicked] = useState<any>(null);
 
-  const postProcessResults = (results: MatchResult[]) => {
-    const ret = [];
+  const headers = [
+    {label: "Arm Description", key: "arm_description"},
+    {label: "Study ID", key: "studyId"},
+    {label: "Patient ID", key: "mrn"},
+    {label: "Sample ID", key: "sample_id"},
+    {label: "Vital Status", key: "vita_status"},
+    {label: "Gender", key: "gender"},
+    {label: "Age", key: "age"},
+    {label: "Diagnosis", key: "oncotree_primary_diagnosis_name"},
+    {label: "HER2 Status", key: "her2_status"},
+    {label: "ER Status", key: "er_status"},
+    {label: "PR Status", key: "pr_status"},
+    {label: "Genomic Alteration", key: "genomic_alteration"},
+    {label: "Hugo Symbol", key: "true_hugo_symbol"},
+    {label: "Mutation Effect", key: "mutation_effect"}
+  ];
+  // csv download link ref
+  const csvLink = useRef()
 
-    // for each trial in results, merge the ones with same protocol_no
-    const availableProtocolNoMap: Map<string, {resultCount: number, resultDate: string}> = new Map();
-    for (let i = 0; i < results.length; i++) {
-      const result:MatchResult = results[i];
-      let count = 1;
-      let updateDate: string = result.matchDate;
-      console.log(availableProtocolNoMap.has(result.trialId))
-      console.log('result', result)
-      if (availableProtocolNoMap.has(result.trialId)) {
-        count = availableProtocolNoMap.get(result.trialId).resultCount;
-        count ++;
-      }
-      availableProtocolNoMap.set(results[i].trialId, {resultCount: count, resultDate: updateDate});
-    }
-
-    for (let [key, value] of availableProtocolNoMap) {
-      ret.push({
-        protocol_no: key,
-        results: value.resultCount,
-        resultsDate: value.resultDate,
-      });
-    }
-    setResults(ret);
-  }
-
-  const downloadBodyTemplate = (rowData: CondensedMatchResult) => {
-    return <i className={classNames('pi', { 'true-icon pi-download': rowData.matchCCount > 0, '': rowData.matchCCount = 0 })}
+  const downloadBodyTemplate = (rowData) => {
+    return <>
+        <i className={classNames('pi', { 'true-icon pi-download': rowData.trialRetCount > 0, '': rowData.trialRetCount == 0 })}
               onClick={() => {
                 downloadClicked(rowData);
               }}
-    ></i>;
+        ></i>
+        <CSVLink
+          headers={headers}
+          data={downloadResults}
+          filename={rowData.nct_id + '_result.csv'}
+          className='hidden'
+          ref={csvLink}
+          target='_blank'
+      />
+      </>
   };
 
-  const downloadClicked = (e) => {
-
-    const recordDownloadEvent = () => {
-      const accessToken = localStorage.getItem('ctims-accessToken');
-      const headers = {
-        'Authorization': 'Bearer ' + accessToken,
-      }
-      axios.request({
-        method: 'post',
-        url: `/results/${e.trialId}/export`,
-        headers
-      });
-    }
-
-    const doDownloadResult = () => {
-      const blob = new Blob([getDownloadResultsResponse], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.setAttribute('href', url);
-      link.setAttribute('download', e.trialId + '.csv');
-      recordDownloadEvent()
-      link.style.display = 'none';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-
-    e.preventDefault();
-    doDownloadResult()
+  const downloadClicked = (e: any) => {
+    getDownloadResultsOperation(e.trialId, e.nct_id);
   }
-
 
   return (
     <>
@@ -145,14 +123,14 @@ const Results = () => {
                      sortField="createdOn" sortOrder={-1}
                      emptyMessage={'No match results.'}
           >
-            <Column field="protocol_no" header="ID"></Column>
+            <Column field="trialId" header="ID"></Column>
             <Column field="nickname" header="Nickname"></Column>
             <Column field="principal_investigator" header="Principal Investigator"></Column>
             <Column field="ctml_status_label" header="CTML Status" sortable></Column>
             <Column field="createdAt" header="Created on" dataType="date"></Column>
             <Column field="updatedAt" header="Modified on" dataType="date"></Column>
-            <Column field="results" header="Match Results"></Column>
-            <Column field="resultsDate" header="Match Date" dataType="date"></Column>
+            <Column field="trialRetCount" header="Match Results" ></Column>
+            <Column field="matchedDate" header="Match Date" dataType="date"></Column>
             <Column field="download" header="Download" dataType="boolean" style={{ minWidth: '6rem' }} body={downloadBodyTemplate}></Column>
           </DataTable>
         </div>
