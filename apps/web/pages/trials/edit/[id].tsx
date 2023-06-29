@@ -8,6 +8,7 @@ import useEditTrial from "../../../hooks/useEditTrial";
 import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
 import {setTrialId} from "../../../store/slices/contextSlice";
 import {useDispatch} from "react-redux";
+import IdleComponent from "../../../components/IdleComponent";
 
 const containerStyle: React.CSSProperties = {
   display: 'flex',
@@ -87,7 +88,7 @@ const {
   return (
     <>
       <EditorTopBar isEditMode={true} />
-
+      <IdleComponent />
       <div style={containerStyle}>
         <LeftMenuEditorComponent />
         {(getCtmlSchemaResponse && formData) && <Ui ctml_schema={getCtmlSchemaResponse} formData={formData}></Ui>}

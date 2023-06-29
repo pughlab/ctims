@@ -5,6 +5,7 @@ import React, { useEffect } from 'react';
 import EditorTopBar from '../../../components/editor/EditorTopBar';
 import LeftMenuEditorComponent from '../../../components/editor/LeftMenuEditorComponent';
 import { Ui } from '@ctims-mono-repo/ui';
+import IdleComponent from "../../../components/IdleComponent";
 
 const EditorCreateCtmlForGroup = () => {
   const router = useRouter()
@@ -37,7 +38,7 @@ const EditorCreateCtmlForGroup = () => {
   return (
     <>
       <EditorTopBar />
-
+      <IdleComponent />
       <div style={containerStyle}>
         <LeftMenuEditorComponent />
         {response && <Ui ctml_schema={response}></Ui>}
