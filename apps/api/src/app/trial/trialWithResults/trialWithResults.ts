@@ -1,4 +1,6 @@
-export type status = (typeof status)[keyof typeof status]
+import {CtmlStatusEnum} from "../../../../../../libs/types/src/ctml-status.enum";
+
+export type status = (typeof CtmlStatusEnum)[keyof typeof CtmlStatusEnum];
 
 // services the results page, with counts of latest matches
 export type trialWithResults = {
