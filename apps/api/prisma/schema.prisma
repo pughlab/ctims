@@ -107,6 +107,7 @@ enum status {
   DRAFT
   IN_REVIEW
   COMPLETED
+  PENDING
 }
 
 enum event_type {

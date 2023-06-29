@@ -9,6 +9,7 @@ import useGetMatchResults from "../../hooks/useGetMatchResults";
 import {classNames} from "primereact/utils";
 import useDownloadResults from "../../hooks/useDownloadResults";
 import { CSVLink } from "react-csv";
+import {CtmlStatusEnum} from "../../../../libs/types/src/ctml-status.enum";
 
 const Results = () => {
 
@@ -43,7 +44,8 @@ const Results = () => {
 
   useEffect(() => {
     if (getMatchResultsResponse) {
-      setResults(getMatchResultsResponse);
+      const processedData = postProcess(getMatchResultsResponse);
+      setResults(processedData);
     }
   }, [getMatchResultsResponse])
 
@@ -105,6 +107,25 @@ const Results = () => {
 
   const downloadClicked = (e: any) => {
     getDownloadResultsOperation(e.trialId, e.nct_id);
+  }
+
+  // if trial is pending state (send to CTML but hasn't been matched), then don't display
+  // trialRetCount and matchedDate
+  const postProcess = (data: any) => {
+    let dataCopy = [];
+    for (let cur of data) {
+      const curCopy = {
+        trialId: cur.trialId,
+        nickname: cur.nickname,
+        principal_investigator: cur.principal_investigator,
+        ctml_status_label: cur.ctml_status_label,
+        createdAt: cur.createdAt,
+        updatedAt: cur.updatedAt,
+        trialRetCount: (cur.ctml_status_label === CtmlStatusEnum.PENDING) ? '' : cur.trialRetCount,
+        matchedDate: (cur.ctml_status_label === CtmlStatusEnum.PENDING) ? null : cur.matchedDate,
+      }
+    }
+    return data;
   }
 
   return (

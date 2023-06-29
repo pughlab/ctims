@@ -27,7 +27,7 @@ export class TrialResultService implements OnModuleInit {
     let matchResults: any;
     if (trials.length > 0) {
       try {
-        const url = `${process.env.REACT_APP_MM_API_URL}` + '/ctims_trial_match2';
+        const url = `${process.env.REACT_APP_MM_API_URL}` + '/ctims_trial_summary';
         matchResults = await axios.request(
           {
             method: 'get',
