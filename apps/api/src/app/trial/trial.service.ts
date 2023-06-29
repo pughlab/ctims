@@ -42,8 +42,8 @@ export class TrialService implements OnModuleInit {
     return this.prismaService.trial.findMany();
   }
 
-  findOne(id: number): Promise<trial> {
-    return this.prismaService.trial.findUnique(
+  async findOne(id: number): Promise<trial> {
+    const result = await this.prismaService.trial.findUnique(
       {
         where: { id: id },
         include: {
@@ -51,6 +51,12 @@ export class TrialService implements OnModuleInit {
         }
       }
     );
+    result.ctml_jsons = result.ctml_jsons.map(val => {
+      val.data = JSON.parse(val.data);
+      return val;
+    });
+
+    return result;
   }
 
   findTrialsByUser(userId: number): Promise<trial[]> {
