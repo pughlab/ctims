@@ -2,7 +2,6 @@ import styles from './index.module.scss';
 import { Button } from 'primereact/button';
 import { DataTable, DataTableRowMouseEventParams } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-
 import TopBar from "../../components/trials/TopBar";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
@@ -10,73 +9,28 @@ import React from 'react';
 import { Menu } from "primereact/menu";
 import { useSession } from "next-auth/react";
 import useGetUserTrials from "../../hooks/useGetUserTrials";
-
 import { ConfirmDialog } from 'primereact/confirmdialog';
 import { confirmDialog } from 'primereact/confirmdialog';
 import useDeleteTrial from '../../hooks/useDeleteTrial';
 import TrialGroupsDropdown from '../../components/trials/TrialGroupsDropdown';
 import useGetTrialsForUsersInGroup from '../../hooks/useGetTrialsForUsersInGroup';
-import {setIsFormDisabled} from "./../../store/slices/contextSlice";
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from "../../store/store";
-
+import { setIsFormDisabled } from "./../../store/slices/contextSlice";
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from "../../store/store";
+import useIdle from "../../hooks/useIdle";
+import IdleComponent from "../../components/IdleComponent";
 
 const Trials = () => {
-
-  // const {response, error, loading, getAllTrialsOperation} = useGetUserTrials();
-  const {
-    response: deleteTrialResponse,
-    error: deleteTrialError,
-    loading: deleteTrialLoading,
-    deleteTrialOperation
-  } = useDeleteTrial();
-  const {
-    response: getTrialsForUsersInGroupResponse,
-    error: getTrialsForUsersInGroupError,
-    loading: getTrialsForUsersInGroupLoading,
-    getTrialsForUsersInGroupOperation
-  } = useGetTrialsForUsersInGroup();
-
+  const { response: deleteTrialResponse, error: deleteTrialError, loading: deleteTrialLoading, deleteTrialOperation } = useDeleteTrial();
+  const { response: getTrialsForUsersInGroupResponse, error: getTrialsForUsersInGroupError, loading: getTrialsForUsersInGroupLoading, getTrialsForUsersInGroupOperation } = useGetTrialsForUsersInGroup();
   const isTrialGroupAdmin = useSelector((state: RootState) => state.context.isTrialGroupAdmin);
-
-
-  const {data} = useSession()
-  // console.log('session', data);
-  // const { accessToken } = data
-
-  useEffect(() => {
-    if (!data) {
-      router.push('/');
-      return;
-    }
-    localStorage.setItem('ctims-accessToken', data['accessToken']);
-    console.log('data', data)
-  }, [data])
-
-  useEffect(() => {
-    if (getTrialsForUsersInGroupResponse) {
-      setTrials(getTrialsForUsersInGroupResponse);
-      console.log('response', getTrialsForUsersInGroupResponse);
-    }
-  }, [getTrialsForUsersInGroupResponse]);
-
-  useEffect(() => {
-    if (deleteTrialResponse) {
-      // console.log('deleteTrialResponse', deleteTrialResponse);
-      getTrialsForUsersInGroupOperation(selectedTrialGroup.plainRole);
-    }
-  }, [deleteTrialResponse]);
-
-
+  const {data, status: sessionStatus} = useSession()
   const [trials, setTrials] = useState<any>([]);
   const [rowEntered, setRowEntered] = useState<DataTableRowMouseEventParams>(null);
   const [rowClicked, setRowClicked] = useState<any>(null);
   const [selectedTrialGroup, setSelectedTrialGroup] = useState<{ plainRole: string, isAdmin: boolean }>(null);
-
   const router = useRouter();
-
   const dispatch = useDispatch();
-
   const menu = useRef(null);
 
   const createCtmlClick = (e) => {
@@ -126,9 +80,7 @@ const Trials = () => {
   }
 
   const subMenuTemplate = (rowData) => {
-    // is row where mouse event entered the same as the current row to display?
     let isShown = (rowEntered === rowData);
-    // if the menu is shown, check the current row is the row where menu was clicked
     if (rowClicked) {
       isShown = rowData.id === rowClicked.id;
     }
@@ -153,30 +105,64 @@ const Trials = () => {
     setRowEntered(null);
   }
 
-  const onTrialGroupSelected = (e: { role: string, code: string }) => {
-    console.log('onTrialGroupSelected', e);
-    const plainRole = e.code.replace('-admin', '');
-    setSelectedTrialGroup({plainRole, isAdmin: e.code.includes('admin')});
+  const onTrialGroupSelected = ({ role, code }) => {
+    const plainRole = code.replace('-admin', '');
+    setSelectedTrialGroup({ plainRole, isAdmin: code.includes('admin') });
     getTrialsForUsersInGroupOperation(plainRole);
   }
 
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+    localStorage.setItem('ctims-accessToken', data['accessToken']);
+    console.log('data', data)
+  }, [data])
+
+  useEffect(() => {
+    if (getTrialsForUsersInGroupError) {
+      console.error('Error fetching trials:', getTrialsForUsersInGroupError);
+    }
+  }, [getTrialsForUsersInGroupError]);
+
+  useEffect(() => {
+    if (deleteTrialError) {
+      console.error('Error deleting trial:', deleteTrialError);
+    }
+  }, [deleteTrialError]);
+
+  useEffect(() => {
+    if (getTrialsForUsersInGroupResponse) {
+      setTrials(getTrialsForUsersInGroupResponse);
+      console.log('response', getTrialsForUsersInGroupResponse);
+    }
+  }, [getTrialsForUsersInGroupResponse]);
+
+  useEffect(() => {
+    if (deleteTrialResponse) {
+      getTrialsForUsersInGroupOperation(selectedTrialGroup.plainRole);
+    }
+  }, [deleteTrialResponse]);
+
   return (
     <>
-      <ConfirmDialog/>
-      {data && <>
-        <TopBar/>
+      <ConfirmDialog />
+      <IdleComponent />
+      {sessionStatus === 'loading' && <div>Loading...</div>}
+      {sessionStatus === 'authenticated' && <>
+        <TopBar />
         <div className={styles.pageContainer}>
-          <TrialGroupsDropdown roles={(data as any).roles} onTrialGroupSelected={onTrialGroupSelected}/>
+          <TrialGroupsDropdown roles={(data as unknown as any).roles} onTrialGroupSelected={onTrialGroupSelected} />
           <div className={styles.titleAndButtonsContainer}>
             <span className={styles.trialsText}>Trials</span>
             <div className={styles.buttonsContainer}>
-              <Button label="Import" className="p-button-text p-button-plain"/>
-              <Button disabled={!selectedTrialGroup} label="Create CTML" className={styles.createCtmlButton} onClick={(e) => createCtmlClick(e)}/>
+              <Button label="Import" className="p-button-text p-button-plain" />
+              <Button disabled={!selectedTrialGroup} label="Create CTML" className={styles.createCtmlButton} onClick={createCtmlClick} />
             </div>
           </div>
 
           <Menu model={trialMenuItems} ref={menu} popup id="popup_menu" className={styles.menu} appendTo={'self'}
-                onHide={() => clearRowClicked()}/>
+                onHide={clearRowClicked} />
 
           <div className={styles.tableContainer}>
             <DataTable value={trials} rowHover={true}
@@ -198,10 +184,9 @@ const Trials = () => {
 
         </div>
       </>}
-
+      {sessionStatus === 'unauthenticated' && <div>Please log in to view this page.</div>}
     </>
-
-
   )
 }
+
 export default Trials

@@ -5,9 +5,37 @@ import Layout from "../components/Layout";
 import { Provider } from 'react-redux'
 import {store} from "../store/store";
 import {SessionProvider} from "next-auth/react";
+import {useRouter} from "next/router";
+import {useEffect} from "react";
+import useRefreshToken from "../hooks/useRefreshToken";
 
 function CustomApp({ Component, pageProps: { session, ...pageProps }, }: AppProps) {
   const AnyComponent = Component as any;
+
+  const router = useRouter();
+
+  const { error, response, loading, refreshTokenOperation } = useRefreshToken();
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        const accessToken = localStorage.getItem('ctims-accessToken');
+        refreshTokenOperation();
+        if (!accessToken) {
+          router.push('/');
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Cleanup listener on unmount
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
+
+
   return (
     <Layout>
       <Head>

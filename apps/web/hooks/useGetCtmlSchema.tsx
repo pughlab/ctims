@@ -1,15 +1,24 @@
 import axios, {AxiosRequestConfig} from "axios";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useSession} from "next-auth/react";
 import {store} from "../store/store";
 import getConfig from 'next/config';
+import {useRouter} from "next/router";
 
 const useGetCtmlSchema = () => {
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const {data} = useSession()
+  const router = useRouter();
+
+  const {data,status} = useSession()
+
+  useEffect(() => {
+    if(status === 'unauthenticated') {
+      router.push('/');
+    }
+  }, [status])
 
   const getCtmlSchemaOperation = async() => {
 

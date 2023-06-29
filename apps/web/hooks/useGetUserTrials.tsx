@@ -15,13 +15,13 @@ const useGetUserTrials = () => {
 
   const router = useRouter();
 
-  const {data} = useSession()
+  const {data, status} = useSession()
 
   useEffect(() => {
-    if(!data) {
+    if(status === 'unauthenticated') {
       router.push('/');
     }
-  }, [data])
+  }, [status])
 
 
   const getAllTrialsOperation = async () => {

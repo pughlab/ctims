@@ -1,10 +1,8 @@
 import getConfig from "next/config";
 import axios from "axios";
-import {useEffect, useState} from "react";
-import {useSession} from "next-auth/react";
-import {useRouter} from "next/router";
+import {useState} from "react";
 
-const useEditTrial = () => {
+const useRefreshToken = () => {
   const { publicRuntimeConfig } = getConfig();
   axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
 
@@ -12,19 +10,11 @@ const useEditTrial = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const router = useRouter();
-
-  const {data, status} = useSession()
-
-  useEffect(() => {
-    if(status === 'unauthenticated') {
-      router.push('/');
-    }
-  }, [status])
-
-  const editTrialOperation = async (trialId: string) => {
-    console.log('editTrialOperation trialId', trialId)
+  const refreshTokenOperation = async () => {
     const accessToken = localStorage.getItem('ctims-accessToken');
+    if (!accessToken) {
+      return;
+    }
     const headers = {
       'Authorization': 'Bearer ' + accessToken,
     }
@@ -32,14 +22,14 @@ const useEditTrial = () => {
     try {
       const response = await axios.request({
         method: 'get',
-        url: `/trials/${trialId}`,
+        url: `/auth/refresh`,
         headers,
       });
-      const trial: any = response.data;
-      setResponse(trial);
+      const token: any = response.data;
+      localStorage.setItem('ctims-accessToken', token.accessToken);
+      setResponse(token);
     }
     catch (error) {
-      console.log('response', error.response)
       if(error.response) {
         setError(error.response.data);
       } else {
@@ -51,7 +41,6 @@ const useEditTrial = () => {
     }
   }
 
-  return {response, error, loading, editTrialOperation};
-
+  return {response, error, loading, refreshTokenOperation};
 }
-export default useEditTrial;
+export default useRefreshToken;
