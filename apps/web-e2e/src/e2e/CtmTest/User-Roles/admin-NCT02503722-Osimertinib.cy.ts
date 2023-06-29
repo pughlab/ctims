@@ -125,7 +125,7 @@ describe('Validate as TrialGroupx Admin on "NCT02503722_Osimertinib" ', { testIs
     table.each(($el) => {
       let ee = $el.text()
 
-      if (ee.includes('TrialGroupx Admin role')) {
+      if (ee.includes('NCT02503722_Osimertinib TrialGroupx Admin role')) {
         cy.wrap($el).prev().then(($prevEl) => {
           cy.wrap($prevEl).click();
         });
@@ -137,12 +137,12 @@ describe('Validate as TrialGroupx Admin on "NCT02503722_Osimertinib" ', { testIs
     })
   })
 
-  it('should enter values into the "Trial Editor Form" of "NCT02503722_Osimertinib"', () => {
-    createCTMLButton().should('not.have.class','p-disabled').click()
+  it('should enter values into the "Trial Editor Form" of "NCT02503722_Osimertinib" as Admin', () => {
+    createCTMLButton().should('not.have.class', 'p-disabled').click()
     cy.title().should('contain', 'CTIMS')
     trialEditorLeftPanelList().should('have.length', '9')
     cy.trialInformation(ctmlTestData.nct_id,
-      "TrialGroupx Admin role",
+      "NCT02503722_Osimertinib TrialGroupx Admin role",
       "John Doe",
       "Draft",
       ctmlTestData.long_title,
@@ -151,19 +151,39 @@ describe('Validate as TrialGroupx Admin on "NCT02503722_Osimertinib" ', { testIs
       ctmlTestData.protocol_no,
       ctmlTestData.nct_purpose,
       ctmlTestData.status)
+  })
+  it('should Save Trial information values, click edit NCT02503722_Osimertinib to re-enter, as Admin',() => {
+    cy.clickSaveEditButtonForTrialGroupAdmin("NCT02503722_Osimertinib TrialGroupx Admin role")
+  })
 
-    // Prior treatment requirements
+  //**************Prior Treatment Requirement
+  it('should enter the Prior Treatment Requirement values of NCT02503722_Osimertinib as Admin', () => {
+    trialEditorLeftPanelList().eq(1).should('contain','Prior Treatment Requirements').click()
     cy.clickMultipleFunction(getPriorTreatmentRequirementPlusIconMultiple(),ctmlTestData.prior_treatment_requirements.length)
     getPriorTreatmentRequirementMultiple().each((input, index) => {
       if (ctmlTestData.prior_treatment_requirements[index]) {
         cy.wrap(input).type(ctmlTestData.prior_treatment_requirements[index]);
       }
     })
+  });
+  it('should Save Prior Treatment Requirement values, click edit NCT02503722_Osimertinib to re-enter as Admin ',() => {
+    cy.clickSaveEditButtonForTrialGroupAdmin("NCT02503722_Osimertinib TrialGroupx Admin role")
+  })
 
-    //Age
+  //************** Age ***************
+
+  it('should enter the Age values of NCT02503722_Osimertinib as Admin', () => {
+    trialEditorLeftPanelList().eq(2).should('contain','Age').click()
     cy.age(ctmlTestData.age)
+  });
+  it('should Save Age values, click edit NCT02503722_Osimertinib to re-enter as Admin ',() => {
+    cy.clickSaveEditButtonForTrialGroupAdmin("NCT02503722_Osimertinib TrialGroupx Admin role")
+  })
 
-    //Drug List
+  //************** Drug List ***************
+
+  it('should enter the Drug List values of NCT02503722_Osimertinib as Admin', () => {
+    trialEditorLeftPanelList().eq(3).should('contain','Drug List').click()
     cy.clickMultipleFunction(getDrugNamePlusIcon(), ctmlTestData.drug_list.drug.length - 1)
 
     getDrugNameTextBoxMultiple().each((input, index) => {
@@ -171,36 +191,73 @@ describe('Validate as TrialGroupx Admin on "NCT02503722_Osimertinib" ', { testIs
         cy.wrap(input).type(ctmlTestData.drug_list.drug[index].drug_name);
       }
     })
-    //Management Group List
+  });
+
+  it('should Save Drug List values, click edit NCT02503722_Osimertinib to re-enter as Admin ',() => {
+    cy.clickSaveEditButtonForTrialGroupAdmin("NCT02503722_Osimertinib TrialGroupx Admin role")
+  })
+
+  //************** Management Group List ***************
+
+  it('should enter the Management Group List values of NCT02503722_Osimertinib as Admin', () => {
+    trialEditorLeftPanelList().eq(4).should('contain', 'Management Group List').click()
     cy.clickMultipleFunction(getPrimaryManagementGroupPlusIcon(), ctmlTestData.management_group_list.management_group.length - 1)
     getManagementGroupNameTextBoxMultiple().each(($input, index) => {
       cy.wrap($input).find('.p-dropdown').click().contains(ctmlTestData.management_group_list.management_group[index].management_group_name).click();
       cy.wrap($input).find('.p-selectbutton').contains(ctmlTestData.management_group_list.management_group[index].is_primary).click();
     });
+  })
 
-    //Site List
+    it('should Save Management Group List values, click edit NCT02503722_Osimertinib to re-enter as Admin ',() => {
+    cy.clickSaveEditButtonForTrialGroupAdmin("NCT02503722_Osimertinib TrialGroupx Admin role")
+  })
+
+  //************** Site List ***************
+
+  it('should enter the Site List values of NCT02503722_Osimertinib as Admin', () => {
+    trialEditorLeftPanelList().eq(5).should('contain','Site List').click()
     cy.clickMultipleFunction(getSiteNamePlusIcon(), ctmlTestData.site_list.site.length - 1)
     getSiteNameMultiple().each(($input, index) => {
       const site = ctmlTestData.site_list.site[index]
       cy.fillSiteDetails($input, site)
     })
+  });
 
-    //Sponsor List
+  it('should Save Site List values, click edit NCT02503722_Osimertinib to re-enter as Admin ',() => {
+    cy.clickSaveEditButtonForTrialGroupAdmin("NCT02503722_Osimertinib TrialGroupx Admin role")
+  })
+
+  //************** Sponsor List ***************
+
+  it('should enter the Sponsor List values of NCT02503722_Osimertinib as Admin', () => {
+    trialEditorLeftPanelList().eq(6).should('contain','Sponsor List').click()
     cy.clickMultipleFunction(getSponsorNamePlusIcon(), ctmlTestData.sponsor_list.sponsor.length - 1)
     getSponsorNameMultiple().each(($input, index) => {
       cy.wrap($input).find('.p-inputtext').type(ctmlTestData.sponsor_list.sponsor[index].sponsor_name)
       cy.wrap($input).find('.p-selectbutton').contains(ctmlTestData.sponsor_list.sponsor[index].is_principal_sponsor).click();
     });
+  });
 
-    //Staff List
+  it('should Save Sponsor List values, click edit NCT02503722_Osimertinib to re-enter as Admin ',() => {
+    cy.clickSaveEditButtonForTrialGroupAdmin("NCT02503722_Osimertinib TrialGroupx Admin role")
+  })
+
+  //************** Staff List ***************
+
+  it('should enter the Staff List values of NCT02503722_Osimertinib as Admin', () => {
+    trialEditorLeftPanelList().eq(7).should('contain','Staff List').click()
     cy.clickMultipleFunction(getProtocolStaffPlusIcon(), ctmlTestData.staff_list.protocol_staff.length - 1);
     getProtocolStaffMultiple().each(($input, index) => {
       const staff = ctmlTestData.staff_list.protocol_staff[index]
       cy.fillProtocolStaffDetails($input, staff)
     });
+  });
+  it('should Save Staff List values, click edit NCT02503722_Osimertinib to re-enter as Admin ',() => {
+    cy.clickSaveEditButtonForTrialGroupAdmin("NCT02503722_Osimertinib TrialGroupx Admin role")
   })
-//!************ Arm 1  *****************
-  it('should enter the values in "Treatment List and Matching criteria modal" for Arm 1 "NCT02503722_Osimertinib" ' , () => {
+
+//************ Arm 1  *****************
+  it('should enter the values in "Treatment List and Matching criteria modal" for Arm 1 "NCT02503722_Osimertinib" as Admin' , () => {
     trialEditorLeftPanelList().eq(8).should('contain', 'Treatment List').click()
     //delete the dose level
     cy.wait(1000)
@@ -305,7 +362,7 @@ describe('Validate as TrialGroupx Admin on "NCT02503722_Osimertinib" ', { testIs
     cy.wait(1000)
   })
 
-  it('should validate the match between "Json preview window text" and "NCT02503722_Osimertinib"', () => {
+  it('should validate the match between "Json preview window text" and "NCT02503722_Osimertinib" as Admin', () => {
     ctmlTestData.treatment_list.step[0].arm.forEach((arm,armIndex) => {
       const matchCriteria = arm.match
       getPreviewWindow().each(($el, index) => {
@@ -325,7 +382,8 @@ describe('Validate as TrialGroupx Admin on "NCT02503722_Osimertinib" ', { testIs
       })
     })
   });
-  it('should validate the match between "JSON preview window text" and "YAML preview window text" of "NCT02503722_Osimertinib"',  () => {
+  it('should validate the match between "JSON preview window text" and "YAML preview window text" of' +
+    ' "NCT02503722_Osimertinib" as Admin',  () => {
     getMatchingCriteriaTableHeader().contains('YAML').click()
     getPreviewTextWindow().invoke("text").then((yamlText) => {
       const yamlObject = yaml.load(yamlText)
@@ -338,40 +396,26 @@ describe('Validate as TrialGroupx Admin on "NCT02503722_Osimertinib" ', { testIs
       })
     })
   })
-  it('should Save, Edit Ctml test data of "NCT02503722_Osimertinib"', () => {
-    //save and Edit and Export
-    trialEditorSave().click()
-    cy.get('.p-toast-message-content').should('contain','Trial saved')
-    //cy.get('.p-toast-icon-close').click()
-    trialEditorBackButton().should('be.visible').trigger("click")
-    cy.get('.trials_trialsText__0DJhD').should('contain','Trials')
-    selectTrialGroupButton().click()
-    trialGroupxAdmin().click()
-    trialTableIdColumn()
-      .contains(ctmlTestData.nct_id)
-      .nextUntil('TrialGroupx Admin role')
-      .then((test) => {
-        trialTableIdColumn().contains(ctmlTestData.nct_id).click();
-        cy.get('.trials_trailsEllipseBtn__OHV_W > .p-button').click();
-        trialTableEdit().click()
-      })
-  });
+  it('should Save, Edit NCT02503722_Osimertinib to re-enter as Admin to validate Export as Admin ',() => {
+    cy.clickSaveEditButtonForTrialGroupAdmin("NCT02503722_Osimertinib TrialGroupx Admin role")
+  })
+
 
   //!************Export Ctml***************
-  it('should click on Export button, "Export as JSON" file of "NCT02503722_Osimertinib"', () => {
+  it('should click on Export button, "Export as JSON" file of "NCT02503722_Osimertinib" as Admin', () => {
     trialEditorHeaderButtons().eq(1).should('contain', 'Export').click()
     trialEditorRadioButtons().eq(0).should('contain.html', 'json')
     cy.get('[type="radio"]').first().check({force: true}).should('be.checked')
     validateCtmlOkButton().should('not.have.class','p-disabled').click()
   });
 
-  it('should click on Export button, "Export as YAML" file of "NCT02503722_Osimertinib" ', () => {
+  it('should click on Export button, "Export as YAML" file of "NCT02503722_Osimertinib" as Admin ', () => {
     trialEditorHeaderButtons().eq(1).should('contain', 'Export').click()
     trialEditorRadioButtons().eq(1).click({force: true})
     validateCtmlOkButton().click()
   });
 
-  it('should validate the match between "Export JSON" and "Export YAML" file of "NCT02503722_Osimertinib"', () => {
+  it('should validate the match between "Export JSON" and "Export YAML" file of "NCT02503722_Osimertinib" as Admin', () => {
     cy.readFile(ctmlJson).then((exportedCtmlModelJson) => {
       const json = JSON.stringify(exportedCtmlModelJson);
       cy.readFile(ctmlYaml).then((exportedCtmlModelYaml) => {
@@ -383,7 +427,7 @@ describe('Validate as TrialGroupx Admin on "NCT02503722_Osimertinib" ', { testIs
   })
 //!**************** Match Export Json file with Test Data
 
-  it('should validate exported "Trial Information" matches "ctmlTestData" of "NCT02503722_Osimertinib" ', () => {
+  it('should validate exported "Trial Information" matches "ctmlTestData" of "NCT02503722_Osimertinib" as Admin ', () => {
     cy.readFile(ctmlJson).then((exportedCtmlModel) => {
       const exportedAttributeNames = ['trial_id', 'long_title', 'short_title', 'phase', 'protocol_no', 'nct_purpose', 'status'];
       const testDataAttributeNames = ['nct_id', 'long_title', 'short_title', 'phase', 'protocol_no', 'nct_purpose', 'status'];
@@ -395,7 +439,7 @@ describe('Validate as TrialGroupx Admin on "NCT02503722_Osimertinib" ', { testIs
     });
   });
 
-  it('should validate exported "Age" matches "ctmlTestData" of "NCT02503722_Osimertinib"', () => {
+  it('should validate exported "Age" matches "ctmlTestData" of "NCT02503722_Osimertinib" as Admin', () => {
     cy.readFile(ctmlJson).then((exportedCtmlModel) => {
       const exportData = exportedCtmlModel.age
       let testData = ctmlTestData.age
@@ -403,7 +447,7 @@ describe('Validate as TrialGroupx Admin on "NCT02503722_Osimertinib" ', { testIs
     })
   });
 
-  it('should validate exported "Prior treatment requirement" match "ctmlTestData" of "NCT02503722_Osimertinib"', () => {
+  it('should validate exported "Prior treatment requirement" match "ctmlTestData" of "NCT02503722_Osimertinib" as Admin', () => {
     cy.readFile(ctmlJson).then((exportedCtmlModel) => {
       const exportData = exportedCtmlModel.prior_treatment_requirements
       let testData = ctmlTestData.prior_treatment_requirements
@@ -411,7 +455,7 @@ describe('Validate as TrialGroupx Admin on "NCT02503722_Osimertinib" ', { testIs
     })
   });
 
-  it('should validate exported "Drug list" match "ctmlTestData" of "NCT02503722_Osimertinib"', () => {
+  it('should validate exported "Drug list" match "ctmlTestData" of "NCT02503722_Osimertinib" as Admin', () => {
     let rawData = ctmlTestData.drug_list.drug
 
     cy.drugListAttributes(rawData).then(testDataMatchingCriteria => {
@@ -424,7 +468,7 @@ describe('Validate as TrialGroupx Admin on "NCT02503722_Osimertinib" ', { testIs
       });
     });
   });
-  it('should validate exported "Management Group list" matches "ctmlTestData" of "NCT02503722_Osimertinib"', () => {
+  it('should validate exported "Management Group list" matches "ctmlTestData" of "NCT02503722_Osimertinib" as Admin', () => {
     let rawData = ctmlTestData.management_group_list.management_group;
 
     cy.managementGroupListAttributes(rawData).then(testDataMatchingCriteria => {
@@ -438,7 +482,7 @@ describe('Validate as TrialGroupx Admin on "NCT02503722_Osimertinib" ', { testIs
     });
   });
 
-  it('should validate exported "Site Group list" matches "ctmlTestData" of "NCT02503722_Osimertinib"', () => {
+  it('should validate exported "Site Group list" matches "ctmlTestData" of "NCT02503722_Osimertinib" as Admin', () => {
     let rawData = ctmlTestData.site_list.site
 
     cy.siteListAttributes(rawData).then(testDataMatchingCriteria => {
@@ -452,7 +496,7 @@ describe('Validate as TrialGroupx Admin on "NCT02503722_Osimertinib" ', { testIs
     });
   });
 
-  it('should validate exported "Sponsor list" matches "ctmlTestData" of "NCT02503722_Osimertinib"', () => {
+  it('should validate exported "Sponsor list" matches "ctmlTestData" of "NCT02503722_Osimertinib" as Admin', () => {
     let rawData = ctmlTestData.sponsor_list.sponsor
 
     cy.sponsorListAttributes(rawData).then(testDataMatchingCriteria => {
@@ -466,7 +510,7 @@ describe('Validate as TrialGroupx Admin on "NCT02503722_Osimertinib" ', { testIs
     });
   });
 
-  it('should validate exported "Staff list" matches "ctmlTestData" of "NCT02503722_Osimertinib"', () => {
+  it('should validate exported "Staff list" matches "ctmlTestData" of "NCT02503722_Osimertinib" as Admin', () => {
     let rawData = ctmlTestData.staff_list.protocol_staff
 
     cy.staffListAttributes(rawData).then(testDataMatchingCriteria => {
@@ -480,7 +524,8 @@ describe('Validate as TrialGroupx Admin on "NCT02503722_Osimertinib" ', { testIs
     });
   })
 
-  it('should validate exported "Treatment list" with multiple arm/matching criteria matches with "ctmlTestData" of "NCT02503722_Osimertinib"',() =>{
+  it('should validate exported "Treatment list" with multiple arm/matching criteria matches with "ctmlTestData" of' +
+    ' "NCT02503722_Osimertinib" as Admin',() =>{
     //Arm and dose level validation
     const matchAndT = ctmlTestData.treatment_list.step[0].arm;
     cy.readFile(ctmlJson).then((exportedCtmlModel) => {

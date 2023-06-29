@@ -48,5 +48,8 @@ declare namespace Cypress {
     saveAndDelete()
     switchGroupOperator()
     processGenomicCondition(condition: any)
+    saveAndBackBtn()
+    clickSaveEditButtonForTrialGroupAdmin(nickNameVal: string)
+    clickSaveEditButtonForTrialGroupMember(nickNameVal: string)
   }
 }

@@ -92,7 +92,12 @@ import {
   trialTableEdit,
   trialEditorSave,
   trialEditorBackButton,
-  getCNVCall, getProteinChange, getVariantClassification
+  getCNVCall,
+  getProteinChange,
+  getVariantClassification,
+  selectTrialGroupButton,
+  trialGroupxAdmin,
+  ctimsUserTrialGroupxMember
 } from './app.po';
 import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib";
 import {NCT03297606_CAPTUR} from "../fixtures/NCT03297606_CAPTUR";
@@ -415,6 +420,13 @@ Cypress.Commands.add('compareMultiple', (data,testData) => {
             });
           });
 });
+Cypress.Commands.add('saveAndBackBtn', () => {
+  trialEditorSave().click()
+  cy.get('.p-toast-message-content').should('contain', 'Trial saved')
+  cy.get('.p-toast-icon-close').click()
+  trialEditorBackButton().should('be.visible').trigger("click")
+  cy.get('.trials_trialsText__0DJhD').should('contain', 'Trials')
+})
 Cypress.Commands.add('saveAndEdit', () => {
   trialEditorSave().click()
   cy.get('.p-toast-message-content').should('contain','Trial saved')
@@ -456,6 +468,78 @@ Cypress.Commands.add('processGenomicCondition', (condition) => {
     }
   });
 });
+/*
+Cypress.Commands.add('clickSaveEditButtonForTrialGroupAdmin', (nickNameVal) => {
+  cy.saveAndBackBtn();
+  selectTrialGroupButton().click();
+  trialGroupxAdmin().click();
+
+  const findElement = () => {
+    cy.get('table tr td').should('have.length.gt', 0).then(($td) => {
+      let found = false;
+      $td.each((index, el) => {
+        const ee = Cypress.$(el).text();
+        cy.window().scrollTo('bottom');
+        if (ee.includes(nickNameVal)) {
+          found = true;
+          cy.wrap(el).prev().then(($prevEl) => {
+            cy.wrap($prevEl).click();
+          });
+          cy.get('.trials_trailsEllipseBtn__OHV_W > .p-button').click();
+          trialTableEdit().click();
+          return false;
+        }
+      });
+      // If nickNameVal is not found, retry after a delay
+      if (!found) {
+        cy.wait(1000); // Adjust the delay time as needed
+        findElement();
+      }
+    });
+  };
+
+  findElement();
+});
+*/
+
+Cypress.Commands.add('clickSaveEditButtonForTrialGroupAdmin', (nickNameVal) => {
+  cy.saveAndBackBtn();
+  selectTrialGroupButton().click();
+  trialGroupxAdmin().click();
+  //cy.window().scrollTo('bottom');
+  cy.wait(1000)
+  cy.get('table tr td').each(($el) => {
+    let ee = $el.text();
+    if (ee.includes(nickNameVal)) {
+      cy.wrap($el).prev().then(($prevEl) => {
+        cy.wrap($prevEl).should('be.visible').click();
+      });
+      cy.get('.trials_trailsEllipseBtn__OHV_W > .p-button').click();
+      trialTableEdit().click();
+      return false;
+    }
+  });
+});
+//cy.wrap('.trials_trailsEllipseBtn__OHV_W').should('be.visible')
+
+Cypress.Commands.add('clickSaveEditButtonForTrialGroupMember', (nickNameVal) => {
+  cy.saveAndBackBtn();
+  selectTrialGroupButton().click();
+  ctimsUserTrialGroupxMember().click();
+  cy.get('table tr td').each(($el) => {
+    let ee = $el.text();
+
+    if (ee.includes(nickNameVal)) {
+      cy.wrap($el).prev().then(($prevEl) => {
+        cy.wrap($prevEl).click();
+      });
+      cy.get('.trials_trailsEllipseBtn__OHV_W > .p-button').click();
+      trialTableEdit().click();
+      return false;
+    }
+  });
+});
+
 
 //
 // -- This is a child command --
