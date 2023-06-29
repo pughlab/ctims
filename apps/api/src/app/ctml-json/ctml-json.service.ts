@@ -22,20 +22,34 @@ export class CtmlJsonService {
     return createdCtmlJson;
   }
 
-  findAll(): Promise<ctml_json[]> {
-    return this.prismaService.ctml_json.findMany();
+  async findAll(): Promise<ctml_json[]> {
+    let ctmlJsons = await this.prismaService.ctml_json.findMany();
+    ctmlJsons = ctmlJsons.map(ctmlJson => {
+      ctmlJson.data = JSON.parse(ctmlJson.data as string);
+      return ctmlJson;
+    })
+    return ctmlJsons;
   }
 
-  findOne(id: number) {
-    return this.prismaService.ctml_json.findUnique({ where: { id: id } });
+  async findOne(id: number) {
+    const ctmlJson = await this.prismaService.ctml_json.findUnique({
+      where: { id: id }
+    });
+    ctmlJson.data = JSON.parse(ctmlJson.data as string);
+    return ctmlJson;
   }
 
-  findByTrialId(trialId: number): Promise<ctml_json[]> {
-    return this.prismaService.ctml_json.findMany({
+  async findByTrialId(trialId: number): Promise<ctml_json[]> {
+    let ctmlJsons = await this.prismaService.ctml_json.findMany({
       where: {
         trialId: trialId
       }
     });
+    ctmlJsons = ctmlJsons.map(ctmlJson => {
+      ctmlJson.data = JSON.parse(ctmlJson.data as string);
+      return ctmlJson;
+    })
+    return ctmlJsons;
   }
 
   async update(updateCtmlJsonDto: UpdateCtmlJsonDto): Promise<ctml_json[]> {
@@ -68,7 +82,7 @@ export class CtmlJsonService {
           ]
         }
       });
-      const affected = await this.prismaService.ctml_json.findMany({
+      let affected = await this.prismaService.ctml_json.findMany({
         where: {
           AND: [
             { trialId: trialId },
@@ -76,6 +90,12 @@ export class CtmlJsonService {
           ]
         }
       });
+      
+      // Convert the string version of the data into an object
+      affected = affected.map(val => {
+        val.data = JSON.parse(val.data as string);
+        return val;
+      })
       return affected;
 
     }

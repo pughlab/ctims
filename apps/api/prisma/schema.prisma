@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
 }
 
 datasource db {
@@ -25,8 +26,8 @@ model ctml_json {
   id        Int          @id @default(autoincrement())
   version   ctml_schema? @relation(fields: [versionId], references: [id])
   versionId Int?
-  // This should be encrypted
-  data      Json?
+  // The /// comment is an annotation added to the column to make it encrypted. See prisma-field-encryption package.
+  data      String?      @db.LongText /// @encrypted
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
   // One trial to many ctml_json records
