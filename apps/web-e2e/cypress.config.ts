@@ -30,7 +30,7 @@ const cypressJsonConfig: EndToEndConfigOptions = {
   //specPattern: 'src/e2e/CtmTest/CTM-105-NCT02503722_Osimertinib.cy.ts',
  // specPattern: 'src/e2e/CtmTest/CTM-114-NCT03297606_CAPTUR.cy.ts',
   //specPattern: 'src/e2e/CtmTest/CTM-194-Save-Edit-Delete/CTM-194-NCT03297606_CAPTUR-Edit.cy.ts',
-  //specPattern: 'src/e2e/Regression/E2E-RegressionTest.cy.ts',
+ // specPattern: 'src/e2e/E2ETest/E2E-Test.cy.ts',
   //specPattern: 'src/e2e/CtmTest/CTM-204/CTM-204-NCT03114319_TNO155.cy.ts',
  // specPattern: 'src/e2e/CtmTest/User-Roles/**.cy.ts',
   //specPattern: 'src/e2e/CtmTest/User-Roles/member-NCT02503722_Osimertinib.cy.ts',

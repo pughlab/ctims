@@ -118,33 +118,33 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
   const ctmlJson = `./cypress/downloads/${jsonFile}`
   const ctmlYaml = `./cypress/downloads/${yamlFile}`
 
-  it('should "Delete" the existing Ctml file as trialgroupx Admin', () => {
-    createCTMLButton().should('have.class','p-disabled')
-    selectTrialGroupButton().click()
-    trialGroupxAdmin().click()
-    let table = cy.get('table tr td')
-    table.each(($el) => {
-      let ee = $el.text()
+   it('should "Delete" the existing NCT03114319_TN0155 as trialgroupx Admin', () => {
+     createCTMLButton().should('have.class','p-disabled')
+     selectTrialGroupButton().click()
+     trialGroupxAdmin().click()
+     let table = cy.get('table tr td')
+     table.each(($el) => {
+       let ee = $el.text()
 
-      if (ee.includes('NCT03114319_TNO155 TrialGroupx Admin role')) {
-        cy.wrap($el).prev().then(($prevEl) => {
-          cy.wrap($prevEl).click();
-        });
-        cy.get('.trials_trailsEllipseBtn__OHV_W > .p-button').click();
-        trialTableDelete().click();
-        trialTableDialogueDeleteBtn().click();
-        return false;
-      }
-    })
-  })
+       if (ee.includes('NCT03114319_TN0155 TrialGroupx Admin role')) {
+         cy.wrap($el).prev().then(($prevEl) => {
+           cy.wrap($prevEl).click();
+         });
+         cy.get('.trials_trailsEllipseBtn__OHV_W > .p-button').click();
+         trialTableDelete().click();
+         trialTableDialogueDeleteBtn().click();
+         return false;
+       }
+     })
+   })
 
-  it('should enter values into the "Trial Editor Form"', () => {
-    createCTMLButton().should('not.have.class','p-disabled').click()
+  it('should enter values into the "Trial Editor Form" of "NCT03114319_TN0155" as Admin', () => {
+    createCTMLButton().should('not.have.class', 'p-disabled').click()
     cy.title().should('contain', 'CTIMS')
     trialEditorLeftPanelList().should('have.length', '9')
     cy.trialInformation(ctmlTestData.nct_id,
-      "NCT03114319_TNO155 TrialGroupx Admin role",
-      "Srimathi",
+      "NCT03114319_TN0155 TrialGroupx Admin role",
+      "John Doe",
       "Draft",
       ctmlTestData.long_title,
       ctmlTestData.short_title,
@@ -152,62 +152,113 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
       ctmlTestData.protocol_no,
       ctmlTestData.nct_purpose,
       ctmlTestData.status)
+  })
+  it('should Save Trial information values, click edit NCT03114319_TN0155 to re-enter, as Admin',() => {
+    cy.wait(1000);
+    cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
+  })
 
-    // Prior treatment requirements
+  //**************Prior Treatment Requirement
+  it('should enter the Prior Treatment Requirement values of NCT03114319_TN0155 as Admin', () => {
+    trialEditorLeftPanelList().eq(1).should('contain','Prior Treatment Requirements').click()
     cy.clickMultipleFunction(getPriorTreatmentRequirementPlusIconMultiple(),ctmlTestData.prior_treatment_requirements.length)
     getPriorTreatmentRequirementMultiple().each((input, index) => {
       if (ctmlTestData.prior_treatment_requirements[index]) {
         cy.wrap(input).type(ctmlTestData.prior_treatment_requirements[index]);
       }
     })
-    //Age
-    cy.age(ctmlTestData.age)
-
-    //Drug List
-    cy.clickMultipleFunction(getDrugNamePlusIcon(),ctmlTestData.drug_list.drug.length - 1)
-
-    getDrugNameTextBoxMultiple().each((input, index) => {
-      if (ctmlTestData.drug_list.drug[index]) {
-        cy.wrap(input).type(ctmlTestData.drug_list.drug[index].drug_name);
-      }
-    })
-
-    //Management Group List
-    cy.clickMultipleFunction(getPrimaryManagementGroupPlusIcon(),ctmlTestData.management_group_list.management_group.length - 1)
-    getManagementGroupNameTextBoxMultiple().each(($input, index) => {
-      cy.wrap($input).find('.p-dropdown').click().contains(ctmlTestData.management_group_list.management_group[index].management_group_name).click();
-      cy.wrap($input).find('.p-selectbutton').contains(ctmlTestData.management_group_list.management_group[index].is_primary).click();
-    });
-
-    //Site List - done
-    cy.clickMultipleFunction(getSiteNamePlusIcon(),ctmlTestData.site_list.site.length - 1)
-    getSiteNameMultiple().each(($input, index) => {
-      cy.wrap($input).find('.p-dropdown').eq(0).click().contains(ctmlTestData.site_list.site[index].site_name).click();
-      cy.wrap($input).find('.p-dropdown').eq(1).click().contains(ctmlTestData.site_list.site[index].site_status).click();
-      cy.wrap($input).find('.p-selectbutton').eq(0).click().contains(ctmlTestData.site_list.site[index].coordinating_center).click();
-      cy.wrap($input).find('.p-selectbutton').eq(1).click().contains(ctmlTestData.site_list.site[index].uses_cancer_center_irb).click();
-    });
-
-    //Sponsor List array of 5 values - done
-    cy.clickMultipleFunction(getSponsorNamePlusIcon(), ctmlTestData.sponsor_list.sponsor.length - 1)
-    getSponsorNameMultiple().each(($input, index) => {
-      cy.wrap($input).find('.p-inputtext').type(ctmlTestData.sponsor_list.sponsor[index].sponsor_name)
-      cy.wrap($input).find('.p-selectbutton').contains(ctmlTestData.sponsor_list.sponsor[index].is_principal_sponsor).click();
-    });
-
-    //Staff List - Done
-    cy.clickMultipleFunction(getProtocolStaffPlusIcon,
-      ctmlTestData.staff_list.protocol_staff.length - 1);
-    getProtocolStaffMultiple().each(($input, index) => {
-      cy.log($input.attr('id'));
-      cy.wrap($input).find('.p-inputtext').eq(0).type(ctmlTestData.staff_list.protocol_staff[index].first_name);
-      cy.wrap($input).find('.p-inputtext').eq(1).type(ctmlTestData.staff_list.protocol_staff[index].last_name);
-      cy.wrap($input).find('.p-inputtext').eq(2).type(ctmlTestData.staff_list.protocol_staff[index].email_address);
-      cy.wrap($input).find('.p-dropdown').eq(0).click().contains(ctmlTestData.staff_list.protocol_staff[index].institution_name).click();
-      cy.wrap($input).find('.p-dropdown').eq(1).click().contains(ctmlTestData.staff_list.protocol_staff[index].staff_role).click();
-    });
+  });
+  it('should Save Prior Treatment Requirement values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+    cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
   })
 
+ //!************** Age ***************
+
+  it('should enter the Age values of NCT03114319_TN0155 as Admin', () => {
+    trialEditorLeftPanelList().eq(2).should('contain','Age').click()
+    cy.age(ctmlTestData.age)
+  });
+  it('should Save Age values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+    cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
+  })
+/*
+  //!************** Drug List ***************
+
+    it('should enter the Drug List values of NCT03114319_TN0155 as Admin', () => {
+     trialEditorLeftPanelList().eq(3).should('contain','Drug List').click()
+     cy.clickMultipleFunction(getDrugNamePlusIcon(), ctmlTestData.drug_list.drug.length - 1)
+
+     getDrugNameTextBoxMultiple().each((input, index) => {
+       if (ctmlTestData.drug_list.drug[index]) {
+         cy.wrap(input).type(ctmlTestData.drug_list.drug[index].drug_name);
+       }
+     })
+   });
+
+   it('should Save Drug List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+     cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
+   })
+
+   //!************** Management Group List ***************
+
+   it('should enter the Management Group List values of NCT02503722_Osimertinib as Admin', () => {
+     trialEditorLeftPanelList().eq(4).should('contain', 'Management Group List').click()
+     cy.clickMultipleFunction(getPrimaryManagementGroupPlusIcon(), ctmlTestData.management_group_list.management_group.length - 1)
+     getManagementGroupNameTextBoxMultiple().each(($input, index) => {
+       cy.wrap($input).find('.p-dropdown').click().contains(ctmlTestData.management_group_list.management_group[index].management_group_name).click();
+       cy.wrap($input).find('.p-selectbutton').contains(ctmlTestData.management_group_list.management_group[index].is_primary).click();
+     });
+   })
+
+   it('should Save Management Group List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+     cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
+   })
+
+   //!************** Site List ***************
+
+   it('should enter the Site List values of NCT03114319_TN0155 as Admin', () => {
+     trialEditorLeftPanelList().eq(5).should('contain','Site List').click()
+     cy.clickMultipleFunction(getSiteNamePlusIcon(), ctmlTestData.site_list.site.length - 1)
+     getSiteNameMultiple().each(($input, index) => {
+       const site = ctmlTestData.site_list.site[index]
+       cy.fillSiteDetails($input, site)
+     })
+   });
+
+   it('should Save Site List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+     cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
+   })
+
+   //!************** Sponsor List ***************
+
+   it('should enter the Sponsor List values of NCT03114319_TN0155 as Admin', () => {
+     trialEditorLeftPanelList().eq(6).should('contain','Sponsor List').click()
+     cy.clickMultipleFunction(getSponsorNamePlusIcon(), ctmlTestData.sponsor_list.sponsor.length - 1)
+     getSponsorNameMultiple().each(($input, index) => {
+       cy.wrap($input).find('.p-inputtext').type(ctmlTestData.sponsor_list.sponsor[index].sponsor_name)
+       cy.wrap($input).find('.p-selectbutton').contains(ctmlTestData.sponsor_list.sponsor[index].is_principal_sponsor).click();
+     });
+   });
+
+   it('should Save Sponsor List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+     cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
+   })
+
+   //!************** Staff List ***************
+
+   it('should enter the Staff List values of NCT03114319_TN0155 as Admin', () => {
+     trialEditorLeftPanelList().eq(7).should('contain','Staff List').click()
+     cy.clickMultipleFunction(getProtocolStaffPlusIcon(), ctmlTestData.staff_list.protocol_staff.length - 1);
+     getProtocolStaffMultiple().each(($input, index) => {
+       const staff = ctmlTestData.staff_list.protocol_staff[index]
+       cy.fillProtocolStaffDetails($input, staff)
+     });
+   });
+
+   it('should Save Staff List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+     cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
+   })*/
+/*
 //!************ Arm 1  *****************
   it('should enter the values in "Treatment List and Matching criteria modal" for Arm 1', () => {
     trialEditorLeftPanelList().eq(8).should('contain', 'Treatment List').click()
@@ -236,7 +287,7 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
         //Validate the header
         getMatchCriteriaHeader().should('contain', treatmentList[index].arm_code);
         getAddCriteriaGroup().click()
-        //******** OR ********************
+        //!******** OR ********************
         cy.clickParentAnd()
         cy.switchGroupOperator()
         getTruncateButton().click()
@@ -251,17 +302,11 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
 
         cy.clickParentNode(1).click()
         cy.clickOr()
- //       cy.clickChildToggleArrowButton(2)
         cy.clickParentNode(3).click()
         cy.clickGenomic()
-        //expand child OR
-//        cy.get(':nth-child(2) > .p-treenode-content > .p-tree-toggler > .p-tree-toggler-icon')
-//        cy.get('li:nth-child(1)>ul>li:nth-child(2)>div>.p-tree-toggler').click()
-//        cy.clickChildToggleArrowButton(2)
         let orConditions = ctmlTestData.treatment_list.step[0].arm[0].match[0].or[0].and[1].or
         cy.clickMultipleFunction(getAddCriteriaToSameList(), orConditions.length - 1)
         cy.get('li:nth-child(1)>ul>li:nth-child(2)').find('.p-treenode-children>li')
-          // getSubGroup().find('.p-treenode-children>li')
           .each((childElement, index) => {
             if (Cypress.$(childElement).length > 0) {
               cy.wrap(childElement).click() // click on each child element
@@ -348,7 +393,10 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
         getSaveMatchingCriteria().click()
         }
     })
-//    cy.saveAndEdit()
+  })
+
+  it('should Save Staff List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+    cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
   })
 
   //!************ Arm 2  *****************
@@ -393,7 +441,7 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
         //Validate the header
         getMatchCriteriaHeader().should('contain', treatmentList[index].arm_code);
         getAddCriteriaGroup().click()
-        //******** Clinical ********************
+        //!******** Clinical ********************
         cy.clickParentAnd()
         cy.clickClinical()
         getClinicalAge().type(ctmlTestData.treatment_list.step[0].arm[1].match[0].and[0].clinical.age_numerical)
@@ -437,7 +485,10 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
          getSaveMatchingCriteria().click()
       }
     })
-//    cy.saveAndEdit()
+  })
+
+  it('should Save Staff List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+    cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
   })
 
 //!************ Arm 3  *****************
@@ -483,11 +534,8 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
         //!*****And[1]> or> genomic (9 values)********
         cy.clickParentNode(1).click()
         cy.clickOr()
-//        cy.clickChildToggleArrowButton(1)
         cy.clickParentNode(3).click()
         cy.clickGenomic()
-       // cy.clickChildToggleArrowButton(2)
- //       cy.get('.p-treenode-children').find('.p-tree-toggler-icon').eq(2).click()
         let orConditions = ctmlTestData.treatment_list.step[0].arm[2].match[0].or[0].and[1].or
         cy.clickMultipleFunction(getAddCriteriaToSameList(), orConditions.length - 1)
        //Or subgroup second index of And
@@ -522,9 +570,6 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
               return false;
             }
           })
-        /*//Save after each subgroup and re-enter
-        getSaveMatchingCriteria().click()
-        getEditMatchingCriteriaMultiple().eq(index).click()*/
 
         //collapse the first And child
         cy.clickChildToggleArrowButton(1)
@@ -534,8 +579,6 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
         cy.clickAnd()
         cy.clickParentNode(2).click()
         cy.clickGenomic()
-        //expand the second And subgroup
-//        cy.clickChildToggleArrowButton(2)
         let values = ctmlTestData.treatment_list.step[0].arm[2].match[0].or[1].and[0].genomic
         Object.entries(values).map(([key,value]) => {
           if (key === 'hugo_symbol') {
@@ -569,9 +612,6 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
         cy.clickGenomic()
         let orConditionGenomic = ctmlTestData.treatment_list.step[0].arm[2].match[0].or[1].and[1].or
         cy.clickMultipleFunction(getAddCriteriaToSameList(), orConditionGenomic.length - 1)
-        //expand or child
-//        cy.get(':nth-child(2) > .p-treenode-children > :nth-child(2) > .p-treenode-content > .p-tree-toggler >' +
-//          ' .p-tree-toggler-icon').click()
         //or expanded, add genomic fields values at specified index
         cy.get('li:nth-child(2)>ul>li:nth-child(2)').find('.p-treenode-children>li')
           .each((childElement, index) => {
@@ -603,9 +643,6 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
               return false;
             }
           })
-       /* //Save after each subgroup and re-enter
-        getSaveMatchingCriteria().click()
-        getEditMatchingCriteriaMultiple().eq(index).click()*/
 
         cy.clickChildToggleArrowButton(2) //close the child components
 
@@ -618,14 +655,10 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
         getClinicalOncotreePrimaryDiagnosis().type(ctmlTestData.treatment_list.step[0].arm[2].match[0].or[2].and[0].clinical.oncotree_primary_diagnosis)
         cy.clickParentNode(3).click()
         cy.clickOr()
-//        cy.clickChildToggleArrowButton(3) //expand 3rd And subgroup
         cy.clickParentNode(5).click()
         cy.clickGenomic()
         let orConditionGenomic3 = ctmlTestData.treatment_list.step[0].arm[2].match[0].or[2].and[1].or
         cy.clickMultipleFunction(getAddCriteriaToSameList(), orConditionGenomic3.length - 1)
-        //expand or child
-//       cy.get('li:nth-child(3)>ul>li:nth-child(2)>div>.p-tree-toggler').click()
-
         cy.get('li:nth-child(3)>ul>li:nth-child(2)').find('.p-treenode-children>li')
           .each((childElement, index) => {
             cy.log(index.toString())
@@ -656,9 +689,6 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
               return false;
             }
           })
-       /* //Save after each subgroup and re-enter
-        getSaveMatchingCriteria().click()
-        getEditMatchingCriteriaMultiple().eq(index).click()*/
         //close the And subgroup
         cy.clickChildToggleArrowButton(3) //collapse 3rd And subgroup
 
@@ -671,14 +701,10 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
         getClinicalOncotreePrimaryDiagnosis().type(ctmlTestData.treatment_list.step[0].arm[2].match[0].or[3].and[0].clinical.oncotree_primary_diagnosis)
         cy.clickParentNode(4).click()
         cy.clickOr()
-//        cy.clickChildToggleArrowButton(4) //expand 3rd And subgroup
         cy.clickParentNode(6).click()
         cy.clickGenomic()
         let orConditionGenomic4 = ctmlTestData.treatment_list.step[0].arm[2].match[0].or[3].and[1].or
         cy.clickMultipleFunction(getAddCriteriaToSameList(), orConditionGenomic4.length - 1)
-        //expand or child
-//        cy.get('li:nth-child(4)>ul>li:nth-child(2)>div>.p-tree-toggler').click()
-
         cy.get('li:nth-child(4)>ul>li:nth-child(2)').find('.p-treenode-children>li')
           .each((childElement, index) => {
             cy.log(index.toString())
@@ -710,10 +736,6 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
               return false;
             }
           })
-       /* //Save after each subgroup and re-enter
-        getSaveMatchingCriteria().click()
-        getEditMatchingCriteriaMultiple().eq(index).click()*/
-        //close the And subgroup
         cy.clickChildToggleArrowButton(4) //collapse 3rd And subgroup
 
         //!************ 5th Or And subgroup********
@@ -725,14 +747,10 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
         getClinicalOncotreePrimaryDiagnosis().type(ctmlTestData.treatment_list.step[0].arm[2].match[0].or[4].and[0].clinical.oncotree_primary_diagnosis)
         cy.clickParentNode(5).click()
         cy.clickOr()
-//        cy.clickChildToggleArrowButton(5) //expand 3rd And subgroup
         cy.clickParentNode(7).click()
         cy.clickGenomic()
         let orConditionGenomic5 = ctmlTestData.treatment_list.step[0].arm[2].match[0].or[4].and[1].or
         cy.clickMultipleFunction(getAddCriteriaToSameList(), orConditionGenomic5.length - 1)
-        //expand or child
-//        cy.get('li:nth-child(5)>ul>li:nth-child(2)>div>.p-tree-toggler').click()
-
         cy.get('li:nth-child(5)>ul>li:nth-child(2)').find('.p-treenode-children>li')
           .each((childElement, index) => {
             cy.log(index.toString())
@@ -769,7 +787,10 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
         getSaveMatchingCriteria().click()
       }
     })
-//    cy.saveAndEdit()
+  })
+
+  it('should Save Staff List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+    cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
   })
 
   //!************ Arm 4  *****************
@@ -815,7 +836,7 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
         //Validate the header
         getMatchCriteriaHeader().should('contain', treatmentList[index].arm_code);
         getAddCriteriaGroup().click()
-        //******** Clinical ********************
+        //!******** Clinical ********************
         cy.clickParentAnd()
         cy.clickClinical()
         getClinicalAge().type(ctmlTestData.treatment_list.step[0].arm[3].match[0].and[0].clinical.age_numerical)
@@ -859,10 +880,9 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
         getSaveMatchingCriteria().click()
       }
     })
-//    cy.saveAndEdit()
   })
 
-  //******** Matching criteria Preview ********************
+  //!******** Matching criteria Preview ********************
   it('should validate Arm 1,2,3,4 "Json preview window text" matches with "ctmlTestData"', () => {
     ctmlTestData.treatment_list.step[0].arm.forEach((arm, armIndex) => {
       const matchCriteria = arm.match;
@@ -941,7 +961,7 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
       });
     });
   })
-//**************** Match Export Json file with Test Data
+//!**************** Match Export Json file with Test Data
 
   it('should validate exported "Trial Information" matches "ctmlTestData" ', () => {
     cy.readFile(ctmlJson).then((exportedCtmlModel) => {
@@ -1100,5 +1120,6 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
     });
   });
 
+*/
  // baseClass.afterClass()
 })
