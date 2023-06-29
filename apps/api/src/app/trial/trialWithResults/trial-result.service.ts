@@ -27,7 +27,7 @@ export class TrialResultService implements OnModuleInit {
     let matchResults: any;
     if (trials.length > 0) {
       try {
-        const url = `${process.env.REACT_APP_MM_API_URL}` + '/ctims_trial_summary';
+        const url = `${process.env.MM_API_URL}/ctims_trial_summary`;
         matchResults = await axios.request(
           {
             method: 'get',
@@ -78,7 +78,7 @@ export class TrialResultService implements OnModuleInit {
       );
       console.log('trial: ', trial);
       const protocol_no = trial.nct_id;
-      const url = `${process.env.REACT_APP_MM_API_URL}` + '/ctims_trial_match?where={"protocol_no":"' + protocol_no + '"}';
+      const url = `${process.env.MM_API_URL}/ctims_trial_match?where={"protocol_no":"${protocol_no}"}`;
       const matchResults = await axios.request(
         {
           method: 'get',

@@ -10,14 +10,13 @@ import {classNames} from "primereact/utils";
 import useDownloadResults from "../../hooks/useDownloadResults";
 import { CSVLink } from "react-csv";
 import {CtmlStatusEnum} from "../../../../libs/types/src/ctml-status.enum";
+import IdleComponent from "../../components/IdleComponent";
 
 const Results = () => {
 
-  // maybe don't need this one we refactor tab navigation
-  const {data} = useSession()
+  const {data, status: sessionStatus} = useSession()
   useEffect(() => {
     if (!data) {
-      router.push('/');
       return;
     }
     localStorage.setItem('ctims-accessToken', data['accessToken']);
@@ -130,32 +129,38 @@ const Results = () => {
 
   return (
     <>
+      <IdleComponent />
+      {sessionStatus === 'loading' && <div>Loading...</div>}
+      {sessionStatus === 'authenticated' && <>
       <TopBar/>
-      {data && <>
-        <div className={styles.pageContainer}>
-          <span className={styles.trialsText}>Match Results</span>
-        </div>
+        {data && <>
+          <div className={styles.pageContainer}>
+            <span className={styles.trialsText}>Match Results</span>
+          </div>
 
-        <div className={styles.tableContainer}>
-          <DataTable value={results} rowHover={true}
-                     loading={getMatchResultsLoading}
-                     // onRowMouseEnter={(event) => setRowEntered(event.data)}
-                     // onRowMouseLeave={() => setRowEntered(null)}
-                     sortField="createdOn" sortOrder={-1}
-                     emptyMessage={'No match results.'}
-          >
-            <Column field="trialId" header="ID"></Column>
-            <Column field="nickname" header="Nickname"></Column>
-            <Column field="principal_investigator" header="Principal Investigator"></Column>
-            <Column field="ctml_status_label" header="CTML Status" sortable></Column>
-            <Column field="createdAt" header="Created on" dataType="date"></Column>
-            <Column field="updatedAt" header="Modified on" dataType="date"></Column>
-            <Column field="trialRetCount" header="Match Results" ></Column>
-            <Column field="matchedDate" header="Match Date" dataType="date"></Column>
-            <Column field="download" header="Download" dataType="boolean" style={{ minWidth: '6rem' }} body={downloadBodyTemplate}></Column>
-          </DataTable>
-        </div>
+          <div className={styles.tableContainer}>
+            <DataTable value={results} rowHover={true}
+                       loading={getMatchResultsLoading}
+              // onRowMouseEnter={(event) => setRowEntered(event.data)}
+              // onRowMouseLeave={() => setRowEntered(null)}
+                       sortField="createdOn" sortOrder={-1}
+                       emptyMessage={'No match results.'}
+            >
+              <Column field="trialId" header="ID"></Column>
+              <Column field="nickname" header="Nickname"></Column>
+              <Column field="principal_investigator" header="Principal Investigator"></Column>
+              <Column field="ctml_status_label" header="CTML Status" sortable></Column>
+              <Column field="createdAt" header="Created on" dataType="date"></Column>
+              <Column field="updatedAt" header="Modified on" dataType="date"></Column>
+              <Column field="trialRetCount" header="Match Results"></Column>
+              <Column field="matchedDate" header="Match Date" dataType="date"></Column>
+              <Column field="download" header="Download" dataType="boolean" style={{minWidth: '6rem'}}
+                      body={downloadBodyTemplate}></Column>
+            </DataTable>
+          </div>
+        </>}
       </>}
+      {sessionStatus === 'unauthenticated' && <div>Please log in to view this page.</div>}
     </>
   )
 }
