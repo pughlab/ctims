@@ -3,6 +3,7 @@ import { CreateCtmlJsonDto } from './dto/create-ctml-json.dto';
 import { UpdateCtmlJsonDto } from './dto/update-ctml-json.dto';
 import { ctml_json, event_type, user } from "@prisma/client";
 import {PrismaService} from "../prisma.service";
+import axios from "axios";
 
 @Injectable()
 export class CtmlJsonService {
@@ -90,7 +91,7 @@ export class CtmlJsonService {
           ]
         }
       });
-      
+
       // Convert the string version of the data into an object
       affected = affected.map(val => {
         val.data = JSON.parse(val.data as string);
@@ -114,4 +115,20 @@ export class CtmlJsonService {
     return this.prismaService.ctml_json.delete({ where: { id } });
   }
 
+  async send_to_matchminer(ctml_json: any) {
+    try {
+      const url = `${process.env.MM_API_URL}/load_trial`;
+      const results = await axios.request(
+        {
+          method: 'post',
+          url: url,
+          data: ctml_json,
+        }
+      );
+      console.log(results);
+    } catch (error) {
+      console.log(error);
+      throw new Error(error);
+    }
+  }
 }
