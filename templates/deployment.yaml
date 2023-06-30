@@ -66,6 +66,8 @@ spec:
               value: "{{ .Values.ctimsapi.keycloak.adminClientSecret }}"
             - name: KEYCLOAK_TOKEN_ENDPOINT
               value: "{{ .Values.ctimsapi.keycloak.tokenEndpoint }}"
+            - name: PRISMA_FIELD_ENCRYPTION_KEY
+              value: "{{ .Values.ctimsapi.prismaEncryptionKey }}"
         - image: "{{ .Values.docker.dbImage }}:latest"
           name: ctimsdb
           ports:
