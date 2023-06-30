@@ -9,6 +9,7 @@ import {signOut} from "next-auth/react";
 import {Toast} from "primereact/toast";
 import useSaveTrial from "../../hooks/useSaveTrial";
 import { useSelector } from 'react-redux';
+import {confirmDialog, ConfirmDialog} from "primereact/confirmdialog";
 
 
 const EditorTopBar = (props: {isEditMode?: boolean}) => {
@@ -103,6 +104,26 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
     saveTrialOperation(getTrialModelOnly(), getCtmlJsonOnly());
   }
 
+  const sendCTMLConfirm = () => {
+    confirmDialog({
+      message: 'Are you sure you want to send CTML to Matcher? Please ensure all mandatory fields are complete to optimize match results.',
+      header: 'Confirmation',
+      icon: '',
+      accept: () => {
+        //send CTML
+        toast.current.show({
+          severity:
+            'info',
+          summary: '',
+          detail: 'CTML sent to Matcher',
+        });
+      },
+      reject: () => {
+
+      }
+    });
+  };
+
   return (
     <>
       <Toast ref={toast} position="top-center" />
@@ -111,6 +132,7 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
         exportCtmlClicked={onExportClick}
         onDialogHide={() => setIsDialogVisible(false)}
       />
+      <ConfirmDialog />
     <div className={styles.topBar}>
       <div className={styles.logoContainer}>
         <img src={'/assets/ctims-logo.svg'} alt={'logo'} className={styles.logo}/>
@@ -127,6 +149,11 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
           <Button label={isGroupAdmin ? 'Export' : 'Validate'}
                   onClick={onExportClick}
                   className="p-button-text p-button-plain" />
+          <>
+            {isGroupAdmin &&
+              <Button disabled={isFormDisabled} label="Send CTML to Matcher" className={styles.saveBtn} onClick={sendCTMLConfirm} />
+            }
+          </>
           <Button disabled={isFormDisabled} label="Save" className={styles.saveBtn} onClick={onSaveClick} />
         </div>
 

@@ -107,6 +107,7 @@ enum status {
   DRAFT
   IN_REVIEW
   COMPLETED
+  PENDING
 }
 
 enum event_type {
@@ -132,4 +133,5 @@ enum event_type {
   CtmlSchemaUpdated
   CtmlSchemaDeleted
   CtmlSchemaDoesNotExist
+  ResultDownloaded
 }

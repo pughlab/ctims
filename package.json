@@ -16,7 +16,11 @@
     "generate:build": "npx prisma generate --schema=./apps/api/prisma/schema.prisma && nx build api",
     "build-web": "nx build web --verbose --development",
     "build-all": "nx run-many --target=build --projects=api,web --parallel",
-    "cypress:dev": "nx e2e web-e2e --watch"
+    "cypress:dev": "nx e2e web-e2e --watch",
+    "seed": "npx prisma db seed"
+  },
+  "prisma": {
+    "seed": "ts-node apps/api/prisma/seed/index.js"
   },
   "private": true,
   "type": "commonjs",
@@ -54,6 +58,7 @@
     "primereact": "^8.7.3",
     "prisma-field-encryption": "^1.4.3",
     "react": "^18.2.0",
+    "react-csv": "^2.2.2",
     "react-dom": "^18.2.0",
     "react-idle-timer": "^5.7.2",
     "react-json-view": "^1.21.3",
