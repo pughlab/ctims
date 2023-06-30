@@ -66,7 +66,7 @@ const Login = () => {
     const result = await signIn('credentials', {username, password, redirect: false})
     console.log('result', result);
     if (result.ok) {
-      router.push('/trials');
+      router.push('/main');
     } else {
       showInvalidLoginToast(`Unauthorized - ${username}`);
     }
