@@ -5,6 +5,8 @@ import {ModuleRef} from "@nestjs/core";
 import {trialWithResults, trialWithResultsMiner} from "./trialWithResults";
 import axios from "axios";
 import {event_type, user} from "@prisma/client";
+import {getCtmlStatusLabel} from "../../../../../../libs/types/src/CtmlStatusLabels";
+import {CtmlStatusEnum} from "../../../../../../libs/types/src/ctml-status.enum";
 
 @Injectable()
 export class TrialResultService implements OnModuleInit {
@@ -42,13 +44,14 @@ export class TrialResultService implements OnModuleInit {
 
       for (let trial of trials) {
         const mm_info = await this.findMatchMinerInfo(trial.nct_id, matchResults.data.values);
-
+        const myStatus = trial.status;
+        const ctml_status_label = getCtmlStatusLabel(CtmlStatusEnum[myStatus]);
         const result: trialWithResults = {
           trialId: trial.id,
           nct_id: trial.nct_id,
           nickname: trial.nickname,
           principal_investigator: trial.principal_investigator,
-          status: trial.status,
+          status: CtmlStatusEnum[ctml_status_label],
           createdAt: trial.createdAt,
           updatedAt: trial.updatedAt,
           trialRetCount: mm_info.count,
