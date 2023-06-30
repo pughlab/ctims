@@ -26,25 +26,6 @@ const useGetMatchResults = () => {
   const getMatchResultsOperation = async () => {
     setLoading(true);
     try {
-      // const matchResults = await axios.request({
-      //   method: 'get',
-      //   url: `/trial_match`,
-      // });
-      //
-      // console.log(matchResults.data._items);
-      // const mapped = matchResults.data._items.map((result) => {
-      //   let val: MatchResult = {
-      //     trialId: result.protocol_no,
-      //     nickName: result.nickName,
-      //     pi: result.pi,
-      //     status: result.status,
-      //     createdOn: result.createdOn,
-      //     modifiedOn: result.modifiedOn,
-      //     matchDate: result._update
-      //   }
-      //   return val;
-      // });
-
       const accessToken = localStorage.getItem('ctims-accessToken');
       const headers = {
         'Authorization': 'Bearer ' + accessToken,
