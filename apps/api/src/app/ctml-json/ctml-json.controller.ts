@@ -155,7 +155,7 @@ export class CtmlJsonController implements OnModuleInit {
   @Delete(':id')
   @UseGuards(KeycloakPasswordGuard)
   @ApiBearerAuth("KeycloakPasswordGuard")
-  @ApiOperation({ summary: "Get all CTML JSON records" })
+  @ApiOperation({ summary: "Delete CTML JSON record" })
   @ApiNoContentResponse({ description: "CTML JSON record deleted." })
   async remove(
     @CurrentUser() user: user,
