@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import useIdle, { IdleState } from "../hooks/useIdle";
 import { Dialog } from 'primereact/dialog';
 import {useRouter} from "next/router";
 import useRefreshToken from "../hooks/useRefreshToken";
 
-const IdleComponent: React.FC = () => {
+const IdleComponent = () => {
   const { state: idleState, remaining, count } = useIdle(); // Get the idle state, remaining time, and count from the useIdle hook
   const [showDialog, setShowDialog] = useState(false); // Create a state variable for the dialog visibility
   const [remainingTime, setRemainingTime] = useState(0); // Create a state variable for the remaining time
@@ -31,7 +31,7 @@ const IdleComponent: React.FC = () => {
   }, [idleState]); // Run the effect whenever the idle state changes
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: any;
 
     if (showDialog) { // If the dialog is visible
       interval = setInterval(() => {
@@ -40,13 +40,18 @@ const IdleComponent: React.FC = () => {
     }
 
     if (remainingTime === 0 && showDialog) { // If the remaining time is 0 and the dialog is visible
-      clearInterval(interval) // Clear the interval
+      if (interval) {
+        clearInterval(interval); // Clear the interval
+      }
       localStorage.removeItem('ctims-accessToken') // Remove the access token from local storage
       router.push('/'); // Redirect to the home page
     }
 
     return () => {
-      clearInterval(interval); // Clear the interval on unmount
+      if (interval)
+      {
+        clearInterval(interval); // Clear the interval on unmount
+      }
     };
   }, [showDialog, remainingTime]); // Run the effect whenever the dialog visibility or remaining time changes
 
