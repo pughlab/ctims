@@ -10,6 +10,7 @@ const nextConfig = {
   //   // See: https://github.com/gregberge/svgr
   //   svgr: false,
   // },
+  swcMinify: false,
   publicRuntimeConfig: {
     // Will be available on both server and client
     REACT_APP_API_URL: process.env.REACT_APP_API_URL,
