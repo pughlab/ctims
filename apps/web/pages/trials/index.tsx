@@ -2,12 +2,13 @@ import styles from './index.module.scss';
 import { Button } from 'primereact/button';
 import { DataTable, DataTableRowMouseEventParams } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import TopBar from "../../components/trials/TopBar";
+
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import React from 'react';
 import { Menu } from "primereact/menu";
 import { useSession } from "next-auth/react";
+
 import { ConfirmDialog } from 'primereact/confirmdialog';
 import { confirmDialog } from 'primereact/confirmdialog';
 import useDeleteTrial from '../../hooks/useDeleteTrial';
@@ -16,7 +17,6 @@ import useGetTrialsForUsersInGroup from '../../hooks/useGetTrialsForUsersInGroup
 import { setIsFormDisabled } from "./../../store/slices/contextSlice";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from "../../store/store";
-import IdleComponent from "../../components/IdleComponent";
 
 const Trials = () => {
   const { response: deleteTrialResponse, error: deleteTrialError, loading: deleteTrialLoading, deleteTrialOperation } = useDeleteTrial();
@@ -145,11 +145,7 @@ const Trials = () => {
   return (
     <>
       <ConfirmDialog />
-      <IdleComponent />
-      {sessionStatus === 'loading' && <div>Loading...</div>}
-      {sessionStatus === 'authenticated' && <>
-        <TopBar />
-        <div className={styles.pageContainer}>
+        <div >
           <TrialGroupsDropdown roles={(data as unknown as any).roles} onTrialGroupSelected={onTrialGroupSelected} />
           <div className={styles.titleAndButtonsContainer}>
             <span className={styles.trialsText}>Trials</span>
@@ -181,8 +177,6 @@ const Trials = () => {
           </div>
 
         </div>
-      </>}
-      {sessionStatus === 'unauthenticated' && <div>Please log in to view this page.</div>}
     </>
   )
 }

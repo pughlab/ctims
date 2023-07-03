@@ -1,16 +1,13 @@
-import TopBar from "../../components/trials/TopBar";
+import styles from './index.module.scss';
 import React, {useEffect, useRef, useState} from "react";
 import {useSession} from "next-auth/react";
-import {router} from "next/client";
-import styles from "../trials/index.module.scss";
-import {DataTable, DataTableRowMouseEventParams} from "primereact/datatable";
+import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import useGetMatchResults from "../../hooks/useGetMatchResults";
 import {classNames} from "primereact/utils";
 import useDownloadResults from "../../hooks/useDownloadResults";
 import { CSVLink } from "react-csv";
 import {CtmlStatusEnum} from "../../../../libs/types/src/ctml-status.enum";
-import IdleComponent from "../../components/IdleComponent";
 
 const Results = () => {
 
@@ -129,20 +126,12 @@ const Results = () => {
 
   return (
     <>
-      <IdleComponent />
-      {sessionStatus === 'loading' && <div>Loading...</div>}
-      {sessionStatus === 'authenticated' && <>
-      <TopBar/>
         {data && <>
-          <div className={styles.pageContainer}>
-            <span className={styles.trialsText}>Match Results</span>
-          </div>
+          <span className={styles.titleText}>Match Results</span>
 
           <div className={styles.tableContainer}>
             <DataTable value={results} rowHover={true}
                        loading={getMatchResultsLoading}
-              // onRowMouseEnter={(event) => setRowEntered(event.data)}
-              // onRowMouseLeave={() => setRowEntered(null)}
                        sortField="createdOn" sortOrder={-1}
                        emptyMessage={'No match results.'}
             >
@@ -159,8 +148,6 @@ const Results = () => {
             </DataTable>
           </div>
         </>}
-      </>}
-      {sessionStatus === 'unauthenticated' && <div>Please log in to view this page.</div>}
     </>
   )
 }

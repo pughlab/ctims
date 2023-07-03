@@ -694,3 +694,22 @@ summary svg {
 .p-datatable-emptymessage {
   font-style: italic;
 }
+
+.p-tabview .p-tabview-panels {
+  background: #ffffff;
+  padding: 1.25rem 1.25rem 1.25rem 0;
+  border: 0 none;
+  color: #495057;
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+.p-tabview-title {
+  font-family: 'Inter', sans-serif !important;
+  letter-spacing: 0.05rem !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  font-size: 20px !important;
+  line-height: 20px !important;
+  color: rgba(0, 0, 0, 0.87) !important;
+}
