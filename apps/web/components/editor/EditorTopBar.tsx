@@ -9,12 +9,15 @@ import {signOut} from "next-auth/react";
 import {Toast} from "primereact/toast";
 import useSaveTrial from "../../hooks/useSaveTrial";
 import { useSelector } from 'react-redux';
-import {confirmDialog, ConfirmDialog} from "primereact/confirmdialog";
+import SendCtmlToMatchminerDialog from "./SendCTMLtoMatchminerDialog";
+import useSendCTML from "../../hooks/useSendCTML";
 
 
 const EditorTopBar = (props: {isEditMode?: boolean}) => {
 
   const [isDialogVisible, setIsDialogVisible] = useState<boolean>(false);
+  const [isSendDialogVisible, setIsSendDialogVisible] = useState<boolean>(false);
+  const [isOKClicked, setIsOKClicked] = useState<boolean>(false);
   const {
     response: saveTrialResponse,
     error: saveTrialError,
@@ -22,9 +25,16 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
     saveTrialOperation
   } = useSaveTrial();
 
+  const {
+    response: sendCTMLResponse,
+    error: sendCTMLError,
+    loading: sendCTMLLoading,
+    sendCTMLOperation
+  } = useSendCTML();
+
   const isGroupAdmin = useSelector((state: RootState) => state.context.isTrialGroupAdmin);
   const isFormDisabled = useSelector((state: RootState) => state.context.isFormDisabled);
-
+  const trialId = useSelector((state: RootState) => state.context.trialId);
 
   const router = useRouter();
 
@@ -50,6 +60,33 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
     }
   }, [saveTrialError, saveTrialResponse]);
 
+  useEffect(() => {
+    if (sendCTMLResponse) {
+      console.log('response', sendCTMLResponse);
+      if (sendCTMLResponse.status === 201) {
+        toast.current.show({
+          severity:
+            'info',
+          summary: 'CTML sent to Matcher successfully',
+        });
+      }
+    }
+    if(sendCTMLError) {
+      console.log('error', sendCTMLError);
+      if (sendCTMLError.statusCode === 401) {
+        signOut({callbackUrl: '/#/login', redirect: false}).then(() => {
+          localStorage.removeItem('ctims-accessToken');
+        });
+      }
+    }
+  }, [sendCTMLError, sendCTMLResponse]);
+
+  useEffect(() => {
+    if (isOKClicked) {
+      useSendCTML();
+    }
+  }, [isOKClicked]);
+
   const backClick = (e) => {
     e.preventDefault();
     router.push('/trials');
@@ -57,6 +94,16 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
 
   const onExportClick = () => {
     setIsDialogVisible(true);
+  }
+
+  const onSendClick = () => {
+    setIsSendDialogVisible(true);
+  }
+
+  const handleSendCTMLOKClicked = (val: boolean) => {
+    if (val) {
+      sendCTMLOperation();
+    }
   }
 
   const getValidationErrors = () => {
@@ -104,26 +151,6 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
     saveTrialOperation(getTrialModelOnly(), getCtmlJsonOnly());
   }
 
-  const sendCTMLConfirm = () => {
-    confirmDialog({
-      message: 'Are you sure you want to send CTML to Matcher? Please ensure all mandatory fields are complete to optimize match results.',
-      header: 'Confirmation',
-      icon: '',
-      accept: () => {
-        //send CTML
-        toast.current.show({
-          severity:
-            'info',
-          summary: '',
-          detail: 'CTML sent to Matcher',
-        });
-      },
-      reject: () => {
-
-      }
-    });
-  };
-
   return (
     <>
       <Toast ref={toast} position="top-center" />
@@ -132,7 +159,11 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
         exportCtmlClicked={onExportClick}
         onDialogHide={() => setIsDialogVisible(false)}
       />
-      <ConfirmDialog />
+      <SendCtmlToMatchminerDialog
+        isCTMLDialogVisible={isSendDialogVisible}
+        sendCtmlClicked={onSendClick}
+        onCTMLDialogHide={() => setIsSendDialogVisible(false)}
+        onIsOKClicked={handleSendCTMLOKClicked}/>
     <div className={styles.topBar}>
       <div className={styles.logoContainer}>
         <img src={'/assets/ctims-logo.svg'} alt={'logo'} className={styles.logo}/>
@@ -151,7 +182,7 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
                   className="p-button-text p-button-plain" />
           <>
             {isGroupAdmin &&
-              <Button disabled={isFormDisabled} label="Send CTML to Matcher" className={styles.saveBtn} onClick={sendCTMLConfirm} />
+              <Button disabled={isFormDisabled} label="Send CTML to Matcher" className={styles.saveBtn} onClick={onSendClick} />
             }
           </>
           <Button disabled={isFormDisabled} label="Save" className={styles.saveBtn} onClick={onSaveClick} />
