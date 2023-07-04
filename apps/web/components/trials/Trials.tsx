@@ -1,22 +1,18 @@
-import styles from './index.module.scss';
-import { Button } from 'primereact/button';
-import { DataTable, DataTableRowMouseEventParams } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/router";
-import React from 'react';
-import { Menu } from "primereact/menu";
-import { useSession } from "next-auth/react";
-
-import { ConfirmDialog } from 'primereact/confirmdialog';
-import { confirmDialog } from 'primereact/confirmdialog';
 import useDeleteTrial from '../../hooks/useDeleteTrial';
-import TrialGroupsDropdown from '../../components/trials/TrialGroupsDropdown';
 import useGetTrialsForUsersInGroup from '../../hooks/useGetTrialsForUsersInGroup';
-import { setIsFormDisabled } from "./../../store/slices/contextSlice";
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from "../../store/store";
+import { RootState } from '../../store/store';
+import { useSession } from 'next-auth/react';
+import React, { useEffect, useRef, useState } from 'react';
+import { DataTable, DataTableRowMouseEventParams } from 'primereact/datatable';
+import { useRouter } from 'next/router';
+import { setIsFormDisabled } from '../../store/slices/contextSlice';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import styles from './Trials.module.scss';
+import { Button } from 'primereact/button';
+import TrialGroupsDropdown from './TrialGroupsDropdown';
+import { Menu } from 'primereact/menu';
+import { Column } from 'primereact/column';
 
 const Trials = () => {
   const { response: deleteTrialResponse, error: deleteTrialError, loading: deleteTrialLoading, deleteTrialOperation } = useDeleteTrial();
@@ -145,40 +141,39 @@ const Trials = () => {
   return (
     <>
       <ConfirmDialog />
-        <div >
-          <TrialGroupsDropdown roles={(data as unknown as any).roles} onTrialGroupSelected={onTrialGroupSelected} />
-          <div className={styles.titleAndButtonsContainer}>
-            <span className={styles.trialsText}>Trials</span>
-            <div className={styles.buttonsContainer}>
-              <Button label="Import" className="p-button-text p-button-plain" />
-              <Button disabled={!selectedTrialGroup} label="Create CTML" className={styles.createCtmlButton} onClick={createCtmlClick} />
-            </div>
+      <div >
+        <TrialGroupsDropdown roles={(data as unknown as any).roles} onTrialGroupSelected={onTrialGroupSelected} />
+        <div className={styles.titleAndButtonsContainer}>
+          <span className={styles.trialsText}>Trials</span>
+          <div className={styles.buttonsContainer}>
+            <Button label="Import" className="p-button-text p-button-plain" />
+            <Button disabled={!selectedTrialGroup} label="Create CTML" className={styles.createCtmlButton} onClick={createCtmlClick} />
           </div>
-
-          <Menu model={trialMenuItems} ref={menu} popup id="popup_menu" className={styles.menu} appendTo={'self'}
-                onHide={clearRowClicked} />
-
-          <div className={styles.tableContainer}>
-            <DataTable value={trials} rowHover={true}
-                       loading={getTrialsForUsersInGroupLoading || deleteTrialLoading}
-                       onRowMouseEnter={(event) => setRowEntered(event.data)}
-                       onRowMouseLeave={() => setRowEntered(null)}
-                       sortField="createdOn" sortOrder={-1}
-                       emptyMessage={!selectedTrialGroup ? 'Select a Trial Group to start' : 'No CTML files. Select the \'Create\' button to start.'}
-            >
-              <Column field="nct_id" header="ID"></Column>
-              <Column field="id" header="" body={subMenuTemplate}></Column>
-              <Column field="nickname" header="Nickname"></Column>
-              <Column field="principal_investigator" header="Principal Investigator"></Column>
-              <Column field="ctml_status_label" header="CTML Status" sortable></Column>
-              <Column field="createdAt" header="Created on" dataType="date"></Column>
-              <Column field="updatedAt" header="Modified on" dataType="date"></Column>
-            </DataTable>
-          </div>
-
         </div>
+
+        <Menu model={trialMenuItems} ref={menu} popup id="popup_menu" className={styles.menu} appendTo={'self'}
+              onHide={clearRowClicked} />
+
+        <div className={styles.tableContainer}>
+          <DataTable value={trials} rowHover={true}
+                     loading={getTrialsForUsersInGroupLoading || deleteTrialLoading}
+                     onRowMouseEnter={(event) => setRowEntered(event.data)}
+                     onRowMouseLeave={() => setRowEntered(null)}
+                     sortField="createdOn" sortOrder={-1}
+                     emptyMessage={!selectedTrialGroup ? 'Select a Trial Group to start' : 'No CTML files. Select the \'Create\' button to start.'}
+          >
+            <Column field="nct_id" header="ID"></Column>
+            <Column field="id" header="" body={subMenuTemplate}></Column>
+            <Column field="nickname" header="Nickname"></Column>
+            <Column field="principal_investigator" header="Principal Investigator"></Column>
+            <Column field="ctml_status_label" header="CTML Status" sortable></Column>
+            <Column field="createdAt" header="Created on" dataType="date"></Column>
+            <Column field="updatedAt" header="Modified on" dataType="date"></Column>
+          </DataTable>
+        </div>
+
+      </div>
     </>
   )
 }
-
 export default Trials

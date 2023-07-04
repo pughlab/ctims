@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
 import {useSession} from "next-auth/react";
 import {TabPanel, TabView} from "primereact/tabview";
-import Trials from "../trials";
-import Results from "../results";
 import IdleComponent from "../../components/IdleComponent";
 import TopBar from "../../components/trials/TopBar";
 import styles from './index.module.scss';
+import Trials from '../../components/trials/Trials';
+import Results from '../../components/trials/Results';
 
 const Main = () => {
 

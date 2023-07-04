@@ -1,16 +1,15 @@
-import styles from './index.module.scss';
-import React, {useEffect, useRef, useState} from "react";
-import {useSession} from "next-auth/react";
-import {DataTable} from "primereact/datatable";
-import {Column} from "primereact/column";
-import useGetMatchResults from "../../hooks/useGetMatchResults";
-import {classNames} from "primereact/utils";
-import useDownloadResults from "../../hooks/useDownloadResults";
+import { useSession } from 'next-auth/react';
+import React, { useEffect, useRef, useState } from 'react';
+import useGetMatchResults from '../../hooks/useGetMatchResults';
+import useDownloadResults from '../../hooks/useDownloadResults';
+import { classNames } from 'primereact/utils';
+import { CtmlStatusEnum } from '../../../../libs/types/src/ctml-status.enum';
+import styles from './Results.module.scss';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 import { CSVLink } from "react-csv";
-import {CtmlStatusEnum} from "../../../../libs/types/src/ctml-status.enum";
 
 const Results = () => {
-
   const {data, status: sessionStatus} = useSession()
   useEffect(() => {
     if (!data) {
@@ -85,20 +84,20 @@ const Results = () => {
 
   const downloadBodyTemplate = (rowData) => {
     return <>
-        <i className={classNames('pi', { 'true-icon pi-download': rowData.trialRetCount > 0, '': rowData.trialRetCount == 0 })}
-              onClick={() => {
-                downloadClicked(rowData);
-              }}
-        ></i>
-        <CSVLink
-          headers={headers}
-          data={downloadResults}
-          filename={rowData.nct_id + '_result.csv'}
-          className='hidden'
-          ref={csvLink}
-          target='_blank'
+      <i className={classNames('pi', { 'true-icon pi-download': rowData.trialRetCount > 0, '': rowData.trialRetCount == 0 })}
+         onClick={() => {
+           downloadClicked(rowData);
+         }}
+      ></i>
+      <CSVLink
+        headers={headers}
+        data={downloadResults}
+        filename={rowData.nct_id + '_result.csv'}
+        className='hidden'
+        ref={csvLink}
+        target='_blank'
       />
-      </>
+    </>
   };
 
   const downloadClicked = (e: any) => {
@@ -126,28 +125,28 @@ const Results = () => {
 
   return (
     <>
-        {data && <>
-          <span className={styles.titleText}>Match Results</span>
+      {data && <>
+        <span className={styles.titleText}>Match Results</span>
 
-          <div className={styles.tableContainer}>
-            <DataTable value={results} rowHover={true}
-                       loading={getMatchResultsLoading}
-                       sortField="createdOn" sortOrder={-1}
-                       emptyMessage={'No match results.'}
-            >
-              <Column field="trialId" header="ID"></Column>
-              <Column field="nickname" header="Nickname"></Column>
-              <Column field="principal_investigator" header="Principal Investigator"></Column>
-              <Column field="ctml_status_label" header="CTML Status" sortable></Column>
-              <Column field="createdAt" header="Created on" dataType="date"></Column>
-              <Column field="updatedAt" header="Modified on" dataType="date"></Column>
-              <Column field="trialRetCount" header="Match Results"></Column>
-              <Column field="matchedDate" header="Match Date" dataType="date"></Column>
-              <Column field="download" header="Download" dataType="boolean" style={{minWidth: '6rem'}}
-                      body={downloadBodyTemplate}></Column>
-            </DataTable>
-          </div>
-        </>}
+        <div className={styles.tableContainer}>
+          <DataTable value={results} rowHover={true}
+                     loading={getMatchResultsLoading}
+                     sortField="createdOn" sortOrder={-1}
+                     emptyMessage={'No match results.'}
+          >
+            <Column field="trialId" header="ID"></Column>
+            <Column field="nickname" header="Nickname"></Column>
+            <Column field="principal_investigator" header="Principal Investigator"></Column>
+            <Column field="ctml_status_label" header="CTML Status" sortable></Column>
+            <Column field="createdAt" header="Created on" dataType="date"></Column>
+            <Column field="updatedAt" header="Modified on" dataType="date"></Column>
+            <Column field="trialRetCount" header="Match Results"></Column>
+            <Column field="matchedDate" header="Match Date" dataType="date"></Column>
+            <Column field="download" header="Download" dataType="boolean" style={{minWidth: '6rem'}}
+                    body={downloadBodyTemplate}></Column>
+          </DataTable>
+        </div>
+      </>}
     </>
   )
 }
