@@ -27,3 +27,12 @@ spec:
                 name: {{ $fullName }}
                 port:
                   name: ctimsapi
+    - host: "mm-api.{{ .Values.domain }}"
+      http:
+        paths:
+        - pathType: "ImplementationSpecific"
+          backend:
+          service:
+            name: {{ $fullName }}
+            port:
+              name: mm-api
