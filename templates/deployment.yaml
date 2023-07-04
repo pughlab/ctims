@@ -89,7 +89,7 @@ spec:
               value: "{{ .Values.ctimsdb.user }}"
             - name: MYSQL_PASSWORD
               value: "{{ .Values.ctimsdb.password }}"
-        - image: "docker-registry.uhn.ca:443/matchminer-db:6fa65d00-c80e-424d-a8ec-622784c9e076"
+        - image: "docker-registry.uhn.ca:443/matchminer-db:7c562e9a-ad5f-4c62-aa73-7ea9981b1e1e"
           name: mm-mongo
           imagePullPolicy: IfNotPresent
           ports:
