@@ -25,6 +25,10 @@ spec:
           hostPath:
             path: "{{.Values.mountRoot}}/mysql/data"
             type: DirectoryOrCreate
+        - name: "mm-mongo-data"
+          hostPath:
+            path: "{{.Values.mountRoot}}/mongo/data"
+            type: DirectoryOrCreate
       containers:
         - image: "{{ .Values.docker.image }}:{{ .Values.git.ref }}"
           name: ctimsweb
@@ -85,5 +89,17 @@ spec:
               value: "{{ .Values.ctimsdb.user }}"
             - name: MYSQL_PASSWORD
               value: "{{ .Values.ctimsdb.password }}"
+        - image: "docker-registry.uhn.ca:443/matchminer-db:6fa65d00-c80e-424d-a8ec-622784c9e076"
+          name: mm-mongo
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 27017
+              name: mongo
+          volumeMounts:
+            - name: "mm-mongo-data"
+              mountPath: "/data/db"
+          env:
+            - name: MONGO_INITDB_DATABASE
+              value: "matchminer"
       imagePullSecrets:
         - name: regcred

@@ -7,11 +7,14 @@ metadata:
 spec:
   type: NodePort
   ports:
-
     - port: 3306
       targetPort: 3306
       nodePort: 31256
       name: ctimsdb
+    - port: 27017
+      targetPort: 27017
+      nodePort: 31257
+      name: mm-mongo
 
   selector:
     app.kubernetes.io/name: {{ include "thischart.name" . }}
