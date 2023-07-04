@@ -97,7 +97,7 @@ spec:
               name: mongo
           volumeMounts:
             - name: "mm-mongo-data"
-              mountPath: "/data/db"
+              mountPath: "/var/lib/mongodb"
           env:
             - name: MONGO_INITDB_DATABASE
               value: "matchminer"
