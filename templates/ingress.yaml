@@ -32,7 +32,7 @@ spec:
         paths:
         - pathType: "ImplementationSpecific"
           backend:
-          service:
-            name: {{ $fullName }}
-            port:
-              name: mm-api
+            service:
+              name: {{ $fullName }}
+              port:
+                name: mm-api
