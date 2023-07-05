@@ -14,7 +14,7 @@ spec:
       targetPort: 3333
       name: ctimsapi
     - port: 5000
-      targetPort: 80
+      targetPort: 5000
       name: mm-api
   selector:
     app.kubernetes.io/name: {{ include "thischart.name" . }}
