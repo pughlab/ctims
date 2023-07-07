@@ -119,8 +119,9 @@ const Results = () => {
         trialRetCount: (cur.ctml_status_label === CtmlStatusEnum.PENDING) ? '' : cur.trialRetCount,
         matchedDate: (cur.ctml_status_label === CtmlStatusEnum.PENDING) ? null : cur.matchedDate,
       }
+      dataCopy.push(curCopy);
     }
-    return data;
+    return dataCopy;
   }
 
   return (
