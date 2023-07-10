@@ -3,20 +3,23 @@ export const getUserName = () => cy.get('.Login_usernameInput__fcjd7')
 export const getPassword = () => cy.get('.Login_passwordInputText__E6Ybu')
 
 export const signInButton = () => cy.get('.p-button')
-export const createCTMLButton = () => cy.get('.trials_createCtmlButton__JBdrd')
+export const createCTMLButton = () => cy.get('button[aria-label=\'Create CTML\']')
 export const trialTableUsername = () => cy.get('.TopBar_userContainer__Dcaw3')
 
 //TrialEditor Header
 export const trialEditorHeader = () => cy.get('.EditorTopBar_title__kDE8R')
 
-//TrialEditor Buttons (Discard, Export, Save)
+//TrialEditor Buttons (Discard, Export, Save, Send)
 export const trialEditorHeaderButtons = () => cy.get('.EditorTopBar_menuBtnGroup__dBNyO>button') //3 elements
 export const trialEditorRadioButtons = () => cy.get('.field-radiobutton>.p-radiobutton') //json and yamlradio buttons
 export const trialEditorExportCtml = () => cy.get('.p-dialog-footer>div>button') //2 buttons Cancel and Export CTML
-export const trialEditorSave = () => cy.get('.EditorTopBar_menuBtnGroup__dBNyO>button:nth-child(3)')
+export const trialEditorSave = () => cy.get('button[aria-label=\'Save\'] span[class=\'p-button-label p-c\']')
 export const trialEditorBackButton = () => cy.get('.EditorTopBar_backBtn__Ivwqo')
 export const validateCtmlCancelButton = () => cy.get('button[aria-label="Cancel"]')
 export const validateCtmlOkButton = () => cy.get('button[aria-label="OK"]')
+export const sendCtmlToMatcher = () => cy.get("button[aria-label='Send CTML to Matcher']")
+export const sendCTMLOkButton = () => cy.get("button[aria-label='OK']")
+export const sendCTMLCancelButton = () => cy.get("button[aria-label='Cancel']")
 
 //Trial table
 export const selectTrialGroupButton = () => cy.get('div[aria-label="Select a Trial Group"]')
@@ -33,6 +36,8 @@ export const trialTableDelete = () => cy.get('#popup_menu>ul>li:nth-child(2)')
 export const trialTableExport = () => cy.get('#popup_menu>ul>li:nth-child(3)')
 export const trialTableDialogueDeleteBtn = () => cy.get('.p-confirm-dialog-accept')
 export const trialTableIdColumn = () => cy.get('tbody tr td:nth-child(1)')
+export const trialTableThreeDots = () => cy.get('tr[draggable=\'false\']>td:nth-child(2)>div')
+
 
 
 //LeftPanel Trial Editor

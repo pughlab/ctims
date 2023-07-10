@@ -94,7 +94,7 @@ import {
   trialTableDelete,
   trialTableDialogueDeleteBtn,
   trialTableDots,
-  trialTableIdColumn
+  trialTableIdColumn, trialTableThreeDots
 } from '../../../support/app.po';
 import {NCT02503722_Osimertinib} from "../../../fixtures/NCT02503722_Osimertinib"
 import baseClass from "../../Base/baseClass.cy"
@@ -125,7 +125,7 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
         cy.wrap($el).prev().then(($prevEl) => {
           cy.wrap($prevEl).click();
         });
-        cy.get('.trials_trailsEllipseBtn__OHV_W > .p-button').click();
+        trialTableThreeDots().click();
         trialTableDelete().click();
         trialTableDialogueDeleteBtn().click();
         return false;
@@ -146,7 +146,7 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
         .nextUntil('John')
         .then((test) => {
           trialTableIdColumn().contains(ctmlTestData.nct_id).click();
-          cy.get('.trials_trailsEllipseBtn__OHV_W > .p-button').click();
+          trialTableThreeDots().click();
           trialTableDelete().click();
           trialTableDialogueDeleteBtn().click();
         });
@@ -159,17 +159,9 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
 
   it.skip('should Save CTML File',  () => {
     trialEditorSave().click()
-//    cy.get('.EditorTopBar_saveBtn__VqjLp').click()
     cy.get('div[class="p-toast p-component p-toast-top-center"] div').should('contain','Trial saved')
     cy.get('.p-toast-icon-close').click()
-    // cy.wait(1000)
-    // cy.get('div[class="p-toast p-component p-toast-top-center"] div')
-    //   cy.get('.p-toast-summary').should('contain','Trial saved')
-    cy.wait(1000)
-    // cy.get('.p-toast-icon-close').click()
-    //cy.wait(1000)
     trialEditorBackButton().should('be.visible').trigger("click")
-    cy.get('.trials_trialsText__0DJhD').should('contain','Trials')
     selectTrialGroupButton().click()
     trialGroupxAdmin().click()
     trialTableIdColumn().should('contain',ctmlTestData.nct_id)

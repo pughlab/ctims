@@ -86,14 +86,20 @@ import {
   getVariantCategory,
   getVariantClassification,
   selectDraftCtmlStatus,
-  selectTrialGroupButton,
+  selectTrialGroupButton, sendCTMLOkButton, sendCtmlToMatcher,
   trialEditorBackButton,
   trialEditorExportCtml,
   trialEditorHeaderButtons,
   trialEditorLeftPanelList,
   trialEditorRadioButtons,
   trialEditorSave,
-  trialGroupxAdmin, trialTableDelete, trialTableDialogueDeleteBtn, trialTableDots, trialTableEdit, trialTableIdColumn,
+  trialGroupxAdmin,
+  trialTableDelete,
+  trialTableDialogueDeleteBtn,
+  trialTableDots,
+  trialTableEdit,
+  trialTableIdColumn,
+  trialTableThreeDots,
   validateButton,
   validateCtmlCancelButton,
   validateCtmlOkButton,
@@ -129,7 +135,7 @@ describe('Validate as TrialGroupx Admin on "NCT02503722_Osimertinib" ', { testIs
         cy.wrap($el).prev().then(($prevEl) => {
           cy.wrap($prevEl).click();
         });
-        cy.get('.trials_trailsEllipseBtn__OHV_W > .p-button').click();
+        trialTableThreeDots().click();
         trialTableDelete().click();
         trialTableDialogueDeleteBtn().click();
         return false;
@@ -564,5 +570,9 @@ describe('Validate as TrialGroupx Admin on "NCT02503722_Osimertinib" ', { testIs
         });
       });
     });
+  });
+  it('should validate "Send Ctml to matcher', () => {
+    sendCtmlToMatcher().click()
+    sendCTMLOkButton().click()
   });
 })

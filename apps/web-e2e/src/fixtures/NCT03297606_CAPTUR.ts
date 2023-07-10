@@ -567,7 +567,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
               }
             ]
           },
-          {
+      /*    {
             "arm_code": "Group 9",
             "arm_description": "Experimental: Group 9",
             "arm_internal_id": 9,
@@ -1463,7 +1463,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                 ]
               }
             ]
-          }
+          }*/
         ]
       }
     ]

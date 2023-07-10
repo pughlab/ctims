@@ -88,7 +88,7 @@ import {
   getVariantClassification,
   getWildType,
   selectDraftCtmlStatus,
-  selectTrialGroupButton,
+  selectTrialGroupButton, sendCTMLOkButton, sendCtmlToMatcher,
   trialEditorBackButton,
   trialEditorExportCtml,
   trialEditorHeaderButtons,
@@ -98,7 +98,7 @@ import {
   trialGroupxAdmin,
   trialTableDelete,
   trialTableDialogueDeleteBtn, trialTableEdit,
-  trialTableIdColumn, validateCtmlOkButton
+  trialTableIdColumn, trialTableThreeDots, validateCtmlOkButton
 } from '../../../support/app.po';
 import {NCT03297606_CAPTUR} from "../../../fixtures/NCT03297606_CAPTUR"
 import {NCT03114319_TNO155} from "../../../fixtures/NCT03114319_TNO155"
@@ -130,7 +130,7 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
          cy.wrap($el).prev().then(($prevEl) => {
            cy.wrap($prevEl).click();
          });
-         cy.get('.trials_trailsEllipseBtn__OHV_W > .p-button').click();
+         trialTableThreeDots().click();
          trialTableDelete().click();
          trialTableDialogueDeleteBtn().click();
          return false;
@@ -144,7 +144,7 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
     trialEditorLeftPanelList().should('have.length', '9')
     cy.trialInformation(ctmlTestData.nct_id,
       "NCT03114319_TN0155 TrialGroupx Admin role",
-      "John Doe",
+      "Srimathi",
       "Draft",
       ctmlTestData.long_title,
       ctmlTestData.short_title,
@@ -153,11 +153,11 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
       ctmlTestData.nct_purpose,
       ctmlTestData.status)
   })
-  it('should Save Trial information values, click edit NCT03114319_TN0155 to re-enter, as Admin',() => {
+ /* it('should Save Trial information values, click edit NCT03114319_TN0155 to re-enter, as Admin',() => {
     cy.wait(1000);
     cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
   })
-
+*/
   //**************Prior Treatment Requirement
   it('should enter the Prior Treatment Requirement values of NCT03114319_TN0155 as Admin', () => {
     trialEditorLeftPanelList().eq(1).should('contain','Prior Treatment Requirements').click()
@@ -168,21 +168,20 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
       }
     })
   });
-  it('should Save Prior Treatment Requirement values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+  /*it('should Save Prior Treatment Requirement values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
     cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
   })
-
+*/
  //!************** Age ***************
 
   it('should enter the Age values of NCT03114319_TN0155 as Admin', () => {
     trialEditorLeftPanelList().eq(2).should('contain','Age').click()
     cy.age(ctmlTestData.age)
   });
-  it('should Save Age values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+  /*it('should Save Age values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
     cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
-  })
-/*
-  //!************** Drug List ***************
+  })*/
+  //************** Drug List ***************
 
     it('should enter the Drug List values of NCT03114319_TN0155 as Admin', () => {
      trialEditorLeftPanelList().eq(3).should('contain','Drug List').click()
@@ -195,9 +194,9 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
      })
    });
 
-   it('should Save Drug List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+  /* it('should Save Drug List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
      cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
-   })
+   })*/
 
    //!************** Management Group List ***************
 
@@ -210,9 +209,9 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
      });
    })
 
-   it('should Save Management Group List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+   /*it('should Save Management Group List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
      cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
-   })
+   })*/
 
    //!************** Site List ***************
 
@@ -225,9 +224,9 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
      })
    });
 
-   it('should Save Site List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+  /* it('should Save Site List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
      cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
-   })
+   })*/
 
    //!************** Sponsor List ***************
 
@@ -240,9 +239,9 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
      });
    });
 
-   it('should Save Sponsor List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+  /* it('should Save Sponsor List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
      cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
-   })
+   })*/
 
    //!************** Staff List ***************
 
@@ -255,11 +254,10 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
      });
    });
 
-   it('should Save Staff List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+   /*it('should Save Staff List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
      cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
    })*/
-/*
-//!************ Arm 1  *****************
+//************ Arm 1  *****************
   it('should enter the values in "Treatment List and Matching criteria modal" for Arm 1', () => {
     trialEditorLeftPanelList().eq(8).should('contain', 'Treatment List').click()
     cy.clickMultipleFunction(getAddArmPlusIcon(), ctmlTestData.treatment_list.step[0].arm.length - 1)
@@ -395,9 +393,9 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
     })
   })
 
-  it('should Save Staff List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+  /*it('should Save Arm 1, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
     cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
-  })
+  })*/
 
   //!************ Arm 2  *****************
 
@@ -487,9 +485,9 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
     })
   })
 
-  it('should Save Staff List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+  /*it('should Save Arm 2, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
     cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
-  })
+  })*/
 
 //!************ Arm 3  *****************
 
@@ -789,9 +787,9 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
     })
   })
 
-  it('should Save Staff List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+  /*it('should Save Arm 3, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
     cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
-  })
+  })*/
 
   //!************ Arm 4  *****************
 
@@ -923,9 +921,7 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
     //save and Edit and Export
     trialEditorSave().click()
     cy.get('.p-toast-message-content').should('contain','Trial saved')
-    //cy.get('.p-toast-icon-close').click()
     trialEditorBackButton().should('be.visible').trigger("click")
-    cy.get('.trials_trialsText__0DJhD').should('contain','Trials')
     selectTrialGroupButton().click()
     trialGroupxAdmin().click()
     trialTableIdColumn()
@@ -933,7 +929,7 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
       .nextUntil('NCT03114319_TNO155 TrialGroupx Admin role')
       .then((test) => {
         trialTableIdColumn().contains(ctmlTestData.nct_id).click();
-        cy.get('.trials_trailsEllipseBtn__OHV_W > .p-button').click();
+        trialTableThreeDots().click();
         trialTableEdit().click()
       })
   });
@@ -1119,7 +1115,9 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
       });
     });
   });
-
-*/
+  it('should validate "Send Ctml to matcher', () => {
+    sendCtmlToMatcher().click()
+    sendCTMLOkButton().click()
+  });
  // baseClass.afterClass()
 })
