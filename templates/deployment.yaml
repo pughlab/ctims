@@ -30,7 +30,7 @@ spec:
             path: "{{.Values.mountRoot}}/mongo/data"
             type: DirectoryOrCreate
       containers:
-        - image: "docker-registry.uhn.ca:443/ctims-web:3c0792e7653370fc8b2b904255986fd7419a0706"
+        - image: "{{ .Values.docker.image }}:{{ .Values.git.ref }}"
           name: ctimsweb
           imagePullPolicy: IfNotPresent
           ports:
@@ -45,7 +45,7 @@ spec:
               value: "https://ctims-web.{{ .Values.domain }}"
             - name: NEXTAUTH_API_URL
               value: "http://localhost:3333/api"
-        - image: "docker-registry.uhn.ca:443/ctims-spi:3c0792e7653370fc8b2b904255986fd7419a0706"
+        - image: "{{ .Values.docker.apiImage }}:{{ .Values.git.ref }}"
           name: ctimsapi
           imagePullPolicy: IfNotPresent
           ports:
