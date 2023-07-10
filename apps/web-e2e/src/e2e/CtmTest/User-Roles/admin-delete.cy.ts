@@ -93,13 +93,7 @@ import {
   trialEditorLeftPanelList,
   trialEditorRadioButtons,
   trialEditorSave,
-  trialGroupxAdmin,
-  trialTableDelete,
-  trialTableDialogueDeleteBtn,
-  trialTableDots,
-  trialTableEdit,
-  trialTableIdColumn,
-  trialTableThreeDots,
+  trialGroupxAdmin, trialTableDelete, trialTableDialogueDeleteBtn, trialTableDots, trialTableEdit, trialTableIdColumn,
   validateButton,
   validateCtmlCancelButton,
   validateCtmlOkButton,
@@ -111,71 +105,32 @@ import dateClass from "../../Base/dateClass.cy";
 
 const { deleteDownloadsFolderBeforeAll } = require('cypress-delete-downloads-folder');
 import * as yaml from 'js-yaml';
+import {NCT03297606_CAPTUR} from "../../../fixtures/NCT03297606_CAPTUR";
 let exportJsonFile = 'NCT02503722_2023-05-12.json';
 let split = exportJsonFile.substring(0,11); //grab only NCT id
 let jsonFile = split.concat('_', dateClass.currentDate()).concat('.json');
 let yamlFile = split.concat('_', dateClass.currentDate()).concat('.yaml');
 
-describe('Validate as Delete functionality as member on "NCT02503722_Osimertinib" ', { testIsolation: false }, () => {
-  baseClass.beforeClass()
+describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() => {
+  baseClass.adminTrialGroupx()
   deleteDownloadsFolderBeforeAll()
-  const ctmlTestData = NCT02503722_Osimertinib
+  const ctmlTestData = NCT03297606_CAPTUR
   const ctmlJson = `./cypress/downloads/${jsonFile}`
   const ctmlYaml = `./cypress/downloads/${yamlFile}`
 
-  /*it('should "Delete" the existing Trial ID "NCT02503722" if nickname is "Test Delete Member Role"', () => {
+  it('should "Delete" the existing Ctml file "NCT03297606_CAPTUR" as Admin', () => {
     createCTMLButton().should('have.class','p-disabled')
     selectTrialGroupButton().click()
-    ctimsUserTrialGroupxMember().click()
+    trialGroupxAdmin().click()
     let table = cy.get('table tr td')
     table.each(($el) => {
       let ee = $el.text()
 
-      if (ee.includes('Test Delete Member Role')) {
+      if (ee.includes('NCT03297606_CAPTUR TrialGroupx Admin role')) {
         cy.wrap($el).prev().then(($prevEl) => {
           cy.wrap($prevEl).click();
         });
-        cy.get('.trials_trailsEllipseBtn__OHV_W > .p-button').click();
-        trialTableDelete().click();
-        trialTableDialogueDeleteBtn().click();
-        return false;
-      }
-    })
-  })*/
-
-  it('should enter values into the "Trial Editor Form" as member', () => {
-    selectTrialGroupButton().click()
-    ctimsUserTrialGroupxMember().click()
-    createCTMLButton().should('not.have.class', 'p-disabled').click()
-    cy.title().should('contain', 'CTIMS')
-    trialEditorLeftPanelList().should('have.length', '9')
-    cy.trialInformation(ctmlTestData.nct_id,
-      "Test Delete Member Role",
-      "Srimathi",
-      "Draft",
-      ctmlTestData.long_title,
-      ctmlTestData.short_title,
-      ctmlTestData.phase,
-      ctmlTestData.protocol_no,
-      ctmlTestData.nct_purpose,
-      ctmlTestData.status)
-  })
-  it('should Save/click back button after entering "Trial information values of NCT02503722_Osimertinib" as Member',() => {
-    cy.saveAndBackBtn();
-  })
-  it('should "Delete" TrialId "NCT02503722" as Member', () => {
-    createCTMLButton().should('have.class','p-disabled')
-    selectTrialGroupButton().click()
-    ctimsUserTrialGroupxMember().click()
-    let table = cy.get('table tr td')
-    table.each(($el) => {
-      let ee = $el.text()
-
-      if (ee.includes('Test Delete Member Role')) {
-        cy.wrap($el).prev().then(($prevEl) => {
-          cy.wrap($prevEl).click();
-        });
-        trialTableThreeDots().click();
+        cy.get('tr[draggable=\'false\']>td:nth-child(2)>div').click();
         trialTableDelete().click();
         trialTableDialogueDeleteBtn().click();
         return false;

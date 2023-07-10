@@ -26,7 +26,7 @@ const cypressJsonConfig: EndToEndConfigOptions = {
   chromeWebSecurity: false,
   supportFile: 'src/support/e2e.ts',
   downloadsFolder: 'cypress/downloads',
-   specPattern: 'src/e2e/CtmTest/**/*.cy.{js,jsx,ts,tsx}',
+  // specPattern: 'src/e2e/CtmTest/**/*.cy.{js,jsx,ts,tsx}',
   //specPattern: 'src/e2e/CtmTest/CTM-105-NCT02503722_Osimertinib.cy.ts',
  // specPattern: 'src/e2e/CtmTest/CTM-114-NCT03297606_CAPTUR.cy.ts',
   //specPattern: 'src/e2e/CtmTest/CTM-194-Save-Edit-Delete/CTM-194-NCT03297606_CAPTUR-Edit.cy.ts',
@@ -35,6 +35,9 @@ const cypressJsonConfig: EndToEndConfigOptions = {
  // specPattern: 'src/e2e/CtmTest/User-Roles/**.cy.ts',
   //specPattern: 'src/e2e/CtmTest/User-Roles/member-NCT02503722_Osimertinib.cy.ts',
   //specPattern: 'src/e2e/CtmTest/User-Roles/admin-NCT03114319_TNO155.cy.ts',
+  specPattern: 'src/e2e/CtmTest/User-Roles/admin-NCT03297606_CAPTUR.cy.ts',
+
+
 
   defaultCommandTimeout: 10000,
   pageLoadTimeout: 30000,
@@ -92,8 +95,8 @@ module.exports = defineConfig({
   //viewportHeight: 1080,
   "env": {
     //"baseUrl": "http://localhost:4200/",
-    baseUrl: 'http://localhost:3000',
-  // baseUrl: 'https://ctims-web.qa02.technainstitute.net',
+  //  baseUrl: 'http://localhost:3000',
+  baseUrl: 'https://ctims-web.qa02.technainstitute.net',
     defaultCommandTimeout: 30000,
     allureReuseAfterSpec: true,
     allureResultsPath: "allure-results",
@@ -101,6 +104,8 @@ module.exports = defineConfig({
     snapshotOnly: true,
     testIsolation: false,
     experimentalSessionSupport: true,
+    experimentalMemoryManagement: true
+
     /*db: {
       host: 'localhost',
       port: '3306',

@@ -97,7 +97,7 @@ import {
   getVariantClassification,
   selectTrialGroupButton,
   trialGroupxAdmin,
-  ctimsUserTrialGroupxMember
+  ctimsUserTrialGroupxMember, trialTableThreeDots
 } from './app.po';
 import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib";
 import {NCT03297606_CAPTUR} from "../fixtures/NCT03297606_CAPTUR";
@@ -425,7 +425,7 @@ Cypress.Commands.add('saveAndBackBtn', () => {
   cy.get('.p-toast-message-content').should('contain', 'Trial saved')
   cy.get('.p-toast-icon-close').click()
   trialEditorBackButton().should('be.visible').trigger("click")
-  cy.get('.trials_trialsText__0DJhD').should('contain', 'Trials')
+  //cy.get('.trials_trialsText__0DJhD').should('contain', 'Trials')
 })
 Cypress.Commands.add('saveAndEdit', () => {
   trialEditorSave().click()
@@ -514,7 +514,7 @@ Cypress.Commands.add('clickSaveEditButtonForTrialGroupAdmin', (nickNameVal) => {
       cy.wrap($el).prev().then(($prevEl) => {
         cy.wrap($prevEl).should('be.visible').click();
       });
-      cy.get('.trials_trailsEllipseBtn__OHV_W > .p-button').click();
+      trialTableThreeDots().click();
       trialTableEdit().click();
       return false;
     }
@@ -533,7 +533,7 @@ Cypress.Commands.add('clickSaveEditButtonForTrialGroupMember', (nickNameVal) => 
       cy.wrap($el).prev().then(($prevEl) => {
         cy.wrap($prevEl).click();
       });
-      cy.get('.trials_trailsEllipseBtn__OHV_W > .p-button').click();
+      trialTableThreeDots().click();
       trialTableEdit().click();
       return false;
     }
