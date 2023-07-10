@@ -29,9 +29,12 @@ import {
   getCtmlStatusDropdown,
   getDefaultTextMatchingCriteria,
   getDefaultTrialEditorDropDown,
-  getDrugName, getDrugNamePlusIcon, getDrugNameTextBoxMultiple,
+  getDrugName,
+  getDrugNamePlusIcon,
+  getDrugNameTextBoxMultiple,
   getEditMatchingCriteria,
-  getEditMatchingCriteriaMultiple, getFusionPartnerHugoSymbol,
+  getEditMatchingCriteriaMultiple,
+  getFusionPartnerHugoSymbol,
   getGenomicDropDown,
   getHugoSymbol,
   getLeftMenuComponent,
@@ -39,17 +42,24 @@ import {
   getLevelDescription,
   getLevelInternalId,
   getLongTitle,
-  getManagementGroupName, getManagementGroupNameTextBoxMultiple, getMatchCriteriaHeader,
+  getManagementGroupName,
+  getManagementGroupNameTextBoxMultiple,
+  getMatchCriteriaHeader,
   getMatchingCriteriaTableHeader,
   getMatchModalFooterButtons,
   getMenuItemAnd,
   getMenuItemClinical,
   getMenuItemClinicalGenomic,
-  getMenuItemOr, getMolecularFunction, getMultipleArm,
-  getNCTPurpose, getOncotreeExclamation,
+  getMenuItemOr,
+  getMolecularFunction,
+  getMultipleArm,
+  getNCTPurpose,
+  getOncotreeExclamation,
   getPhaseDropdownList,
-  getPlusIcon, getPreviewTextWindow,
-  getPreviewWindow, getPrimaryManagementGroupPlusIcon,
+  getPlusIcon,
+  getPreviewTextWindow,
+  getPreviewWindow,
+  getPrimaryManagementGroupPlusIcon,
   getPrincipalInvestigator,
   getPriorTreatmentRequirementMultiple,
   getPriorTreatmentRequirementPlusIconMultiple,
@@ -58,14 +68,20 @@ import {
   getProtocolStaffEmail,
   getProtocolStaffFirstName,
   getProtocolStaffInstitutionalName,
-  getProtocolStaffLastName, getProtocolStaffMultiple, getProtocolStaffPlusIcon,
+  getProtocolStaffLastName,
+  getProtocolStaffMultiple,
+  getProtocolStaffPlusIcon,
   getProtocolStaffRole,
   getProtocolStaffStatus,
   getSaveMatchingCriteria,
   getShortTitle,
-  getSiteName, getSiteNameMultiple, getSiteNamePlusIcon,
+  getSiteName,
+  getSiteNameMultiple,
+  getSiteNamePlusIcon,
   getSiteStatus,
-  getSponsorName, getSponsorNameMultiple, getSponsorNamePlusIcon,
+  getSponsorName,
+  getSponsorNameMultiple,
+  getSponsorNamePlusIcon,
   getSubGroup,
   getSwitchGroupOperator,
   getTrialId,
@@ -73,11 +89,18 @@ import {
   getTruncateButton,
   getVariantCategory,
   getVariantClassification,
-  selectDraftCtmlStatus, selectTrialGroupButton,
+  selectDraftCtmlStatus,
+  selectTrialGroupButton, sendCTMLOkButton, sendCtmlToMatcher,
+  trialEditorBackButton,
   trialEditorExportCtml,
   trialEditorHeaderButtons,
   trialEditorLeftPanelList,
-  trialEditorRadioButtons, trialGroupxAdmin, trialTableDelete, trialTableDialogueDeleteBtn
+  trialEditorRadioButtons,
+  trialEditorSave,
+  trialGroupxAdmin,
+  trialTableDelete,
+  trialTableDialogueDeleteBtn, trialTableEdit,
+  trialTableIdColumn, trialTableThreeDots, validateCtmlOkButton
 } from '../../../support/app.po';
 import {NCT03297606_CAPTUR} from "../../../fixtures/NCT03297606_CAPTUR"
 const { deleteDownloadsFolderBeforeAll } = require('cypress-delete-downloads-folder');
@@ -108,7 +131,7 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
         cy.wrap($el).prev().then(($prevEl) => {
           cy.wrap($prevEl).click();
         });
-        cy.get('.trials_trailsEllipseBtn__OHV_W > .p-button').click();
+        trialTableThreeDots().click();
         trialTableDelete().click();
         trialTableDialogueDeleteBtn().click();
         return false;
@@ -119,8 +142,8 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
     createCTMLButton().should('not.have.class','p-disabled').click()
     cy.title().should('contain', 'CTIMS')
     trialEditorLeftPanelList().should('have.length', '9')
-    /*cy.trialInformation(ctmlTestData.nct_id,
-      "NCT03114319_TNO155 TrialGroupx Admin role",
+    cy.trialInformation(ctmlTestData.nct_id,
+      "NCT03297606_CAPTUR TrialGroupx Admin role",
       "Srimathi",
       "Draft",
       ctmlTestData.long_title,
@@ -182,7 +205,7 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
       cy.wrap($input).find('.p-inputtext').eq(2).type(ctmlTestData.staff_list.protocol_staff[index].email_address);
       cy.wrap($input).find('.p-dropdown').eq(0).click().contains(ctmlTestData.staff_list.protocol_staff[index].institution_name).click();
       cy.wrap($input).find('.p-dropdown').eq(1).click().contains(ctmlTestData.staff_list.protocol_staff[index].staff_role).click();
-    });*/
+    });
   })
 
 //!************ Arm 1  *****************
@@ -197,21 +220,20 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
       const arm = treatmentList[index];
       if(index === 0) {
         //cy.wrap($input).each(($armInput, armIndex) => {
-      /*  cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
+        cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
         cy.wrap($input).find('.p-inputtext').eq(1).type(arm.arm_description);
         cy.wrap($input).find('.p-inputtext').eq(2).type(arm.arm_internal_id.toString());
         cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click();
-*/
         cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]`).each(($input, doseIndex) => {
           cy.log($input.attr('id'));
           const dose = doseLevels[doseIndex];
-        /*  cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
+          cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
           cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
           cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
           cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
-     */   });
+        });
         //click first matching criteria link of each arm
-       /* getEditMatchingCriteriaMultiple().eq(index).click()
+        getEditMatchingCriteriaMultiple().eq(index).click()
         //Validate the header
       //  getMatchCriteriaHeader().should('contain', treatmentList[index].arm_code);
         //}
@@ -219,7 +241,7 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
         getAddCriteriaGroup().click()
         //})
 
-        //!******** OR ********************
+        //******** OR ********************
         cy.clickParentAnd()
         cy.clickOr()
         //Click Or Parent at index 1
@@ -261,13 +283,13 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
         getClinicalAge().type(ctmlTestData.treatment_list.step[0].arm[0].match[0].and[1].clinical.age_numerical)
         getClinicalOncotreePrimaryDiagnosis().type(ctmlTestData.treatment_list.step[0].arm[0].match[0].and[1].clinical.oncotree_primary_diagnosis)
         getOncotreeExclamation().click()
-        getSaveMatchingCriteria().click()*/
+        getSaveMatchingCriteria().click()
       }
     })
   })
 
   //********Arm 2************
-  it.skip('should enter the values in Arm 2',  () => {
+  it('should enter the values in Arm 2',  () => {
     const treatmentList = ctmlTestData.treatment_list.step[0].arm;
     const doseLevels = treatmentList[1].dose_level;
 
@@ -275,19 +297,17 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
       cy.log($input.attr('id'));
       const arm = treatmentList[index];
       if (index === 1) {
-        /*  cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
+          cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
           cy.wrap($input).find('.p-inputtext').eq(1).type(arm.arm_description);
           cy.wrap($input).find('.p-inputtext').eq(2).type(arm.arm_internal_id.toString());
           cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click();
           cy.get(`#array-item-list-root_treatment_list_step_0_arm_${index}_dose_level`).contains('Add Dose Level').click()
-  */
         cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]`).each(($input, doseIndex) => {
           const dose = arm.dose_level[doseIndex]
-          /* cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
+           cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
              cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
              cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
              cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
-          */
         });
 
         //click first matching criteria link of each arm
@@ -347,7 +367,7 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
 
   //********Arm 3************
 
-  it.skip('should enter the values in Arm 3',  () => {
+  it('should enter the values in Arm 3',  () => {
     const treatmentList = ctmlTestData.treatment_list.step[0].arm;
     const doseLevels = treatmentList[2].dose_level;
 
@@ -355,19 +375,17 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
       cy.log($input.attr('id'));
       const arm = treatmentList[index];
       if (index === 2) {
-        /*  cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
+          cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
           cy.wrap($input).find('.p-inputtext').eq(1).type(arm.arm_description);
           cy.wrap($input).find('.p-inputtext').eq(2).type(arm.arm_internal_id.toString());
           cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click();
           cy.get(`#array-item-list-root_treatment_list_step_0_arm_${index}_dose_level`).contains('Add Dose Level').click()
-  */
         cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]`).each(($input, doseIndex) => {
           const dose = arm.dose_level[doseIndex]
-          /* cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
+           cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
              cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
              cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
              cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
-          */
         });
 
         //click first matching criteria link of each arm
@@ -426,7 +444,7 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
     })
   });
 
-  it.skip('should enter the values in Arm 4',  () => {
+  it('should enter the values in Arm 4',  () => {
     const treatmentList = ctmlTestData.treatment_list.step[0].arm;
     const doseLevels = treatmentList[3].dose_level;
 
@@ -434,19 +452,17 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
       cy.log($input.attr('id'));
       const arm = treatmentList[index];
       if (index === 3) {
-        /*  cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
+          cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
           cy.wrap($input).find('.p-inputtext').eq(1).type(arm.arm_description);
           cy.wrap($input).find('.p-inputtext').eq(2).type(arm.arm_internal_id.toString());
           cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click();
           cy.get(`#array-item-list-root_treatment_list_step_0_arm_${index}_dose_level`).contains('Add Dose Level').click()
-  */
         cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]`).each(($input, doseIndex) => {
           const dose = arm.dose_level[doseIndex]
-          /* cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
+           cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
              cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
              cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
              cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
-          */
         });
 
         //click first matching criteria link of each arm
@@ -532,7 +548,7 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
     })
   })
 
-  it.skip('should enter the values in Arm 5',  () => {
+  it('should enter the values in Arm 5',  () => {
     const treatmentList = ctmlTestData.treatment_list.step[0].arm;
     const doseLevels = treatmentList[4].dose_level;
 
@@ -540,19 +556,17 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
       cy.log($input.attr('id'));
       const arm = treatmentList[index];
       if (index === 4) {
-        /*  cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
+          cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
           cy.wrap($input).find('.p-inputtext').eq(1).type(arm.arm_description);
           cy.wrap($input).find('.p-inputtext').eq(2).type(arm.arm_internal_id.toString());
           cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click();
           cy.get(`#array-item-list-root_treatment_list_step_0_arm_${index}_dose_level`).contains('Add Dose Level').click()
-  */
         cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]`).each(($input, doseIndex) => {
           const dose = arm.dose_level[doseIndex]
-          /* cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
+           cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
              cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
              cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
              cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
-          */
         });
 
         //click first matching criteria link of each arm
@@ -598,19 +612,18 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
       cy.log($input.attr('id'));
       const arm = treatmentList[index];
       if(index === 5) {
-      /*  cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
+        cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
         cy.wrap($input).find('.p-inputtext').eq(1).type(arm.arm_description);
         cy.wrap($input).find('.p-inputtext').eq(2).type(arm.arm_internal_id.toString());
         cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click();
         cy.get(`#array-item-list-root_treatment_list_step_0_arm_${index}_dose_level`).contains('Add Dose Level').click()
-*/
         cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]`).each(($input, doseIndex) => {
           const dose = arm.dose_level[doseIndex]
-       /* cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
+        cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
           cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
           cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
           cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
-       */ });
+        });
 
         //click first matching criteria link of each arm
         getEditMatchingCriteriaMultiple().eq(index).click()
@@ -697,19 +710,17 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
       cy.log($input.attr('id'));
       const arm = treatmentList[index];
       if (index === 6) {
-        /*  cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
+          cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
           cy.wrap($input).find('.p-inputtext').eq(1).type(arm.arm_description);
           cy.wrap($input).find('.p-inputtext').eq(2).type(arm.arm_internal_id.toString());
           cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click();
           cy.get(`#array-item-list-root_treatment_list_step_0_arm_${index}_dose_level`).contains('Add Dose Level').click()
-  */
         cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]`).each(($input, doseIndex) => {
           const dose = arm.dose_level[doseIndex]
-          /* cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
+           cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
              cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
              cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
              cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
-          */
         });
 
         //click first matching criteria link of each arm
@@ -769,6 +780,61 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
         getSaveMatchingCriteria().click()
       }
     })
+  });
+
+  it('should Save, Edit Ctml test data ', () => {
+    //save and Edit and Export
+    trialEditorSave().click()
+    cy.get('.p-toast-message-content').should('contain','Trial saved')
+    //cy.get('.p-toast-icon-close').click()
+    trialEditorBackButton().should('be.visible').trigger("click")
+    selectTrialGroupButton().click()
+    trialGroupxAdmin().click()
+    trialTableIdColumn()
+      .contains(ctmlTestData.nct_id)
+      .nextUntil('NCT03297606_CAPTUR TrialGroupx Admin role')
+      .then((test) => {
+        trialTableIdColumn().contains(ctmlTestData.nct_id).click();
+        trialTableThreeDots().click();
+        trialTableEdit().click()
+      })
+  });
+  //!************Export Ctml***************
+  it('should click on Export button, "Export as JSON" file ', () => {
+    trialEditorHeaderButtons().eq(1).should('contain', 'Export').click()
+    trialEditorRadioButtons().eq(0).should('contain.html', 'json')
+    cy.get('[type="radio"]').first().check({force: true}).should('be.checked')
+    validateCtmlOkButton().should('not.have.class','p-disabled').click()
+  });
+
+  it('should click on Export button, "Export as YAML" file ', () => {
+    trialEditorHeaderButtons().eq(1).should('contain', 'Export').click()
+    trialEditorRadioButtons().eq(1).click({force: true})
+    validateCtmlOkButton().click()
+  });
+
+  it('should validate the match between "Export JSON" and "Export YAML" file', () => {
+    cy.readFile(ctmlJson).then((exportedCtmlModelJson) => {
+      const json = JSON.stringify(exportedCtmlModelJson);
+      cy.readFile(ctmlYaml).then((exportedCtmlModelYaml) => {
+        const yamlObject = yaml.load(exportedCtmlModelYaml);
+        const yamlVal = JSON.stringify(yamlObject);
+        cy.compareArrays(json.split(','), yamlVal.split(','))
+      });
+    });
+  })
+//!**************** Match Export Json file with Test Data
+
+  it('should validate exported "Trial Information" matches "ctmlTestData" ', () => {
+    cy.readFile(ctmlJson).then((exportedCtmlModel) => {
+      const exportedAttributeNames = ['trial_id', 'long_title', 'short_title', 'phase', 'protocol_no', 'nct_purpose', 'status'];
+      const testDataAttributeNames = ['nct_id', 'long_title', 'short_title', 'phase', 'protocol_no', 'nct_purpose', 'status'];
+
+      const exportedTrialInformation = exportedAttributeNames.map((attribute) => exportedCtmlModel[attribute]);
+      const testDataTrialInformation = testDataAttributeNames.map((attribute) => ctmlTestData[attribute]);
+
+      cy.compareArrays(exportedTrialInformation, testDataTrialInformation);
+    });
   });
 
 
@@ -837,30 +903,7 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
       })
     })
   })
-  //!************Export Ctml***************
-  it('should click on Export button, "Export as JSON" file ', () => {
-    trialEditorHeaderButtons().eq(1).should('contain', 'Export').click()
-    trialEditorRadioButtons().eq(0).should('contain.html', 'json')
-    cy.get('[type="radio"]').first().check({force: true}).should('be.checked')
-    trialEditorExportCtml().eq(1).should('contain', 'Export CTML').click()
-  });
-
-  it('should click on Export button, "Export as YAML" file ', () => {
-    trialEditorHeaderButtons().eq(1).should('contain', 'Export').click()
-    trialEditorRadioButtons().eq(1).click({force: true})
-    trialEditorExportCtml().eq(1).should('contain', 'Export CTML').click()
-  });
-
-  it('should validate the match between "Export JSON" and "Export YAML" file', () => {
-    cy.readFile(ctmlJson).then((exportedCtmlModelJson) => {
-      const json = JSON.stringify(exportedCtmlModelJson);
-      cy.readFile(ctmlYaml).then((exportedCtmlModelYaml) => {
-        const yamlObject = yaml.load(exportedCtmlModelYaml);
-        const yamlVal = JSON.stringify(yamlObject);
-        cy.compareArrays(json.split(','), yamlVal.split(','))
-      });
-    });
-  })
+*/
 //!**************** Match Export Json file with Test Data
 
   it('should validate exported "Trial Information" matches "ctmlTestData" ', () => {
@@ -1006,5 +1049,9 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
       });
     });
 
-  });*/
+  });
+  it('should validate "Send Ctml to matcher', () => {
+    sendCtmlToMatcher().click()
+    sendCTMLOkButton().click()
+  });
 })
