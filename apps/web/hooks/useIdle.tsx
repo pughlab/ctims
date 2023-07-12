@@ -32,7 +32,7 @@ const useIdle = () => {
 
   const onAction = (event?: Event) => {
     setCount(count + 1);
-    console.log('user did something', count, event);
+    // console.log('user did something', count, event);
     // console.log(event);
   };
 

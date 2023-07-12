@@ -8,9 +8,10 @@ import ExportCtmlDialog from "./ExportCtmlDialog";
 import {signOut} from "next-auth/react";
 import {Toast} from "primereact/toast";
 import useSaveTrial from "../../hooks/useSaveTrial";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import SendCtmlToMatchminerDialog from "./SendCTMLtoMatchminerDialog";
 import useSendCTML from "../../hooks/useSendCTML";
+import { setIsFormChanged } from '../../store/slices/contextSlice';
 
 
 const EditorTopBar = (props: {isEditMode?: boolean}) => {
@@ -36,6 +37,8 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
   const isFormDisabled = useSelector((state: RootState) => state.context.isFormDisabled);
   const trialId = useSelector((state: RootState) => state.context.trialId);
 
+  const dispatch = useDispatch();
+
   const router = useRouter();
 
   const toast = useRef(null);
@@ -48,7 +51,7 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
           'info',
         summary: 'Trial saved',
       });
-
+      dispatch(setIsFormChanged(false));
     }
     if(saveTrialError) {
       console.log('error', saveTrialError);

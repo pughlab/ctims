@@ -6,6 +6,7 @@ export interface ContextSliceState {
   seletedTrialGroupId: string;
   isTrialGroupAdmin: boolean;
   isFormDisabled: boolean;
+  isFormChanged: boolean;
 }
 
 const initialState: ContextSliceState = {
@@ -14,6 +15,7 @@ const initialState: ContextSliceState = {
   seletedTrialGroupId: '',
   isTrialGroupAdmin: false,
   isFormDisabled: false,
+  isFormChanged: false
 }
 
 export const contextSlice = createSlice({
@@ -34,6 +36,9 @@ export const contextSlice = createSlice({
     },
     setIsFormDisabled: (state, action: PayloadAction<boolean>) => {
       state.isFormDisabled = action.payload
+    },
+    setIsFormChanged: (state, action: PayloadAction<boolean>) => {
+      state.isFormChanged = action.payload
     }
   }
 });
@@ -43,5 +48,6 @@ export const {
   setTrialId,
   selectedTrialGroupId,
   setIsTrialGroupAdmin,
-  setIsFormDisabled} = contextSlice.actions;
+  setIsFormDisabled,
+  setIsFormChanged} = contextSlice.actions;
 export default contextSlice.reducer;
