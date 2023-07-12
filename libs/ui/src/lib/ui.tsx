@@ -13,7 +13,7 @@ import {setCtmlModel, setErrorSchema} from "../../../../apps/web/store/slices/ct
 import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
 import Form from "@rjsf/core";
 import {ValidationData} from "@rjsf/utils";
-import {setTrialId} from "../../../../apps/web/store/slices/contextSlice";
+import { setIsFormChanged, setTrialId } from "../../../../apps/web/store/slices/contextSlice";
 
 
 const containerStyle: CSSProperties = {
@@ -44,6 +44,12 @@ export const Ui = (props: UiProps) => {
     if (currentURL.includes('/trials/create')) {
       dispatch(setTrialId(0))
     }
+    if(currentURL.includes('/trials/edit/')) {
+      const form: Form = formRef.current;
+      form.validateForm();
+      const errorDetails: ValidationData<any> = form.validate(props.formData);
+      dispatch(setErrorSchema(errorDetails));
+    }
   }, []);
 
   const handleSpecialClick = (formD: any, id: string) => {
@@ -58,16 +64,13 @@ export const Ui = (props: UiProps) => {
     setIsOpen(true);
   }
 
-  const handleSubmit = (e: any) => {
-    console.log(e);
-  }
-
   const onFormChange = (data: any) => {
     if (formRef && formRef.current) {
       const form: Form = formRef.current;
       form.validateForm();
       const errorDetails: ValidationData<any> = form.validate(data.formData);
       dispatch(setErrorSchema(errorDetails));
+      dispatch(setIsFormChanged(true));
     }
 
     const formDataClone = structuredClone(data.formData)

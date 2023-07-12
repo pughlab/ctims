@@ -9,6 +9,7 @@ import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/struc
 import {setTrialId} from "../../../store/slices/contextSlice";
 import {useDispatch} from "react-redux";
 import IdleComponent from "../../../components/IdleComponent";
+import { setCtmlModel } from '../../../store/slices/ctmlModelSlice';
 
 const containerStyle: React.CSSProperties = {
   display: 'flex',
@@ -78,6 +79,7 @@ const {
 
       editTrialObject = {...editTrialObject, ...ctml_json}
       setFormData(editTrialObject)
+      dispatch(setCtmlModel(editTrialObject))
       console.log('editTrialObject', editTrialObject)
     }
 

@@ -4,6 +4,7 @@ import {RootState} from "../../store/store";
 import {Dialog} from "primereact/dialog";
 import styles from "./SendCTMLtoMatchminerDialog.module.scss";
 import {Button} from "primereact/button";
+import { Message } from 'primereact/message';
 
 interface SendCtmlDialogProps {
   isCTMLDialogVisible: boolean;
@@ -16,22 +17,19 @@ const SendCtmlToMatchminerDialog = (props: SendCtmlDialogProps) => {
   const [isDialogVisible, setIsDialogVisible] = useState<boolean>(props.isCTMLDialogVisible);
   const [sendButtonDisabled, setSendButtonDisabled] = useState<boolean>(true);
 
-  const ctmlModel = useSelector((state: RootState) => state.finalModelAndErrors.ctmlModel);
+  const isFormChanged = useSelector((state: RootState) => state.context.isFormChanged);
 
   useEffect(() => {
     setIsDialogVisible(props.isCTMLDialogVisible);
   }, [props.isCTMLDialogVisible])
 
   useEffect(() => {
-    if(ctmlModel === null) {
-      console.log('ctmlModel not ready');
+    if (isFormChanged) {
       setSendButtonDisabled(true);
     } else {
-      console.log('ctmlModel', ctmlModel);
       setSendButtonDisabled(false);
-
     }
-  }, [ctmlModel])
+  }, [isFormChanged])
 
   const onDialogHide = () => {
     props.onCTMLDialogHide();
@@ -40,6 +38,14 @@ const SendCtmlToMatchminerDialog = (props: SendCtmlDialogProps) => {
   const doSendCtml = () => {
     props.onIsOKClicked(true);
     onDialogHide();
+  }
+
+  const errorContent = () => {
+    return (
+      <>
+        <div>You must save CTML before you can export it</div>
+      </>
+    )
   }
 
   const footer = (props: {sendCtmlClicked: () => void}) => {
@@ -65,6 +71,14 @@ const SendCtmlToMatchminerDialog = (props: SendCtmlDialogProps) => {
             visible={isDialogVisible}
             style={{width: '700px', minHeight: '200px'}}
             onHide={onDialogHide}>
+      <div>
+      {isFormChanged && <Message severity="error"
+               style={{
+                 marginLeft: '18px',
+                 marginBottom: '10px'
+               }}
+               content={errorContent()} />}
+      </div>
       <div className={styles['dialog-content']}>
         Are you sure you want to send CTML to Matcher? Please ensure all mandatory fields are complete to optimize match results.'
       </div>
