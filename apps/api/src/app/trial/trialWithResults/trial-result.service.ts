@@ -51,7 +51,7 @@ export class TrialResultService implements OnModuleInit {
           nct_id: trial.nct_id,
           nickname: trial.nickname,
           principal_investigator: trial.principal_investigator,
-          status: CtmlStatusEnum[ctml_status_label],
+          status: CtmlStatusEnum[trial.status],
           createdAt: trial.createdAt,
           updatedAt: trial.updatedAt,
           protocol_no: trial.protocol_no,
