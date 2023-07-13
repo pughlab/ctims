@@ -28,6 +28,7 @@ function setupSwagger(app: INestApplication) {
   const config = new DocumentBuilder()
     .setTitle('CTIMS API')
     .setDescription('The API for CTIMS backend.')
+    .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' }, 'KeycloakPasswordGuard')
     .setVersion('0.1')
     .build();
 

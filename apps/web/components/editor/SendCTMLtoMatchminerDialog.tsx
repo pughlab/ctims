@@ -43,7 +43,7 @@ const SendCtmlToMatchminerDialog = (props: SendCtmlDialogProps) => {
   const errorContent = () => {
     return (
       <>
-        <div>You must save CTML before you can export it</div>
+        <div>You must save the CTML before sending to the Matcher.</div>
       </>
     )
   }
