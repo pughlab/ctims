@@ -10,7 +10,7 @@
     "schema:push": "npx prisma db push --schema=./apps/api/prisma/schema.prisma",
     "schema:generate-client": "npx prisma generate --schema=./apps/api/prisma/schema.prisma",
     "prisma:migrate": "npx prisma migrate deploy --schema=./apps/api/prisma/schema.prisma",
-    "prisma:create_migration": "npx prisma migrate dev --name initial_migration --create-only --schema=./apps/api/prisma/schema.prisma",
+    "prisma:create_migration": "npx prisma migrate dev --name add_trial_protocol --create-only --schema=./apps/api/prisma/schema.prisma",
     "prisma:resolve_migration": "npx prisma migrate resolve --applied 0_init --schema=./apps/api/prisma/schema.prisma",
     "prisma:encrypt": "ts-node apps/api/prisma/prisma-field-encryption-migrations/index.ts",
     "start:prod": "node dist/apps/api/main.js",

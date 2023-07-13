@@ -30,4 +30,6 @@ export class CreateTrialDto {
   @ApiProperty({description: 'Group Id of the trial'})
   group_id: string;
 
+  @ApiProperty({description: 'The protocol no. of the trial'})
+  protocol_no: string;
 }

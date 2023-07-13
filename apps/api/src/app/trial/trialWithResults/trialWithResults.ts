@@ -11,6 +11,7 @@ export type trialWithResults = {
   status: status | null
   createdAt: Date
   updatedAt: Date
+  protocol_no: string
   trialRetCount?: number | null
   matchedDate?: Date | null
 }

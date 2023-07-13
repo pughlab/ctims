@@ -43,7 +43,7 @@ export class TrialResultService implements OnModuleInit {
       }
 
       for (let trial of trials) {
-        const mm_info = await this.findMatchMinerInfo(trial.nct_id, matchResults.data.values);
+        const mm_info = await this.findMatchMinerInfo(trial.protocol_no, matchResults.data.values);
         const myStatus = trial.status;
         const ctml_status_label = getCtmlStatusLabel(CtmlStatusEnum[myStatus]);
         const result: trialWithResults = {
@@ -51,9 +51,10 @@ export class TrialResultService implements OnModuleInit {
           nct_id: trial.nct_id,
           nickname: trial.nickname,
           principal_investigator: trial.principal_investigator,
-          status: CtmlStatusEnum[ctml_status_label],
+          status: CtmlStatusEnum[trial.status],
           createdAt: trial.createdAt,
           updatedAt: trial.updatedAt,
+          protocol_no: trial.protocol_no,
           trialRetCount: mm_info.count,
           matchedDate: mm_info.updated
         }
@@ -80,7 +81,7 @@ export class TrialResultService implements OnModuleInit {
         }
       );
       console.log('trial: ', trial);
-      const protocol_no = trial.nct_id;
+      const protocol_no = trial.protocol_no;
       const url = `${process.env.MM_API_URL}/ctims_trial_match?where={"protocol_no":"${protocol_no}"}`;
       const matchResults = await axios.request(
         {

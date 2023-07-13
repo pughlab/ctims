@@ -92,7 +92,7 @@ const Results = () => {
       <CSVLink
         headers={headers}
         data={downloadResults}
-        filename={rowData.nct_id + '_result.csv'}
+        filename={rowData.protocol_no + '_result.csv'}
         className='hidden'
         ref={csvLink}
         target='_blank'
@@ -101,7 +101,7 @@ const Results = () => {
   };
 
   const downloadClicked = (e: any) => {
-    getDownloadResultsOperation(e.trialId, e.nct_id);
+    getDownloadResultsOperation(e.trialId, e.protocol_no);
   }
 
   // if trial is pending state (send to CTML but hasn't been matched), then don't display
@@ -116,6 +116,7 @@ const Results = () => {
         ctml_status_label: cur.ctml_status_label,
         createdAt: cur.createdAt,
         updatedAt: cur.updatedAt,
+        protocol_no: cur.protocol_no,
         trialRetCount: (cur.ctml_status_label === CtmlStatusEnum.PENDING) ? '' : cur.trialRetCount,
         matchedDate: (cur.ctml_status_label === CtmlStatusEnum.PENDING) ? null : cur.matchedDate,
       }
