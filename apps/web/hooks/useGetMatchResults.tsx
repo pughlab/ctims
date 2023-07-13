@@ -38,7 +38,7 @@ const useGetMatchResults = () => {
       const mapped = trialsWithResults.data.map((trial) => {
         let createdAtDate = new Date(trial.createdAt)
         let updatedAtDate = new Date(trial.updatedAt)
-        let matchedDate = new Date(trial.matchedDate);
+        let matchedDateFormatted = null;
         const createdAtFormatted = createdAtDate.toLocaleString(undefined, {
           month: 'short',
           day: 'numeric',
@@ -53,13 +53,16 @@ const useGetMatchResults = () => {
           hour: 'numeric',
           minute: 'numeric'
         });
-        const matchedDateFormatted = matchedDate.toLocaleString(undefined, {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric',
-          hour: 'numeric',
-          minute: 'numeric'
-        });
+        if (trial.matchedDate) {
+          let matchedDate = new Date(trial.matchedDate);
+          matchedDateFormatted = matchedDate.toLocaleString(undefined, {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric'
+          });
+        }
         const ctml_status_label = getCtmlStatusLabel(trial.status);
         return {
           ...trial,

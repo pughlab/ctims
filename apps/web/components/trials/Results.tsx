@@ -8,6 +8,7 @@ import styles from './Results.module.scss';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { CSVLink } from "react-csv";
+import {CtmlStatusLabels} from "../../../../libs/types/src/CtmlStatusLabels";
 
 const Results = () => {
   const {data, status: sessionStatus} = useSession()
@@ -117,8 +118,8 @@ const Results = () => {
         createdAt: cur.createdAt,
         updatedAt: cur.updatedAt,
         protocol_no: cur.protocol_no,
-        trialRetCount: (cur.ctml_status_label === CtmlStatusEnum.PENDING) ? '' : cur.trialRetCount,
-        matchedDate: (cur.ctml_status_label === CtmlStatusEnum.PENDING) ? null : cur.matchedDate,
+        trialRetCount: (cur.ctml_status_label === CtmlStatusLabels[CtmlStatusEnum.PENDING]) ? '' : cur.trialRetCount,
+        matchedDate: cur.matchedDate? cur.matchedDate : ''
       }
       dataCopy.push(curCopy);
     }
