@@ -118,7 +118,8 @@ const Results = () => {
         createdAt: cur.createdAt,
         updatedAt: cur.updatedAt,
         protocol_no: cur.protocol_no,
-        trialRetCount: (cur.ctml_status_label === CtmlStatusLabels[CtmlStatusEnum.PENDING]) ? '' : cur.trialRetCount,
+        // trialRetCount: (cur.ctml_status_label === CtmlStatusLabels[CtmlStatusEnum.PENDING]) ? '' : cur.trialRetCount,
+        trialRetCount: cur.trialRetCount,
         matchedDate: cur.matchedDate? cur.matchedDate : ''
       }
       dataCopy.push(curCopy);
