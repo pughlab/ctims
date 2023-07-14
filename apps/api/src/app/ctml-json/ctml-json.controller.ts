@@ -180,8 +180,9 @@ export class CtmlJsonController implements OnModuleInit {
   @ApiFoundResponse({ description: "CTML JSON send to matchminer." })
   async send_to_matchminer(
     @CurrentUser() user: user,
+    @Param('id') id: string,
     @Body() ctmlJson: any
   ) {
-    await this.ctmlJsonService.send_to_matchminer(ctmlJson);
+    await this.ctmlJsonService.send_to_matchminer(+id, ctmlJson);
   }
 }

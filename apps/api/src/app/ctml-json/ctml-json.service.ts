@@ -4,6 +4,7 @@ import { UpdateCtmlJsonDto } from './dto/update-ctml-json.dto';
 import { ctml_json, event_type, user } from "@prisma/client";
 import {PrismaService} from "../prisma.service";
 import axios from "axios";
+import {CtmlStatusEnum} from "../../../../../libs/types/src/ctml-status.enum";
 
 @Injectable()
 export class CtmlJsonService {
@@ -115,7 +116,7 @@ export class CtmlJsonService {
     return this.prismaService.ctml_json.delete({ where: { id } });
   }
 
-  async send_to_matchminer(ctml_json: any) {
+  async send_to_matchminer(trialId: number, ctml_json: any) {
     try {
       const url = `${process.env.MM_API_URL}/load_trial`;
       const results = await axios.request(
@@ -126,6 +127,24 @@ export class CtmlJsonService {
         }
       );
       console.log(results);
+
+      // update the trial's status to pending
+      const trial = await this.prismaService.trial.findUnique({
+        where: {
+          id: trialId
+        }
+      });
+      if (trial) {
+        // in case if the trial wasn't saved before sending to matchminer
+        await this.prismaService.trial.update({
+          where: {
+            id: trialId
+          },
+          data: {
+            status: CtmlStatusEnum.PENDING
+          }
+        });
+      }
     } catch (error) {
       console.log(error);
       throw new Error(error);
