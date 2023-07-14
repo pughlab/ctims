@@ -445,6 +445,102 @@ export const NCT03297606_CAPTUR: Ctml3 =
             ]
           },
           {
+            "arm_code": "Group 6",
+            "arm_description": "Experimental: Group 6",
+            "arm_internal_id": 6,
+            "arm_suspended": "N",
+            "dose_level": [
+              {
+                "level_code": "Nivolumab plus Ipilimumab",
+                "level_description": "Combination Phase - 3mg/kg nivolumab administered as an intravenous infusion over 30 minutes every 3 weeks for the first 4 doses in combination with ipilmumab 1mg/kg administered intravenously over 30 minutes, followed by the single-agent phase.",
+                "level_internal_id": 6,
+                "level_suspended": "N"
+              },
+              {
+                "level_code": "Nivolumab",
+                "level_description": "Single-Agent Phase - 480mg nivolumab administered as an intravenous infusion over 30 minutes every 4 weeks.",
+                "level_internal_id": 7,
+                "level_suspended": "N"
+              }
+            ],
+            "match": [
+              {
+                "and": [
+                  {
+                    "or": [
+                      {
+                        "genomic": {
+                          "hugo_symbol": "POLE",
+                          "variant_category": "Mutation"
+                        }
+                      },
+                      {
+                        "genomic": {
+                          "hugo_symbol": "POLD1",
+                          "variant_category": "Mutation"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "and": [
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "!Melanoma"
+                        }
+                      },
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "!Non-Small Cell Lung Cancer"
+                        }
+                      },
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "!Small Cell Lung Cancer"
+                        }
+                      },
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "!Renal Cell Carcinoma"
+                        }
+                      },
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "!Hepatocellular Carcinoma"
+                        }
+                      },
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "!Head and Neck"
+                        }
+                      },
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "!Colorectal Adenocarcinoma",
+                          "ms_status": "MSI-H"
+                        }
+                      },
+                      {
+                        "clinical": {
+                          "age_numerical": ">=18",
+                          "oncotree_primary_diagnosis": "_SOLID_",
+                          "tmb": 10
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
             "arm_code": "Group 7",
             "arm_description": "Experimental: Group 7",
             "arm_internal_id": 7,
@@ -567,7 +663,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
               }
             ]
           },
-      /*    {
+          {
             "arm_code": "Group 9",
             "arm_description": "Experimental: Group 9",
             "arm_internal_id": 9,
@@ -595,7 +691,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "CSF1R",
-                          "variant_category": "Copy Number Variation"
+                          "variant_category": "CNV"
                         }
                       },
                       {
@@ -608,7 +704,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "PDGFRA",
-                          "variant_category": "Copy Number Variation"
+                          "variant_category": "CNV"
                         }
                       },
                       {
@@ -621,7 +717,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "PDGFRB",
-                          "variant_category": "Copy Number Variation"
+                          "variant_category": "CNV"
                         }
                       },
                       {
@@ -634,7 +730,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "FLT1",
-                          "variant_category": "Copy Number Variation"
+                          "variant_category": "CNV"
                         }
                       },
                       {
@@ -647,7 +743,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "KDR",
-                          "variant_category": "Copy Number Variation"
+                          "variant_category": "CNV"
                         }
                       },
                       {
@@ -660,7 +756,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "FLT4",
-                          "variant_category": "Copy Number Variation"
+                          "variant_category": "CNV"
                         }
                       },
                       {
@@ -673,7 +769,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "KIT",
-                          "variant_category": "Copy Number Variation"
+                          "variant_category": "CNV"
                         }
                       },
                       {
@@ -686,7 +782,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "RET",
-                          "variant_category": "Copy Number Variation"
+                          "variant_category": "CNV"
                         }
                       },
                       {
@@ -699,7 +795,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "FGFR1",
-                          "variant_category": "Copy Number Variation"
+                          "variant_category": "CNV"
                         }
                       },
                       {
@@ -712,7 +808,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "FGFR2",
-                          "variant_category": "Copy Number Variation"
+                          "variant_category": "CNV"
                         }
                       },
                       {
@@ -725,7 +821,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "FGFR3",
-                          "variant_category": "Copy Number Variation"
+                          "variant_category": "CNV"
                         }
                       },
                       {
@@ -738,14 +834,14 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "FLT3",
-                          "variant_category": "Copy Number Variation"
+                          "variant_category": "CNV"
                         }
                       },
                       {
                         "genomic": {
-                          "cnv_call": "Heterozygous Deletion",
+                          "cnv_call": "Heterozygous deletion",
                           "hugo_symbol": "VHL",
-                          "variant_category": "Copy Number Variation"
+                          "variant_category": "CNV"
                         }
                       },
                       {
@@ -1463,7 +1559,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                 ]
               }
             ]
-          }*/
+          }
         ]
       }
     ]
