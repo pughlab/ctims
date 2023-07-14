@@ -3,12 +3,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import useGetMatchResults from '../../hooks/useGetMatchResults';
 import useDownloadResults from '../../hooks/useDownloadResults';
 import { classNames } from 'primereact/utils';
-import { CtmlStatusEnum } from '../../../../libs/types/src/ctml-status.enum';
 import styles from './Results.module.scss';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { CSVLink } from "react-csv";
-import {CtmlStatusLabels} from "../../../../libs/types/src/CtmlStatusLabels";
 
 const Results = () => {
   const {data, status: sessionStatus} = useSession()
@@ -61,6 +59,8 @@ const Results = () => {
 
   // match results use effects
   const [results, setResults] = useState<any>([]);
+  // trial protocol number that was clicked
+  const [protocolNo, setProtocolNo] = useState<string>(null);
   // const [rowEntered, setRowEntered] = useState<DataTableRowMouseEventParams>(null);
   // const [rowClicked, setRowClicked] = useState<any>(null);
 
@@ -93,7 +93,7 @@ const Results = () => {
       <CSVLink
         headers={headers}
         data={downloadResults}
-        filename={rowData.protocol_no + '_result.csv'}
+        filename={protocolNo + '_result.csv'}
         className='hidden'
         ref={csvLink}
         target='_blank'
@@ -102,6 +102,7 @@ const Results = () => {
   };
 
   const downloadClicked = (e: any) => {
+    setProtocolNo(e.protocol_no);
     getDownloadResultsOperation(e.trialId, e.protocol_no);
   }
 
