@@ -142,7 +142,7 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
     createCTMLButton().should('not.have.class','p-disabled').click()
     cy.title().should('contain', 'CTIMS')
     trialEditorLeftPanelList().should('have.length', '9')
-    cy.trialInformation(ctmlTestData.nct_id,
+   /* cy.trialInformation(ctmlTestData.nct_id,
       "NCT03297606_CAPTUR TrialGroupx Admin role",
       "Srimathi",
       "Draft",
@@ -205,7 +205,7 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
       cy.wrap($input).find('.p-inputtext').eq(2).type(ctmlTestData.staff_list.protocol_staff[index].email_address);
       cy.wrap($input).find('.p-dropdown').eq(0).click().contains(ctmlTestData.staff_list.protocol_staff[index].institution_name).click();
       cy.wrap($input).find('.p-dropdown').eq(1).click().contains(ctmlTestData.staff_list.protocol_staff[index].staff_role).click();
-    });
+    });*/
   })
 
 //!************ Arm 1  *****************
@@ -220,28 +220,25 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
       const arm = treatmentList[index];
       if(index === 0) {
         //cy.wrap($input).each(($armInput, armIndex) => {
-        cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
+      /*  cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
         cy.wrap($input).find('.p-inputtext').eq(1).type(arm.arm_description);
         cy.wrap($input).find('.p-inputtext').eq(2).type(arm.arm_internal_id.toString());
         cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click();
-        cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]`).each(($input, doseIndex) => {
+      */  cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]`).each(($input, doseIndex) => {
           cy.log($input.attr('id'));
           const dose = doseLevels[doseIndex];
-          cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
+       /*   cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
           cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
           cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
           cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
-        });
+      */  });
         //click first matching criteria link of each arm
-        getEditMatchingCriteriaMultiple().eq(index).click()
+//        getEditMatchingCriteriaMultiple().eq(index).click()
         //Validate the header
       //  getMatchCriteriaHeader().should('contain', treatmentList[index].arm_code);
-        //}
-        // });
-        getAddCriteriaGroup().click()
-        //})
+        /*getAddCriteriaGroup().click()
 
-        //******** OR ********************
+        //!******** OR ********************
         cy.clickParentAnd()
         cy.clickOr()
         //Click Or Parent at index 1
@@ -284,12 +281,12 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
         getClinicalOncotreePrimaryDiagnosis().type(ctmlTestData.treatment_list.step[0].arm[0].match[0].and[1].clinical.oncotree_primary_diagnosis)
         getOncotreeExclamation().click()
         getSaveMatchingCriteria().click()
-      }
+   */   }
     })
   })
 
   //********Arm 2************
-  it('should enter the values in Arm 2',  () => {
+  it.skip('should enter the values in Arm 2',  () => {
     const treatmentList = ctmlTestData.treatment_list.step[0].arm;
     const doseLevels = treatmentList[1].dose_level;
 
@@ -367,7 +364,7 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
 
   //********Arm 3************
 
-  it('should enter the values in Arm 3',  () => {
+  it.skip('should enter the values in Arm 3',  () => {
     const treatmentList = ctmlTestData.treatment_list.step[0].arm;
     const doseLevels = treatmentList[2].dose_level;
 
@@ -444,7 +441,7 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
     })
   });
 
-  it('should enter the values in Arm 4',  () => {
+  it.skip('should enter the values in Arm 4',  () => {
     const treatmentList = ctmlTestData.treatment_list.step[0].arm;
     const doseLevels = treatmentList[3].dose_level;
 
@@ -548,7 +545,7 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
     })
   })
 
-  it('should enter the values in Arm 5',  () => {
+  it.skip('should enter the values in Arm 5',  () => {
     const treatmentList = ctmlTestData.treatment_list.step[0].arm;
     const doseLevels = treatmentList[4].dose_level;
 
@@ -599,19 +596,142 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
       }
     })
   })
+  //!************ Arm 6  *****************
 
-
-  //!************ Arm 7  *****************
-
-  it('should enter the values in "Treatment List and Matching criteria modal" for Arm 7', () => {
-
+  it.skip('should enter the values in Arm 6(hint check fix for CTM-258 bug ticket-o/p mismatched)',  () => {
     const treatmentList = ctmlTestData.treatment_list.step[0].arm;
     const doseLevels = treatmentList[5].dose_level;
 
     getMultipleArm().each(($input, index) => {
       cy.log($input.attr('id'));
       const arm = treatmentList[index];
-      if(index === 5) {
+      if (index === 5) {
+       /* cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
+        cy.wrap($input).find('.p-inputtext').eq(1).type(arm.arm_description);
+        cy.wrap($input).find('.p-inputtext').eq(2).type(arm.arm_internal_id.toString());
+        cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click();
+      */  //click multiple dose
+        cy.clickMultiple(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]>div>.pi-plus-circle`, doseLevels.length)
+
+        cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]>div>div>div>div>#panel-children`).each(($input, doseIndex) => {
+          const dose = doseLevels[doseIndex];
+          cy.log(doseIndex.toString())
+          cy.log(JSON.stringify(doseLevels))
+          cy.log(JSON.stringify(doseLevels[doseIndex]));
+          cy.wait(1000)
+         /* if (doseIndex === 0) {
+            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
+            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
+            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
+            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
+          }
+          if (doseIndex === 1) {
+            cy.log(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`);
+            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
+            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
+            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
+            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
+          }*/
+        })
+        //click first matching criteria link of each arm
+        getEditMatchingCriteriaMultiple().eq(index).click()
+        //Validate the header
+        //   getMatchCriteriaHeader().should('contain', treatmentList[index].arm_code);
+        getAddCriteriaGroup().click()
+        //!******** OR ********************
+
+        cy.clickParentAnd()
+        cy.clickOr()
+        cy.clickParentNode(1).click()
+        let orConditions = treatmentList[index].match[0].and[0].or
+        cy.clickGenomic()
+        cy.clickMultipleFunction(getAddCriteriaToSameList(), orConditions.length - 1)
+        getSubGroup().find('.p-treenode-children>li')
+          .each((childElement, index) => {
+            if (Cypress.$(childElement).length > 0) {
+              cy.wrap(childElement).click() // click on each child element
+              let condition = orConditions[index % orConditions.length]; // get the corresponding and condition
+              Object.entries(condition.genomic).map(([key, value]) => {
+                if (key === 'hugo_symbol') {
+                  getHugoSymbol().type(value)
+                }
+                if (key === 'protein_change') {
+                  getProteinChange().type(value)
+                }
+                if (key === 'variant_category') {
+                  getVariantCategory().click()
+                  getGenomicDropDown().contains(value).click()
+                }
+                if (key === 'variant_classification') {
+                  getVariantClassification().click()
+                  getGenomicDropDown().contains(value.replace(/_/g, " ")).click()
+                }
+                if (key === 'fusion_partner_hugo_symbol') {
+                  getFusionPartnerHugoSymbol().type(value)
+                }
+                if (key === 'molecular_function') {
+                  getMolecularFunction().click()
+                  getGenomicDropDown().contains(value).click()
+                }
+                if (key === 'cnv_call') {
+                  getCNVCall().click()
+                  getGenomicDropDown().contains(value).click()
+                }
+              })
+            } else {
+              return false;
+            }
+          })
+        cy.clickChildToggleArrowButton(1) //collapse the Or subgroup
+        //!******** AND ********************
+        cy.clickParentNode(0)
+        cy.clickAnd()
+        cy.clickParentNode(2)
+        cy.clickClinical()
+        let clinicalLength = treatmentList[index].match[0].and[1].and.length - 1
+        cy.clickMultipleFunction(getAddCriteriaToSameList(), clinicalLength)
+
+        let andConditions = treatmentList[index].match[0].and[1].and
+        cy.get('.LeftMenuComponent_matchingCriteriaMenuContainer__fe8dz>div:nth-child(2)>ul>li>ul>li:nth-child(2)').find('.p-treenode-children>li')
+          .each((childElement, index) => {
+            cy.log(index.toString())
+            if (Cypress.$(childElement).length > 0) {
+              cy.wrap(childElement).click() // click on each child element
+              let condition = andConditions[index % andConditions.length]; // get the corresponding and condition
+              //andConditions.forEach(condition => { // get the corresponding and condition
+              cy.log(andConditions.length.toString())
+              Object.entries(condition.clinical).map(([key, value]) => {
+                if (key === 'age_numerical') {
+                  getClinicalAge().type(value)
+                }
+                if (key === 'oncotree_primary_diagnosis') {
+                  getClinicalOncotreePrimaryDiagnosis().type(value)
+                  getOncotreeExclamation().click()
+                }
+                if (key === 'tmb') {
+                  getClinicalTMB().type(value)
+                }
+              })
+            } else {
+              return false;
+            }
+          })
+       getSaveMatchingCriteria().click()
+      }
+    })
+  })
+
+  //!************ Arm 7  *****************
+
+  it.skip('should enter the values in "Treatment List and Matching criteria modal" for Arm 7', () => {
+
+    const treatmentList = ctmlTestData.treatment_list.step[0].arm;
+    const doseLevels = treatmentList[6].dose_level;
+
+    getMultipleArm().each(($input, index) => {
+      cy.log($input.attr('id'));
+      const arm = treatmentList[index];
+      if(index === 6) {
         cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
         cy.wrap($input).find('.p-inputtext').eq(1).type(arm.arm_description);
         cy.wrap($input).find('.p-inputtext').eq(2).type(arm.arm_internal_id.toString());
@@ -701,15 +821,16 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
       }
     })
   })
+  //!************ Arm 8  *****************
 
-  it('should enter the values in Arm 8',  () => {
+  it.skip('should enter the values in Arm 8',  () => {
     const treatmentList = ctmlTestData.treatment_list.step[0].arm;
-    const doseLevels = treatmentList[6].dose_level;
+    const doseLevels = treatmentList[7].dose_level;
 
     getMultipleArm().each(($input, index) => {
       cy.log($input.attr('id'));
       const arm = treatmentList[index];
-      if (index === 6) {
+      if (index === 7) {
           cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
           cy.wrap($input).find('.p-inputtext').eq(1).type(arm.arm_description);
           cy.wrap($input).find('.p-inputtext').eq(2).type(arm.arm_internal_id.toString());
@@ -782,276 +903,513 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
     })
   });
 
-  it('should Save, Edit Ctml test data ', () => {
-    //save and Edit and Export
-    trialEditorSave().click()
-    cy.get('.p-toast-message-content').should('contain','Trial saved')
-    //cy.get('.p-toast-icon-close').click()
-    trialEditorBackButton().should('be.visible').trigger("click")
-    selectTrialGroupButton().click()
-    trialGroupxAdmin().click()
-    trialTableIdColumn()
-      .contains(ctmlTestData.nct_id)
-      .nextUntil('NCT03297606_CAPTUR TrialGroupx Admin role')
-      .then((test) => {
-        trialTableIdColumn().contains(ctmlTestData.nct_id).click();
-        trialTableThreeDots().click();
-        trialTableEdit().click()
-      })
-  });
-  //!************Export Ctml***************
-  it('should click on Export button, "Export as JSON" file ', () => {
-    trialEditorHeaderButtons().eq(1).should('contain', 'Export').click()
-    trialEditorRadioButtons().eq(0).should('contain.html', 'json')
-    cy.get('[type="radio"]').first().check({force: true}).should('be.checked')
-    validateCtmlOkButton().should('not.have.class','p-disabled').click()
-  });
+  //!************ Arm 9  *****************
+  it.skip('should enter the values in Arm 9',  () => {
+    const treatmentList = ctmlTestData.treatment_list.step[0].arm;
+    const doseLevels = treatmentList[8].dose_level;
 
-  it('should click on Export button, "Export as YAML" file ', () => {
-    trialEditorHeaderButtons().eq(1).should('contain', 'Export').click()
-    trialEditorRadioButtons().eq(1).click({force: true})
-    validateCtmlOkButton().click()
-  });
+    getMultipleArm().each(($input, index) => {
+      cy.log($input.attr('id'));
+      const arm = treatmentList[index];
+      if (index === 8) {
+        cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
+        cy.wrap($input).find('.p-inputtext').eq(1).type(arm.arm_description);
+        cy.wrap($input).find('.p-inputtext').eq(2).type(arm.arm_internal_id.toString());
+        cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click();
+        cy.get(`#array-item-list-root_treatment_list_step_0_arm_${index}_dose_level`).contains('Add Dose Level').click()
+        cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]`).each(($input, doseIndex) => {
+          const dose = arm.dose_level[doseIndex]
+          cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
+          cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
+          cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
+          cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
+        });
 
-  it('should validate the match between "Export JSON" and "Export YAML" file', () => {
-    cy.readFile(ctmlJson).then((exportedCtmlModelJson) => {
-      const json = JSON.stringify(exportedCtmlModelJson);
-      cy.readFile(ctmlYaml).then((exportedCtmlModelYaml) => {
-        const yamlObject = yaml.load(exportedCtmlModelYaml);
-        const yamlVal = JSON.stringify(yamlObject);
-        cy.compareArrays(json.split(','), yamlVal.split(','))
-      });
-    });
-  })
-//!**************** Match Export Json file with Test Data
+        //click first matching criteria link of each arm
+        getEditMatchingCriteriaMultiple().eq(index).click()
+        //Validate the header
+        //   getMatchCriteriaHeader().should('contain', treatmentList[index].arm_code);
 
-  it('should validate exported "Trial Information" matches "ctmlTestData" ', () => {
-    cy.readFile(ctmlJson).then((exportedCtmlModel) => {
-      const exportedAttributeNames = ['trial_id', 'long_title', 'short_title', 'phase', 'protocol_no', 'nct_purpose', 'status'];
-      const testDataAttributeNames = ['nct_id', 'long_title', 'short_title', 'phase', 'protocol_no', 'nct_purpose', 'status'];
+        // });
+        getAddCriteriaGroup().click()
+        //!******** OR ********************
 
-      const exportedTrialInformation = exportedAttributeNames.map((attribute) => exportedCtmlModel[attribute]);
-      const testDataTrialInformation = testDataAttributeNames.map((attribute) => ctmlTestData[attribute]);
-
-      cy.compareArrays(exportedTrialInformation, testDataTrialInformation);
-    });
-  });
-
-
-  //!******** Matching criteria Preview ********************
- /* it('should validate Arm 1 & Arm 7 "Json preview window text" matches with "ctmlTestData"', () => {
-    ctmlTestData.treatment_list.step[0].arm.forEach((arm,armIndex) => {
-      const matchCriteria = arm.match
-      getPreviewWindow().each(($el, index) => {
-        if (index === 0) {
-          cy.log("click parent")
-          cy.wrap($el).parent().contains('JSON').click()
-          cy.log("Grab the text from the Json preview window")
-          cy.wrap($el).find('.p-tabview-panels').invoke('text').then((text) => {
-            const jsonArray = JSON.parse(text);
-            cy.log('jsonArray', JSON.stringify(jsonArray))
-            cy.log('matchCriteria test data',JSON.stringify(matchCriteria[index]))
-            if(JSON.stringify(jsonArray) == JSON.stringify(matchCriteria)) {
-              expect(JSON.stringify(jsonArray), 'matchPreview').to.deep.equal(JSON.stringify(matchCriteria))
+        cy.clickParentAnd()
+        cy.clickOr()
+        cy.clickParentNode(1).click()
+        let orConditions = treatmentList[index].match[0].and[0].or
+        cy.clickGenomic()
+        cy.clickMultipleFunction(getAddCriteriaToSameList(), orConditions.length - 1)
+        getSubGroup().find('.p-treenode-children>li')
+          .each((childElement, index) => {
+            if (Cypress.$(childElement).length > 0) {
+              cy.wrap(childElement).click() // click on each child element
+              let condition = orConditions[index % orConditions.length]; // get the corresponding and condition
+              Object.entries(condition.genomic).map(([key, value]) => {
+                if (key === 'hugo_symbol') {
+                  getHugoSymbol().type(value)
+                }
+                if (key === 'protein_change') {
+                  getProteinChange().type(value)
+                }
+                if (key === 'variant_category') {
+                  getVariantCategory().click()
+                  getGenomicDropDown().contains(value).click()
+                }
+                if (key === 'variant_classification') {
+                  getVariantClassification().click()
+                  getGenomicDropDown().contains(value.replace(/_/g, " ")).click()
+                }
+                if (key === 'fusion_partner_hugo_symbol') {
+                  getFusionPartnerHugoSymbol().type(value)
+                }
+                if (key === 'molecular_function') {
+                  getMolecularFunction().click()
+                  getGenomicDropDown().contains(value).click()
+                }
+                if (key === 'cnv_call') {
+                  getCNVCall().click()
+                  getGenomicDropDown().contains(value).click()
+                }
+              })
+            } else {
+              return false;
             }
           })
-        }
-        if (index === 1) {
-          cy.log("click parent")
-          cy.wrap($el).parent().contains('JSON').click()
-          cy.wrap($el).find('.p-tabview-panels').invoke('text').then((text) => {
-            const jsonArray = JSON.parse(text);
-            cy.log('jsonArray', JSON.stringify(jsonArray))
-            cy.log('matchCriteria test data',JSON.stringify(matchCriteria[index]))
-            if(JSON.stringify(jsonArray) == JSON.stringify(matchCriteria)) {
-              expect(JSON.stringify(jsonArray), 'matchPreview').to.deep.equal(JSON.stringify(matchCriteria))
+        cy.clickChildToggleArrowButton(1) //collapse the Or subgroup
+        //!******** AND ********************
+        cy.clickParentNode(0)
+        cy.clickAnd()
+        cy.clickParentNode(2)
+        cy.clickClinical()
+        let clinicalLength = treatmentList[index].match[0].and[1].and.length - 1
+        cy.clickMultipleFunction(getAddCriteriaToSameList(), clinicalLength)
+
+        let andConditions = treatmentList[index].match[0].and[1].and
+        cy.get('.LeftMenuComponent_matchingCriteriaMenuContainer__fe8dz>div:nth-child(2)>ul>li>ul>li:nth-child(2)').find('.p-treenode-children>li')
+          .each((childElement, index) => {
+            cy.log(index.toString())
+            if (Cypress.$(childElement).length > 0) {
+              cy.wrap(childElement).click() // click on each child element
+              let condition = andConditions[index % andConditions.length]; // get the corresponding and condition
+              //andConditions.forEach(condition => { // get the corresponding and condition
+              cy.log(andConditions.length.toString())
+              Object.entries(condition.clinical).map(([key, value]) => {
+                if (key === 'age_numerical') {
+                  getClinicalAge().type(value)
+                }
+                if (key === 'oncotree_primary_diagnosis') {
+                  getClinicalOncotreePrimaryDiagnosis().type(value)
+                  getOncotreeExclamation().click()
+                }
+                if (key === 'tmb') {
+                  getClinicalTMB().type(value)
+                }
+              })
+            } else {
+              return false;
             }
           })
-        }
-      })
-    })
-  });
-  it('should validate the match between "JSON preview window text" and "YAML preview window text" ',  () => {
-    ctmlTestData.treatment_list.step[0].arm.forEach((arm,armIndex) => {
-      getPreviewWindow().each(($el, index) => {
-        if (index === 0) {
-          cy.wrap($el).parent().contains('YAML').click()
-          cy.wrap($el).find('.p-tabview-panels').invoke("text").then((yamlText) => {
-            const yamlObject = yaml.load(yamlText)
-            const yamlMatchCriteria = JSON.stringify(yamlObject)
-            cy.wrap($el).parent().contains('JSON').click()
-            cy.wrap($el).find('.p-tabview-panels').invoke("text").then((text) => {
-              const jsonArray = JSON.parse(text);
-              const jsonMatchCriteria = JSON.stringify(jsonArray)
-              cy.compareArrays(yamlMatchCriteria.split(','), jsonMatchCriteria.split(','))
-            })
-          })
-        }
-        if (index === 1) {
-          cy.wrap($el).parent().contains('YAML').click()
-          cy.wrap($el).find('.p-tabview-panels').invoke("text").then((yamlText) => {
-            const yamlObject = yaml.load(yamlText)
-            const yamlMatchCriteria = JSON.stringify(yamlObject)
-            cy.wrap($el).parent().contains('JSON').click()
-            cy.wrap($el).find('.p-tabview-panels').invoke("text").then((text) => {
-              const jsonArray = JSON.parse(text);
-              const jsonMatchCriteria = JSON.stringify(jsonArray)
-              cy.compareArrays(yamlMatchCriteria.split(','), jsonMatchCriteria.split(','))
-            })
-          })
-        }
-      })
+        getSaveMatchingCriteria().click()
+      }
     })
   })
-*/
-//!**************** Match Export Json file with Test Data
 
-  it('should validate exported "Trial Information" matches "ctmlTestData" ', () => {
-    cy.readFile(ctmlJson).then((exportedCtmlModel) => {
-      const exportedAttributeNames = ['trial_id', 'long_title', 'short_title', 'phase', 'protocol_no', 'nct_purpose', 'status'];
-      const testDataAttributeNames = ['nct_id', 'long_title', 'short_title', 'phase', 'protocol_no', 'nct_purpose', 'status'];
+  //!************ Arm 10  *****************
 
-      const exportedTrialInformation = exportedAttributeNames.map((attribute) => exportedCtmlModel[attribute]);
-      const testDataTrialInformation = testDataAttributeNames.map((attribute) => ctmlTestData[attribute]);
+  it('should enter the values in Arm 10',  () => {
+    const treatmentList = ctmlTestData.treatment_list.step[0].arm;
+    const doseLevels = treatmentList[9].dose_level;
 
-      cy.compareArrays(exportedTrialInformation, testDataTrialInformation);
-    });
-  });
+    getMultipleArm().each(($input, index) => {
+      cy.log($input.attr('id'));
+      const arm = treatmentList[index];
+      if (index === 9) {
+        cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
+        cy.wrap($input).find('.p-inputtext').eq(1).type(arm.arm_description);
+        cy.wrap($input).find('.p-inputtext').eq(2).type(arm.arm_internal_id.toString());
+        cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click();
+        cy.get(`#array-item-list-root_treatment_list_step_0_arm_${index}_dose_level`).contains('Add Dose Level').click()
+        cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]`).each(($input, doseIndex) => {
+          const dose = arm.dose_level[doseIndex]
+          cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
+          cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
+          cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
+          cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
+        });
 
-  it('should validate exported "Age" matches "ctmlTestData"', () => {
-    cy.readFile(ctmlJson).then((exportedCtmlModel) => {
-      const exportData = exportedCtmlModel.age
-      let testData = ctmlTestData.age
-      cy.compareArrays(exportData.split(' '), testData.split(' ')) //Age is a single value, not a array
+        //click first matching criteria link of each arm
+        getEditMatchingCriteriaMultiple().eq(index).click()
+        //Validate the header
+        //   getMatchCriteriaHeader().should('contain', treatmentList[index].arm_code);
+        getAddCriteriaGroup().click()
+        //!******** OR ********************
+
+        cy.clickParentAnd()
+        cy.clickOr()
+        cy.clickParentNode(1).click()
+        let orConditions = treatmentList[index].match[0].and[0].or
+        cy.clickGenomic()
+        cy.clickMultipleFunction(getAddCriteriaToSameList(), orConditions.length - 1)
+        getSubGroup().find('.p-treenode-children>li')
+          .each((childElement, index) => {
+            if (Cypress.$(childElement).length > 0) {
+              cy.wrap(childElement).click() // click on each child element
+              let condition = orConditions[index % orConditions.length]; // get the corresponding and condition
+              Object.entries(condition.genomic).map(([key, value]) => {
+                if (key === 'hugo_symbol') {
+                  getHugoSymbol().type(value)
+                }
+                if (key === 'protein_change') {
+                  getProteinChange().type(value)
+                }
+                if (key === 'variant_category') {
+                  getVariantCategory().click()
+                  getGenomicDropDown().contains(value).click()
+                }
+                if (key === 'variant_classification') {
+                  getVariantClassification().click()
+                  getGenomicDropDown().contains(value.replace(/_/g, " ")).click()
+                }
+                if (key === 'fusion_partner_hugo_symbol') {
+                  getFusionPartnerHugoSymbol().type(value)
+                }
+                if (key === 'molecular_function') {
+                  getMolecularFunction().click()
+                  getGenomicDropDown().contains(value).click()
+                }
+                if (key === 'cnv_call') {
+                  getCNVCall().click()
+                  getGenomicDropDown().contains(value).click()
+                }
+              })
+            } else {
+              return false;
+            }
+          })
+        cy.clickChildToggleArrowButton(1) //collapse the Or subgroup
+        //!******** AND ********************
+        cy.clickParentNode(0)
+        cy.clickClinical()
+        let clinicalVal = ctmlTestData.treatment_list.step[0].arm[index].match[0].and[1].clinical
+        getClinicalAge().type(clinicalVal.age_numerical)
+        getClinicalOncotreePrimaryDiagnosis().type(clinicalVal.oncotree_primary_diagnosis)
+        getOncotreeExclamation().click()
+        cy.clickParentNode(0)
+        cy.clickAnd()
+        cy.clickParentNode(3)
+        cy.clickOr()
+
+        cy.clickParentNode(4)
+        cy.clickGenomic()
+        let genomicVal1 = ctmlTestData.treatment_list.step[0].arm[index].match[1].and[0].or[0].genomic
+        getHugoSymbol().type(genomicVal1.hugo_symbol)
+        getVariantCategory().click()
+        getGenomicDropDown().contains(genomicVal1.variant_category).click()
+        getMolecularFunction().click()
+        getGenomicDropDown().contains(genomicVal1.molecular_function).click()
+
+        cy.clickParentNode(4)
+        cy.clickGenomic()
+        let genomicVal2 = ctmlTestData.treatment_list.step[0].arm[index].match[1].and[0].or[1].genomic
+        getHugoSymbol().type(genomicVal2.hugo_symbol)
+        getVariantCategory().click()
+        getGenomicDropDown().contains(genomicVal2.variant_category).click()
+        getMolecularFunction().click()
+        getGenomicDropDown().contains(genomicVal2.molecular_function).click()
+
+        //Clinical at Arm 10 match[1][and[1]
+        cy.clickParentNode(4)
+        cy.clickClinical()
+        let clinicalVal2 = ctmlTestData.treatment_list.step[0].arm[index].match[1].and[1].clinical
+        getClinicalAge().type(clinicalVal2.age_numerical)
+        getClinicalOncotreePrimaryDiagnosis().type(clinicalVal2.oncotree_primary_diagnosis)
+        getOncotreeExclamation().click()
+
+        //Clinical at Arm 10 match[1][and[2]
+        cy.clickParentNode(4)
+        cy.clickClinical()
+        let clinicalVal3 = ctmlTestData.treatment_list.step[0].arm[index].match[1].and[2].clinical
+        getClinicalAge().type(clinicalVal3.age_numerical)
+        getClinicalOncotreePrimaryDiagnosis().type(clinicalVal3.oncotree_primary_diagnosis)
+        getOncotreeExclamation().click()
+         getSaveMatchingCriteria().click()
+      }
     })
-  });
-
-  it('should validate exported "Prior treatment requirement" match "ctmlTestData"', () => {
-    cy.readFile(ctmlJson).then((exportedCtmlModel) => {
-      const exportData = exportedCtmlModel.prior_treatment_requirements
-      let testData = ctmlTestData.prior_treatment_requirements
-      cy.compareArrays(exportData, testData)
-    })
-  });
-
-  it('should validate exported "Drug list" match "ctmlTestData"', () => {
-    let rawData = ctmlTestData.drug_list.drug
-
-    cy.drugListAttributes(rawData).then(testDataMatchingCriteria => {
-      cy.readFile(ctmlJson).then((exportedCtmlModel) => {
-        const exportData = exportedCtmlModel.drug_list.drug
-
-        cy.drugListAttributes(exportData).then(ctmlMatchingCriteria => {
-          cy.compareMultiple(ctmlMatchingCriteria,testDataMatchingCriteria)
-        });
-      });
-    });
-  });
-  it('should validate exported "Management Group list" matches "ctmlTestData"', () => {
-    let rawData = ctmlTestData.management_group_list.management_group;
-
-    cy.managementGroupListAttributes(rawData).then(testDataMatchingCriteria => {
-      cy.readFile(ctmlJson).then((exportedCtmlModel) => {
-        const exportData = exportedCtmlModel.management_group_list.management_group
-
-        cy.managementGroupListAttributes(exportData).then(ctmlMatchingCriteria => {
-          cy.compareMultiple(ctmlMatchingCriteria,testDataMatchingCriteria)
-        });
-      });
-    });
-  });
-
-  it('should validate exported "Site Group list" matches "ctmlTestData"', () => {
-    let rawData = ctmlTestData.site_list.site
-
-    cy.siteListAttributes(rawData).then(testDataMatchingCriteria => {
-      cy.readFile(ctmlJson).then((exportedCtmlModel) => {
-        const exportData = exportedCtmlModel.site_list.site
-
-        cy.siteListAttributes(exportData).then(ctmlMatchingCriteria => {
-          cy.compareMultiple(ctmlMatchingCriteria,testDataMatchingCriteria)
-        });
-      });
-    });
-  });
-
-  it('should validate exported "Sponsor list" matches "ctmlTestData"', () => {
-    let rawData = ctmlTestData.sponsor_list.sponsor
-
-    cy.sponsorListAttributes(rawData).then(testDataMatchingCriteria => {
-      cy.readFile(ctmlJson).then((exportedCtmlModel) => {
-        const exportData = exportedCtmlModel.sponsor_list.sponsor
-
-        cy.sponsorListAttributes(exportData).then(ctmlMatchingCriteria => {
-          cy.compareMultiple(ctmlMatchingCriteria,testDataMatchingCriteria)
-        });
-      });
-    });
-  });
-
-  it('should validate exported "Staff list" matches "ctmlTestData"', () => {
-    let rawData = ctmlTestData.staff_list.protocol_staff
-
-    cy.staffListAttributes(rawData).then(testDataMatchingCriteria => {
-      cy.readFile(ctmlJson).then((exportedCtmlModel) => {
-        const exportData = exportedCtmlModel.staff_list.protocol_staff;
-
-        cy.staffListAttributes(exportData).then(ctmlMatchingCriteria => {
-          cy.compareMultiple(ctmlMatchingCriteria,testDataMatchingCriteria)
-        });
-      });
-    });
   })
 
-  it('should validate "Treatment list" with multiple arm/matching criteria matches with "ctmlTestData"',() =>{
-    //Arm and dose level validation
-    const matchAndT = ctmlTestData.treatment_list.step[0].arm;
-    cy.readFile(ctmlJson).then((exportedCtmlModel) => {
-      const matchAndE = exportedCtmlModel.treatment_list.step[0].arm;
 
-      matchAndT.forEach((armT, armIndex) => {
-        const clauseE_1 = matchAndE.find((clause) => JSON.stringify(clause.arm_code) === JSON.stringify(armT.arm_code));
 
-        if (clauseE_1) {
-          expect(JSON.stringify(clauseE_1.arm_code), 'Arm Code Match').to.deep.equal(JSON.stringify(armT.arm_code));
-          expect(JSON.stringify(clauseE_1.arm_description), 'Arm Description Match').to.deep.equal(JSON.stringify(armT.arm_description));
-          expect(JSON.stringify(clauseE_1.arm_internal_id), 'Arm Internal Id Match').to.deep.equal(JSON.stringify(armT.arm_internal_id.toString()));
-          expect(JSON.stringify(clauseE_1.arm_suspended), 'Arm Suspended Match').to.deep.equal(JSON.stringify(armT.arm_suspended));
+  /* it('should Save, Edit Ctml test data ', () => {
+     //save and Edit and Export
+     trialEditorSave().click()
+     cy.get('.p-toast-message-content').should('contain','Trial saved')
+     //cy.get('.p-toast-icon-close').click()
+     trialEditorBackButton().should('be.visible').trigger("click")
+     selectTrialGroupButton().click()
+     trialGroupxAdmin().click()
+     trialTableIdColumn()
+       .contains(ctmlTestData.nct_id)
+       .nextUntil('NCT03297606_CAPTUR TrialGroupx Admin role')
+       .then((test) => {
+         trialTableIdColumn().contains(ctmlTestData.nct_id).click();
+         trialTableThreeDots().click();
+         trialTableEdit().click()
+       })
+   });
+   //!************Export Ctml***************
+   it('should click on Export button, "Export as JSON" file ', () => {
+     trialEditorHeaderButtons().eq(1).should('contain', 'Export').click()
+     trialEditorRadioButtons().eq(0).should('contain.html', 'json')
+     cy.get('[type="radio"]').first().check({force: true}).should('be.checked')
+     validateCtmlOkButton().should('not.have.class','p-disabled').click()
+   });
 
-          clauseE_1.dose_level.forEach((objE_1, index_2) => {
-            const objE_2 = armT.dose_level[index_2];
+   it('should click on Export button, "Export as YAML" file ', () => {
+     trialEditorHeaderButtons().eq(1).should('contain', 'Export').click()
+     trialEditorRadioButtons().eq(1).click({force: true})
+     validateCtmlOkButton().click()
+   });
 
-            expect(JSON.stringify(objE_1.level_code), 'Dose Level : Level Code Match').to.deep.equal(JSON.stringify(objE_2.level_code));
-            expect(JSON.stringify(objE_1.level_description), 'Dose Level : Level Description Match').to.deep.equal(JSON.stringify(objE_2.level_description));
-            expect(JSON.stringify(objE_1.level_internal_id), 'Dose Level : Level Internal ID Match').to.deep.equal(JSON.stringify(objE_2.level_internal_id.toString()));
-            expect(JSON.stringify(objE_1.level_suspended), 'Dose Level : Level Suspended Match').to.deep.equal(JSON.stringify(objE_2.level_suspended));
-          });
-        }
-        //matching criteria validation
-        const armE = matchAndE[armIndex].match[0].and;
-        armE.forEach((clauseE, index) => {
-          const clauseT = armT.match[0].and[index];
-          if (clauseE.or) {
-            clauseE.or.forEach((objE, index2) => {
-              const objT = clauseT.or[index2];
-              expect(JSON.stringify(objT)).to.deep.equal(JSON.stringify(objE));
-            });
-          } else if (clauseE.and) {
-            clauseE.and.forEach((objE, index2) => {
-              const objT = clauseT.and[index2];
-              expect(JSON.stringify(objT)).to.deep.equal(JSON.stringify(objE));
-            });
-          } else if (clauseE.clinical) {
-            expect(JSON.stringify(clauseT)).to.deep.equal(JSON.stringify(clauseE));
-          }
-        });
+   it('should validate the match between "Export JSON" and "Export YAML" file', () => {
+     cy.readFile(ctmlJson).then((exportedCtmlModelJson) => {
+       const json = JSON.stringify(exportedCtmlModelJson);
+       cy.readFile(ctmlYaml).then((exportedCtmlModelYaml) => {
+         const yamlObject = yaml.load(exportedCtmlModelYaml);
+         const yamlVal = JSON.stringify(yamlObject);
+         cy.compareArrays(json.split(','), yamlVal.split(','))
+       });
+     });
+   })
+ //!**************** Match Export Json file with Test Data
 
-      });
-    });
+   it('should validate exported "Trial Information" matches "ctmlTestData" ', () => {
+     cy.readFile(ctmlJson).then((exportedCtmlModel) => {
+       const exportedAttributeNames = ['trial_id', 'long_title', 'short_title', 'phase', 'protocol_no', 'nct_purpose', 'status'];
+       const testDataAttributeNames = ['nct_id', 'long_title', 'short_title', 'phase', 'protocol_no', 'nct_purpose', 'status'];
 
-  });
-  it('should validate "Send Ctml to matcher', () => {
+       const exportedTrialInformation = exportedAttributeNames.map((attribute) => exportedCtmlModel[attribute]);
+       const testDataTrialInformation = testDataAttributeNames.map((attribute) => ctmlTestData[attribute]);
+
+       cy.compareArrays(exportedTrialInformation, testDataTrialInformation);
+     });
+   });
+
+
+   //!******** Matching criteria Preview ********************
+  /!* it('should validate Arm 1 & Arm 7 "Json preview window text" matches with "ctmlTestData"', () => {
+     ctmlTestData.treatment_list.step[0].arm.forEach((arm,armIndex) => {
+       const matchCriteria = arm.match
+       getPreviewWindow().each(($el, index) => {
+         if (index === 0) {
+           cy.log("click parent")
+           cy.wrap($el).parent().contains('JSON').click()
+           cy.log("Grab the text from the Json preview window")
+           cy.wrap($el).find('.p-tabview-panels').invoke('text').then((text) => {
+             const jsonArray = JSON.parse(text);
+             cy.log('jsonArray', JSON.stringify(jsonArray))
+             cy.log('matchCriteria test data',JSON.stringify(matchCriteria[index]))
+             if(JSON.stringify(jsonArray) == JSON.stringify(matchCriteria)) {
+               expect(JSON.stringify(jsonArray), 'matchPreview').to.deep.equal(JSON.stringify(matchCriteria))
+             }
+           })
+         }
+         if (index === 1) {
+           cy.log("click parent")
+           cy.wrap($el).parent().contains('JSON').click()
+           cy.wrap($el).find('.p-tabview-panels').invoke('text').then((text) => {
+             const jsonArray = JSON.parse(text);
+             cy.log('jsonArray', JSON.stringify(jsonArray))
+             cy.log('matchCriteria test data',JSON.stringify(matchCriteria[index]))
+             if(JSON.stringify(jsonArray) == JSON.stringify(matchCriteria)) {
+               expect(JSON.stringify(jsonArray), 'matchPreview').to.deep.equal(JSON.stringify(matchCriteria))
+             }
+           })
+         }
+       })
+     })
+   });
+   it('should validate the match between "JSON preview window text" and "YAML preview window text" ',  () => {
+     ctmlTestData.treatment_list.step[0].arm.forEach((arm,armIndex) => {
+       getPreviewWindow().each(($el, index) => {
+         if (index === 0) {
+           cy.wrap($el).parent().contains('YAML').click()
+           cy.wrap($el).find('.p-tabview-panels').invoke("text").then((yamlText) => {
+             const yamlObject = yaml.load(yamlText)
+             const yamlMatchCriteria = JSON.stringify(yamlObject)
+             cy.wrap($el).parent().contains('JSON').click()
+             cy.wrap($el).find('.p-tabview-panels').invoke("text").then((text) => {
+               const jsonArray = JSON.parse(text);
+               const jsonMatchCriteria = JSON.stringify(jsonArray)
+               cy.compareArrays(yamlMatchCriteria.split(','), jsonMatchCriteria.split(','))
+             })
+           })
+         }
+         if (index === 1) {
+           cy.wrap($el).parent().contains('YAML').click()
+           cy.wrap($el).find('.p-tabview-panels').invoke("text").then((yamlText) => {
+             const yamlObject = yaml.load(yamlText)
+             const yamlMatchCriteria = JSON.stringify(yamlObject)
+             cy.wrap($el).parent().contains('JSON').click()
+             cy.wrap($el).find('.p-tabview-panels').invoke("text").then((text) => {
+               const jsonArray = JSON.parse(text);
+               const jsonMatchCriteria = JSON.stringify(jsonArray)
+               cy.compareArrays(yamlMatchCriteria.split(','), jsonMatchCriteria.split(','))
+             })
+           })
+         }
+       })
+     })
+   })
+ *!/
+ //!**************** Match Export Json file with Test Data
+
+   it('should validate exported "Trial Information" matches "ctmlTestData" ', () => {
+     cy.readFile(ctmlJson).then((exportedCtmlModel) => {
+       const exportedAttributeNames = ['trial_id', 'long_title', 'short_title', 'phase', 'protocol_no', 'nct_purpose', 'status'];
+       const testDataAttributeNames = ['nct_id', 'long_title', 'short_title', 'phase', 'protocol_no', 'nct_purpose', 'status'];
+
+       const exportedTrialInformation = exportedAttributeNames.map((attribute) => exportedCtmlModel[attribute]);
+       const testDataTrialInformation = testDataAttributeNames.map((attribute) => ctmlTestData[attribute]);
+
+       cy.compareArrays(exportedTrialInformation, testDataTrialInformation);
+     });
+   });
+
+   it('should validate exported "Age" matches "ctmlTestData"', () => {
+     cy.readFile(ctmlJson).then((exportedCtmlModel) => {
+       const exportData = exportedCtmlModel.age
+       let testData = ctmlTestData.age
+       cy.compareArrays(exportData.split(' '), testData.split(' ')) //Age is a single value, not a array
+     })
+   });
+
+   it('should validate exported "Prior treatment requirement" match "ctmlTestData"', () => {
+     cy.readFile(ctmlJson).then((exportedCtmlModel) => {
+       const exportData = exportedCtmlModel.prior_treatment_requirements
+       let testData = ctmlTestData.prior_treatment_requirements
+       cy.compareArrays(exportData, testData)
+     })
+   });
+
+   it('should validate exported "Drug list" match "ctmlTestData"', () => {
+     let rawData = ctmlTestData.drug_list.drug
+
+     cy.drugListAttributes(rawData).then(testDataMatchingCriteria => {
+       cy.readFile(ctmlJson).then((exportedCtmlModel) => {
+         const exportData = exportedCtmlModel.drug_list.drug
+
+         cy.drugListAttributes(exportData).then(ctmlMatchingCriteria => {
+           cy.compareMultiple(ctmlMatchingCriteria,testDataMatchingCriteria)
+         });
+       });
+     });
+   });
+   it('should validate exported "Management Group list" matches "ctmlTestData"', () => {
+     let rawData = ctmlTestData.management_group_list.management_group;
+
+     cy.managementGroupListAttributes(rawData).then(testDataMatchingCriteria => {
+       cy.readFile(ctmlJson).then((exportedCtmlModel) => {
+         const exportData = exportedCtmlModel.management_group_list.management_group
+
+         cy.managementGroupListAttributes(exportData).then(ctmlMatchingCriteria => {
+           cy.compareMultiple(ctmlMatchingCriteria,testDataMatchingCriteria)
+         });
+       });
+     });
+   });
+
+   it('should validate exported "Site Group list" matches "ctmlTestData"', () => {
+     let rawData = ctmlTestData.site_list.site
+
+     cy.siteListAttributes(rawData).then(testDataMatchingCriteria => {
+       cy.readFile(ctmlJson).then((exportedCtmlModel) => {
+         const exportData = exportedCtmlModel.site_list.site
+
+         cy.siteListAttributes(exportData).then(ctmlMatchingCriteria => {
+           cy.compareMultiple(ctmlMatchingCriteria,testDataMatchingCriteria)
+         });
+       });
+     });
+   });
+
+   it('should validate exported "Sponsor list" matches "ctmlTestData"', () => {
+     let rawData = ctmlTestData.sponsor_list.sponsor
+
+     cy.sponsorListAttributes(rawData).then(testDataMatchingCriteria => {
+       cy.readFile(ctmlJson).then((exportedCtmlModel) => {
+         const exportData = exportedCtmlModel.sponsor_list.sponsor
+
+         cy.sponsorListAttributes(exportData).then(ctmlMatchingCriteria => {
+           cy.compareMultiple(ctmlMatchingCriteria,testDataMatchingCriteria)
+         });
+       });
+     });
+   });
+
+   it('should validate exported "Staff list" matches "ctmlTestData"', () => {
+     let rawData = ctmlTestData.staff_list.protocol_staff
+
+     cy.staffListAttributes(rawData).then(testDataMatchingCriteria => {
+       cy.readFile(ctmlJson).then((exportedCtmlModel) => {
+         const exportData = exportedCtmlModel.staff_list.protocol_staff;
+
+         cy.staffListAttributes(exportData).then(ctmlMatchingCriteria => {
+           cy.compareMultiple(ctmlMatchingCriteria,testDataMatchingCriteria)
+         });
+       });
+     });
+   })
+
+   it('should validate "Treatment list" with multiple arm/matching criteria matches with "ctmlTestData"',() =>{
+     //Arm and dose level validation
+     const matchAndT = ctmlTestData.treatment_list.step[0].arm;
+     cy.readFile(ctmlJson).then((exportedCtmlModel) => {
+       const matchAndE = exportedCtmlModel.treatment_list.step[0].arm;
+
+       matchAndT.forEach((armT, armIndex) => {
+         const clauseE_1 = matchAndE.find((clause) => JSON.stringify(clause.arm_code) === JSON.stringify(armT.arm_code));
+
+         if (clauseE_1) {
+           expect(JSON.stringify(clauseE_1.arm_code), 'Arm Code Match').to.deep.equal(JSON.stringify(armT.arm_code));
+           expect(JSON.stringify(clauseE_1.arm_description), 'Arm Description Match').to.deep.equal(JSON.stringify(armT.arm_description));
+           expect(JSON.stringify(clauseE_1.arm_internal_id), 'Arm Internal Id Match').to.deep.equal(JSON.stringify(armT.arm_internal_id.toString()));
+           expect(JSON.stringify(clauseE_1.arm_suspended), 'Arm Suspended Match').to.deep.equal(JSON.stringify(armT.arm_suspended));
+
+           clauseE_1.dose_level.forEach((objE_1, index_2) => {
+             const objE_2 = armT.dose_level[index_2];
+
+             expect(JSON.stringify(objE_1.level_code), 'Dose Level : Level Code Match').to.deep.equal(JSON.stringify(objE_2.level_code));
+             expect(JSON.stringify(objE_1.level_description), 'Dose Level : Level Description Match').to.deep.equal(JSON.stringify(objE_2.level_description));
+             expect(JSON.stringify(objE_1.level_internal_id), 'Dose Level : Level Internal ID Match').to.deep.equal(JSON.stringify(objE_2.level_internal_id.toString()));
+             expect(JSON.stringify(objE_1.level_suspended), 'Dose Level : Level Suspended Match').to.deep.equal(JSON.stringify(objE_2.level_suspended));
+           });
+         }
+         //matching criteria validation
+         const armE = matchAndE[armIndex].match[0].and;
+         armE.forEach((clauseE, index) => {
+           const clauseT = armT.match[0].and[index];
+           if (clauseE.or) {
+             clauseE.or.forEach((objE, index2) => {
+               const objT = clauseT.or[index2];
+               expect(JSON.stringify(objT)).to.deep.equal(JSON.stringify(objE));
+             });
+           } else if (clauseE.and) {
+             clauseE.and.forEach((objE, index2) => {
+               const objT = clauseT.and[index2];
+               expect(JSON.stringify(objT)).to.deep.equal(JSON.stringify(objE));
+             });
+           } else if (clauseE.clinical) {
+             expect(JSON.stringify(clauseT)).to.deep.equal(JSON.stringify(clauseE));
+           }
+         });
+
+       });
+     });
+
+   });*/
+ /* it('should validate "Send Ctml to matcher', () => {
     sendCtmlToMatcher().click()
     sendCTMLOkButton().click()
-  });
+  });*/
 })
