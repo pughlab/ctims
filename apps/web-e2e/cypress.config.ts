@@ -95,8 +95,8 @@ module.exports = defineConfig({
   //viewportHeight: 1080,
   "env": {
     //"baseUrl": "http://localhost:4200/",
-  //  baseUrl: 'http://localhost:3000',
-  baseUrl: 'https://ctims-web.qa02.technainstitute.net',
+    baseUrl: 'http://localhost:3000',
+ // baseUrl: 'https://ctims-web.qa02.technainstitute.net',
     defaultCommandTimeout: 30000,
     allureReuseAfterSpec: true,
     allureResultsPath: "allure-results",
