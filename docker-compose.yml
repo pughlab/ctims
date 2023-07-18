@@ -34,6 +34,7 @@ services:
         KEYCLOAK_TOKEN_ENDPOINT: ${KEYCLOAK_TOKEN_ENDPOINT}
         KEYCLOAK_CLIENT_UUID: ${KEYCLOAK_CLIENT_UUID}
         PRISMA_FIELD_ENCRYPTION_KEY: ${PRISMA_FIELD_ENCRYPTION_KEY}
+        MM_API_URL: ${MM_API_URL}
     environment:
       DATABASE_URL: mysql://ctims:ctims@database:3306/ctims
     ports:
@@ -52,6 +53,17 @@ services:
     restart: on-failure
     networks:
         - my-network
+
+  mm-mongo-db:
+    container_name: mm-mongo-db
+    image: mongo
+    restart: on-failure
+    ports:
+      - "27017:27017"
+    networks:
+        - my-network
+    volumes:
+      - mm-mongo-db:/data/db
 networks:
     my-network:
 
