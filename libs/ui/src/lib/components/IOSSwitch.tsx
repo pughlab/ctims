@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import styles from './IOSSwitch.module.css';
 
-const IOSSwitch = (props: {onChange: (e: any) => void, value?: any}) => {
-  const { value, onChange } = props;
+const IOSSwitch = (props: {onChange: (e: any) => void, value?: any, disabled: boolean}) => {
+  const { value, onChange, disabled } = props;
   const [isChecked, setIsChecked] = useState(value);
 
 
@@ -15,7 +15,7 @@ const IOSSwitch = (props: {onChange: (e: any) => void, value?: any}) => {
   return (
    <>
      <label className={styles.switch}>
-       <input type="checkbox" onChange={handleChange} checked={isChecked}  />
+       <input type="checkbox" disabled={disabled} onChange={handleChange} checked={isChecked}  />
          <span className={styles.slider}></span>
      </label>
    </>
