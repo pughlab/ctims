@@ -133,7 +133,7 @@ export class CtmlJsonController implements OnModuleInit {
     @CurrentUser() user: user,
     @Body() updateCtmlJsonDto: UpdateCtmlJsonDto
   ): Promise<ctml_json> {
-
+    updateCtmlJsonDto.data = JSON.stringify(updateCtmlJsonDto.data);
     const ctmlJsons = await this.ctmlJsonService.update(updateCtmlJsonDto);
 
     // Add event
@@ -155,7 +155,7 @@ export class CtmlJsonController implements OnModuleInit {
   @Delete(':id')
   @UseGuards(KeycloakPasswordGuard)
   @ApiBearerAuth("KeycloakPasswordGuard")
-  @ApiOperation({ summary: "Get all CTML JSON records" })
+  @ApiOperation({ summary: "Delete CTML JSON record" })
   @ApiNoContentResponse({ description: "CTML JSON record deleted." })
   async remove(
     @CurrentUser() user: user,
@@ -171,5 +171,18 @@ export class CtmlJsonController implements OnModuleInit {
         input: { id }
       }
     });
+  }
+
+  @Post(':id/send_to_matchminer')
+  @UseGuards(KeycloakPasswordGuard)
+  @ApiBearerAuth("KeycloakPasswordGuard")
+  @ApiOperation({ summary: "Send a CTML JSON to matchminer" })
+  @ApiFoundResponse({ description: "CTML JSON send to matchminer." })
+  async send_to_matchminer(
+    @CurrentUser() user: user,
+    @Param('id') id: string,
+    @Body() ctmlJson: any
+  ) {
+    await this.ctmlJsonService.send_to_matchminer(+id, ctmlJson);
   }
 }

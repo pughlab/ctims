@@ -19,6 +19,7 @@ eval "helm upgrade --debug \
 --set ctimsapi.keycloak.adminClientId=$KEYCLOAK_ADMIN_CLIENT_ID \
 --set ctimsapi.keycloak.adminClientSecret=$KEYCLOAK_ADMIN_CLIENT_SECRET \
 --set ctimsapi.keycloak.tokenEndpoint=$KEYCLOAK_TOKEN_ENDPOINT \
+--set ctimsapi.prismaEncryptionKey=$PRISMA_FIELD_ENCRYPTION_KEY \
 --set git.branch=$GIT_COMMIT_ISH \
 --set git.ref=$GIT_REF \
 --set git.is_clean=$GIT_IS_CLEAN \

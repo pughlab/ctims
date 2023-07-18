@@ -8,12 +8,17 @@ import ExportCtmlDialog from "./ExportCtmlDialog";
 import {signOut} from "next-auth/react";
 import {Toast} from "primereact/toast";
 import useSaveTrial from "../../hooks/useSaveTrial";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import SendCtmlToMatchminerDialog from "./SendCTMLtoMatchminerDialog";
+import useSendCTML from "../../hooks/useSendCTML";
+import { setIsFormChanged } from '../../store/slices/contextSlice';
 
 
 const EditorTopBar = (props: {isEditMode?: boolean}) => {
 
   const [isDialogVisible, setIsDialogVisible] = useState<boolean>(false);
+  const [isSendDialogVisible, setIsSendDialogVisible] = useState<boolean>(false);
+  const [isOKClicked, setIsOKClicked] = useState<boolean>(false);
   const {
     response: saveTrialResponse,
     error: saveTrialError,
@@ -21,9 +26,18 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
     saveTrialOperation
   } = useSaveTrial();
 
+  const {
+    response: sendCTMLResponse,
+    error: sendCTMLError,
+    loading: sendCTMLLoading,
+    sendCTMLOperation
+  } = useSendCTML();
+
   const isGroupAdmin = useSelector((state: RootState) => state.context.isTrialGroupAdmin);
   const isFormDisabled = useSelector((state: RootState) => state.context.isFormDisabled);
+  const trialId = useSelector((state: RootState) => state.context.trialId);
 
+  const dispatch = useDispatch();
 
   const router = useRouter();
 
@@ -37,7 +51,7 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
           'info',
         summary: 'Trial saved',
       });
-
+      dispatch(setIsFormChanged(false));
     }
     if(saveTrialError) {
       console.log('error', saveTrialError);
@@ -49,13 +63,50 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
     }
   }, [saveTrialError, saveTrialResponse]);
 
+  useEffect(() => {
+    if (sendCTMLResponse) {
+      console.log('response', sendCTMLResponse);
+      if (sendCTMLResponse.status === 201) {
+        toast.current.show({
+          severity:
+            'info',
+          summary: 'CTML sent to Matcher successfully',
+        });
+      }
+    }
+    if(sendCTMLError) {
+      console.log('error', sendCTMLError);
+      if (sendCTMLError.statusCode === 401) {
+        signOut({callbackUrl: '/#/login', redirect: false}).then(() => {
+          localStorage.removeItem('ctims-accessToken');
+        });
+      }
+    }
+  }, [sendCTMLError, sendCTMLResponse]);
+
+  useEffect(() => {
+    if (isOKClicked) {
+      useSendCTML();
+    }
+  }, [isOKClicked]);
+
   const backClick = (e) => {
     e.preventDefault();
-    router.push('/trials');
+    router.push('/main');
   }
 
   const onExportClick = () => {
     setIsDialogVisible(true);
+  }
+
+  const onSendClick = () => {
+    setIsSendDialogVisible(true);
+  }
+
+  const handleSendCTMLOKClicked = (val: boolean) => {
+    if (val) {
+      sendCTMLOperation();
+    }
   }
 
   const getValidationErrors = () => {
@@ -86,7 +137,8 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
         nct_id: ctmlModel.trialInformation.trial_id,
         nickname: ctmlModel.trialInformation.nickname,
         principal_investigator: ctmlModel.trialInformation.principal_investigator,
-        status: ctmlModel.trialInformation.ctml_status
+        status: ctmlModel.trialInformation.ctml_status,
+        protocol_no: ctmlModel.trialInformation.protocol_no,
       }
     }
 
@@ -111,6 +163,11 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
         exportCtmlClicked={onExportClick}
         onDialogHide={() => setIsDialogVisible(false)}
       />
+      <SendCtmlToMatchminerDialog
+        isCTMLDialogVisible={isSendDialogVisible}
+        sendCtmlClicked={onSendClick}
+        onCTMLDialogHide={() => setIsSendDialogVisible(false)}
+        onIsOKClicked={handleSendCTMLOKClicked}/>
     <div className={styles.topBar}>
       <div className={styles.logoContainer}>
         <img src={'/assets/ctims-logo.svg'} alt={'logo'} className={styles.logo}/>
@@ -127,6 +184,11 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
           <Button label={isGroupAdmin ? 'Export' : 'Validate'}
                   onClick={onExportClick}
                   className="p-button-text p-button-plain" />
+          <>
+            {isGroupAdmin &&
+              <Button disabled={isFormDisabled} label="Send CTML to Matcher" className={styles.saveBtn} onClick={onSendClick} />
+            }
+          </>
           <Button disabled={isFormDisabled} label="Save" className={styles.saveBtn} onClick={onSaveClick} />
         </div>
 

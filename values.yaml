@@ -19,6 +19,7 @@ ctimsweb:
 ctimsapi:
   port: 3000
   slug: api
+  prismaEncryptionKey: null
   keycloak:
     url: null
     realm: null

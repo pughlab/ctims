@@ -1,6 +1,8 @@
 import getConfig from "next/config";
 import axios from "axios";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {useSession} from "next-auth/react";
+import {useRouter} from "next/router";
 
 const useEditTrial = () => {
   const { publicRuntimeConfig } = getConfig();
@@ -9,6 +11,16 @@ const useEditTrial = () => {
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
+
+  const {data, status} = useSession()
+
+  useEffect(() => {
+    if(status === 'unauthenticated') {
+      router.push('/');
+    }
+  }, [status])
 
   const editTrialOperation = async (trialId: string) => {
     console.log('editTrialOperation trialId', trialId)

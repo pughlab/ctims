@@ -7,6 +7,7 @@ metadata:
 {{ include "thischart.labels" . | indent 4 }}
   annotations:
     kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/proxy-body-size: 64m
 spec:
   rules:
     - host: "ctims-web.{{ .Values.domain }}"
@@ -27,3 +28,12 @@ spec:
                 name: {{ $fullName }}
                 port:
                   name: ctimsapi
+    - host: "mm-api.{{ .Values.domain }}"
+      http:
+        paths:
+        - pathType: "ImplementationSpecific"
+          backend:
+            service:
+              name: {{ $fullName }}
+              port:
+                name: mm-api

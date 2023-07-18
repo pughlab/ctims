@@ -1,6 +1,4 @@
 {
-  "version": 1,
-  "schema": {
     "definitions": {
       "ctml_status": {
         "enumNames": [
@@ -452,4 +450,3 @@
       }
     }
   }
-}

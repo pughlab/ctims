@@ -3,6 +3,8 @@ import { CreateCtmlJsonDto } from './dto/create-ctml-json.dto';
 import { UpdateCtmlJsonDto } from './dto/update-ctml-json.dto';
 import { ctml_json, event_type, user } from "@prisma/client";
 import {PrismaService} from "../prisma.service";
+import axios from "axios";
+import {CtmlStatusEnum} from "../../../../../libs/types/src/ctml-status.enum";
 
 @Injectable()
 export class CtmlJsonService {
@@ -22,20 +24,34 @@ export class CtmlJsonService {
     return createdCtmlJson;
   }
 
-  findAll(): Promise<ctml_json[]> {
-    return this.prismaService.ctml_json.findMany();
+  async findAll(): Promise<ctml_json[]> {
+    let ctmlJsons = await this.prismaService.ctml_json.findMany();
+    ctmlJsons = ctmlJsons.map(ctmlJson => {
+      ctmlJson.data = JSON.parse(ctmlJson.data as string);
+      return ctmlJson;
+    })
+    return ctmlJsons;
   }
 
-  findOne(id: number) {
-    return this.prismaService.ctml_json.findUnique({ where: { id: id } });
+  async findOne(id: number) {
+    const ctmlJson = await this.prismaService.ctml_json.findUnique({
+      where: { id: id }
+    });
+    ctmlJson.data = JSON.parse(ctmlJson.data as string);
+    return ctmlJson;
   }
 
-  findByTrialId(trialId: number): Promise<ctml_json[]> {
-    return this.prismaService.ctml_json.findMany({
+  async findByTrialId(trialId: number): Promise<ctml_json[]> {
+    let ctmlJsons = await this.prismaService.ctml_json.findMany({
       where: {
         trialId: trialId
       }
     });
+    ctmlJsons = ctmlJsons.map(ctmlJson => {
+      ctmlJson.data = JSON.parse(ctmlJson.data as string);
+      return ctmlJson;
+    })
+    return ctmlJsons;
   }
 
   async update(updateCtmlJsonDto: UpdateCtmlJsonDto): Promise<ctml_json[]> {
@@ -68,7 +84,7 @@ export class CtmlJsonService {
           ]
         }
       });
-      const affected = await this.prismaService.ctml_json.findMany({
+      let affected = await this.prismaService.ctml_json.findMany({
         where: {
           AND: [
             { trialId: trialId },
@@ -76,6 +92,12 @@ export class CtmlJsonService {
           ]
         }
       });
+
+      // Convert the string version of the data into an object
+      affected = affected.map(val => {
+        val.data = JSON.parse(val.data as string);
+        return val;
+      })
       return affected;
 
     }
@@ -94,4 +116,38 @@ export class CtmlJsonService {
     return this.prismaService.ctml_json.delete({ where: { id } });
   }
 
+  async send_to_matchminer(trialId: number, ctml_json: any) {
+    try {
+      const url = `${process.env.MM_API_URL}/load_trial`;
+      const results = await axios.request(
+        {
+          method: 'post',
+          url: url,
+          data: ctml_json,
+        }
+      );
+      console.log(results);
+
+      // update the trial's status to pending
+      const trial = await this.prismaService.trial.findUnique({
+        where: {
+          id: trialId
+        }
+      });
+      if (trial) {
+        // in case if the trial wasn't saved before sending to matchminer
+        await this.prismaService.trial.update({
+          where: {
+            id: trialId
+          },
+          data: {
+            status: CtmlStatusEnum.PENDING
+          }
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      throw new Error(error);
+    }
+  }
 }

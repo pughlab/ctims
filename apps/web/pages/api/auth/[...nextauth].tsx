@@ -28,8 +28,6 @@ export default NextAuth({
     credentials: undefined,
 
     authorize: async  (credentials: any) => {
-      // console.log('credentials', credentials, req);
-      // const api_url = process.env.REACT_APP_API_URL || 'http://localhost:3333/api';
       const api_url = process.env.NEXTAUTH_API_URL || 'http://localhost:3333/api';
       console.log('api_url', api_url)
 

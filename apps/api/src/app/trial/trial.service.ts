@@ -23,7 +23,7 @@ export class TrialService implements OnModuleInit {
   }
 
   async createTrial(createTrialDto: CreateTrialDto, creatingUser: user) {
-    const { nct_id, nickname, principal_investigator, status } = createTrialDto;
+    const { nct_id, nickname, principal_investigator, status, protocol_no } = createTrialDto;
 
     const newTrial = await this.prismaService.trial.create({
       data: {
@@ -32,7 +32,8 @@ export class TrialService implements OnModuleInit {
         principal_investigator,
         status,
         user: { connect: {id: creatingUser.id } },
-        modifiedBy: { connect: {id: creatingUser.id } }
+        modifiedBy: { connect: {id: creatingUser.id } },
+        protocol_no
       }
     });
     return newTrial;
@@ -42,8 +43,8 @@ export class TrialService implements OnModuleInit {
     return this.prismaService.trial.findMany();
   }
 
-  findOne(id: number): Promise<trial> {
-    return this.prismaService.trial.findUnique(
+  async findOne(id: number): Promise<trial> {
+    const result = await this.prismaService.trial.findUnique(
       {
         where: { id: id },
         include: {
@@ -51,6 +52,12 @@ export class TrialService implements OnModuleInit {
         }
       }
     );
+    result.ctml_jsons = result.ctml_jsons.map(val => {
+      val.data = JSON.parse(val.data);
+      return val;
+    });
+
+    return result;
   }
 
   findTrialsByUser(userId: number): Promise<trial[]> {
@@ -82,7 +89,8 @@ export class TrialService implements OnModuleInit {
       principal_investigator,
       nickname,
       ctml_schema_version,
-      nct_id
+      nct_id,
+      protocol_no
     } = updateTrialDto;
     const existing_trial = await this.prismaService.trial.findUnique({
       where: {
@@ -113,7 +121,8 @@ export class TrialService implements OnModuleInit {
                 name: updateTrialDto.group_id
               }
             }
-          }
+          },
+          protocol_no
         }
       });
 
@@ -154,8 +163,9 @@ export class TrialService implements OnModuleInit {
               name: updateTrialDto.group_id
             }
           }
-        }
-      }
+        },
+        protocol_no
+      },
     });
 
     // Add created event
