@@ -54,7 +54,7 @@ services:
     networks:
         - my-network
 
-  mm-api:
+  mm_api:
     image: docker-registry.uhn.ca:443/matchminer-api:2d5d9a42-3048-4ef8-90a4-3d0c70a0558a
     ports:
       - "5000:5000"
@@ -62,8 +62,8 @@ services:
     networks:
       - my-network
 
-  mm-mongo-db:
-    container_name: mm-mongo-db
+  mm_mongo_db:
+    container_name: mm_mongo_db
     image: mongo:3.6.10
     restart: on-failure
     ports:
