@@ -56,10 +56,10 @@ services:
 
   mm-mongo-db:
     container_name: mm-mongo-db
-    image: mongo
+    image: mongo:3.6.10
     restart: on-failure
     ports:
-      - "27017:27017"
+      - "27018:27017"
     networks:
         - my-network
     volumes:
