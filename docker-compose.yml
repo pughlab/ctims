@@ -64,6 +64,10 @@ services:
         - my-network
     volumes:
       - mm-mongo-db:/data/db
+
+volumes:
+  mm-mongo-db:
+
 networks:
     my-network:
 
