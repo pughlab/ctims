@@ -7,6 +7,7 @@ import styles from './Results.module.scss';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { CSVLink } from "react-csv";
+import {TrialStatusEnum} from "../../../../libs/types/src/trial-status.enum";
 
 const Results = () => {
   const {data, status: sessionStatus} = useSession()
@@ -115,13 +116,13 @@ const Results = () => {
         trialId: cur.trialId,
         nickname: cur.nickname,
         principal_investigator: cur.principal_investigator,
-        ctml_status_label: cur.ctml_status_label,
+        // ctml_status_label: cur.ctml_status_label,
         createdAt: cur.createdAt,
         updatedAt: cur.updatedAt,
         protocol_no: cur.protocol_no,
-        // trialRetCount: (cur.ctml_status_label === CtmlStatusLabels[CtmlStatusEnum.PENDING]) ? '' : cur.trialRetCount,
-        trialRetCount: cur.trialRetCount,
-        matchedDate: cur.matchedDate? cur.matchedDate : ''
+        trialRetCount: (cur.trialStatus === TrialStatusEnum[TrialStatusEnum.PENDING]) ? '' : cur.trialRetCount,
+        matchedDate: cur.matchedDate? cur.matchedDate : '',
+        trialStatus: cur.trialStatus
       }
       dataCopy.push(curCopy);
     }
@@ -142,7 +143,7 @@ const Results = () => {
             <Column field="trialId" header="ID"></Column>
             <Column field="nickname" header="Nickname"></Column>
             <Column field="principal_investigator" header="Principal Investigator"></Column>
-            <Column field="ctml_status_label" header="CTML Status" sortable></Column>
+            <Column field="trialStatus" header="Match Status" sortable></Column>
             <Column field="createdAt" header="Created on" dataType="date"></Column>
             <Column field="updatedAt" header="Modified on" dataType="date"></Column>
             <Column field="trialRetCount" header="Match Results"></Column>

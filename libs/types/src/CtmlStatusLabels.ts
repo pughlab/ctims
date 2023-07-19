@@ -4,7 +4,6 @@ export const CtmlStatusLabels: Record<CtmlStatusEnum, string> = {
   [CtmlStatusEnum.DRAFT]: "Draft",
   [CtmlStatusEnum.IN_REVIEW]: "In Review",
   [CtmlStatusEnum.COMPLETED]: "Completed",
-  [CtmlStatusEnum.PENDING]: "Pending",
 };
 
 /**

@@ -185,4 +185,15 @@ export class CtmlJsonController implements OnModuleInit {
   ) {
     await this.ctmlJsonService.send_to_matchminer(+id, ctmlJson);
   }
+
+  @Get('mm/run_match')
+  @UseGuards(KeycloakPasswordGuard)
+  @ApiBearerAuth("KeycloakPasswordGuard")
+  @ApiOperation({ summary: "Triggers matchminer to run matches" })
+  @ApiFoundResponse({ description: "Triggers matchminer to run matches" })
+  async run_matchminer(
+    @CurrentUser() user: user,
+  ) {
+    await this.ctmlJsonService.run_match();
+  }
 }
