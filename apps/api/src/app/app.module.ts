@@ -9,6 +9,7 @@ import { TrialModule } from './trial/trial.module';
 import { UserModule } from './user/user.module';
 import {AuthModule} from "./auth/auth.module";
 import { EventModule } from "./event/event.module";
+import { MatchminerModule } from './matchminer/matchminer.module';
 
 @Global()
 @Module({
@@ -18,6 +19,7 @@ import { EventModule } from "./event/event.module";
     CtmlSchemaModule,
     TrialModule,
     UserModule,
+    MatchminerModule,
     EventModule,
   ],
   controllers: [AppController],
