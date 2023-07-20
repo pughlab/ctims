@@ -184,5 +184,16 @@ export class CtmlJsonController implements OnModuleInit {
     @Body() ctmlJson: any
   ) {
     await this.ctmlJsonService.send_to_matchminer(+id, ctmlJson);
+
+    // Add event
+    this.eventService.createEvent({
+      type: event_type.CtmlJsonSentToMatchminer,
+      description: "CTML JSON sent to Matchminer via Post to /ctml-jsons/:id/send_to_matchminer",
+      user,
+      ctml_json: { id: +id },
+      metadata: {
+        input: { id, ctmlJson }
+      }
+    });
   }
 }
