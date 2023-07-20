@@ -45,6 +45,7 @@ const Results = () => {
 
   useEffect(() => {
     if (getDownloadResultsResponse) {
+      setResultFileName(trialSelected.protocol_no + '_result.csv');
       const processedData = postProcessCSVData(getDownloadResultsResponse);
       setDownloadResults(processedData);
     }
@@ -53,7 +54,6 @@ const Results = () => {
   const [downloadResults, setDownloadResults] = useState<any>([]);
   useEffect(() => {
     if (downloadResults.length > 0) {
-      setResultFileName(trialSelected.protocol_no + '_result.csv');
       // @ts-ignore
       csvLink.current.link.click();
     }
