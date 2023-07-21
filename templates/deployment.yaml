@@ -54,7 +54,7 @@ spec:
           persistentVolumeClaim:
             claimName: mongo-pvc
       containers:
-        - image: "{{ .Values.docker.image }}:{{ .Values.git.ref }}"
+        - image: "{{ .Values.docker.image }}:c1cf8ed496d976eb1a0d527f87bd21bff215e1d0"
           name: ctimsweb
           imagePullPolicy: IfNotPresent
           ports:
@@ -69,7 +69,7 @@ spec:
               value: "https://ctims-web.{{ .Values.domain }}"
             - name: NEXTAUTH_API_URL
               value: "http://localhost:3333/api"
-        - image: "{{ .Values.docker.apiImage }}:{{ .Values.git.ref }}"
+        - image: "{{ .Values.docker.apiImage }}:c1cf8ed496d976eb1a0d527f87bd21bff215e1d0"
           name: ctimsapi
           imagePullPolicy: IfNotPresent
           ports:
@@ -98,7 +98,7 @@ spec:
               value: "{{ .Values.ctimsapi.prismaEncryptionKey }}"
             - name: MM_API_URL
               value: "http://localhost:5000/api"
-        - image: "docker-registry.uhn.ca:443/matchminer-api:fecfb5db-158d-4d0b-b3e7-40ffa07d7abb"
+        - image: "docker-registry.uhn.ca:443/matchminer-api:70164c02-b504-4a8f-80d1-37d0996cc1bf"
           name: mm-api
           imagePullPolicy: IfNotPresent
           ports:
