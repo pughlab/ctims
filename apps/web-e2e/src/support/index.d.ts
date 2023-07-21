@@ -51,5 +51,6 @@ declare namespace Cypress {
     saveAndBackBtn()
     clickSaveEditButtonForTrialGroupAdmin(nickNameVal: string)
     clickSaveEditButtonForTrialGroupMember(nickNameVal: string)
+    enterTreatmentListData(armIndex: number, treatmentList:number)
   }
 }
