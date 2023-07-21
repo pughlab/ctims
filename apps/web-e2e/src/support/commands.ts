@@ -539,6 +539,22 @@ Cypress.Commands.add('clickSaveEditButtonForTrialGroupMember', (nickNameVal) => 
     }
   });
 });
+Cypress.Commands.add('enterTreatmentListData', (armIndex, treatmentList) => {
+  const arm = treatmentList[armIndex];
+  const doseLevels = arm.dose_level;
+
+  cy.get(`#root_treatment_list_step_0_arm_${armIndex}_arm_code`).type(arm.arm_code);
+  cy.get(`#root_treatment_list_step_0_arm_${armIndex}_arm_description`).type(arm.arm_description);
+  cy.get(`#root_treatment_list_step_0_arm_${armIndex}_arm_internal_id`).type(arm.arm_internal_id.toString());
+  cy.get(`#root_treatment_list_step_0_arm_${armIndex}_arm_suspended`).contains(arm.arm_suspended).click();
+
+  doseLevels.forEach((dose, doseIndex) => {
+    cy.get(`#root_treatment_list_step_0_arm_${armIndex}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
+    cy.get(`#root_treatment_list_step_0_arm_${armIndex}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
+    cy.get(`#root_treatment_list_step_0_arm_${armIndex}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
+    cy.get(`#root_treatment_list_step_0_arm_${armIndex}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
+  });
+});
 
 
 //
