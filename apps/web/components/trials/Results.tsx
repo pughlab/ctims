@@ -7,6 +7,7 @@ import styles from './Results.module.scss';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { CSVLink } from "react-csv";
+import {TrialStatusEnum} from "../../../../libs/types/src/trial-status.enum";
 
 const Results = () => {
   const {data, status: sessionStatus} = useSession()
@@ -15,7 +16,6 @@ const Results = () => {
       return;
     }
     localStorage.setItem('ctims-accessToken', data['accessToken']);
-    console.log('data', data)
 
     getMatchResultsOperation();
   }, [data])
@@ -45,7 +45,9 @@ const Results = () => {
 
   useEffect(() => {
     if (getDownloadResultsResponse) {
-      setDownloadResults(getDownloadResultsResponse);
+      setResultFileName(trialSelected.protocol_no + '_result.csv');
+      const processedData = postProcessCSVData(getDownloadResultsResponse);
+      setDownloadResults(processedData);
     }
   }, [getDownloadResultsResponse])
 
@@ -59,17 +61,20 @@ const Results = () => {
 
   // match results use effects
   const [results, setResults] = useState<any>([]);
-  // trial protocol number that was clicked
-  const [protocolNo, setProtocolNo] = useState<string>(null);
-  // const [rowEntered, setRowEntered] = useState<DataTableRowMouseEventParams>(null);
-  // const [rowClicked, setRowClicked] = useState<any>(null);
+  // trial that was clicked
+  const [trialSelected, setTrialSelected] = useState<any>(null);
+  // result download file name
+  const [resultFileName, setResultFileName] = useState<string>('');
 
   const headers = [
+    {label: "Trial Id", key: "trialId"},
+    {label: "Trial Name", key: "trialName"},
+    {label: "Trial Match Date", key: "matchDate"},
     {label: "Arm Description", key: "arm_description"},
     {label: "Study ID", key: "studyId"},
-    {label: "Patient ID", key: "mrn"},
+    {label: "Patient ID", key: "patient_id"},
     {label: "Sample ID", key: "sample_id"},
-    {label: "Vital Status", key: "vita_status"},
+    {label: "Vital Status", key: "vital_status"},
     {label: "Gender", key: "gender"},
     {label: "Age", key: "age"},
     {label: "Diagnosis", key: "oncotree_primary_diagnosis_name"},
@@ -93,7 +98,7 @@ const Results = () => {
       <CSVLink
         headers={headers}
         data={downloadResults}
-        filename={protocolNo + '_result.csv'}
+        filename={resultFileName}
         className='hidden'
         ref={csvLink}
         target='_blank'
@@ -102,8 +107,8 @@ const Results = () => {
   };
 
   const downloadClicked = (e: any) => {
-    setProtocolNo(e.protocol_no);
-    getDownloadResultsOperation(e.trialId, e.protocol_no);
+    setTrialSelected(e);
+    getDownloadResultsOperation(e.id, e.protocol_no);
   }
 
   // if trial is pending state (send to CTML but hasn't been matched), then don't display
@@ -112,20 +117,31 @@ const Results = () => {
     let dataCopy = [];
     for (let cur of data) {
       const curCopy = {
-        trialId: cur.trialId,
+        id: cur.trialId,
+        trialId: cur.nct_id,
         nickname: cur.nickname,
         principal_investigator: cur.principal_investigator,
-        ctml_status_label: cur.ctml_status_label,
+        // ctml_status_label: cur.ctml_status_label,
         createdAt: cur.createdAt,
         updatedAt: cur.updatedAt,
         protocol_no: cur.protocol_no,
-        // trialRetCount: (cur.ctml_status_label === CtmlStatusLabels[CtmlStatusEnum.PENDING]) ? '' : cur.trialRetCount,
-        trialRetCount: cur.trialRetCount,
-        matchedDate: cur.matchedDate? cur.matchedDate : ''
+        trialRetCount: (cur.trialStatus === TrialStatusEnum[TrialStatusEnum.PENDING]) ? '' : cur.trialRetCount,
+        matchedDate: cur.matchedDate? cur.matchedDate : '',
+        trialStatus: cur.trialStatus
       }
       dataCopy.push(curCopy);
     }
     return dataCopy;
+  }
+
+  // add Trial ID, Trial Name, Trial Match Date
+  const postProcessCSVData = (data: any) => {
+    for (let cur of data) {
+      cur.trialId = trialSelected.trialId;
+      cur.trialName = trialSelected.nickname;
+      cur.matchDate = trialSelected.matchedDate;
+    }
+    return data;
   }
 
   return (
@@ -142,7 +158,7 @@ const Results = () => {
             <Column field="trialId" header="ID"></Column>
             <Column field="nickname" header="Nickname"></Column>
             <Column field="principal_investigator" header="Principal Investigator"></Column>
-            <Column field="ctml_status_label" header="CTML Status" sortable></Column>
+            <Column field="trialStatus" header="Match Status" sortable></Column>
             <Column field="createdAt" header="Created on" dataType="date"></Column>
             <Column field="updatedAt" header="Modified on" dataType="date"></Column>
             <Column field="trialRetCount" header="Match Results"></Column>

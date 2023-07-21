@@ -4,6 +4,7 @@ import {useEffect, useState} from 'react';
 import {useRouter} from 'next/router';
 import {useSession} from 'next-auth/react';
 import {getCtmlStatusLabel} from "../../../libs/types/src/CtmlStatusLabels";
+import {getTrialStatusLabel} from "../../../libs/types/src/TrialStatusLabels";
 
 const useGetMatchResults = () => {
   const {publicRuntimeConfig} = getConfig();
@@ -64,12 +65,14 @@ const useGetMatchResults = () => {
           });
         }
         const ctml_status_label = getCtmlStatusLabel(trial.status);
+        const trial_status_label = getTrialStatusLabel(trial.status);
         return {
           ...trial,
           createdAt: createdAtFormatted,
           updatedAt: updatedAtFormatted,
           matchedDate: matchedDateFormatted,
-          ctml_status_label
+          ctml_status_label,
+          trial_status_label
         }
       });
       setResponse(mapped);

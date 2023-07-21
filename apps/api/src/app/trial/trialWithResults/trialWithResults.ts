@@ -14,6 +14,7 @@ export type trialWithResults = {
   protocol_no: string
   trialRetCount?: number | null
   matchedDate?: Date | null
+  trialStatus?: string | null
 }
 
 // the matchminer api returns the following format

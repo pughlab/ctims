@@ -7,6 +7,7 @@ import axios from "axios";
 import {event_type, user} from "@prisma/client";
 import {getCtmlStatusLabel} from "../../../../../../libs/types/src/CtmlStatusLabels";
 import {CtmlStatusEnum} from "../../../../../../libs/types/src/ctml-status.enum";
+import {TrialStatusEnum} from "../../../../../../libs/types/src/trial-status.enum";
 
 @Injectable()
 export class TrialResultService implements OnModuleInit {
@@ -24,7 +25,15 @@ export class TrialResultService implements OnModuleInit {
   }
 
   async findAllWithResults(): Promise<trialWithResults[]> {
-    const trials = await this.prismaService.trial.findMany();
+    const trials = await this.prismaService.trial.findMany({
+      where: {
+        OR: [
+          {trial_status: TrialStatusEnum.PENDING},
+          {trial_status: TrialStatusEnum.MATCHED}
+        ]
+
+      }
+    });
     let trialResults: trialWithResults[] = [];
     let matchResults: any;
     if (trials.length > 0) {
@@ -44,8 +53,6 @@ export class TrialResultService implements OnModuleInit {
 
       for (let trial of trials) {
         const mm_info = await this.findMatchMinerInfo(trial.protocol_no, matchResults.data.values);
-        const myStatus = trial.status;
-        const ctml_status_label = getCtmlStatusLabel(CtmlStatusEnum[myStatus]);
         const result: trialWithResults = {
           trialId: trial.id,
           nct_id: trial.nct_id,
@@ -56,7 +63,8 @@ export class TrialResultService implements OnModuleInit {
           updatedAt: trial.updatedAt,
           protocol_no: trial.protocol_no,
           trialRetCount: mm_info.count,
-          matchedDate: mm_info.updated
+          matchedDate: mm_info.updated,
+          trialStatus: TrialStatusEnum[trial.trial_status],
         }
         trialResults.push(result);
       }
