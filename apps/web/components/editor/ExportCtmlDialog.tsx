@@ -131,16 +131,53 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
       });
     }
 
-    const ctmlModelCopy = move();
+    /**
+     * This function fixes instances in the match tree where some genomic nodes have underscores that should be spaces
+     * in the cnv_call property.
+     * @param json - the json object to be formatted.
+     */
+    const formatAllGenomicNodes = (json: any): any => {
+      if (Array.isArray(json)) {
+        return json.map((item) => formatAllGenomicNodes(item));
+      } else if (typeof json === 'object' && json !== null) {
+        const copy: any = {};
+        for (const key in json) {
+          if (key === 'cnv_call' && typeof json[key] === 'string') {
+            copy[key] = json[key].replace(/_/g, ' ');
+          } else {
+            copy[key] = formatAllGenomicNodes(json[key]);
+          }
+        }
+        return copy;
+      } else {
+        return json;
+      }
+    }
 
-    let ctmlModelString = JSON.stringify(ctmlModelCopy, null, 2);
+    /**
+     * This function fixes instances in the match tree where some values have underscores that should be spaces.
+     * @param json - the json object to be formatted.
+     */
+    const formatMatchTreeLabels = (json: any): any => {
+      // For each arm node, format all genomic nodes
+      json.treatment_list.step.forEach(obj => {
+        obj.arm.map(arm => {
+          arm.match = formatAllGenomicNodes(arm.match);
+        })
+      });
+    }
+
+    const ctmlModelCopy = move();
+    const writableCtmlModelCopy = JSON.parse(JSON.stringify(ctmlModelCopy));
+    formatMatchTreeLabels(writableCtmlModelCopy);
+    let ctmlModelString = JSON.stringify(writableCtmlModelCopy, null, 2);
     let fileName = 'ctml-model';
     if (ctmlModel.trialInformation.trial_id !== undefined) {
       fileName = ctmlModel.trialInformation.trial_id;
     }
     fileName += '_' + new Date().toISOString().slice(0, 10)
     if (format === 'YAML') {
-      ctmlModelString = stringify(ctmlModelCopy);
+      ctmlModelString = stringify(writableCtmlModelCopy);
       fileName += '.yaml';
     } else {
       fileName += '.json';

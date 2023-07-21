@@ -74,8 +74,29 @@ const CtimsMatchingCriteriaWidget = (props: WidgetProps) => {
     borderRadius: '4px',
   }
 
-  const yamlString = stringify(formContext.match, null, 2);
-  const jsonString = JSON.stringify(formContext.match, null, 2);
+
+  const formatAllGenomicNodes = (json: any): any => {
+    if (Array.isArray(json)) {
+      return json.map((item) => formatAllGenomicNodes(item));
+    } else if (typeof json === 'object' && json !== null) {
+      const copy: any = {};
+      for (const key in json) {
+        if (key === 'cnv_call' && typeof json[key] === 'string') {
+          copy[key] = json[key].replace(/_/g, ' ');
+        } else {
+          copy[key] = formatAllGenomicNodes(json[key]);
+        }
+      }
+      return copy;
+    } else {
+      return json;
+    }
+  }
+
+  const formattedTree = formatAllGenomicNodes(formContext.match);
+
+  const yamlString = stringify(formattedTree, null, 2);
+  const jsonString = JSON.stringify(formattedTree, null, 2);
 
   const editMatchingCriteriaClicked = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!isFormDisabled) {
