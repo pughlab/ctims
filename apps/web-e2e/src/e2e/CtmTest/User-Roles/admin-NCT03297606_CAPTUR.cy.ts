@@ -220,18 +220,18 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
       const arm = treatmentList[index];
       if(index === 0) {
         //cy.wrap($input).each(($armInput, armIndex) => {
-      /*  cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
+        cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
         cy.wrap($input).find('.p-inputtext').eq(1).type(arm.arm_description);
         cy.wrap($input).find('.p-inputtext').eq(2).type(arm.arm_internal_id.toString());
         cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click();
-      */  cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]`).each(($input, doseIndex) => {
+        cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]`).each(($input, doseIndex) => {
           cy.log($input.attr('id'));
           const dose = doseLevels[doseIndex];
-       /*   cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
+          cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
           cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
           cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
           cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
-      */  });
+        });
         //click first matching criteria link of each arm
 //        getEditMatchingCriteriaMultiple().eq(index).click()
         //Validate the header
@@ -1017,7 +1017,7 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
 
   //!************ Arm 10  *****************
 
-  it('should enter the values in Arm 10',  () => {
+  it.skip('should enter the values in Arm 10',  () => {
     const treatmentList = ctmlTestData.treatment_list.step[0].arm;
     const doseLevels = treatmentList[9].dose_level;
 
@@ -1138,6 +1138,333 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
     })
   })
 
+//!************ Arm 11  *****************
+
+  it.skip('should enter the values in Arm 10',  () => {
+    const treatmentList = ctmlTestData.treatment_list.step[0].arm;
+    const doseLevels = treatmentList[10].dose_level;
+
+    getMultipleArm().each(($input, index) => {
+      cy.log($input.attr('id'));
+      const arm = treatmentList[index];
+      if (index === 10) {
+        cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
+        cy.wrap($input).find('.p-inputtext').eq(1).type(arm.arm_description);
+        cy.wrap($input).find('.p-inputtext').eq(2).type(arm.arm_internal_id.toString());
+        cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click();
+        cy.clickMultiple(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]>div>.pi-plus-circle`, doseLevels.length)
+        cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]>div>div>div>div>#panel-children`).each(($input, doseIndex) => {
+          const dose = doseLevels[doseIndex];
+          cy.wait(1000)
+       /*   if (doseIndex === 0) {
+            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
+            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
+            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
+            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
+          }
+          if (doseIndex === 1) {
+            cy.log(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`);
+            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
+            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
+            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
+            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
+          }*/
+        })
+
+        //click first matching criteria link of each arm
+       getEditMatchingCriteriaMultiple().eq(index).click()
+        //Validate the header
+        //   getMatchCriteriaHeader().should('contain', treatmentList[index].arm_code);
+        getAddCriteriaGroup().click()
+        //!******** OR ********************
+
+        cy.clickParentAnd()
+        cy.clickOr()
+        cy.clickParentNode(1).click()
+        let orConditions = treatmentList[index].match[0].and[0].or
+        cy.clickGenomic()
+        cy.clickMultipleFunction(getAddCriteriaToSameList(), orConditions.length - 1)
+        getSubGroup().find('.p-treenode-children>li')
+          .each((childElement, index) => {
+            if (Cypress.$(childElement).length > 0) {
+              cy.wrap(childElement).click() // click on each child element
+              let condition = orConditions[index % orConditions.length]; // get the corresponding and condition
+              Object.entries(condition.genomic).map(([key, value]) => {
+                if (key === 'hugo_symbol') {
+                  getHugoSymbol().type(value)
+                }
+                if (key === 'protein_change') {
+                  getProteinChange().type(value)
+                }
+                if (key === 'variant_category') {
+                  getVariantCategory().click()
+                  getGenomicDropDown().contains(value).click()
+                }
+                if (key === 'variant_classification') {
+                  getVariantClassification().click()
+                  getGenomicDropDown().contains(value.replace(/_/g, " ")).click()
+                }
+                if (key === 'fusion_partner_hugo_symbol') {
+                  getFusionPartnerHugoSymbol().type(value)
+                }
+                if (key === 'molecular_function') {
+                  getMolecularFunction().click()
+                  getGenomicDropDown().contains(value).click()
+                }
+                if (key === 'cnv_call') {
+                  getCNVCall().click()
+                  getGenomicDropDown().contains(value).click()
+                }
+              })
+            } else {
+              return false;
+            }
+          })
+        cy.clickChildToggleArrowButton(1) //collapse the Or subgroup
+        //!******** AND ********************
+        cy.clickParentNode(0)
+        cy.clickAnd()
+        cy.clickParentNode(2)
+        cy.clickClinical()
+        let clinicalLength = treatmentList[index].match[0].and[1].and.length - 1
+        cy.clickMultipleFunction(getAddCriteriaToSameList(), clinicalLength)
+
+        let andConditions = treatmentList[index].match[0].and[1].and
+        cy.get('.LeftMenuComponent_matchingCriteriaMenuContainer__fe8dz>div:nth-child(2)>ul>li>ul>li:nth-child(2)').find('.p-treenode-children>li')
+          .each((childElement, index) => {
+            cy.log(index.toString())
+            if (Cypress.$(childElement).length > 0) {
+              cy.wrap(childElement).click() // click on each child element
+              let condition = andConditions[index % andConditions.length]; // get the corresponding and condition
+              //andConditions.forEach(condition => { // get the corresponding and condition
+              cy.log(andConditions.length.toString())
+              Object.entries(condition.clinical).map(([key, value]) => {
+                if (key === 'age_numerical') {
+                  getClinicalAge().type(value)
+                }
+                if (key === 'oncotree_primary_diagnosis') {
+                  getClinicalOncotreePrimaryDiagnosis().type(value)
+                  getOncotreeExclamation().click()
+                }
+                if (key === 'tmb') {
+                  getClinicalTMB().type(value)
+                }
+              })
+            } else {
+              return false;
+            }
+          })
+        getSaveMatchingCriteria().click()
+      }
+    })
+  })
+
+  //!************ Arm 12  *****************
+
+  it('should enter the values in Arm 10',  () => {
+    const treatmentList = ctmlTestData.treatment_list.step[0].arm;
+    const doseLevels = treatmentList[11].dose_level;
+
+    getMultipleArm().each(($input, index) => {
+      cy.log($input.attr('id'));
+      const arm = treatmentList[index];
+      if (index === 11) {
+        cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
+        cy.wrap($input).find('.p-inputtext').eq(1).type(arm.arm_description);
+        cy.wrap($input).find('.p-inputtext').eq(2).type(arm.arm_internal_id.toString());
+        cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click();
+        cy.clickMultiple(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]>div>.pi-plus-circle`, doseLevels.length)
+        cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]>div>div>div>div>#panel-children`).each(($input, doseIndex) => {
+          const dose = doseLevels[doseIndex];
+          cy.wait(1000)
+          /*   if (doseIndex === 0) {
+               cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
+               cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
+               cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
+               cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
+             }
+             if (doseIndex === 1) {
+               cy.log(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`);
+               cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
+               cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
+               cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
+               cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
+             }*/
+        })
+
+        //click first matching criteria link of each arm
+        getEditMatchingCriteriaMultiple().eq(index).click()
+        //Validate the header
+        //   getMatchCriteriaHeader().should('contain', treatmentList[index].arm_code);
+        getAddCriteriaGroup().click()
+        //!******** OR ********************
+
+        cy.clickParentAnd()
+        cy.clickOr()
+        cy.clickParentNode(1).click()
+        let orConditions = treatmentList[index].match[0].and[0].or
+        cy.clickGenomic()
+        cy.clickMultipleFunction(getAddCriteriaToSameList(), orConditions.length - 1)
+        getSubGroup().find('.p-treenode-children>li')
+          .each((childElement, index) => {
+            if (Cypress.$(childElement).length > 0) {
+              cy.wrap(childElement).click() // click on each child element
+              let condition = orConditions[index % orConditions.length]; // get the corresponding and condition
+              Object.entries(condition.genomic).map(([key, value]) => {
+                if (key === 'hugo_symbol') {
+                  getHugoSymbol().type(value)
+                }
+                if (key === 'protein_change') {
+                  getProteinChange().type(value)
+                }
+                if (key === 'variant_category') {
+                  getVariantCategory().click()
+                  getGenomicDropDown().contains(value).click()
+                }
+                if (key === 'variant_classification') {
+                  getVariantClassification().click()
+                  getGenomicDropDown().contains(value.replace(/_/g, " ")).click()
+                }
+                if (key === 'fusion_partner_hugo_symbol') {
+                  getFusionPartnerHugoSymbol().type(value)
+                }
+                if (key === 'molecular_function') {
+                  getMolecularFunction().click()
+                  getGenomicDropDown().contains(value).click()
+                }
+                if (key === 'cnv_call') {
+                  getCNVCall().click()
+                  getGenomicDropDown().contains(value).click()
+                }
+              })
+            } else {
+              return false;
+            }
+          })
+        cy.clickChildToggleArrowButton(1) //collapse the Or subgroup
+        //!******** AND ********************
+        cy.clickParentNode(0)
+        cy.clickAnd()
+        cy.clickParentNode(2)
+        cy.clickClinical()
+        let clinicalLength = treatmentList[index].match[0].and[1].and.length - 1
+        cy.clickMultipleFunction(getAddCriteriaToSameList(), clinicalLength)
+
+        let andConditions = treatmentList[index].match[0].and[1].and
+        cy.get('.LeftMenuComponent_matchingCriteriaMenuContainer__fe8dz>div:nth-child(2)>ul>li>ul>li:nth-child(2)').find('.p-treenode-children>li')
+          .each((childElement, index) => {
+            cy.log(index.toString())
+            if (Cypress.$(childElement).length > 0) {
+              cy.wrap(childElement).click() // click on each child element
+              let condition = andConditions[index % andConditions.length]; // get the corresponding and condition
+              //andConditions.forEach(condition => { // get the corresponding and condition
+              cy.log(andConditions.length.toString())
+              Object.entries(condition.clinical).map(([key, value]) => {
+                if (key === 'age_numerical') {
+                  getClinicalAge().type(value)
+                }
+                if (key === 'oncotree_primary_diagnosis') {
+                  getClinicalOncotreePrimaryDiagnosis().type(value)
+                  getOncotreeExclamation().click()
+                }
+                if (key === 'tmb') {
+                  getClinicalTMB().type(value)
+                }
+              })
+            } else {
+              return false;
+            }
+          })
+        getSaveMatchingCriteria().click()
+      }
+    })
+  })
+
+  //!************ Arm 13  *****************
+
+  it.skip('should enter the values in Arm 10',  () => {
+    const treatmentList = ctmlTestData.treatment_list.step[0].arm;
+    const doseLevels = treatmentList[12].dose_level;
+
+    getMultipleArm().each(($input, index) => {
+      cy.log($input.attr('id'));
+      const arm = treatmentList[index];
+      if (index === 12) {
+        cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
+        cy.wrap($input).find('.p-inputtext').eq(1).type(arm.arm_description);
+        cy.wrap($input).find('.p-inputtext').eq(2).type(arm.arm_internal_id.toString());
+        cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click();
+        cy.get(`#array-item-list-root_treatment_list_step_0_arm_${index}_dose_level`).contains('Add Dose Level').click()
+        cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]`).each(($input, doseIndex) => {
+          const dose = arm.dose_level[doseIndex]
+          cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
+          cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
+          cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
+          cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
+        });
+
+        //click first matching criteria link of each arm
+        getEditMatchingCriteriaMultiple().eq(index).click()
+        //Validate the header
+        //   getMatchCriteriaHeader().should('contain', treatmentList[index].arm_code);
+        getAddCriteriaGroup().click()
+        //!******** OR ********************
+
+        cy.clickParentAnd()
+        cy.clickOr()
+        cy.clickParentNode(1).click()
+        let orConditions = treatmentList[index].match[0].and[0].or
+        cy.clickGenomic()
+        cy.clickMultipleFunction(getAddCriteriaToSameList(), orConditions.length - 1)
+        getSubGroup().find('.p-treenode-children>li')
+          .each((childElement, index) => {
+            if (Cypress.$(childElement).length > 0) {
+              cy.wrap(childElement).click() // click on each child element
+              let condition = orConditions[index % orConditions.length]; // get the corresponding and condition
+              Object.entries(condition.genomic).map(([key, value]) => {
+                if (key === 'hugo_symbol') {
+                  getHugoSymbol().type(value)
+                }
+                if (key === 'protein_change') {
+                  getProteinChange().type(value)
+                }
+                if (key === 'variant_category') {
+                  getVariantCategory().click()
+                  getGenomicDropDown().contains(value).click()
+                }
+                if (key === 'variant_classification') {
+                  getVariantClassification().click()
+                  getGenomicDropDown().contains(value.replace(/_/g, " ")).click()
+                }
+                if (key === 'fusion_partner_hugo_symbol') {
+                  getFusionPartnerHugoSymbol().type(value)
+                }
+                if (key === 'molecular_function') {
+                  getMolecularFunction().click()
+                  getGenomicDropDown().contains(value).click()
+                }
+                if (key === 'cnv_call') {
+                  getCNVCall().click()
+                  getGenomicDropDown().contains(value).click()
+                }
+              })
+            } else {
+              return false;
+            }
+          })
+        cy.clickChildToggleArrowButton(1) //collapse the Or subgroup
+        //!******** AND ********************
+        cy.clickParentNode(0)
+        cy.clickClinical()
+        let clinicalVal = ctmlTestData.treatment_list.step[0].arm[index].match[0].and[1].clinical
+        getClinicalAge().type(clinicalVal.age_numerical)
+        getClinicalOncotreePrimaryDiagnosis().type(clinicalVal.oncotree_primary_diagnosis)
+        getOncotreeExclamation().click()
+
+        getSaveMatchingCriteria().click()
+      }
+    })
+  })
 
 
   /* it('should Save, Edit Ctml test data ', () => {

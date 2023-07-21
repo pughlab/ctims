@@ -1285,7 +1285,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "ERBB2",
-                          "variant_category": "Copy Number Variation"
+                          "variant_category": "CNV"
                         }
                       },
                       {
@@ -1429,7 +1429,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                       {
                         "genomic": {
                           "hugo_symbol": "BRAF",
-                          "wildcard_protein_change": "p.V600D",
+                          "protein_change": "p.V600D",
                           "variant_category": "Mutation",
                           "variant_classification": "Missense_Mutation"
                         }
@@ -1437,7 +1437,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                       {
                         "genomic": {
                           "hugo_symbol": "BRAF",
-                          "wildcard_protein_change": "p.V600E",
+                          "protein_change": "p.V600E",
                           "variant_category": "Mutation",
                           "variant_classification": "Missense_Mutation"
                         }
@@ -1445,7 +1445,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                       {
                         "genomic": {
                           "hugo_symbol": "BRAF",
-                          "wildcard_protein_change": "p.V600G",
+                          "protein_change": "p.V600G",
                           "variant_category": "Mutation",
                           "variant_classification": "Missense_Mutation"
                         }
@@ -1453,7 +1453,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                       {
                         "genomic": {
                           "hugo_symbol": "BRAF",
-                          "wildcard_protein_change": "p.V600K",
+                          "protein_change": "p.V600K",
                           "variant_category": "Mutation",
                           "variant_classification": "Missense_Mutation"
                         }
@@ -1461,7 +1461,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                       {
                         "genomic": {
                           "hugo_symbol": "BRAF",
-                          "wildcard_protein_change": "p.V600M",
+                          "protein_change": "p.V600M",
                           "variant_category": "Mutation",
                           "variant_classification": "Missense_Mutation"
                         }
@@ -1469,7 +1469,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                       {
                         "genomic": {
                           "hugo_symbol": "BRAF",
-                          "wildcard_protein_change": "p.V600R",
+                          "protein_change": "p.V600R",
                           "variant_category": "Mutation",
                           "variant_classification": "Missense_Mutation"
                         }
@@ -1477,7 +1477,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                       {
                         "genomic": {
                           "hugo_symbol": "BRAF",
-                          "wildcard_protein_change": "p.V600_K601delinsE",
+                          "protein_change": "p.V600_K601delinsE",
                           "variant_category": "Mutation",
                           "variant_classification": "Del_Ins"
                         }
