@@ -54,7 +54,7 @@ spec:
           persistentVolumeClaim:
             claimName: mongo-pvc
       containers:
-        - image: "{{ .Values.docker.image }}:{{ .Values.git.ref }}"
+        - image: "{{ .Values.docker.image }}:b398fed191eabc18b264ddb4c7082c9e817350b2"
           name: ctimsweb
           imagePullPolicy: IfNotPresent
           ports:
@@ -98,7 +98,7 @@ spec:
               value: "{{ .Values.ctimsapi.prismaEncryptionKey }}"
             - name: MM_API_URL
               value: "http://localhost:5000/api"
-        - image: "docker-registry.uhn.ca:443/matchminer-api:70164c02-b504-4a8f-80d1-37d0996cc1bf"
+        - image: "docker-registry.uhn.ca:443/matchminer-api:76c9c327-7ad8-4b79-98ca-1e8f8292e883"
           name: mm-api
           imagePullPolicy: IfNotPresent
           ports:
