@@ -44,3 +44,6 @@ Thumbs.db
 # .env files
 apps/api/.env
 apps/web/.env
+
+apps/web-e2e/allure-report
+apps/web-e2e/allure-results
