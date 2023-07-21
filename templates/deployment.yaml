@@ -54,7 +54,7 @@ spec:
           persistentVolumeClaim:
             claimName: mongo-pvc
       containers:
-        - image: "{{ .Values.docker.image }}:c1cf8ed496d976eb1a0d527f87bd21bff215e1d0"
+        - image: "{{ .Values.docker.image }}:{{ .Values.git.ref }}"
           name: ctimsweb
           imagePullPolicy: IfNotPresent
           ports:
