@@ -134,6 +134,7 @@ enum event_type {
   CtmlJsonUpdatedMany
   CtmlJsonDeleted
   CtmlJsonDoesNotExist
+  CtmlJsonSentToMatchminer
   CtmlSchemaCreated
   CtmlSchemaRead
   CtmlSchemaReadMany
