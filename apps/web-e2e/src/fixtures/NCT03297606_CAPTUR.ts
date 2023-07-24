@@ -524,14 +524,13 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "clinical": {
                           "age_numerical": ">=18",
                           "oncotree_primary_diagnosis": "!Colorectal Adenocarcinoma",
-                          "ms_status": "MSI-H"
                         }
                       },
                       {
                         "clinical": {
                           "age_numerical": ">=18",
                           "oncotree_primary_diagnosis": "_SOLID_",
-                          "tmb": 10
+                          "tmb": "10"
                         }
                       }
                     ]
@@ -656,7 +655,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                     "clinical": {
                       "age_numerical": ">=18",
                       "oncotree_primary_diagnosis": "!Breast",
-                      "er_status": "true"
+                      "er_status": "True"
                     }
                   }
                 ]
