@@ -31,7 +31,7 @@ spec:
       containers:
         - image: "{{ .Values.docker.image }}:{{ .Values.git.ref }}"
           name: ctimsweb
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: {{ .Values.ctimsweb.port }}
               name: ctimsweb
@@ -46,7 +46,7 @@ spec:
               value: "http://localhost:3333/api"
         - image: "{{ .Values.docker.apiImage }}:{{ .Values.git.ref }}"
           name: ctimsapi
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: {{ .Values.ctimsapi.port }}
               name: ctimsapi
