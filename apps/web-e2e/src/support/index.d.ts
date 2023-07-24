@@ -51,6 +51,11 @@ declare namespace Cypress {
     saveAndBackBtn()
     clickSaveEditButtonForTrialGroupAdmin(nickNameVal: string)
     clickSaveEditButtonForTrialGroupMember(nickNameVal: string)
-    enterTreatmentListData(armIndex: number, treatmentList:number)
+    inputArmDoseLevel(ctmlTestData: any,$input: any, index: any)
+    inputArmDoseLevelMultiple(ctmlTestData: any,$input: any, index: any)
+    enterGenomicConditions(orConditions: any)
+    enterSingleGenomicConditions(genomicConditions: any)
+    enterClinicalConditionsMultiple(andConditions: any)
+    enterSingleClinicalCondition(testAndConditions: any)
   }
 }

@@ -97,7 +97,18 @@ import {
   getVariantClassification,
   selectTrialGroupButton,
   trialGroupxAdmin,
-  ctimsUserTrialGroupxMember, trialTableThreeDots
+  ctimsUserTrialGroupxMember,
+  trialTableThreeDots,
+  getSubGroup,
+  getMolecularFunction,
+  getFusionPartnerHugoSymbol,
+  getTrueTranscriptExon,
+  getWildType,
+  getPoleStatus,
+  getUVAStatus,
+  getTobaccoStatus,
+  getApobecStatus,
+  getTemozolomideStatus, getMMRStatus, getMSStatus, getOncotreeExclamation, getClinicalTMB
 } from './app.po';
 import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib";
 import {NCT03297606_CAPTUR} from "../fixtures/NCT03297606_CAPTUR";
@@ -539,22 +550,424 @@ Cypress.Commands.add('clickSaveEditButtonForTrialGroupMember', (nickNameVal) => 
     }
   });
 });
-Cypress.Commands.add('enterTreatmentListData', (armIndex, treatmentList) => {
-  const arm = treatmentList[armIndex];
-  const doseLevels = arm.dose_level;
+Cypress.Commands.add('inputArmDoseLevel', (ctmlTestData,$input, index) => {
+  const treatmentList = ctmlTestData.treatment_list.step[0].arm;
+  const doseLevels = treatmentList[index].dose_level;
+  const arm = treatmentList[index];
 
-  cy.get(`#root_treatment_list_step_0_arm_${armIndex}_arm_code`).type(arm.arm_code);
-  cy.get(`#root_treatment_list_step_0_arm_${armIndex}_arm_description`).type(arm.arm_description);
-  cy.get(`#root_treatment_list_step_0_arm_${armIndex}_arm_internal_id`).type(arm.arm_internal_id.toString());
-  cy.get(`#root_treatment_list_step_0_arm_${armIndex}_arm_suspended`).contains(arm.arm_suspended).click();
-
-  doseLevels.forEach((dose, doseIndex) => {
-    cy.get(`#root_treatment_list_step_0_arm_${armIndex}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
-    cy.get(`#root_treatment_list_step_0_arm_${armIndex}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
-    cy.get(`#root_treatment_list_step_0_arm_${armIndex}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
-    cy.get(`#root_treatment_list_step_0_arm_${armIndex}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
+  cy.log("Function input", $input);
+  cy.log(index);
+  cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
+  cy.wrap($input).find('.p-inputtext').eq(1).type(arm.arm_description);
+  cy.wrap($input).find('.p-inputtext').eq(2).type(arm.arm_internal_id.toString());
+  cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click();
+  //Expand Dose level
+  cy.get(`#array-item-list-root_treatment_list_step_0_arm_${index}_dose_level`).contains('Add Dose Level').click()
+  cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]`).each(($input, doseIndex) => {
+    const dose = doseLevels[doseIndex];
+    cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
+    cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
+    cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
+    cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
   });
 });
+Cypress.Commands.add('inputArmDoseLevelMultiple', (ctmlTestData,$input, index) => {
+  const treatmentList = ctmlTestData.treatment_list.step[0].arm;
+  const doseLevels = treatmentList[index].dose_level;
+  const arm = treatmentList[index];
+
+  cy.log("Function input", $input);
+  cy.log(index);
+  cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
+  cy.wrap($input).find('.p-inputtext').eq(1).type(arm.arm_description);
+  cy.wrap($input).find('.p-inputtext').eq(2).type(arm.arm_internal_id.toString());
+  cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click();
+  cy.clickMultiple(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]>div>.pi-plus-circle`, doseLevels.length)
+  cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]>div>div>div>div>#panel-children`).each(($input, doseIndex) => {
+    const dose = doseLevels[doseIndex];
+    cy.wait(1000)
+    if (doseIndex === 0) {
+      cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
+      cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
+      cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
+      cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
+    }
+    if (doseIndex === 1) {
+      cy.log(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`);
+      cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
+      cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
+      cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
+      cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
+    }
+  })
+});
+
+Cypress.Commands.add( 'enterGenomicConditions', (orConditions) => {
+  cy.clickGenomic();
+  cy.clickMultipleFunction(getAddCriteriaToSameList(), orConditions.length - 1);
+
+  getSubGroup()
+    .find('.p-treenode-children>li')
+    .each((childElement, index) => {
+      if (Cypress.$(childElement).length > 0) {
+        cy.wrap(childElement).click(); // click on each child element
+        let condition = orConditions[index % orConditions.length]; // get the corresponding and condition
+        cy.log(orConditions.length.toString());
+        Object.entries(condition.genomic).map(([key, value]) => {
+          switch (key) {
+            case 'hugo_symbol':
+              if (typeof value === "string") {
+                getHugoSymbol().type(value);
+              }
+              break;
+
+            case 'variant_category':
+              if (typeof value === "string") {
+                getVariantCategory().click();
+                getGenomicDropDown().contains(value).click();
+              }
+              break;
+
+            case 'protein_change':
+              if (typeof value === "string") {
+                getProteinChange().type(value);
+              }
+              break;
+
+            case 'molecular_function':
+              if (typeof value === "string") {
+                getMolecularFunction().click();
+                getGenomicDropDown().contains(value).click()
+
+              }
+              break;
+
+            case 'variant_classification':
+              if (typeof value === "string") {
+                getVariantClassification().click();
+                getGenomicDropDown().contains(value.replace(/_/g, ' ')).click();
+              }
+              break;
+
+            case 'cnv_call':
+              if (typeof value === "string") {
+                getCNVCall().type(value)
+              }
+              break;
+
+            case 'fusion_partner_hugo_symbol':
+              if (typeof value === "string") {
+                getFusionPartnerHugoSymbol().type(value);
+              }
+              break;
+
+            case 'true_transcript_exon':
+              if (typeof value === "string") {
+                getTrueTranscriptExon().type(value);
+              }
+              break;
+
+            case 'wildtype':
+              if (typeof value === "string") {
+                getWildType().click();
+                getGenomicDropDown().contains(value).click();
+              }
+              break;
+
+            case 'pole_status':
+              if (typeof value === "string") {
+                getPoleStatus().click();
+                getGenomicDropDown().contains(value).click();
+              }
+              break;
+
+            case 'uva_status':
+              if (typeof value === "string") {
+                getUVAStatus().click()
+                getGenomicDropDown().contains(value).click()
+              }
+              break;
+
+            case 'tobacco_status':
+              if (typeof value === "string") {
+                getTobaccoStatus().click()
+                getGenomicDropDown().contains(value).click()
+              }
+              break;
+
+            case 'apobec_status':
+              if (typeof value === "string") {
+                getApobecStatus().click()
+                getGenomicDropDown().contains(value).click()
+              }
+              break;
+
+            case 'temozolomide_status':
+              if (typeof value === "string") {
+                getTemozolomideStatus().click()
+                getGenomicDropDown().contains(value).click()
+              }
+              break;
+
+            case 'mmr_status':
+              if (typeof value === "string") {
+                getMMRStatus().click()
+                getGenomicDropDown().contains(value).click()
+              }
+              break;
+
+            case 'ms_status':
+              if (typeof value === "string") {
+                getMSStatus().click()
+                getGenomicDropDown().contains(value).click()
+              }
+              break;
+
+          }
+        });
+      } else {
+        return false;
+      }
+    });
+})
+
+Cypress.Commands.add( 'enterSingleGenomicConditions', (genomicConditions) => {
+  cy.clickGenomic();
+ // cy.clickMultipleFunction(getAddCriteriaToSameList(), orConditions.length - 1);
+
+  getSubGroup()
+  //  .each((childElement, index) => {
+  //    if (Cypress.$(childElement).length > 0) {
+   //     cy.wrap(childElement).click(); // click on each child element
+  //      let condition = orConditions[index % orConditions.length]; // get the corresponding and condition
+ //       cy.log(orConditions.length.toString());
+        Object.entries(genomicConditions.genomic).map(([key, value]) => {
+          switch (key) {
+            case 'hugo_symbol':
+              if (typeof value === "string") {
+                getHugoSymbol().type(value);
+              }
+              break;
+
+            case 'variant_category':
+              if (typeof value === "string") {
+                getVariantCategory().click();
+                getGenomicDropDown().contains(value).click();
+              }
+              break;
+
+            case 'protein_change':
+              if (typeof value === "string") {
+                getProteinChange().type(value);
+              }
+              break;
+
+            case 'molecular_function':
+              if (typeof value === "string") {
+                getMolecularFunction().click();
+                getGenomicDropDown().contains(value).click()
+
+              }
+              break;
+
+            case 'variant_classification':
+              if (typeof value === "string") {
+                getVariantClassification().click();
+                getGenomicDropDown().contains(value.replace(/_/g, ' ')).click();
+              }
+              break;
+
+            case 'cnv_call':
+              if (typeof value === "string") {
+                getCNVCall().type(value)
+              }
+              break;
+
+            case 'fusion_partner_hugo_symbol':
+              if (typeof value === "string") {
+                getFusionPartnerHugoSymbol().type(value);
+              }
+              break;
+
+            case 'true_transcript_exon':
+              if (typeof value === "string") {
+                getTrueTranscriptExon().type(value);
+              }
+              break;
+
+            case 'wildtype':
+              if (typeof value === "string") {
+                getWildType().click();
+                getGenomicDropDown().contains(value).click();
+              }
+              break;
+
+            case 'pole_status':
+              if (typeof value === "string") {
+                getPoleStatus().click();
+                getGenomicDropDown().contains(value).click();
+              }
+              break;
+
+            case 'uva_status':
+              if (typeof value === "string") {
+                getUVAStatus().click()
+                getGenomicDropDown().contains(value).click()
+              }
+              break;
+
+            case 'tobacco_status':
+              if (typeof value === "string") {
+                getTobaccoStatus().click()
+                getGenomicDropDown().contains(value).click()
+              }
+              break;
+
+            case 'apobec_status':
+              if (typeof value === "string") {
+                getApobecStatus().click()
+                getGenomicDropDown().contains(value).click()
+              }
+              break;
+
+            case 'temozolomide_status':
+              if (typeof value === "string") {
+                getTemozolomideStatus().click()
+                getGenomicDropDown().contains(value).click()
+              }
+              break;
+
+            case 'mmr_status':
+              if (typeof value === "string") {
+                getMMRStatus().click()
+                getGenomicDropDown().contains(value).click()
+              }
+              break;
+
+            case 'ms_status':
+              if (typeof value === "string") {
+                getMSStatus().click()
+                getGenomicDropDown().contains(value).click()
+              }
+              break;
+
+          }
+        });
+})
+Cypress.Commands.add('enterClinicalConditionsMultiple', (andConditions) => {
+  cy.clickClinical()
+  const clinicalLength = andConditions.length - 1;
+    cy.clickMultipleFunction(getAddCriteriaToSameList(), clinicalLength);
+
+    cy.get('.LeftMenuComponent_matchingCriteriaMenuContainer__fe8dz>div:nth-child(2)>ul>li>ul>li:nth-child(2)').find('.p-treenode-children>li')
+      .each((childElement, index) => {
+        if (Cypress.$(childElement).length > 0) {
+          cy.wrap(childElement).click(); // click on each child element
+          let condition = andConditions[index % andConditions.length]; // get the corresponding and condition
+          Object.entries(condition.clinical).map(([key, value]) => {
+            switch (key) {
+              case 'age_numerical':
+                if (typeof value === "string") {
+                  getClinicalAge().type(value);
+                }
+                break;
+              case 'oncotree_primary_diagnosis':
+                if (typeof value === "string") {
+                  getClinicalOncotreePrimaryDiagnosis().type(value);
+                  if (value.includes('!')) {
+                    getOncotreeExclamation().click();
+                  }
+                }
+                break;
+              case 'tmb':
+                if (typeof value === "string") {
+                  getClinicalTMB().type(value.toString());
+                }
+                break;
+              case 'her2_status':
+                if (typeof value === "string") {
+                  getClinicalHER2Status().type(value);
+                }
+                break;
+
+              case 'er_status':
+                if (typeof value === "string") {
+                  let newValue = value.replace(/True/i, "Positive")
+                 cy.log(newValue)
+                  getClinicalERStatus().type(newValue)
+                  // (); // Click the option
+                    // getClinicalERStatus().click()
+                // cy.wait(500)
+                //  getClinicalDropdown().contains(new RegExp(value.replace(/True/i, "Positive"))).click();
+                    //.click().type(value.replace(/True/i, "Positive"));
+                }
+                break;
+
+              case 'pr_status':
+                if (typeof value === "string") {
+                  getClinicalPRStatus().type(value);
+                }
+                break;
+            }
+          });
+        } /*else {
+          return false;
+        }*/
+      });
+  });
+
+Cypress.Commands.add('enterSingleClinicalCondition', (testAndConditions) => {
+    cy.clickClinical()
+    cy.get('.LeftMenuComponent_matchingCriteriaMenuContainer__fe8dz>div:nth-child(2)>ul>li>ul>li:nth-child(2)').then(() => {
+
+      Object.entries(testAndConditions.clinical).map(([key, value]) => {
+        switch (key) {
+          case 'age_numerical':
+            if (typeof value === "string") {
+              getClinicalAge().type(value);
+            }
+            break;
+          case 'oncotree_primary_diagnosis':
+            if (typeof value === "string") {
+              getClinicalOncotreePrimaryDiagnosis().type(value);
+              if (value.includes('!')) {
+                getOncotreeExclamation().click();
+              }
+            }
+            break;
+          case 'tmb':
+            if (typeof value === "string") {
+              getClinicalTMB().type(value);
+            }
+            break;
+
+          case 'her2_status':
+            if (typeof value === "string") {
+              getClinicalHER2Status().type(value);
+            }
+            break;
+
+          case 'er_status':
+            if (typeof value === "string") {
+              let newValue = value.replace(/True/i, "Positive")
+              cy.log(newValue)
+              getClinicalERStatus().type(newValue)
+
+              //  getClinicalERStatus().type(value);
+            }
+            break;
+
+          case 'pr_status':
+            if (typeof value === "string") {
+              getClinicalPRStatus().type(value);
+            }
+            break;
+        }
+      });
+    });
+  });
+
+//});
 
 
 //
