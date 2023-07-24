@@ -17,6 +17,7 @@ const Results = () => {
     }
     localStorage.setItem('ctims-accessToken', data['accessToken']);
 
+    console.log('results page loaded')
     getMatchResultsOperation();
   }, [data])
 
