@@ -122,7 +122,7 @@ export interface PurpleClinical {
   age_numerical:               string;
   oncotree_primary_diagnosis?: string;
   ms_status?:                  string;
-  tmb?:                        number;
+  tmb?:                        any;
 }
 
 export enum AgeNumerical {

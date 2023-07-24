@@ -104,7 +104,8 @@ module.exports = defineConfig({
     snapshotOnly: true,
     testIsolation: false,
     experimentalSessionSupport: true,
-    experimentalMemoryManagement: true
+    experimentalMemoryManagement: true,
+    "numTestsKeptInMemory": 0
 
     /*db: {
       host: 'localhost',
