@@ -108,7 +108,7 @@ import {
   getUVAStatus,
   getTobaccoStatus,
   getApobecStatus,
-  getTemozolomideStatus, getMMRStatus, getMSStatus, getOncotreeExclamation, getClinicalTMB
+  getTemozolomideStatus, getMMRStatus, getMSStatus, getOncotreeExclamation, getClinicalTMB, createCTMLButton
 } from './app.po';
 import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib";
 import {NCT03297606_CAPTUR} from "../fixtures/NCT03297606_CAPTUR";
@@ -550,6 +550,27 @@ Cypress.Commands.add('clickSaveEditButtonForTrialGroupMember', (nickNameVal) => 
     }
   });
 });
+
+Cypress.Commands.add('deleteExistingTrial', (trialName) => {
+  createCTMLButton().should('have.class','p-disabled')
+  selectTrialGroupButton().click()
+  trialGroupxAdmin().click()
+  let table = cy.get('table tr td')
+  table.each(($el) => {
+    let ee = $el.text()
+
+    if (ee.includes(trialName)) {
+      cy.wrap($el).prev().then(($prevEl) => {
+        cy.wrap($prevEl).click();
+      });
+      trialTableThreeDots().click();
+      trialTableDelete().click();
+      trialTableDialogueDeleteBtn().click();
+      return false;
+    }
+  })
+
+})
 Cypress.Commands.add('inputArmDoseLevel', (ctmlTestData,$input, index) => {
   const treatmentList = ctmlTestData.treatment_list.step[0].arm;
   const doseLevels = treatmentList[index].dose_level;

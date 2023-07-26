@@ -119,23 +119,7 @@ describe('Validate as Trialgroupx member role on "NCT02503722_Osimertinib" and v
   const ctmlYaml = `./cypress/downloads/${yamlFile}`
 
   it('should Login as Trialgroupx Admin and "Delete" the existing Ctml member file of "NCT02503722_Osimertinib"', () => {
-    createCTMLButton().should('have.class','p-disabled')
-    selectTrialGroupButton().click()
-    trialGroupxAdmin().click()
-    let table = cy.get('table tr td')
-    table.each(($el) => {
-      let ee = $el.text()
-
-      if (ee.includes('NCT02503722_Osimertinib Trialgroupx member role')) {
-        cy.wrap($el).prev().then(($prevEl) => {
-          cy.wrap($prevEl).click();
-        });
-        cy.get('.trials_trailsEllipseBtn__OHV_W > .p-button').click();
-        trialTableDelete().click();
-        trialTableDialogueDeleteBtn().click();
-        return false;
-      }
-    })
+    cy.deleteExistingTrial('NCT02503722_Osimertinib Trialgroupx member role')
   })
   it('should logout as Admin of "Trialgroupx"',  () => {
     cy.get('.TopBar_userContainer__Dcaw3>i').click()
@@ -274,7 +258,6 @@ describe('Validate as Trialgroupx member role on "NCT02503722_Osimertinib" and v
     //delete the dose level
     cy.wait(1000)
     cy.get('#array-item-list-root_treatment_list_step_0_arm_0_dose_level').children().find('.pi-trash').click()
-    cy.wait(1000)
 
     cy.clickMultipleFunction(getAddArmPlusIcon(), ctmlTestData.treatment_list.step[0].arm.length - 1)
     const treatmentList = ctmlTestData.treatment_list.step[0].arm;
@@ -285,33 +268,7 @@ describe('Validate as Trialgroupx member role on "NCT02503722_Osimertinib" and v
       const arm = treatmentList[index];
       //At Arm 1
       if(index === 0) {
-        cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
-        cy.wrap($input).find('.p-inputtext').eq(1).type(arm.arm_description);
-        cy.wrap($input).find('.p-inputtext').eq(2).type(arm.arm_internal_id.toString());
-        cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click();
-        //click multiple dose
-        cy.clickMultiple(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]>div>.pi-plus-circle`, doseLevels.length)
-
-        cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]>div>div>div>div>#panel-children`).each(($input, doseIndex) => {
-          const dose = doseLevels[doseIndex];
-          cy.log(doseIndex.toString())
-          cy.log(JSON.stringify(doseLevels))
-          cy.log(JSON.stringify(doseLevels[doseIndex]));
-          cy.wait(1000)
-          if(doseIndex === 0) {
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
-          }
-          if(doseIndex === 1) {
-            cy.log(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`);
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
-          }
-        });
+        cy.inputArmDoseLevelMultiple(ctmlTestData,$input, index)
 
         //click first matching criteria link of each arm
         getEditMatchingCriteriaMultiple().eq(index).click()
