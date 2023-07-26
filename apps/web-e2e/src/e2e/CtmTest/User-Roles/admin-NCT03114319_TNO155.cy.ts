@@ -2,95 +2,38 @@ import {
   createCTMLButton,
   getAddArmPlusIcon,
   getAddCriteriaGroup,
-  getAddCriteriaList,
-  getAddCriteriaToSameGroup,
   getAddCriteriaToSameList,
-  getAddCriteriaToSubGroup,
-  getAgeGroup,
-  getArmCode,
-  getArmDescription,
-  getArmInternalId,
-  getCheckBoxArmIsSuspended,
-  getCheckBoxCancerCenterIRB,
-  getCheckBoxCoordinateCenter,
-  getCheckBoxIcon,
-  getCheckBoxLevelIsSuspended,
-  getCheckBoxPrimaryManagementGroup,
-  getCheckBoxPrincipalSponsor,
-  getClickPhase,
   getClinicalAge,
-  getClinicalDropdown,
-  getClinicalERStatus,
-  getClinicalHER2Status,
   getClinicalOncotreePrimaryDiagnosis,
-  getClinicalPRStatus,
-  getClinicalTMB,
   getCNVCall,
-  getCtmlStatusDropdown,
-  getDefaultTextMatchingCriteria,
-  getDefaultTrialEditorDropDown,
-  getDrugName,
   getDrugNamePlusIcon,
   getDrugNameTextBoxMultiple,
-  getEditMatchingCriteria,
   getEditMatchingCriteriaMultiple,
   getGenomicDropDown,
   getHugoSymbol,
   getLeftMenuComponent,
-  getLevelCode,
-  getLevelDescription,
-  getLevelInternalId,
-  getLongTitle,
-  getManagementGroupName,
   getManagementGroupNameTextBoxMultiple,
   getMatchCriteriaHeader,
-  getMatchingCriteriaTableHeader,
-  getMatchModalFooterButtons,
-  getMenuItemAnd,
-  getMenuItemClinical,
-  getMenuItemClinicalGenomic,
-  getMenuItemOr,
   getMultipleArm,
-  getNCTPurpose,
-  getPhaseDropdownList,
-  getPlusIcon,
-  getPreviewTextWindow,
   getPreviewWindow,
   getPrimaryManagementGroupPlusIcon,
-  getPrincipalInvestigator,
   getPriorTreatmentRequirementMultiple,
   getPriorTreatmentRequirementPlusIconMultiple,
   getProteinChange,
-  getProtocolNumber,
-  getProtocolStaffEmail,
-  getProtocolStaffFirstName,
-  getProtocolStaffInstitutionalName,
-  getProtocolStaffLastName,
   getProtocolStaffMultiple,
   getProtocolStaffPlusIcon,
-  getProtocolStaffRole,
-  getProtocolStaffStatus,
   getSaveMatchingCriteria,
-  getShortTitle,
-  getSiteName,
   getSiteNameMultiple,
   getSiteNamePlusIcon,
-  getSiteStatus,
-  getSponsorName,
   getSponsorNameMultiple,
   getSponsorNamePlusIcon,
   getSubGroup,
-  getSwitchGroupOperator,
-  getTrialId,
-  getTrialNickname,
   getTruncateButton,
   getVariantCategory,
   getVariantClassification,
   getWildType,
-  selectDraftCtmlStatus,
   selectTrialGroupButton, sendCTMLOkButton, sendCtmlToMatcher,
   trialEditorBackButton,
-  trialEditorExportCtml,
   trialEditorHeaderButtons,
   trialEditorLeftPanelList,
   trialEditorRadioButtons,
@@ -100,7 +43,6 @@ import {
   trialTableDialogueDeleteBtn, trialTableEdit,
   trialTableIdColumn, trialTableThreeDots, validateCtmlOkButton
 } from '../../../support/app.po';
-import {NCT03297606_CAPTUR} from "../../../fixtures/NCT03297606_CAPTUR"
 import {NCT03114319_TNO155} from "../../../fixtures/NCT03114319_TNO155"
 const { deleteDownloadsFolderBeforeAll } = require('cypress-delete-downloads-folder');
 import * as yaml from 'js-yaml';
@@ -119,26 +61,10 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
   const ctmlYaml = `./cypress/downloads/${yamlFile}`
 
    it('should "Delete" the existing NCT03114319_TN0155 as trialgroupx Admin', () => {
-     createCTMLButton().should('have.class','p-disabled')
-     selectTrialGroupButton().click()
-     trialGroupxAdmin().click()
-     let table = cy.get('table tr td')
-     table.each(($el) => {
-       let ee = $el.text()
-
-       if (ee.includes('NCT03114319_TN0155 TrialGroupx Admin role')) {
-         cy.wrap($el).prev().then(($prevEl) => {
-           cy.wrap($prevEl).click();
-         });
-         trialTableThreeDots().click();
-         trialTableDelete().click();
-         trialTableDialogueDeleteBtn().click();
-         return false;
-       }
-     })
+   cy.deleteExistingTrial('NCT03114319_TN0155 TrialGroupx Admin role')
    })
 
-  it('should enter values into the "Trial Editor Form" of "NCT03114319_TN0155" as Admin', () => {
+ it('should enter values into the "Trial Editor Form" of "NCT03114319_TN0155" as Admin', () => {
     createCTMLButton().should('not.have.class', 'p-disabled').click()
     cy.title().should('contain', 'CTIMS')
     trialEditorLeftPanelList().should('have.length', '9')
@@ -153,11 +79,9 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
       ctmlTestData.nct_purpose,
       ctmlTestData.status)
   })
- /* it('should Save Trial information values, click edit NCT03114319_TN0155 to re-enter, as Admin',() => {
-    cy.wait(1000);
+  it('should Save Trial information values, click edit NCT03114319_TN0155 to re-enter, as Admin',() => {
     cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
   })
-*/
   //**************Prior Treatment Requirement
   it('should enter the Prior Treatment Requirement values of NCT03114319_TN0155 as Admin', () => {
     trialEditorLeftPanelList().eq(1).should('contain','Prior Treatment Requirements').click()
@@ -168,20 +92,19 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
       }
     })
   });
-  /*it('should Save Prior Treatment Requirement values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+  it('should Save Prior Treatment Requirement values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
     cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
   })
-*/
  //!************** Age ***************
 
   it('should enter the Age values of NCT03114319_TN0155 as Admin', () => {
     trialEditorLeftPanelList().eq(2).should('contain','Age').click()
     cy.age(ctmlTestData.age)
   });
-  /*it('should Save Age values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+  it('should Save Age values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
     cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
-  })*/
-  //************** Drug List ***************
+  })
+  //!************** Drug List ***************
 
     it('should enter the Drug List values of NCT03114319_TN0155 as Admin', () => {
      trialEditorLeftPanelList().eq(3).should('contain','Drug List').click()
@@ -194,9 +117,9 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
      })
    });
 
-  /* it('should Save Drug List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+  it('should Save Drug List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
      cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
-   })*/
+   })
 
    //!************** Management Group List ***************
 
@@ -209,9 +132,9 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
      });
    })
 
-   /*it('should Save Management Group List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+  it('should Save Management Group List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
      cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
-   })*/
+   })
 
    //!************** Site List ***************
 
@@ -224,9 +147,9 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
      })
    });
 
-  /* it('should Save Site List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+  it('should Save Site List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
      cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
-   })*/
+   })
 
    //!************** Sponsor List ***************
 
@@ -239,9 +162,9 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
      });
    });
 
-  /* it('should Save Sponsor List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+ it('should Save Sponsor List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
      cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
-   })*/
+   })
 
    //!************** Staff List ***************
 
@@ -254,36 +177,22 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
      });
    });
 
-   /*it('should Save Staff List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+  it('should Save Staff List values, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
      cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
-   })*/
-//************ Arm 1  *****************
+   })
+//!************ Arm 1  *****************
   it('should enter the values in "Treatment List and Matching criteria modal" for Arm 1', () => {
     trialEditorLeftPanelList().eq(8).should('contain', 'Treatment List').click()
+    //delete the dose level
+    cy.get('#array-item-list-root_treatment_list_step_0_arm_0_dose_level').children().find('.pi-trash').click()
+
     cy.clickMultipleFunction(getAddArmPlusIcon(), ctmlTestData.treatment_list.step[0].arm.length - 1)
     const treatmentList = ctmlTestData.treatment_list.step[0].arm;
-    const doseLevels = treatmentList[0].dose_level;
-
     getMultipleArm().each(($input, index) => {
-      cy.log($input.attr('id'));
-      const arm = treatmentList[index];
       if(index === 0) {
-         cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
-         cy.wrap($input).find('.p-inputtext').eq(1).type(arm.arm_description);
-         cy.wrap($input).find('.p-inputtext').eq(2).type(arm.arm_internal_id.toString());
-         cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click();
-        cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]`).each(($input, doseIndex) => {
-          cy.log($input.attr('id'));
-          const dose = doseLevels[doseIndex];
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
-        });
-        //click first matching criteria link of each arm
+        cy.inputArmDoseLevel(ctmlTestData,$input, index)
         getEditMatchingCriteriaMultiple().eq(index).click()
-        //Validate the header
-        getMatchCriteriaHeader().should('contain', treatmentList[index].arm_code);
+       getMatchCriteriaHeader().should('contain', treatmentList[index].arm_code);
         getAddCriteriaGroup().click()
         //!******** OR ********************
         cy.clickParentAnd()
@@ -291,9 +200,10 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
         getTruncateButton().click()
         cy.clickAnd()
         cy.clickParentNode(1).click()
+        let clinicalValue = ctmlTestData.treatment_list.step[0].arm[0].match[0].or[0].and[0]
         cy.clickClinical()
-        getClinicalAge().type(ctmlTestData.treatment_list.step[0].arm[0].match[0].or[0].and[0].clinical.age_numerical)
-        getClinicalOncotreePrimaryDiagnosis().type(ctmlTestData.treatment_list.step[0].arm[0].match[0].or[0].and[0].clinical.oncotree_primary_diagnosis)
+        getClinicalAge().type(clinicalValue.clinical.age_numerical)
+        getClinicalOncotreePrimaryDiagnosis().type(clinicalValue.clinical.oncotree_primary_diagnosis)
         //Save after each subgroup and re-enter
         getSaveMatchingCriteria().click()
         getEditMatchingCriteriaMultiple().eq(index).click()
@@ -301,38 +211,38 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
         cy.clickParentNode(1).click()
         cy.clickOr()
         cy.clickParentNode(3).click()
-        cy.clickGenomic()
-        let orConditions = ctmlTestData.treatment_list.step[0].arm[0].match[0].or[0].and[1].or
-        cy.clickMultipleFunction(getAddCriteriaToSameList(), orConditions.length - 1)
-        cy.get('li:nth-child(1)>ul>li:nth-child(2)').find('.p-treenode-children>li')
-          .each((childElement, index) => {
-            if (Cypress.$(childElement).length > 0) {
-              cy.wrap(childElement).click() // click on each child element
-              let condition = orConditions[index % orConditions.length]; // get the corresponding and condition
+            cy.clickGenomic()
+           let orConditions = ctmlTestData.treatment_list.step[0].arm[0].match[0].or[0].and[1].or
+           cy.clickMultipleFunction(getAddCriteriaToSameList(), orConditions.length - 1)
+           cy.get('li:nth-child(1)>ul>li:nth-child(2)').find('.p-treenode-children>li')
+             .each((childElement, index) => {
+               if (Cypress.$(childElement).length > 0) {
+                 cy.wrap(childElement).click() // click on each child element
+                 let condition = orConditions[index % orConditions.length]; // get the corresponding and condition
 
-              Object.entries(condition.genomic).map(([key, value]) => {
-                if (key === 'cnv_call') {
-                  getCNVCall().type(value)
-                }
-                if (key === 'hugo_symbol') {
-                  getHugoSymbol().type(value)
-                }
-                if (key === 'variant_category') {
-                  getVariantCategory().click()
-                  getGenomicDropDown().contains(value).click()
-                }
-                if (key === 'protein_change') {
-                  getProteinChange().type(value)
-                }
-                if (key === 'variant_classification') {
-                  getVariantClassification().click()
-                  getGenomicDropDown().contains(value.replace(/_/g, ' ')).click()
-                }
-              })
-            } else {
-              return false;
-            }
-          })
+                 Object.entries(condition.genomic).map(([key, value]) => {
+                   if (key === 'cnv_call') {
+                     getCNVCall().type(value)
+                   }
+                   if (key === 'hugo_symbol') {
+                     getHugoSymbol().type(value)
+                   }
+                   if (key === 'variant_category') {
+                     getVariantCategory().click()
+                     getGenomicDropDown().contains(value).click()
+                   }
+                   if (key === 'protein_change') {
+                     getProteinChange().type(value)
+                   }
+                   if (key === 'variant_classification') {
+                     getVariantClassification().click()
+                     getGenomicDropDown().contains(value.replace(/_/g, ' ')).click()
+                   }
+                 })
+               } else {
+                 return false;
+               }
+             })
         //Save after each subgroup and re-enter
         getSaveMatchingCriteria().click()
         getEditMatchingCriteriaMultiple().eq(index).click()
@@ -343,7 +253,6 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
         cy.clickAnd()
         cy.clickParentNode(2).click()
         cy.clickClinical()
-//        cy.clickChildToggleArrowButton(2)
          getClinicalAge().type(ctmlTestData.treatment_list.step[0].arm[0].match[0].or[1].and[0].clinical.age_numerical)
         getClinicalOncotreePrimaryDiagnosis().type(ctmlTestData.treatment_list.step[0].arm[0].match[0].or[1].and[0].clinical.oncotree_primary_diagnosis)
         cy.clickParentNode(2).click()
@@ -353,7 +262,8 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
         let child2 = getSubGroup().contains('Genomic')
         child2.click()
         let secondGenomicChild = ctmlTestData.treatment_list.step[0].arm[0].match[0].or[1].and[1]
-              Object.entries(secondGenomicChild.genomic).map(([key, value]) => {
+       // cy.enterGenomicConditions(secondGenomicChild)
+          Object.entries(secondGenomicChild.genomic).map(([key, value]) => {
                 if (key === 'hugo_symbol') {
                   getHugoSymbol().type(value)
                 }
@@ -393,50 +303,18 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
     })
   })
 
-  /*it('should Save Arm 1, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+  it('should Save Arm 1, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
     cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
-  })*/
+  })
 
   //!************ Arm 2  *****************
 
   it('should enter the values in "Treatment List and Matching criteria modal" for Arm 2', () => {
     const treatmentList = ctmlTestData.treatment_list.step[0].arm;
-    const doseLevels = treatmentList[1].dose_level;
-
     getMultipleArm().each(($input, index) => {
-      cy.log($input.attr('id'));
-      const arm = treatmentList[index];
       if(index === 1) {
-        cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
-        cy.wrap($input).find('.p-inputtext').eq(1).type(arm.arm_description);
-        cy.wrap($input).find('.p-inputtext').eq(2).type(arm.arm_internal_id.toString());
-        cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click();
-        //click multiple dose
-        cy.clickMultiple(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]>div>.pi-plus-circle`, doseLevels.length)
-        cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]>div>div>div>div>#panel-children`).each(($input, doseIndex) => {
-          const dose = doseLevels[doseIndex];
-          cy.log(doseIndex.toString())
-          cy.log(JSON.stringify(doseLevels))
-          cy.log(JSON.stringify(doseLevels[doseIndex]));
-          cy.wait(1000)
-          if(doseIndex === 0) {
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
-          }
-          if(doseIndex === 1) {
-            cy.log(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`);
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
-          }
-        });
-
-        //click matching criteria link of each arm
+        cy.inputArmDoseLevelMultiple(ctmlTestData,$input, index)
         getEditMatchingCriteriaMultiple().eq(index).click()
-        //Validate the header
         getMatchCriteriaHeader().should('contain', treatmentList[index].arm_code);
         getAddCriteriaGroup().click()
         //!******** Clinical ********************
@@ -449,45 +327,16 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
         cy.clickParentNode(0).click()
         cy.clickOr()
         cy.clickParentNode(2).click()
-        cy.clickGenomic()
-//        cy.clickChildToggleArrowButton(2)
         let orConditions = ctmlTestData.treatment_list.step[0].arm[1].match[0].and[1].or
-        cy.clickMultipleFunction(getAddCriteriaToSameList(), orConditions.length - 1)
-        getSubGroup().find('.p-treenode-children>li')
-          .each((childElement, index) => {
-            cy.log(index.toString())
-            if (Cypress.$(childElement).length > 0) {
-              cy.wrap(childElement).click() // click on each child element
-              let condition = orConditions[index % orConditions.length]; // get the corresponding and condition
-              cy.log(orConditions.length.toString())
-              Object.entries(condition.genomic).map(([key, value]) => {
-                if (key === 'hugo_symbol') {
-                  getHugoSymbol().type(value)
-                }
-                if (key === 'variant_category') {
-                  getVariantCategory().click()
-                  getGenomicDropDown().contains(value).click()
-                }
-                if (key === 'protein_change') {
-                  getProteinChange().type(value)
-                }
-                if (key === 'variant_classification') {
-                  getVariantClassification().click()
-                  getGenomicDropDown().contains(value.replace(/_/g, ' ')).click()
-                }
-              })
-            } else {
-              return false;
-            }
-          })
+     cy.enterGenomicConditions(orConditions)
          getSaveMatchingCriteria().click()
       }
     })
   })
 
-  /*it('should Save Arm 2, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+  it('should Save Arm 2, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
     cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
-  })*/
+  })
 
 //!************ Arm 3  *****************
 
@@ -499,22 +348,8 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
       cy.log($input.attr('id'));
       const arm = treatmentList[index];
       if(index === 2) {
-        cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
-        cy.wrap($input).find('.p-inputtext').eq(1).type(arm.arm_description);
-        cy.wrap($input).find('.p-inputtext').eq(2).type(arm.arm_internal_id.toString());
-        cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click();
-        cy.get(`#array-item-list-root_treatment_list_step_0_arm_${index}_dose_level`).contains('Add Dose Level').click()
-        cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]`).each(($input, doseIndex) => {
-          const dose = arm.dose_level[doseIndex]
-          cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
-          cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
-          cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
-          cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
-        });
-
-        //click matching criteria link of each arm
+        cy.inputArmDoseLevel(ctmlTestData,$input, index)
         getEditMatchingCriteriaMultiple().eq(index).click()
-        //Validate the header
         getMatchCriteriaHeader().should('contain', treatmentList[index].arm_code);
         getAddCriteriaGroup().click()
         //!******** Clinical ********************
@@ -787,51 +622,19 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
     })
   })
 
-  /*it('should Save Arm 3, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
+  it('should Save Arm 3, click edit NCT03114319_TN0155 to re-enter as Admin ',() => {
     cy.clickSaveEditButtonForTrialGroupAdmin("NCT03114319_TN0155 TrialGroupx Admin role")
-  })*/
+  })
 
   //!************ Arm 4  *****************
 
   it('should enter the values in "Treatment List and Matching criteria modal" for Arm 4', () => {
      const treatmentList = ctmlTestData.treatment_list.step[0].arm;
-    const doseLevels = treatmentList[3].dose_level;
-
     getMultipleArm().each(($input, index) => {
       cy.log($input.attr('id'));
-      const arm = treatmentList[index];
       if(index === 3) {
-        cy.wrap($input).find('.p-inputtext').eq(0).type(arm.arm_code);
-        cy.wrap($input).find('.p-inputtext').eq(1).type(arm.arm_description);
-        cy.wrap($input).find('.p-inputtext').eq(2).type(arm.arm_internal_id.toString());
-        cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click();
-        //click multiple dose
-        cy.clickMultiple(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]>div>.pi-plus-circle`, doseLevels.length)
-
-        cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]>div>div>div>div>#panel-children`).each(($input, doseIndex) => {
-          const dose = doseLevels[doseIndex];
-          cy.log(doseIndex.toString())
-          cy.log(JSON.stringify(doseLevels))
-          cy.log(JSON.stringify(doseLevels[doseIndex]));
-          cy.wait(1000)
-          if(doseIndex === 0) {
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
-          }
-          if(doseIndex === 1) {
-            cy.log(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`);
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).type(dose.level_code);
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).type(dose.level_description);
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).type(dose.level_internal_id.toString());
-            cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
-          }
-        });
-
-        //click matching criteria link of each arm
+        cy.inputArmDoseLevelMultiple(ctmlTestData,$input, index)
         getEditMatchingCriteriaMultiple().eq(index).click()
-        //Validate the header
         getMatchCriteriaHeader().should('contain', treatmentList[index].arm_code);
         getAddCriteriaGroup().click()
         //!******** Clinical ********************
@@ -844,37 +647,8 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
         cy.clickParentNode(0).click()
         cy.clickOr()
         cy.clickParentNode(2).click()
-        cy.clickGenomic()
-//        cy.clickChildToggleArrowButton(2)
-        let orConditions = ctmlTestData.treatment_list.step[0].arm[3].match[0].and[1].or
-        cy.clickMultipleFunction(getAddCriteriaToSameList(), orConditions.length - 1)
-        getSubGroup().find('.p-treenode-children>li')
-          .each((childElement, index) => {
-            cy.log(index.toString())
-            if (Cypress.$(childElement).length > 0) {
-              cy.wrap(childElement).click() // click on each child element
-              let condition = orConditions[index % orConditions.length]; // get the corresponding and condition
-              cy.log(orConditions.length.toString())
-              Object.entries(condition.genomic).map(([key, value]) => {
-                if (key === 'hugo_symbol') {
-                  getHugoSymbol().type(value)
-                }
-                if (key === 'variant_category') {
-                  getVariantCategory().click()
-                  getGenomicDropDown().contains(value).click()
-                }
-                if (key === 'protein_change') {
-                  getProteinChange().type(value)
-                }
-                if (key === 'variant_classification') {
-                  getVariantClassification().click()
-                  getGenomicDropDown().contains(value.replace(/_/g, ' ')).click()
-                }
-              })
-            } else {
-              return false;
-            }
-          })
+        let orConditions = ctmlTestData.treatment_list.step[0].arm[index].match[0].and[1].or
+      cy.enterGenomicConditions(orConditions)
         getSaveMatchingCriteria().click()
       }
     })
