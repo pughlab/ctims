@@ -29,7 +29,7 @@ spec:
             path: "{{.Values.mountRoot}}/mongo/data"
             type: DirectoryOrCreate
       containers:
-        - image: "{{ .Values.docker.image }}:{{ .Values.git.ref }}"
+        - image: "{{ .Values.docker.image }}:6175e5ea2a168e84c034b27059328a39dd6e9eb2"
           name: ctimsweb
           imagePullPolicy: IfNotPresent
           ports:
@@ -44,7 +44,7 @@ spec:
               value: "https://ctims-web.{{ .Values.domain }}"
             - name: NEXTAUTH_API_URL
               value: "http://localhost:3333/api"
-        - image: "{{ .Values.docker.apiImage }}:{{ .Values.git.ref }}"
+        - image: "{{ .Values.docker.apiImage }}:6175e5ea2a168e84c034b27059328a39dd6e9eb2"
           name: ctimsapi
           imagePullPolicy: IfNotPresent
           ports:
@@ -75,7 +75,7 @@ spec:
               value: "http://localhost:5000/api"
         - image: "docker-registry.uhn.ca:443/matchminer-api:9378d778-7194-416b-8579-cb6cf52d51c4"
           name: mm-api
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Never
           ports:
             - containerPort: 5000
               name: mm-api
@@ -101,7 +101,7 @@ spec:
               value: "{{ .Values.ctimsdb.password }}"
         - image: "docker-registry.uhn.ca:443/matchminer-db:c65bc87c-750d-40fc-a383-14b4e3fd2443"
           name: mm-mongo
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Never
           ports:
             - containerPort: 27017
               name: mongo
