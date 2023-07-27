@@ -123,10 +123,10 @@ export const GenomicForm = (props: IFormProps) => {
           "High level amplification",
         ],
         "enum": [
-          "Heterozygous_deletion",
-          "Homozygous_deletion",
+          "Heterozygous deletion",
+          "Homozygous deletion",
           "Gain",
-          "High_level_amplification",
+          "High level amplification",
         ]
       },
       'wildtype': {
