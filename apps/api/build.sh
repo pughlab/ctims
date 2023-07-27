@@ -43,3 +43,7 @@ docker build \
   --label ca.uhn.techna.${PROJECT}.containerName=$CONTAINER_NAME \
   --label ca.uhn.techna.${PROJECT}.containerRole="backend" \
   $PROJECT_DIR
+
+docker save $CTIMS_API_CONTAINER_IMAGE_LOCATION:$GIT_REF -o $CTIMS_API_CONTAINER_IMAGE_NAME:$GIT_REF.tar
+ctr -n k8s.io image import $CTIMS_API_CONTAINER_IMAGE_NAME:$GIT_REF.tar
+rm $CTIMS_API_CONTAINER_IMAGE_NAME:$GIT_REF.tar
