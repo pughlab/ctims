@@ -25,3 +25,6 @@ docker build --no-cache  \
 	--label ca.uhn.techna.$PROJECT.ref=$GIT_REF \
 	--label ca.uhn.techna.$PROJECT.branch="$GIT_BRANCH" \
 	"$SELFDIR"
+
+docker save $CTIMS_WEB_CONTAINER_IMAGE_LOCATION:$GIT_REF -o $CTIMS_WEB_CONTAINER_IMAGE_LOCATION:$GIT_REF.tar
+ctr -n k8s.io image import $CTIMS_WEB_CONTAINER_IMAGE_LOCATION:$GIT_REF.tar
