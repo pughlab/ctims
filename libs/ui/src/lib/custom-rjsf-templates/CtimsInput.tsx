@@ -28,7 +28,7 @@ const CtimsInput = (props: WidgetProps) => {
     useEffect(() => {
       const currentURL = window.location.href;
 
-      if (label === 'Trial ID' && currentURL.includes('/trials/create')) {
+      if (label === 'Nickname' && currentURL.includes('/trials/create')) {
        onChange('')
       }
     }, [])
