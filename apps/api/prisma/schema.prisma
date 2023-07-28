@@ -56,7 +56,7 @@ model trial {
   event                  event[]
   trial_group            trial_group?  @relation(fields: [trial_groupId], references: [id])
   trial_groupId          Int?
-  protocol_no            String
+  protocol_no            String?
   // This is trial matching status
   trial_status           trial_status?
 }
