@@ -80,7 +80,7 @@ const SendCtmlToMatchminerDialog = (props: SendCtmlDialogProps) => {
                content={errorContent()} />}
       </div>
       <div className={styles['dialog-content']}>
-        Are you sure you want to send CTML to Matcher? Please ensure all mandatory fields are complete to optimize match results.'
+        Are you sure you want to send CTML to Matcher? Please ensure all mandatory fields are complete to optimize match results.
       </div>
     </Dialog>
   )
