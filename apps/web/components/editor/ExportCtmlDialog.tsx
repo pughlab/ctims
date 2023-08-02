@@ -174,7 +174,6 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
           }}
           content={errorContent}
         />)}
-
       </div>
       {isGroupAdmin ? <div style={{marginLeft: '30px'}}>
         <h2>Export As</h2>
@@ -193,8 +192,13 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
           />
           <label htmlFor="yaml" className={styles['radio-btn']}>YAML</label>
         </div>
-      </div> : null}
-
+      </div> :
+        <>
+        {errors.length === 0 && (<div style={{marginLeft: '30px'}}>
+          All mandatory fields are complete!
+        </div>)}
+        </>
+      }
     </Dialog>
   )
 }
