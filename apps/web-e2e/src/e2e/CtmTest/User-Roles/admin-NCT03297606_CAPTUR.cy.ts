@@ -107,6 +107,7 @@ const { deleteDownloadsFolderBeforeAll } = require('cypress-delete-downloads-fol
 import * as yaml from 'js-yaml';
 import baseClass from "../../Base/baseClass.cy";
 import dateClass from "../../Base/dateClass.cy";
+import {enterTrialEditorFormData} from "../../Base/trialEditorReusableFunction.cy";
 let exportJsonFile = 'NCT03297606_2023-05-12.json';
 let split = exportJsonFile.substring(0,11); //grab only NCT id
 let jsonFile = split.concat('_', dateClass.currentDate()).concat('.json');
@@ -123,73 +124,10 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
    cy.deleteExistingTrial('NCT03297606_CAPTUR TrialGroupx Admin role')
   })
   it('should enter the Trial Editor form with valid test data', () => {
-    createCTMLButton().should('not.have.class', 'p-disabled').click()
-    cy.title().should('contain', 'CTIMS')
-    trialEditorLeftPanelList().should('have.length', '9')
-     cy.trialInformation(ctmlTestData.nct_id,
-       "NCT03297606_CAPTUR TrialGroupx Admin role",
-       "Srimathi",
-       "Draft",
-       ctmlTestData.long_title,
-       ctmlTestData.short_title,
-       ctmlTestData.phase,
-       ctmlTestData.protocol_no,
-       ctmlTestData.nct_purpose,
-       ctmlTestData.status)
-
-     // Prior treatment requirements
-     cy.clickMultipleFunction(getPriorTreatmentRequirementPlusIconMultiple(),ctmlTestData.prior_treatment_requirements.length)
-     getPriorTreatmentRequirementMultiple().each((input, index) => {
-       if (ctmlTestData.prior_treatment_requirements[index]) {
-         cy.wrap(input).type(ctmlTestData.prior_treatment_requirements[index]);
-       }
-     })
-     //Age
-     cy.age(ctmlTestData.age)
-
-     //Drug List
-     cy.clickMultipleFunction(getDrugNamePlusIcon(),ctmlTestData.drug_list.drug.length - 1)
-
-     getDrugNameTextBoxMultiple().each((input, index) => {
-       if (ctmlTestData.drug_list.drug[index]) {
-         cy.wrap(input).type(ctmlTestData.drug_list.drug[index].drug_name);
-       }
-     })
-
-     //Management Group List
-     cy.clickMultipleFunction(getPrimaryManagementGroupPlusIcon(),ctmlTestData.management_group_list.management_group.length - 1)
-     getManagementGroupNameTextBoxMultiple().each(($input, index) => {
-       cy.wrap($input).find('.p-dropdown').click().contains(ctmlTestData.management_group_list.management_group[index].management_group_name).click();
-       cy.wrap($input).find('.p-selectbutton').contains(ctmlTestData.management_group_list.management_group[index].is_primary).click();
-     });
-
-     //Site List - done
-     cy.clickMultipleFunction(getSiteNamePlusIcon(),ctmlTestData.site_list.site.length - 1)
-     getSiteNameMultiple().each(($input, index) => {
-       cy.wrap($input).find('.p-dropdown').eq(0).click().contains(ctmlTestData.site_list.site[index].site_name).click();
-       cy.wrap($input).find('.p-dropdown').eq(1).click().contains(ctmlTestData.site_list.site[index].site_status).click();
-       cy.wrap($input).find('.p-selectbutton').eq(0).click().contains(ctmlTestData.site_list.site[index].coordinating_center).click();
-       cy.wrap($input).find('.p-selectbutton').eq(1).click().contains(ctmlTestData.site_list.site[index].uses_cancer_center_irb).click();
-     });
-
-     //Sponsor List array of 5 values - done
-     cy.clickMultipleFunction(getSponsorNamePlusIcon(), ctmlTestData.sponsor_list.sponsor.length - 1)
-     getSponsorNameMultiple().each(($input, index) => {
-       cy.wrap($input).find('.p-inputtext').type(ctmlTestData.sponsor_list.sponsor[index].sponsor_name)
-       cy.wrap($input).find('.p-selectbutton').contains(ctmlTestData.sponsor_list.sponsor[index].is_principal_sponsor).click();
-     });
-
-     //Staff List - Done
-     cy.clickMultipleFunction(getProtocolStaffPlusIcon,
-       ctmlTestData.staff_list.protocol_staff.length - 1);
-     getProtocolStaffMultiple().each(($input, index) => {
-       cy.log($input.attr('id'));
-       cy.wrap($input).find('.p-inputtext').eq(0).type(ctmlTestData.staff_list.protocol_staff[index].first_name);
-       cy.wrap($input).find('.p-inputtext').eq(1).type(ctmlTestData.staff_list.protocol_staff[index].last_name);
-       cy.wrap($input).find('.p-inputtext').eq(2).type(ctmlTestData.staff_list.protocol_staff[index].email_address);
-       cy.wrap($input).find('.p-dropdown').eq(0).click().contains(ctmlTestData.staff_list.protocol_staff[index].institution_name).click();
-       cy.wrap($input).find('.p-dropdown').eq(1).click().contains(ctmlTestData.staff_list.protocol_staff[index].staff_role).click();
-     });
+    enterTrialEditorFormData(ctmlTestData,
+      "NCT03297606_CAPTUR TrialGroupx Admin role",
+      "Srimathi",
+      "Draft")
   })
 
 //!************ Arm 1  *****************

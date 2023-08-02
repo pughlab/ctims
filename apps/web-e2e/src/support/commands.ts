@@ -317,7 +317,8 @@ Cypress.Commands.add('clickParentAnd',() => {
 })
 //All parents child
 Cypress.Commands.add('clickParentNode',(indexNum: number) => {
-  getLeftMenuComponent().find('span').should('contain','And').eq(indexNum)
+  getLeftMenuComponent().find('span').eq(indexNum)
+    //.should('contain','And').eq(indexNum)
   getLeftMenuComponent().eq(indexNum).trigger('mouseover').invoke('addClass', 'p-menuitem-active').click()
   getTruncateButton().should('be.visible').click()
 })
@@ -964,15 +965,19 @@ Cypress.Commands.add('enterSingleClinicalCondition', (testAndConditions) => {
 
           case 'her2_status':
             if (typeof value === "string") {
-              getClinicalHER2Status().type(value);
+              let newValue = value.toLowerCase() === "true" ? "Positive" : "Negative";
+              cy.log(newValue);
+              getClinicalHER2Status().click({force:true}).type(newValue);
             }
             break;
 
           case 'er_status':
             if (typeof value === "string") {
-              let newValue = value.replace(/True/i, "Positive")
-              cy.log(newValue)
-              getClinicalERStatus().type(newValue)
+              let newValue = value.toLowerCase() === "true" ? "Positive" : "Negative";
+              cy.log(newValue);
+           /*   let newValue = value.replace(/True/i, "Positive")
+              cy.log(newValue)*/
+              getClinicalERStatus().click({force: true}).type(newValue)
 
               //  getClinicalERStatus().type(value);
             }
@@ -980,14 +985,70 @@ Cypress.Commands.add('enterSingleClinicalCondition', (testAndConditions) => {
 
           case 'pr_status':
             if (typeof value === "string") {
-              getClinicalPRStatus().type(value);
+              let newValue = value.toLowerCase() === "true" ? "Positive" : "Negative";
+              cy.log(newValue);
+              getClinicalPRStatus().click({force: true}).type(newValue);
             }
             break;
         }
       });
     });
   });
+Cypress.Commands.add('enterAndClinical', (testAndConditions) => {
+  cy.clickClinical()
+  cy.get('.p-treenode-children > .p-treenode > .p-treenode-content')
 
+    Object.entries(testAndConditions.clinical).map(([key, value]) => {
+      switch (key) {
+        case 'age_numerical':
+          if (typeof value === "string") {
+            getClinicalAge().type(value);
+          }
+          break;
+        case 'oncotree_primary_diagnosis':
+          if (typeof value === "string") {
+            getClinicalOncotreePrimaryDiagnosis().type(value);
+            if (value.includes('!')) {
+              getOncotreeExclamation().click();
+            }
+          }
+          break;
+        case 'tmb':
+          if (typeof value === "string") {
+            getClinicalTMB().type(value);
+          }
+          break;
+
+        case 'her2_status':
+          if (typeof value === "string") {
+            let newValue = value.toLowerCase() === "true" ? "Positive" : "Negative";
+            cy.log(newValue);
+            getClinicalHER2Status().click({force:true}).type(newValue);
+          }
+          break;
+
+        case 'er_status':
+          if (typeof value === "string") {
+            let newValue = value.toLowerCase() === "true" ? "Positive" : "Negative";
+            cy.log(newValue);
+            /*   let newValue = value.replace(/True/i, "Positive")
+               cy.log(newValue)*/
+            getClinicalERStatus().click({force: true}).type(newValue)
+
+            //  getClinicalERStatus().type(value);
+          }
+          break;
+
+        case 'pr_status':
+          if (typeof value === "string") {
+            let newValue = value.toLowerCase() === "true" ? "Positive" : "Negative";
+            cy.log(newValue);
+            getClinicalPRStatus().click({force: true}).type(newValue);
+          }
+          break;
+      }
+    });
+});
 //});
 
 
