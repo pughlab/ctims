@@ -11,7 +11,7 @@ import {RegistryWidgetsType, ValidationData} from "@rjsf/utils";
 import {JSONSchema7} from "json-schema";
 import localValidator from "@rjsf/validator-ajv8";
 import {IFormProps} from "../MatchingMenuAndForm";
-import {OperatorDropdown} from "./OperatorDropdown";
+import { OperatorDropdown, OperatorOptions } from "./OperatorDropdown";
 import {TitleContainer} from "./TitleContainer";
 import {Theme as PrimeTheme} from "../../primereact";
 import type Form from "@rjsf/core";
@@ -21,6 +21,8 @@ import CtimsInput from "../../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../../custom-rjsf-templates/CtimsDropdown";
 import {CtimsDialogContext, CtimsDialogContextType} from "../CtimsMatchDialog";
 import CtimsInputWithExcludeToggle from '../../custom-rjsf-templates/CtimsInputWithExcludeToggle';
+import TreeNode from "primereact/treenode";
+import { findArrayContainingKeyInsideATree, getCurrentOperator } from "../helpers";
 
 const RjsfForm = withTheme(PrimeTheme)
 
@@ -42,7 +44,7 @@ const formContainerStyle: CSSProperties = {
 }
 
 export const ClinicalForm = (props: IFormProps) => {
-  const {node} = props
+  const {node, rootNodes} = props
   const nk = node.key as string;
   console.log('ClinicalForm node: ', node)
 
@@ -158,9 +160,15 @@ export const ClinicalForm = (props: IFormProps) => {
     dispatch(operatorChange({operator: codeLowerCase, nodeKey: node.key as string, location: 'form'}));
   }
 
+
+  const getCurrentOperatorHook = () => {
+    return getCurrentOperator(rootNodes, node);
+  }
+
+
   return (
     <div style={formContainerStyle}>
-      <OperatorDropdown onOperatorChange={onOperatorChange} />
+      <OperatorDropdown onOperatorChange={onOperatorChange} getCurrentOperator={getCurrentOperatorHook} selectedNode={node} />
       <div>
         <TitleContainer title="Clinical" node={node} />
       </div>

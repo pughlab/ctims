@@ -2,6 +2,7 @@ import TreeNode from "primereact/treenode";
 import {EComponentType} from "./EComponentType";
 import { v4 as uuidv4 } from 'uuid';
 import {ErrorSchema, RJSFValidationError} from "@rjsf/utils";
+import { OperatorOptions } from "./forms/OperatorDropdown";
 
 interface JsonObject {
   [key: string]: any;
@@ -240,4 +241,16 @@ export const extractErrors = (errors: RJSFValidationError[]): string[] => {
   }
 
   return errorStrings;
+}
+
+export const getCurrentOperator = (rootNodes: TreeNode[], currentNode: TreeNode) => {
+  if (currentNode && rootNodes.length > 0) {
+    const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], currentNode.key as string);
+    if (parentNode && parentNode.label) {
+      if (parentNode.label.toLowerCase() === 'or') {
+        return OperatorOptions.OR;
+      }
+    }
+  }
+  return OperatorOptions.AND;
 }

@@ -20,6 +20,7 @@ import CtimsErrorListTemplate from "../../custom-rjsf-templates/CtimsErrorListTe
 import CtimsInput from "../../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../../custom-rjsf-templates/CtimsDropdown";
 import {CtimsDialogContext, CtimsDialogContextType} from "../CtimsMatchDialog";
+import { getCurrentOperator } from "../helpers";
 
 const RjsfForm = withTheme(PrimeTheme)
 
@@ -41,7 +42,7 @@ const formContainerStyle: CSSProperties = {
 }
 
 export const GenomicForm = (props: IFormProps) => {
-  const {node} = props
+  const {node, rootNodes} = props
   const nk = node.key as string;
   console.log('GenomicForm node: ', node)
 
@@ -359,9 +360,13 @@ export const GenomicForm = (props: IFormProps) => {
     dispatch(operatorChange({operator: codeLowerCase, nodeKey: node.key as string, location: 'form'}));
   }
 
+  const getCurrentOperatorHook = () => {
+    return getCurrentOperator(rootNodes, node);
+  }
+
   return (
     <div style={formContainerStyle}>
-      <OperatorDropdown onOperatorChange={onOperatorChange} />
+      <OperatorDropdown onOperatorChange={onOperatorChange} getCurrentOperator={getCurrentOperatorHook} selectedNode={node} />
       <div>
         <TitleContainer title="Genomic" node={node} />
       </div>
