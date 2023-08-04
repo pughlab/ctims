@@ -161,14 +161,17 @@ export const ClinicalForm = (props: IFormProps) => {
   }
 
 
-  const getCurrentOperatorHook = () => {
+  /**
+   * This function is used to get the current operator for the node.
+   */
+  const useCurrentOperator = () => {
     return getCurrentOperator(rootNodes, node);
   }
 
 
   return (
     <div style={formContainerStyle}>
-      <OperatorDropdown onOperatorChange={onOperatorChange} getCurrentOperator={getCurrentOperatorHook} selectedNode={node} />
+      <OperatorDropdown onOperatorChange={onOperatorChange} getCurrentOperator={useCurrentOperator} selectedNode={node} />
       <div>
         <TitleContainer title="Clinical" node={node} />
       </div>
