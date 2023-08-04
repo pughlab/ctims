@@ -159,9 +159,9 @@ const Results = () => {
             <Column field="trialId" header="ID"></Column>
             <Column field="nickname" header="Nickname"></Column>
             <Column field="principal_investigator" header="Principal Investigator"></Column>
-            <Column field="trialStatus" header="Match Status" sortable></Column>
             <Column field="createdAt" header="Created on" dataType="date"></Column>
             <Column field="updatedAt" header="Modified on" dataType="date"></Column>
+            <Column field="trialStatus" header="Match Status" sortable></Column>
             <Column field="trialRetCount" header="Match Results"></Column>
             <Column field="matchedDate" header="Match Date" dataType="date"></Column>
             <Column field="download" header="Download" dataType="boolean" style={{minWidth: '6rem'}}
