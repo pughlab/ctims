@@ -139,7 +139,7 @@ const Results = () => {
   const postProcessCSVData = (data: any) => {
     for (let cur of data) {
       cur.trialId = trialSelected.trialId;
-      cur.trialName = trialSelected.nickname;
+      cur.trialName = cur.short_title;
       cur.matchDate = trialSelected.matchedDate;
     }
     return data;
