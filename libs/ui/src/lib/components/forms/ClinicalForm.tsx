@@ -171,7 +171,10 @@ export const ClinicalForm = (props: IFormProps) => {
 
   return (
     <div style={formContainerStyle}>
-      <OperatorDropdown onOperatorChange={onOperatorChange} getCurrentOperator={useCurrentOperator} selectedNode={node} />
+      <OperatorDropdown
+        onOperatorChange={onOperatorChange}
+        getCurrentOperator={useCurrentOperator}
+        selectedNode={node} />
       <div>
         <TitleContainer title="Clinical" node={node} />
       </div>

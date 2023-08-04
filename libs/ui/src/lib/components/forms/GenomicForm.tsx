@@ -360,13 +360,19 @@ export const GenomicForm = (props: IFormProps) => {
     dispatch(operatorChange({operator: codeLowerCase, nodeKey: node.key as string, location: 'form'}));
   }
 
-  const getCurrentOperatorHook = () => {
+  /**
+   * This function is used to get the current operator for the node.
+   */
+  const useCurrentOperator = () => {
     return getCurrentOperator(rootNodes, node);
   }
 
   return (
     <div style={formContainerStyle}>
-      <OperatorDropdown onOperatorChange={onOperatorChange} getCurrentOperator={getCurrentOperatorHook} selectedNode={node} />
+      <OperatorDropdown
+        onOperatorChange={onOperatorChange}
+        getCurrentOperator={useCurrentOperator}
+        selectedNode={node} />
       <div>
         <TitleContainer title="Genomic" node={node} />
       </div>
