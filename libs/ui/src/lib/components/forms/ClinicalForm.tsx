@@ -162,7 +162,7 @@ export const ClinicalForm = (props: IFormProps) => {
     <div style={formContainerStyle}>
       <OperatorDropdown onOperatorChange={onOperatorChange} />
       <div>
-        <TitleContainer title="Clinical" node={node} />
+        <TitleContainer title="Clinical" node={node} isAddEnabled />
       </div>
       <div>
         <RjsfForm ref={clinicalFormRef}

@@ -1,4 +1,4 @@
-import React, {CSSProperties, useContext, useEffect, useRef} from "react";
+import React, {CSSProperties, useContext, useEffect, useRef, useState} from "react";
 import Form, {withTheme} from "@rjsf/core";
 import {RegistryWidgetsType, ValidationData} from "@rjsf/utils";
 import {useDispatch} from "react-redux";
@@ -20,6 +20,8 @@ import CtimsErrorListTemplate from "../../custom-rjsf-templates/CtimsErrorListTe
 import CtimsInput from "../../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../../custom-rjsf-templates/CtimsDropdown";
 import {CtimsDialogContext, CtimsDialogContextType} from "../CtimsMatchDialog";
+import { Checkbox } from 'primereact/checkbox';
+
 
 const RjsfForm = withTheme(PrimeTheme)
 
@@ -40,10 +42,18 @@ const formContainerStyle: CSSProperties = {
   overflowY: 'scroll'
 }
 
+const matchAllContainerStyle: CSSProperties = {
+  marginLeft: '20px',
+  marginTop: '16px',
+  marginBottom: '16px'
+}
+
 export const GenomicForm = (props: IFormProps) => {
   const {node} = props
   const nk = node.key as string;
   console.log('GenomicForm node: ', node)
+
+  const [matchAllChecked, setMatchAllChecked] = useState<boolean>(false);
 
   const {setSaveBtnState} = useContext(CtimsDialogContext) as CtimsDialogContextType;
 
@@ -51,7 +61,22 @@ export const GenomicForm = (props: IFormProps) => {
 
   useEffect(() => {
     node.data.formValid = false;
+
+    if (node.data.formData.match_all) {
+      setMatchAllChecked(true);
+    }
+
   }, [node]);
+
+  useEffect(() => {
+    if (matchAllChecked) {
+      validateFormFromRef();
+      node.data.formData = {
+        match_all: true
+      }
+      dispatch(formChange());
+    }
+  }, [matchAllChecked]);
 
   const dispatch = useDispatch()
 
@@ -334,10 +359,15 @@ export const GenomicForm = (props: IFormProps) => {
     },
   }
 
-  const onFormChange = (data: any) => {
+  const validateFormFromRef = (data?: any) => {
     const form: Form = genomicFormRef.current;
     form?.validateForm();
-    const errorDetails: ValidationData<any> = form?.validate(data.formData);
+    let errorDetails: ValidationData<any>;
+    if (data) {
+      errorDetails = form?.validate(data.formData);
+    } else {
+      errorDetails = form?.validate(form.state.formData);
+    }
     console.log('onFormChange errorDetails: ', errorDetails);
     if (errorDetails?.errors.length > 0) {
       node.data.formValid = false;
@@ -348,6 +378,14 @@ export const GenomicForm = (props: IFormProps) => {
       node.data.formValid = true;
       dispatch(deleteMatchDialogError(nk));
       setSaveBtnState(false)
+    }
+  }
+
+  const onFormChange = (data: any) => {
+    validateFormFromRef(data);
+
+    if (!matchAllChecked) {
+      delete data.formData.match_all;
     }
     node.data.formData = data.formData;
     dispatch(formChange());
@@ -363,10 +401,15 @@ export const GenomicForm = (props: IFormProps) => {
     <div style={formContainerStyle}>
       <OperatorDropdown onOperatorChange={onOperatorChange} />
       <div>
-        <TitleContainer title="Genomic" node={node} />
+        <TitleContainer title="Genomic" isAddEnabled={!matchAllChecked} node={node} />
       </div>
       <div>
+        <div style={matchAllContainerStyle}>
+          <Checkbox inputId="matchAllChkb" onChange={e => setMatchAllChecked(e.checked)} checked={matchAllChecked}></Checkbox>
+          <label htmlFor="matchAllChkb" style={{marginLeft: '10px'}}>Match with all available genomic criteria</label>
+        </div>
         <RjsfForm ref={genomicFormRef}
+                  disabled={matchAllChecked}
                   schema={genomicFormSchema as JSONSchema7}
                   templates={formTemplates}
                   formData={node.data.formData}
