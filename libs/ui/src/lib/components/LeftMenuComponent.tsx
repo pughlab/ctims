@@ -335,6 +335,20 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     }
   }
 
+  const isGenomicDisabled = () => {
+    let isDisabled = false;
+    const {children} = selectedNode;
+    if (children && children.length > 0) {
+      children.forEach((child: any) => {
+        if (child.label === 'Genomic' && child.data.formData.match_all) {
+          isDisabled = true;
+          return;
+        }
+      })
+    }
+    return isDisabled;
+  }
+
   const nodeTemplate = (node: TreeNode) => {
 
     const tieredMenuModel = [
@@ -354,9 +368,12 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
             command: () => {
               addCriteriaToSameList(selectedNode.key as string, 'Genomic');
             },
-            icon: 'genomic-icon in-menu'
-          }
-        ]
+            icon: 'genomic-icon in-menu',
+            disabled: isGenomicDisabled()
+          },
+
+        ],
+
 
       },
       {

@@ -70,11 +70,13 @@ export const GenomicForm = (props: IFormProps) => {
 
   useEffect(() => {
     if (matchAllChecked) {
-      validateFormFromRef();
+      noErrorsInFormDispatch();
       node.data.formData = {
         match_all: true
       }
       dispatch(formChange());
+    } else {
+      validateFormFromRef();
     }
   }, [matchAllChecked]);
 
@@ -370,15 +372,23 @@ export const GenomicForm = (props: IFormProps) => {
     }
     console.log('onFormChange errorDetails: ', errorDetails);
     if (errorDetails?.errors.length > 0) {
-      node.data.formValid = false;
-      const payload = {[nk]: true};
-      dispatch(setMatchDialogErrors(payload));
+      errorsInFormDispatch();
     }
     if (errorDetails?.errors.length === 0) {
-      node.data.formValid = true;
-      dispatch(deleteMatchDialogError(nk));
-      setSaveBtnState(false)
+      noErrorsInFormDispatch();
     }
+  }
+
+  const noErrorsInFormDispatch = () => {
+    node.data.formValid = true;
+    dispatch(deleteMatchDialogError(nk));
+    setSaveBtnState(false)
+  }
+
+  const errorsInFormDispatch = () => {
+    node.data.formValid = false;
+    const payload = {[nk]: true};
+    dispatch(setMatchDialogErrors(payload));
   }
 
   const onFormChange = (data: any) => {
