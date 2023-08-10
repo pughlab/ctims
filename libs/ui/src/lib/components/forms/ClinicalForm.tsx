@@ -1,28 +1,28 @@
 import React, {CSSProperties, useContext, useEffect, useRef} from "react";
 import {
   deleteMatchDialogError,
-  formChange, operatorChange,
+  formChange,
+  operatorChange,
   setMatchDialogErrors
 } from "../../../../../../apps/web/store/slices/modalActionsSlice";
 import {useDispatch} from "react-redux";
 import CtimsMatchDialogObjectFieldTemplate from "../../custom-rjsf-templates/CtimsMatchDialogObjectFieldTemplate";
+import type Form from "@rjsf/core";
 import {withTheme} from "@rjsf/core";
 import {RegistryWidgetsType, ValidationData} from "@rjsf/utils";
 import {JSONSchema7} from "json-schema";
 import localValidator from "@rjsf/validator-ajv8";
 import {IFormProps} from "../MatchingMenuAndForm";
-import { OperatorDropdown, OperatorOptions } from "./OperatorDropdown";
+import {OperatorDropdown} from "./OperatorDropdown";
 import {TitleContainer} from "./TitleContainer";
 import {Theme as PrimeTheme} from "../../primereact";
-import type Form from "@rjsf/core";
 import CtimsFieldTemplate from "../../custom-rjsf-templates/CtimsFieldTemplate";
 import CtimsErrorListTemplate from "../../custom-rjsf-templates/CtimsErrorListTemplate";
 import CtimsInput from "../../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../../custom-rjsf-templates/CtimsDropdown";
 import {CtimsDialogContext, CtimsDialogContextType} from "../CtimsMatchDialog";
 import CtimsInputWithExcludeToggle from '../../custom-rjsf-templates/CtimsInputWithExcludeToggle';
-import TreeNode from "primereact/treenode";
-import { findArrayContainingKeyInsideATree, getCurrentOperator } from "../helpers";
+import {getCurrentOperator} from "../helpers";
 
 const RjsfForm = withTheme(PrimeTheme)
 
