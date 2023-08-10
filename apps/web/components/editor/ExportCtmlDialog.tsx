@@ -122,7 +122,7 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
       }
       axios.request({
         method: 'post',
-        url: `/trials/${trialId}/export`,
+        url: `/trials/${trialId}/export/${format}`,
         headers
       });
     }

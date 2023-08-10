@@ -14,6 +14,7 @@ const RjsfForm = withTheme(PrimeTheme)
 
 export interface IFormProps {
   node: TreeNode;
+  rootNodes: TreeNode[];
 }
 
 export interface IRootNode {
@@ -31,6 +32,7 @@ const MatchingMenuAndForm = (props: any) => {
   const [componentType, setComponentType] = useState<IComponentType>({type: EComponentType.None, node: {}});
   const [isEmpty, setIsEmpty] = useState(true);
   const [buildRootNodeParams, setBuildRootNodeParams] = useState<IRootNode>({rootLabel: '', firstChildLabel: ''});
+  const [rootNodes, setRootNodes] = useState<TreeNode[]>([]);
 
   const AddCriteriaButton = (props: {addCriteriaGroupClicked: () => void}) => {
     const {addCriteriaGroupClicked} = props;
@@ -84,9 +86,9 @@ const MatchingMenuAndForm = (props: any) => {
   return (
     <>
       <div className={styles.matchingMenuAndFormContainer}>
-        <LeftMenuComponent onTreeNodeClick={treeNodeClicked} rootNodesProp={buildRootNodeParams} />
+        <LeftMenuComponent onTreeNodeClick={treeNodeClicked} rootNodesProp={buildRootNodeParams} rootNodes={rootNodes} setRootNodes={setRootNodes} />
         <div className={styles.matchingCriteriaFormContainer}>
-          {isEmpty ? <EmptyForm addCriteriaGroupClicked={addCriteriaGroupClicked} /> : <ComponentToRender node={componentType.node}/>}
+          {isEmpty ? <EmptyForm addCriteriaGroupClicked={addCriteriaGroupClicked} /> : <ComponentToRender node={componentType.node} rootNodes={rootNodes} />}
         </div>
       </div>
     </>

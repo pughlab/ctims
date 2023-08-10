@@ -21,6 +21,7 @@ import CtimsInput from "../../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../../custom-rjsf-templates/CtimsDropdown";
 import {CtimsDialogContext, CtimsDialogContextType} from "../CtimsMatchDialog";
 import { Checkbox } from 'primereact/checkbox';
+import { getCurrentOperator } from "../helpers";
 
 
 const RjsfForm = withTheme(PrimeTheme)
@@ -49,7 +50,7 @@ const matchAllContainerStyle: CSSProperties = {
 }
 
 export const GenomicForm = (props: IFormProps) => {
-  const {node} = props
+  const {node, rootNodes} = props
   const nk = node.key as string;
   // console.log('GenomicForm node: ', node)
 
@@ -412,9 +413,19 @@ export const GenomicForm = (props: IFormProps) => {
     dispatch(operatorChange({operator: codeLowerCase, nodeKey: node.key as string, location: 'form'}));
   }
 
+  /**
+   * This function is used to get the current operator for the node.
+   */
+  const useCurrentOperator = () => {
+    return getCurrentOperator(rootNodes, node);
+  }
+
   return (
     <div style={formContainerStyle}>
-      <OperatorDropdown onOperatorChange={onOperatorChange} />
+      <OperatorDropdown
+        onOperatorChange={onOperatorChange}
+        getCurrentOperator={useCurrentOperator}
+        selectedNode={node} />
       <div>
         <TitleContainer title="Genomic" isAddEnabled={!matchAllChecked} node={node} />
       </div>
