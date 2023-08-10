@@ -176,7 +176,7 @@ export const ClinicalForm = (props: IFormProps) => {
         getCurrentOperator={useCurrentOperator}
         selectedNode={node} />
       <div>
-        <TitleContainer title="Clinical" node={node} />
+        <TitleContainer title="Clinical" node={node} isAddEnabled />
       </div>
       <div>
         <RjsfForm ref={clinicalFormRef}
