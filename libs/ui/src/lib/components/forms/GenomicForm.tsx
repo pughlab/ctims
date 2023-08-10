@@ -51,7 +51,7 @@ const matchAllContainerStyle: CSSProperties = {
 export const GenomicForm = (props: IFormProps) => {
   const {node} = props
   const nk = node.key as string;
-  console.log('GenomicForm node: ', node)
+  // console.log('GenomicForm node: ', node)
 
   const [matchAllChecked, setMatchAllChecked] = useState<boolean>(false);
 
@@ -66,6 +66,10 @@ export const GenomicForm = (props: IFormProps) => {
       setMatchAllChecked(true);
     }
 
+    return () => {
+      setMatchAllChecked(false);
+    }
+
   }, [node]);
 
   useEffect(() => {
@@ -77,6 +81,7 @@ export const GenomicForm = (props: IFormProps) => {
       dispatch(formChange());
     } else {
       validateFormFromRef();
+      dispatch(formChange());
     }
   }, [matchAllChecked]);
 
