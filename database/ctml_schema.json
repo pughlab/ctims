@@ -172,7 +172,8 @@
                     "The Ottawa Hospital Cancer Centre",
                     "Juravinski Cancer Centre at Hamilton Health Sciences",
                     "Odette Cancer Centre - Sunnybrook Health Sciences Centre",
-                    "Mount Sinai Hospital"
+                    "Mount Sinai Hospital",
+                    "Cross Cancer Institute"
                   ],
                   "description":"The hospital/clinic conducting the trial (study site(s)) in Canada. Please input the full name of the hospital/clinic site. If there is more than one site, please list each hospital/site"
                 },
@@ -214,7 +215,8 @@
                     "The Ottawa Hospital Cancer Centre",
                     "Juravinski Cancer Centre at Hamilton Health Sciences",
                     "Odette Cancer Centre - Sunnybrook Health Sciences Centre",
-                    "Mount Sinai Hospital"
+                    "Mount Sinai Hospital",
+                    "Cross Cancer Institute"
                   ],
                   "description":"The hospital/clinic managing this trial. Please input the full name of the hospital/clinic site."
                 },
