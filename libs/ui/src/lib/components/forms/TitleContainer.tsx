@@ -11,10 +11,11 @@ import TreeNode from "primereact/treenode";
 export interface ITitleContainerProps {
   title: string;
   node: TreeNode;
+  isAddEnabled: boolean;
 }
 
 export const TitleContainer = (props: ITitleContainerProps) => {
-  const {title, node} = props;
+  const {title, node, isAddEnabled} = props;
 
   const dispatch = useDispatch();
 
@@ -42,6 +43,7 @@ export const TitleContainer = (props: ITitleContainerProps) => {
       />
       <Button icon="pi pi-plus-circle"
               label="Add criteria to the same list"
+              disabled={!isAddEnabled}
               iconPos="left"
               className={addCriteriaButtonClasses}
               onClick={onAddCriteria}

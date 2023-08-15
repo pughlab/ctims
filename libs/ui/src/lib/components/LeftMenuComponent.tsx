@@ -37,15 +37,17 @@ import {CtimsDialogContext, CtimsDialogContextType} from "./CtimsMatchDialog";
 interface ILeftMenuComponentProps {
   onTreeNodeClick: (componentType: EComponentType, note: TreeNode) => void;
   rootNodesProp: IRootNode;
+  rootNodes: TreeNode[];
+  setRootNodes: (newRootNodes: TreeNode[]) => void;
 }
 
 const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
-  const {onTreeNodeClick, rootNodesProp} = props;
+  const {onTreeNodeClick, rootNodesProp, rootNodes, setRootNodes} = props;
 
   const {setSaveBtnState} = useContext(CtimsDialogContext) as CtimsDialogContextType;
 
-  const [rootNodes, setRootNodes] = useState<TreeNode[]>([]);
+  // const [rootNodes, setRootNodes] = useState<TreeNode[]>([]);
   const [selectedNode, setSelectedNode] = useState<any>(null);
   const [selectedKeys, setSelectedKeys] = useState<any>(null);
   const [expandedKeys, setExpandedKeys] = useState<TreeExpandedKeysType>({0: true});
@@ -335,6 +337,20 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     }
   }
 
+  const isGenomicDisabled = () => {
+    let isDisabled = false;
+    const {children} = selectedNode;
+    if (children && children.length > 0) {
+      children.forEach((child: any) => {
+        if (child.label === 'Genomic' && child.data.formData.match_all) {
+          isDisabled = true;
+          return;
+        }
+      })
+    }
+    return isDisabled;
+  }
+
   const nodeTemplate = (node: TreeNode) => {
 
     const tieredMenuModel = [
@@ -354,9 +370,12 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
             command: () => {
               addCriteriaToSameList(selectedNode.key as string, 'Genomic');
             },
-            icon: 'genomic-icon in-menu'
-          }
-        ]
+            icon: 'genomic-icon in-menu',
+            disabled: isGenomicDisabled()
+          },
+
+        ],
+
 
       },
       {

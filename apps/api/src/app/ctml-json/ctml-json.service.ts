@@ -4,7 +4,7 @@ import { UpdateCtmlJsonDto } from './dto/update-ctml-json.dto';
 import { ctml_json, event_type, user } from "@prisma/client";
 import {PrismaService} from "../prisma.service";
 import axios from "axios";
-import {CtmlStatusEnum} from "../../../../../libs/types/src/ctml-status.enum";
+import {TrialStatusEnum} from "../../../../../libs/types/src/trial-status.enum";
 
 @Injectable()
 export class CtmlJsonService {
@@ -141,10 +141,36 @@ export class CtmlJsonService {
             id: trialId
           },
           data: {
-            status: CtmlStatusEnum.PENDING
+            trial_status: TrialStatusEnum.PENDING
           }
         });
       }
+    } catch (error) {
+      console.log(error);
+      throw new Error(error);
+    }
+  }
+
+  async run_match() {
+    try {
+      const url = `${process.env.MM_API_URL}/run_ctims_matchengine`;
+      const results = await axios.request(
+        {
+          method: 'get',
+          url: url,
+        }
+      );
+      console.log(results);
+
+      // update the trial's status from pending to matched
+      const trial = await this.prismaService.trial.updateMany({
+        where: {
+          trial_status: TrialStatusEnum.PENDING
+        },
+        data: {
+          trial_status: TrialStatusEnum.MATCHED
+        }
+      });
     } catch (error) {
       console.log(error);
       throw new Error(error);

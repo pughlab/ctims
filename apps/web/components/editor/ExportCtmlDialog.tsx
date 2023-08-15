@@ -27,14 +27,11 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
   const ctmlModel = useSelector((state: RootState) => state.finalModelAndErrors.ctmlModel);
   const trialId = useSelector((state: RootState) => state.context.trialId);
   const isGroupAdmin = useSelector((state: RootState) => state.context.isTrialGroupAdmin);
-
+  const isFormChanged = useSelector((state: RootState) => state.context.isFormChanged);
 
   useEffect(() => {
-    if(ctmlModel === null) {
-    console.log('ctmlModel', ctmlModel);
-      setExportButtonDisabled(true);
-    }
-  }, [ctmlModel])
+    setExportButtonDisabled(shouldDisableExportButton());
+  }, [ctmlModel, isFormChanged, errors])
 
   useEffect(() => {
     setIsDialogVisible(props.isDialogVisible);
@@ -55,21 +52,13 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
 
   }, [errorSchema])
 
-  useEffect(() => {
-
-    if (errors.length > 0) {
-      setExportButtonDisabled(true);
-    }
-    if (errors.length === 0) {
-      if (ctmlModel !== null) {
-        setExportButtonDisabled(false);
-      }
-    }
-
-  }, [errors])
-
   const onDialogHide = () => {
     props.onDialogHide();
+  }
+
+  // disable export OK button if there are errors of if form is changed and not saved
+  const shouldDisableExportButton = () => {
+    return errors.length > 0 || isFormChanged || ctmlModel === null;
   }
 
   const footer = (props: {exportCtmlClicked: () => void}) => {
@@ -104,6 +93,13 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
     )
   }
 
+  const notSavedErrorContent = () => {
+    return (
+      <>
+        <div>You must save the CTML before you can export it.</div>
+      </>
+    )
+  }
 
   const doExport = () => {
 
@@ -126,7 +122,7 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
       }
       axios.request({
         method: 'post',
-        url: `/trials/${trialId}/export`,
+        url: `/trials/${trialId}/export/${format}`,
         headers
       });
     }
@@ -174,7 +170,15 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
           }}
           content={errorContent}
         />)}
-
+        {isFormChanged && (<Message
+          severity="error"
+          style={{
+            whiteSpace: "pre-line",
+            marginLeft: '18px',
+            marginBottom: '10px'
+          }}
+          content={notSavedErrorContent}
+        />)}
       </div>
       {isGroupAdmin ? <div style={{marginLeft: '30px'}}>
         <h2>Export As</h2>
@@ -193,8 +197,13 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
           />
           <label htmlFor="yaml" className={styles['radio-btn']}>YAML</label>
         </div>
-      </div> : null}
-
+      </div> :
+        <>
+        {errors.length === 0 && (<div style={{marginLeft: '30px'}}>
+          All mandatory fields are complete!
+        </div>)}
+        </>
+      }
     </Dialog>
   )
 }

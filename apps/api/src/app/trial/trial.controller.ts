@@ -72,16 +72,22 @@ export class TrialController implements OnModuleInit{
     return newTrial;
   }
 
-  @Post(':id/export')
+  @Post(':id/export/:format')
   @UseGuards(KeycloakPasswordGuard)
   @ApiBearerAuth("KeycloakPasswordGuard")
   @ApiOperation({ summary: "Called when trial has been exported on the front end." })
+  @ApiParam({ name: "id", description: "ID of the trial." })
+  @ApiParam({ name: "format", description: "Format of the export. Limited to the values 'YAML' and 'JSON'" })
   @ApiNoContentResponse()
   async trialExported(
     @CurrentUser() user: user,
-    @Param('id') id: string
+    @Param('id') id: string,
+    @Param('format') format: string
   ) {
-    this.trialService.recordTrialExported(+id, user);
+    if (format !== 'YAML' && format !== 'JSON') {
+      throw new NotFoundException(`Format ${format} is not supported.`);
+    }
+    this.trialService.recordTrialExported(+id, user, format);
   }
 
   @Get()

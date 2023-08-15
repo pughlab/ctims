@@ -2,6 +2,7 @@ import TreeNode from "primereact/treenode";
 import {EComponentType} from "./EComponentType";
 import { v4 as uuidv4 } from 'uuid';
 import {ErrorSchema, RJSFValidationError} from "@rjsf/utils";
+import { OperatorOptions } from "./forms/OperatorDropdown";
 
 interface JsonObject {
   [key: string]: any;
@@ -240,4 +241,25 @@ export const extractErrors = (errors: RJSFValidationError[]): string[] => {
   }
 
   return errorStrings;
+}
+
+/**
+ * Get the current operator based on the provided root nodes and the current node.
+ * If the current node's parent has a label of "OR", it returns the OR operator, otherwise returns the AND operator.
+ * @param {TreeNode[]} rootNodes - An array of root nodes representing the tree.
+ * @param {TreeNode} currentNode - The current node for which the operator needs to be determined.
+ * @returns {OperatorOptions} The current operator (AND or OR).
+ */
+export const getCurrentOperator = (rootNodes: TreeNode[], currentNode: TreeNode) => {
+  if (currentNode && rootNodes.length > 0) {
+    // Find the parent node of the current node within the tree.
+    const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], currentNode.key as string);
+    if (parentNode && parentNode.label) {
+      // Check if the parent node's label is "OR" (case-insensitive).
+      if (parentNode.label.toLowerCase() === 'or') {
+        return OperatorOptions.OR;
+      }
+    }
+  }
+  return OperatorOptions.AND;
 }

@@ -1,29 +1,3 @@
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: mongo-pv
-  labels:
-    type: local
-spec:
-  storageClassName: manual
-  capacity:
-    storage: 10Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: "{{.Values.mountRoot}}/mongo/data"
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mongo-pvc
-spec:
-  storageClassName: manual
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -51,8 +25,9 @@ spec:
             path: "{{.Values.mountRoot}}/mysql/data"
             type: DirectoryOrCreate
         - name: "mm-mongo-data"
-          persistentVolumeClaim:
-            claimName: mongo-pvc
+          hostPath:
+            path: "{{.Values.mountRoot}}/mongo/data"
+            type: DirectoryOrCreate
       containers:
         - image: "{{ .Values.docker.image }}:{{ .Values.git.ref }}"
           name: ctimsweb
@@ -98,9 +73,9 @@ spec:
               value: "{{ .Values.ctimsapi.prismaEncryptionKey }}"
             - name: MM_API_URL
               value: "http://localhost:5000/api"
-        - image: "docker-registry.uhn.ca:443/matchminer-api:fecfb5db-158d-4d0b-b3e7-40ffa07d7abb"
+        - image: "docker-registry.uhn.ca:443/matchminer-api:d184fa25-0209-4446-affa-3c0d2183de28"
           name: mm-api
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Never
           ports:
             - containerPort: 5000
               name: mm-api
@@ -126,7 +101,7 @@ spec:
               value: "{{ .Values.ctimsdb.password }}"
         - image: "docker-registry.uhn.ca:443/matchminer-db:c65bc87c-750d-40fc-a383-14b4e3fd2443"
           name: mm-mongo
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Never
           ports:
             - containerPort: 27017
               name: mongo

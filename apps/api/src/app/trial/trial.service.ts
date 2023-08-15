@@ -209,13 +209,16 @@ export class TrialService implements OnModuleInit {
     }
   }
 
-  async recordTrialExported(id: number, user: user) {
+  async recordTrialExported(id: number, user: user, format: string) {
     if (id) {
       await this.prismaService.event.create({
         data: {
           type: event_type.TrialExported,
           trial: { connect: { id } },
-          user: { connect: { id: user.id } }
+          user: { connect: { id: user.id } },
+          metadata: {
+            "input": { format }
+          }
         }
       });
     } else {

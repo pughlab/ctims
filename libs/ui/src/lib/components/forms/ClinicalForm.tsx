@@ -1,11 +1,13 @@
 import React, {CSSProperties, useContext, useEffect, useRef} from "react";
 import {
   deleteMatchDialogError,
-  formChange, operatorChange,
+  formChange,
+  operatorChange,
   setMatchDialogErrors
 } from "../../../../../../apps/web/store/slices/modalActionsSlice";
 import {useDispatch} from "react-redux";
 import CtimsMatchDialogObjectFieldTemplate from "../../custom-rjsf-templates/CtimsMatchDialogObjectFieldTemplate";
+import type Form from "@rjsf/core";
 import {withTheme} from "@rjsf/core";
 import {RegistryWidgetsType, ValidationData} from "@rjsf/utils";
 import {JSONSchema7} from "json-schema";
@@ -14,13 +16,13 @@ import {IFormProps} from "../MatchingMenuAndForm";
 import {OperatorDropdown} from "./OperatorDropdown";
 import {TitleContainer} from "./TitleContainer";
 import {Theme as PrimeTheme} from "../../primereact";
-import type Form from "@rjsf/core";
 import CtimsFieldTemplate from "../../custom-rjsf-templates/CtimsFieldTemplate";
 import CtimsErrorListTemplate from "../../custom-rjsf-templates/CtimsErrorListTemplate";
 import CtimsInput from "../../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../../custom-rjsf-templates/CtimsDropdown";
 import {CtimsDialogContext, CtimsDialogContextType} from "../CtimsMatchDialog";
 import CtimsInputWithExcludeToggle from '../../custom-rjsf-templates/CtimsInputWithExcludeToggle';
+import {getCurrentOperator} from "../helpers";
 
 const RjsfForm = withTheme(PrimeTheme)
 
@@ -42,7 +44,7 @@ const formContainerStyle: CSSProperties = {
 }
 
 export const ClinicalForm = (props: IFormProps) => {
-  const {node} = props
+  const {node, rootNodes} = props
   const nk = node.key as string;
   console.log('ClinicalForm node: ', node)
 
@@ -158,11 +160,23 @@ export const ClinicalForm = (props: IFormProps) => {
     dispatch(operatorChange({operator: codeLowerCase, nodeKey: node.key as string, location: 'form'}));
   }
 
+
+  /**
+   * This function is used to get the current operator for the node.
+   */
+  const useCurrentOperator = () => {
+    return getCurrentOperator(rootNodes, node);
+  }
+
+
   return (
     <div style={formContainerStyle}>
-      <OperatorDropdown onOperatorChange={onOperatorChange} />
+      <OperatorDropdown
+        onOperatorChange={onOperatorChange}
+        getCurrentOperator={useCurrentOperator}
+        selectedNode={node} />
       <div>
-        <TitleContainer title="Clinical" node={node} />
+        <TitleContainer title="Clinical" node={node} isAddEnabled />
       </div>
       <div>
         <RjsfForm ref={clinicalFormRef}

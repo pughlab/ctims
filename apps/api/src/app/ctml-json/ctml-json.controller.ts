@@ -184,5 +184,27 @@ export class CtmlJsonController implements OnModuleInit {
     @Body() ctmlJson: any
   ) {
     await this.ctmlJsonService.send_to_matchminer(+id, ctmlJson);
+
+    // Add event
+    this.eventService.createEvent({
+      type: event_type.CtmlJsonSentToMatchminer,
+      description: "CTML JSON sent to Matchminer via Post to /ctml-jsons/:id/send_to_matchminer",
+      user,
+      ctml_json: { id: +id },
+      metadata: {
+        input: { id, ctmlJson }
+      }
+    });
+  }
+
+  @Get('mm/run_match')
+  @UseGuards(KeycloakPasswordGuard)
+  @ApiBearerAuth("KeycloakPasswordGuard")
+  @ApiOperation({ summary: "Triggers matchminer to run matches" })
+  @ApiFoundResponse({ description: "Triggers matchminer to run matches" })
+  async run_matchminer(
+    @CurrentUser() user: user,
+  ) {
+    await this.ctmlJsonService.run_match();
   }
 }

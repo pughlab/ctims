@@ -56,7 +56,9 @@ model trial {
   event                  event[]
   trial_group            trial_group?  @relation(fields: [trial_groupId], references: [id])
   trial_groupId          Int?
-  protocol_no            String
+  protocol_no            String?
+  // This is trial matching status
+  trial_status           trial_status?
 }
 
 model trial_group {
@@ -108,7 +110,11 @@ enum status {
   DRAFT
   IN_REVIEW
   COMPLETED
+}
+
+enum trial_status {
   PENDING
+  MATCHED
 }
 
 enum event_type {
@@ -128,6 +134,7 @@ enum event_type {
   CtmlJsonUpdatedMany
   CtmlJsonDeleted
   CtmlJsonDoesNotExist
+  CtmlJsonSentToMatchminer
   CtmlSchemaCreated
   CtmlSchemaRead
   CtmlSchemaReadMany
