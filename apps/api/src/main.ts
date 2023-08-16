@@ -13,7 +13,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
-  app.enableCors()
+  let origin = process.env.CTIMS_ENV === 'development' ? '*' : 'https://ctims.ca';
+  app.enableCors({origin})
 
   setupSwagger(app);
 
