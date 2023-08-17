@@ -98,29 +98,13 @@ export class TrialResultService implements OnModuleInit {
         }
       );
 
-      // Get all trial groups that relate to a trial that the user is a member of
-      const trialGroups = await this.prismaService.trial_group.findMany({
-        where: {
-          trials: {
-            some: {
-              user: { id: user.id  }
-            }
-          },
-        }
-      });
-      await this.prismaService.event.create({
-        data: {
-          type: event_type.ResultDownloaded,
-          trial: {connect: {id}},
-          user: {connect: {id: user.id}},
-          metadata: {
-            user: {
-              trialGroups: trialGroups.map(trialGroup => ({
-                name: trialGroup.name,
-                id: trialGroup.id
-              }))
-            }
-          }
+      // Add event
+      this.eventService.createEvent({
+        type: event_type.ResultDownloaded,
+        user,
+        trial,
+        metadata: {
+          input: { id }
         }
       });
 
