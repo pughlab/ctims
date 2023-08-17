@@ -211,13 +211,29 @@ export class TrialService implements OnModuleInit {
 
   async recordTrialExported(id: number, user: user, format: string) {
     if (id) {
+      // Get all trial groups that relate to a trial that the user is a member of
+      const trialGroups = await this.prismaService.trial_group.findMany({
+        where: {
+          trials: {
+            some: {
+              user: { id: user.id  }
+            }
+          },
+        }
+      });
       await this.prismaService.event.create({
         data: {
           type: event_type.TrialExported,
           trial: { connect: { id } },
           user: { connect: { id: user.id } },
           metadata: {
-            "input": { format }
+            "input": { format },
+            "user": {
+              "trialGroups": trialGroups.map(trialGroup => ({
+                "name": trialGroup.name,
+                "id": trialGroup.id
+              }))
+            }
           }
         }
       });
