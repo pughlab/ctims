@@ -98,11 +98,13 @@ export class TrialResultService implements OnModuleInit {
         }
       );
 
-      await this.prismaService.event.create({
-        data: {
-          type: event_type.ResultDownloaded,
-          trial: {connect: {id}},
-          user: {connect: {id: user.id}}
+      // Add event
+      this.eventService.createEvent({
+        type: event_type.ResultDownloaded,
+        user,
+        trial,
+        metadata: {
+          input: { id }
         }
       });
 

@@ -15,6 +15,20 @@ export class EventService {
   ) { }
   async createEvent(data: ICreateEvent): Promise<event> {
     try {
+      // Get all trial groups that relate to a trial that the user is a member of
+      const trialGroups = await this.prismaService.trial_group.findMany({
+        where: {
+          trials: {
+            some: {
+              user: { id: data.user.id  }
+            }
+          },
+        }
+      });
+      // add the trial groups to the metadata
+      data.metadata["user"] = {
+        trialGroups: trialGroups.map(t => ({ "name": t.name, "id": t.id }))
+      }
       return this.prismaService.event.create({
         data: {
           ...data,
