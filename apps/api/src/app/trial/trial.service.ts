@@ -210,28 +210,28 @@ export class TrialService implements OnModuleInit {
   }
 
   async recordTrialExported(id: number, user: user, format: string) {
+    // Get all trial groups that relate to a trial that the user is a member of
+    const trialGroups = await this.prismaService.trial_group.findMany({
+      where: {
+        trials: {
+          some: {
+            user: { id: user.id  }
+          }
+        },
+      }
+    });
     if (id) {
-      // Get all trial groups that relate to a trial that the user is a member of
-      const trialGroups = await this.prismaService.trial_group.findMany({
-        where: {
-          trials: {
-            some: {
-              user: { id: user.id  }
-            }
-          },
-        }
-      });
       await this.prismaService.event.create({
         data: {
           type: event_type.TrialExported,
           trial: { connect: { id } },
           user: { connect: { id: user.id } },
           metadata: {
-            "input": { format },
-            "user": {
-              "trialGroups": trialGroups.map(trialGroup => ({
-                "name": trialGroup.name,
-                "id": trialGroup.id
+            input: { format },
+            user: {
+              trialGroups: trialGroups.map(trialGroup => ({
+                name: trialGroup.name,
+                id: trialGroup.id
               }))
             }
           }
@@ -242,7 +242,16 @@ export class TrialService implements OnModuleInit {
         data: {
           type: event_type.TrialExported,
           description: "Trial exported as a draft (not yet saved)",
-          user: { connect: { id: user.id } }
+          user: { connect: { id: user.id } },
+          metadata: {
+            input: { format },
+            user: {
+              trialGroups: trialGroups.map(trialGroup => ({
+                name: trialGroup.name,
+                id: trialGroup.id
+              }))
+            }
+          }
         }
       });
     }
