@@ -128,7 +128,8 @@ const Results = () => {
         protocol_no: cur.protocol_no,
         trialRetCount: (cur.trialStatus === TrialStatusEnum[TrialStatusEnum.PENDING]) ? '' : cur.trialRetCount,
         matchedDate: cur.matchedDate? cur.matchedDate : '',
-        trialStatus: cur.trialStatus
+        trialStatus: cur.trialStatus,
+        short_title: cur.short_title
       }
       dataCopy.push(curCopy);
     }
@@ -139,7 +140,7 @@ const Results = () => {
   const postProcessCSVData = (data: any) => {
     for (let cur of data) {
       cur.trialId = trialSelected.trialId;
-      cur.trialName = cur.short_title;
+      cur.trialName = trialSelected.short_title;
       cur.matchDate = trialSelected.matchedDate;
     }
     return data;

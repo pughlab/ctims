@@ -15,6 +15,7 @@ export type trialWithResults = {
   trialRetCount?: number | null
   matchedDate?: Date | null
   trialStatus?: string | null
+  short_title?: string | null
 }
 
 // the matchminer api returns the following format
