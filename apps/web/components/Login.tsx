@@ -117,7 +117,7 @@ const Login = () => {
 
           <div className={styles.heading}>
             <div className={styles.signIn}>Sign in</div>
-            <span className={styles.description}>Use your T-ID, RMP ID, Research ID, or UHN email address to sign in.</span>
+            <span className={styles.description}>{componentStrings.login_instructions}</span>
           </div>
           <form>
             <div className={styles.usernameContainer}>
