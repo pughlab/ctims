@@ -138,6 +138,46 @@ const Trials = () => {
     }
   }, [deleteTrialResponse]);
 
+  const onImportClicked = () => {
+    console.log('onImportClicked');
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.style.display = 'none'; // Ensure it's not displayed
+
+    // Attach an event listener to handle file selection
+    fileInput.addEventListener('change', (event) => {
+      // @ts-ignore
+      const file = event.target.files[0];
+      if (file) {
+        console.log('File selected:', file);
+        const reader = new FileReader();
+
+        // If the file is text (e.g., .txt, .csv, .json), use readAsText
+        reader.readAsText(file);
+
+        reader.onload = function() {
+          // console.log("File contents:", reader.result);
+          sessionStorage.setItem('imported_ctml', reader.result as string);
+          router.push(`/trials/import`);
+        };
+
+        reader.onerror = function() {
+          console.error("Error reading file:", reader.error);
+          sessionStorage.removeItem('imported_ctml')
+        };
+      }
+
+      // Remove the input element from the document after use
+      document.body.removeChild(fileInput);
+    });
+
+    // Append the input element to the document
+    document.body.appendChild(fileInput);
+
+    // Programmatically trigger a click on the input element
+    fileInput.click();
+  }
+
   return (
     <>
       <ConfirmDialog />
@@ -146,7 +186,7 @@ const Trials = () => {
         <div className={styles.titleAndButtonsContainer}>
           <span className={styles.trialsText}>Trials</span>
           <div className={styles.buttonsContainer}>
-            <Button label="Import" className="p-button-text p-button-plain" />
+            <Button disabled={!selectedTrialGroup} label="Import" className="p-button-text p-button-plain" onClick={onImportClicked} />
             <Button disabled={!selectedTrialGroup} label="Create CTML" className={styles.createCtmlButton} onClick={createCtmlClick} />
           </div>
         </div>
