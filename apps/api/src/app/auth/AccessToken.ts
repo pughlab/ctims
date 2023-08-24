@@ -5,6 +5,9 @@ export const AccessToken = createParamDecorator(
         const req = context.switchToHttp().getRequest();
         const headers = req.headers
         const authorization = headers['authorization']
+        if (!authorization) {
+            return null
+        }
         const token = authorization.replace('Bearer', '').trim()
         return token
 

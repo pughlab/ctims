@@ -25,6 +25,9 @@ export class AuthController {
 
   @Get('refresh')
   async refresh(@AccessToken() accessToken: Token) {
+    if (!accessToken) {
+      throw new BadRequestException('Access token is required')
+    }
     return await this.strategy.refreshToken(accessToken);
   }
 
