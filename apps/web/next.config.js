@@ -19,6 +19,20 @@ const nextConfig = {
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     NEXTAUTH_API_URL: process.env.NEXTAUTH_API_URL,
+  },
+  async headers() {
+    return [
+      {
+        // Apply these headers to all routes in your application.
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN', // You can also set it to 'DENY' if you prefer
+          },
+        ],
+      },
+    ];
   }
 };
 
