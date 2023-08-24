@@ -13,6 +13,7 @@ import { Button } from 'primereact/button';
 import TrialGroupsDropdown from './TrialGroupsDropdown';
 import { Menu } from 'primereact/menu';
 import { Column } from 'primereact/column';
+import {Toast} from "primereact/toast";
 
 const Trials = () => {
   const { response: deleteTrialResponse, error: deleteTrialError, loading: deleteTrialLoading, deleteTrialOperation } = useDeleteTrial();
@@ -27,6 +28,9 @@ const Trials = () => {
   const dispatch = useDispatch();
   const menu = useRef(null);
 
+  const trialsErrorToast = useRef(null);
+
+
   const createCtmlClick = (e) => {
     e.preventDefault();
     dispatch(setIsFormDisabled(false));
@@ -38,7 +42,6 @@ const Trials = () => {
       label: 'Edit',
       icon: 'pi pi-pencil',
       command: () => {
-        console.log('Edit');
         dispatch(setIsFormDisabled((rowClicked?.user.email !== data.user.email) && !isTrialGroupAdmin));
         router.push(`/trials/edit/${rowClicked.id}`);
       }
@@ -54,11 +57,11 @@ const Trials = () => {
           rejectLabel: 'Cancel',
           acceptLabel: 'Delete',
           accept: () => {
-            console.log('accept', rowClicked);
+            // console.log('accept', rowClicked);
             deleteTrialOperation(rowClicked.id);
           },
           reject: () => {
-            console.log('reject');
+            // console.log('reject');
           }
         });
       }
@@ -110,18 +113,25 @@ const Trials = () => {
       return;
     }
     localStorage.setItem('ctims-accessToken', data['accessToken']);
-    console.log('data', data)
+    sessionStorage.removeItem('imported_ctml');
+    // console.log('data', data)
   }, [data])
 
   useEffect(() => {
     if (getTrialsForUsersInGroupError) {
-      console.error('Error fetching trials:', getTrialsForUsersInGroupError);
+      trialsErrorToast.current.show({
+        severity: "error",
+        summary: 'Error fetching trials',
+      });
     }
   }, [getTrialsForUsersInGroupError]);
 
   useEffect(() => {
     if (deleteTrialError) {
-      console.error('Error deleting trial:', deleteTrialError);
+        trialsErrorToast.current.show({
+            severity: "error",
+            summary: 'Error deleting trial',
+        });
     }
   }, [deleteTrialError]);
 
@@ -139,7 +149,6 @@ const Trials = () => {
   }, [deleteTrialResponse]);
 
   const onImportClicked = () => {
-    console.log('onImportClicked');
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.style.display = 'none'; // Ensure it's not displayed
@@ -148,23 +157,29 @@ const Trials = () => {
     fileInput.addEventListener('change', (event) => {
       // @ts-ignore
       const file = event.target.files[0];
-      if (file) {
-        console.log('File selected:', file);
+      if (file && file.type === 'application/json') {
         const reader = new FileReader();
 
         // If the file is text (e.g., .txt, .csv, .json), use readAsText
         reader.readAsText(file);
 
         reader.onload = function() {
-          // console.log("File contents:", reader.result);
           sessionStorage.setItem('imported_ctml', reader.result as string);
           router.push(`/trials/import`);
         };
 
         reader.onerror = function() {
-          console.error("Error reading file:", reader.error);
+          trialsErrorToast.current.show({
+            severity: "error",
+            summary: reader.error
+          });
           sessionStorage.removeItem('imported_ctml')
         };
+      } else {
+        trialsErrorToast.current.show({
+          severity: "error",
+          summary: 'Please select a valid JSON or YAML file'
+        });
       }
 
       // Remove the input element from the document after use
@@ -180,6 +195,7 @@ const Trials = () => {
 
   return (
     <>
+      <Toast ref={trialsErrorToast}></Toast>
       <ConfirmDialog />
       <div >
         <TrialGroupsDropdown roles={(data as unknown as any).roles} onTrialGroupSelected={onTrialGroupSelected} />
