@@ -10,6 +10,8 @@ import {increment} from "../store/slices/counterSlice";
 import {signIn} from "next-auth/react";
 import {Password} from "primereact/password";
 import { Toast } from "primereact/toast";
+import { Dialog } from "primereact/dialog";
+import strings from "../data/strings.json";
 
 const Login = () => {
   const hasMounted = useHasMounted();
@@ -23,6 +25,18 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const router: NextRouter = useRouter();
+
+  const [dialogVisible, setDialogVisible] = useState(false);
+
+  const componentStrings = strings.components.Login;
+
+  const showDialog = () => {
+    setDialogVisible(true);
+  };
+
+  const hideDialog = () => {
+    setDialogVisible(false);
+  };
 
   const showInvalidLoginToast =  (message) => {
     loginErrorToast.current.show({
@@ -80,10 +94,19 @@ const Login = () => {
     e.preventDefault();
     dispatch(increment());
     console.log('Forgot password');
+    showDialog();
   }
 
   return (
     <Layout>
+      <Dialog
+        header="Forgot Password"
+        visible={dialogVisible}
+        onHide={hideDialog}
+        closable={true}
+        footer={<Button label="OK" onClick={hideDialog} style={{background: '#2E72D2'}} />}>
+        <p style={{margin: '25px', width: '50vw' }}>{componentStrings.reset_password_modal}</p>
+      </Dialog>
     <Toast ref={loginErrorToast}></Toast>
     <div className={styles.loginBg}>
       <div className={styles.frame}>
