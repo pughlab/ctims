@@ -32,7 +32,7 @@ const EditorImportTrialPage = () => {
           trial_id: trial.nct_id,
           nickname: trial.nickname,
           principal_investigator: trial.principal_investigator,
-          ctml_status: trial.status,
+          ctml_status: 'DRAFT',
           long_title: trial.long_title,
           short_title: trial.short_title,
           phase: trial.phase,
@@ -45,12 +45,22 @@ const EditorImportTrialPage = () => {
         }
       }
 
-      editTrialObject = {...editTrialObject, ...trial}
-
       delete trial.trial_id
       delete trial.nickname
       delete trial.principal_investigator
       delete trial.ctml_status
+      delete trial.status
+      delete trial.age
+      delete trial.last_updated
+      delete trial.nct_id
+      delete trial.nct_purpose
+      delete trial.phase
+      delete trial.protocol_no
+      delete trial.short_title
+      delete trial.long_title
+
+
+      editTrialObject = {...editTrialObject, ...trial}
 
       setFormData(editTrialObject);
       dispatch(setCtmlModel(editTrialObject))
