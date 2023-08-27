@@ -157,7 +157,8 @@ const Trials = () => {
     fileInput.addEventListener('change', (event) => {
       // @ts-ignore
       const file = event.target.files[0];
-      if (file && file.type === 'application/json') {
+      console.log('file type', file.type);
+      if (file && (file.type === 'application/json' || file.type === 'application/x-yaml')) {
         const reader = new FileReader();
 
         // If the file is text (e.g., .txt, .csv, .json), use readAsText
@@ -202,7 +203,7 @@ const Trials = () => {
         <div className={styles.titleAndButtonsContainer}>
           <span className={styles.trialsText}>Trials</span>
           <div className={styles.buttonsContainer}>
-            <Button disabled={!selectedTrialGroup} label="Import" className="p-button-text p-button-plain" onClick={onImportClicked} />
+            <Button disabled={!selectedTrialGroup} label="Import CTML" className="p-button-text p-button-plain" onClick={onImportClicked} />
             <Button disabled={!selectedTrialGroup} label="Create CTML" className={styles.createCtmlButton} onClick={createCtmlClick} />
           </div>
         </div>
