@@ -73,7 +73,7 @@ spec:
               value: "{{ .Values.ctimsapi.prismaEncryptionKey }}"
             - name: MM_API_URL
               value: "http://localhost:5000/api"
-        - image: "docker-registry.uhn.ca:443/matchminer-api:985917ea-03d2-4349-968a-2f0fab0ef985"
+        - image: "docker-registry.uhn.ca:443/matchminer-api:224399fb-9fdd-493a-b196-4f3ab4d58687"
           name: mm-api
           imagePullPolicy: Never
           ports:
