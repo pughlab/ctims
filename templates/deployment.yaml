@@ -29,7 +29,7 @@ spec:
             path: "{{.Values.mountRoot}}/mongo/data"
             type: DirectoryOrCreate
       containers:
-        - image: "{{ .Values.docker.image }}:28c276793626b776238800c63d35f081dd9f676f"
+        - image: "{{ .Values.docker.image }}:{{ .Values.git.ref }}"
           name: ctimsweb
           imagePullPolicy: IfNotPresent
           ports:

@@ -180,7 +180,7 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
           <div className={styles.title}>{props.isEditMode ? 'Edit CTML' : 'New CTML'}</div>
         </div>
         <div className={styles.menuBtnGroup}>
-          <Button label="Discard" className="p-button-text p-button-plain" />
+          {/*<Button label="Discard" className="p-button-text p-button-plain" />*/}
           <Button label={isGroupAdmin ? 'Export' : 'Validate'}
                   onClick={onExportClick}
                   className="p-button-text p-button-plain" />
