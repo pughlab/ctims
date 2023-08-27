@@ -1,0 +1,8 @@
+{
+  "components": {
+    "Login":{
+      "reset_password_modal": "CTIMS leverages UHN credentials to authenticate users. If you are having issues signing in with your UHN credentials, please contact UHN HelpDesk.",
+      "login_instructions": "User your T-ID or UHN email address to sign in."
+    }
+  }
+}
