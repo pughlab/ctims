@@ -94,14 +94,14 @@ export const GenomicForm = (props: IFormProps) => {
         "enumNames": [
           "Mutation",
           "CNV",
-          "SV",
+          "Structural Variation",
           "WT",
           "Signature"
         ],
         "enum": [
           "Mutation",
           "CNV",
-          "SV",
+          "Structural Variation",
           "WT",
           "Signature"
         ]
@@ -124,8 +124,10 @@ export const GenomicForm = (props: IFormProps) => {
           "3_prime_UTR",
           "5'Flank",
           "5'UTR",
-          "5'UTR_mutation",
-          "5_prime_UTR",
+          "5'UTR Mutation",
+          "5 Prime UTR",
+          "Splice Region",
+          "Splice Site",
         ],
         "enum": [
           "Missense_Mutation",
@@ -146,6 +148,8 @@ export const GenomicForm = (props: IFormProps) => {
           "5'UTR",
           "5'UTR_mutation",
           "5_prime_UTR",
+          "Splice_Region",
+          "Splice_Site",
         ]
       },
       'cnv_call': {
