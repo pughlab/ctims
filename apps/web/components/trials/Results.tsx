@@ -84,7 +84,10 @@ const Results = () => {
     {label: "PR Status", key: "pr_status"},
     {label: "Genomic Alteration", key: "genomic_alteration"},
     {label: "Hugo Symbol", key: "true_hugo_symbol"},
-    {label: "Mutation Effect", key: "mutation_effect"}
+    {label: "Mutation Effect", key: "mutation_effect"},
+    {label: "True Variant Classification", key: "true_variant_classification"},
+    {label: "Variant Category", key: "variant_category"},
+    {label: "CNV Call", key: "cnv_call"},
   ];
   // csv download link ref
   const csvLink = useRef()
