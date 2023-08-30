@@ -41,7 +41,9 @@ const Login = () => {
   const showInvalidLoginToast =  (message) => {
     loginErrorToast.current.show({
       severity: "error",
-      summary: message
+      summary: message,
+      closable: true,
+      sticky: true
     });
   }
 
@@ -82,7 +84,7 @@ const Login = () => {
     if (result.ok) {
       router.push('/main');
     } else {
-      showInvalidLoginToast(`Unauthorized - ${username}`);
+      showInvalidLoginToast(`Unable to sign in. If you have not registered your account please contact ${componentStrings.sign_up_contact} to register your account.`);
     }
   }
 
