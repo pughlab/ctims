@@ -71,7 +71,7 @@ const Results = () => {
     {label: "Trial Id", key: "trialId"},
     {label: "Trial Name", key: "trialName"},
     {label: "Trial Match Date", key: "matchDate"},
-    {label: "Arm Description", key: "arm_description"},
+    {label: "Arm Description", key: "code"},
     {label: "Study ID", key: "study_id"},
     {label: "Patient ID", key: "patient_id"},
     {label: "Sample ID", key: "sample_id"},
@@ -87,6 +87,8 @@ const Results = () => {
     {label: "Mutation Effect", key: "mutation_effect"},
     {label: "True Variant Classification", key: "true_variant_classification"},
     {label: "Variant Category", key: "variant_category"},
+    {label: "Left Partner Gene", key: "left_partner_gene"},
+    {label: "Right Partner Gene", key: "right_partner_gene"},
     {label: "CNV Call", key: "cnv_call"},
   ];
   // csv download link ref
