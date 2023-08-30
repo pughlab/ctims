@@ -14,6 +14,7 @@ import TrialGroupsDropdown from './TrialGroupsDropdown';
 import { Menu } from 'primereact/menu';
 import { Column } from 'primereact/column';
 import {Toast} from "primereact/toast";
+import {parse} from "yaml";
 
 const Trials = () => {
   const { response: deleteTrialResponse, error: deleteTrialError, loading: deleteTrialLoading, deleteTrialOperation } = useDeleteTrial();
@@ -165,7 +166,12 @@ const Trials = () => {
         reader.readAsText(file);
 
         reader.onload = function() {
-          sessionStorage.setItem('imported_ctml', reader.result as string);
+          let ctmlModel = reader.result as string;
+          if (file.type === 'application/x-yaml') {
+            ctmlModel = parse(reader.result as string);
+            ctmlModel = JSON.stringify(ctmlModel, null, 2);
+          }
+          sessionStorage.setItem('imported_ctml', ctmlModel);
           router.push(`/trials/import`);
         };
 
