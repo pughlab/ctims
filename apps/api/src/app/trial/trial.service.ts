@@ -33,7 +33,7 @@ export class TrialService implements OnModuleInit {
         status,
         user: { connect: {id: creatingUser.id } },
         modifiedBy: { connect: {id: creatingUser.id } },
-        protocol_no
+        protocol_no: (typeof protocol_no === 'string') ? protocol_no : protocol_no.toString()
       }
     });
     return newTrial;
@@ -122,7 +122,7 @@ export class TrialService implements OnModuleInit {
               }
             }
           },
-          protocol_no
+          protocol_no: (typeof protocol_no === 'string') ? protocol_no : protocol_no.toString()
         }
       });
 
@@ -164,7 +164,7 @@ export class TrialService implements OnModuleInit {
             }
           }
         },
-        protocol_no
+        protocol_no: (typeof protocol_no === 'string') ? protocol_no : protocol_no.toString()
       },
     });
 
