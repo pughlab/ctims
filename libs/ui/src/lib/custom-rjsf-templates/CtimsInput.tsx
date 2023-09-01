@@ -37,13 +37,28 @@ const CtimsInput = (props: WidgetProps) => {
                            target: { value },
                        }: React.ChangeEvent<HTMLInputElement>) => {
       console.log('registry', props.registry)
-      return onChange(value === "" ? options.emptyValue : value)
+      return onChange(value === "" ? options.emptyValue : value.toString())
     };
     const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
         onBlur(id, value);
     const _onFocus = ({
                           target: { value },
                       }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+
+    const cleanValue = (input: any): string => {
+      let result = '';
+      if (input || input === 0) {
+        if (typeof input === 'number') {
+          result = input.toString();
+        }
+        if (typeof input === 'string') {
+          result = input;
+        }
+
+      }
+      return result;
+    }
+
     const inputType = (type || schema.type) === "string" ? "text" : `${type || schema.type}`
     const labelValue = uiSchema?.["ui:title"] || schema.title || label;
 
@@ -73,7 +88,7 @@ const CtimsInput = (props: WidgetProps) => {
                 className={cn("w-full")}
                 list={schema.examples ? `examples_${id}` : undefined}
                 type={inputType}
-                value={value || value === 0 ? value : ""}
+                value={cleanValue(value)}
                 onChange={_onChange}
                 onBlur={_onBlur}
                 onFocus={_onFocus}
