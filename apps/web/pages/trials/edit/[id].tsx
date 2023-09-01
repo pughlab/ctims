@@ -57,7 +57,7 @@ const {
       let editTrialObject = {
         trialInformation: {
           trial_id: trial.nct_id,
-          nickname: trial.nickname,
+          nickname: trial.nickname ? trial.nickname : '',
           // This is a fix to get the principal investigator to show up in the form
           // Without checking for null, the field will be marked as invalid on export, even when empty. See CTM-296.
           principal_investigator: trial.principal_investigator ? trial.principal_investigator : '',

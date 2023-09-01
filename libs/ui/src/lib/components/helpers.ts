@@ -237,7 +237,28 @@ export const extractErrors = (errors: RJSFValidationError[]): string[] => {
   for (let key in groupedObjects) {
     const errorLength = groupedObjects[key].length;
     const groupString = keyToStringDict[key];
-    errorStrings.push(`${groupString} has ${errorLength} missing field${errorLength === 1 ? '' : 's'}`);
+    // Hash map to store error types, their counts, and their fields
+    const errorTypes = {};
+    // Loop through errors in groupedObjects, and add to errorTypes hash map
+    groupedObjects[key].forEach((currError) => {
+        if (errorTypes[currError.message]) {
+            errorTypes[currError.message]['count']++;
+            errorTypes[currError.message]['fields'].push(currError.property);
+        } else {
+            errorTypes[currError.message] = { count: 1, fields: [currError.property]};
+        }
+    });
+    // Loop through keys in errorTypes, and add to errorStrings
+    for (const currentError in errorTypes) {
+      // Default message for missing fields
+      if (currentError.startsWith('must have required property')) {
+        errorStrings.push(`${groupString} has ${errorTypes[currentError].count} missing field${errorTypes[currentError].count === 1 ? '' : 's'}`);
+      } else {
+        // Message for inccorect types, should only be shown when importing a CTIMs file
+        errorStrings.push(`${groupString} has ${errorTypes[currentError].count} fields with the error '${currentError}' \n ${errorTypes[currentError]['fields'].join(',\n')}`);
+      }
+
+    }
   }
 
   return errorStrings;
