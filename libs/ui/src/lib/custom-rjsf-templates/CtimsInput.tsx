@@ -37,7 +37,7 @@ const CtimsInput = (props: WidgetProps) => {
                            target: { value },
                        }: React.ChangeEvent<HTMLInputElement>) => {
       console.log('registry', props.registry)
-      return onChange(value === "" ? options.emptyValue : value.toString())
+      return onChange(value === "" ? options.emptyValue : value)
     };
     const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
         onBlur(id, value);
