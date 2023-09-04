@@ -3,14 +3,6 @@ import {
   Get,
   Query,
   Res,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  NotImplementedException,
-  HttpStatus,
-  UseGuards, OnModuleInit
 } from '@nestjs/common';
 import { GeneService } from './gene.service';
 import {ModuleRef} from "@nestjs/core";
