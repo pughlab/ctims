@@ -90,6 +90,16 @@ export const GenomicForm = (props: IFormProps) => {
 
   const genomicFormSchema = {
     'definitions': {
+      'hugo_symbol': {
+        "enumNames": [
+          "AAA",
+          "BBB"
+        ],
+        "enum": [
+          "AAA",
+          "BBB"
+        ],
+      },
       "variant_category": {
         "enumNames": [
           "Mutation",
@@ -279,7 +289,7 @@ export const GenomicForm = (props: IFormProps) => {
     'required': ['hugo_symbol', "variant_category"],
     'properties': {
       'hugo_symbol': {
-        'type': 'string',
+        "$ref": "#/definitions/hugo_symbol",
         'title': 'Hugo Symbol',
         "description": "Gene symbol as determined by https://www.genenames.org/",
       },
