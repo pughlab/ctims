@@ -89,58 +89,42 @@ export const GenomicForm = (props: IFormProps) => {
 
   const dispatch = useDispatch()
 
-//   async function fetchTopSymbols() {
-//   try {
-//     const response = await axios.get('/api/app/gene'); 
-//     return response.data.topSymbols;
-//   } catch (error) {
-//     console.error('Error fetching topSymbols:', error);
-//     return []; 
-//   }
-// }
 
-let hugoSymbols1 = ["AAA"];
-let symbols = [];
 const hugo_gene_component = () => {
-const [hugoSymbols, setHugoSymbols] = useState([]);
-let dummyArray = [];
+  const [hugoSymbols, setHugoSymbols] = useState([]);
 
-  useEffect(() => {
-    async function fetchTopSymbols() {
-      try {
-        // const response = await axios.get('/api/app/gene');
-        // const topSymbols = response.data.topSymbols;
-        // setHugoSymbols(topSymbols);
-          const response = await fetch(
-          "https://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/json/hgnc_complete_set.json"
-        );        
-        const data = await response.json();
-        const symbols = data.response.docs.map((x) => x.symbol);
-        setHugoSymbols(symbols);
-        hugoSymbols1.push(symbols);
-        dummyArray.push(symbols);
-        console.log("hugoSymbols: ", hugoSymbols);
-        console.log("hugoSymbols1: ", hugoSymbols1);
-        console.log(symbols);
-      } catch (error) {
-        console.error('Error fetching topSymbols:', error);
+    useEffect(() => {
+      async function fetchTopSymbols() {
+        try {
+          // const response = await axios.get('/api/app/gene');
+          // const topSymbols = response.data.topSymbols;
+          // setHugoSymbols(topSymbols);
+            const response = await fetch(
+            "https://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/json/hgnc_complete_set.json"
+          );
+          const data = await response.json();
+          const symbols = data.response.docs.map((x) => x.symbol);
+          setHugoSymbols(symbols);
+          hugoSymbols.push(symbols);
+        } catch (error) {
+          console.error('Error fetching topSymbols:', error);
+        }
       }
-    }
-    console.log("fetching...");
-    fetchTopSymbols();
-    return dummyArray;
-  }, []);
-  
+      console.log("fetching...");
+      fetchTopSymbols();
+    }, []);
+    console.log(hugoSymbols);
+    return hugoSymbols;
 }
-// hugo_gene_component();
-let foo = hugo_gene_component();
-console.log(foo)
-// console.log(hugoSymbols1);
+
+let hugoSymbols = hugo_gene_component();
+console.log(hugoSymbols);
+hugo_gene_component();
   const genomicFormSchema = {
     'definitions': {
       'hugo_symbol': {
-        "enumNames": hugoSymbols1,
-        "enum": hugoSymbols1
+        "enumNames": hugoSymbols.slice(0,9),
+        "enum": hugoSymbols.slice(0,9)
       },
       "variant_category": {
         "enumNames": [
