@@ -89,20 +89,21 @@ export const GenomicForm = (props: IFormProps) => {
 
   const dispatch = useDispatch()
 
-  async function fetchTopSymbols() {
-  try {
-    const response = await axios.get('/api/app/gene'); 
-    return response.data.topSymbols;
-  } catch (error) {
-    console.error('Error fetching topSymbols:', error);
-    return []; 
-  }
-}
+//   async function fetchTopSymbols() {
+//   try {
+//     const response = await axios.get('/api/app/gene'); 
+//     return response.data.topSymbols;
+//   } catch (error) {
+//     console.error('Error fetching topSymbols:', error);
+//     return []; 
+//   }
+// }
 
-let hugoSymbols = ["AAA"];
+let hugoSymbols1 = ["AAA"];
 let symbols = [];
 const hugo_gene_component = () => {
-  const [hugoSymbols, setHugoSymbols] = useState([]);
+const [hugoSymbols, setHugoSymbols] = useState([]);
+let dummyArray = [];
 
   useEffect(() => {
     async function fetchTopSymbols() {
@@ -116,7 +117,10 @@ const hugo_gene_component = () => {
         const data = await response.json();
         const symbols = data.response.docs.map((x) => x.symbol);
         setHugoSymbols(symbols);
+        hugoSymbols1.push(symbols);
+        dummyArray.push(symbols);
         console.log("hugoSymbols: ", hugoSymbols);
+        console.log("hugoSymbols1: ", hugoSymbols1);
         console.log(symbols);
       } catch (error) {
         console.error('Error fetching topSymbols:', error);
@@ -124,15 +128,19 @@ const hugo_gene_component = () => {
     }
     console.log("fetching...");
     fetchTopSymbols();
+    return dummyArray;
   }, []);
+  
 }
-hugo_gene_component();
-
+// hugo_gene_component();
+let foo = hugo_gene_component();
+console.log(foo)
+// console.log(hugoSymbols1);
   const genomicFormSchema = {
     'definitions': {
       'hugo_symbol': {
-        "enumNames": hugoSymbols,
-        "enum": hugoSymbols
+        "enumNames": hugoSymbols1,
+        "enum": hugoSymbols1
       },
       "variant_category": {
         "enumNames": [
@@ -323,7 +331,7 @@ hugo_gene_component();
     'required': ['hugo_symbol', "variant_category"],
     'properties': {
       'hugo_symbol': {
-        'type': 'string',
+        // 'type': 'string',
         "$ref": "#/definitions/hugo_symbol",
         'title': 'Hugo Symbol',
         "description": "Gene symbol as determined by https://www.genenames.org/",
