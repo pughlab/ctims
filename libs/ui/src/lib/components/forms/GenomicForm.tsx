@@ -99,7 +99,7 @@ export const GenomicForm = (props: IFormProps) => {
   }
 }
 
-let hugoSymbols = [];
+let hugoSymbols = ["AAA"];
 let symbols = [];
 const hugo_gene_component = () => {
   const [hugoSymbols, setHugoSymbols] = useState([]);
@@ -323,6 +323,7 @@ hugo_gene_component();
     'required': ['hugo_symbol', "variant_category"],
     'properties': {
       'hugo_symbol': {
+        'type': 'string',
         "$ref": "#/definitions/hugo_symbol",
         'title': 'Hugo Symbol',
         "description": "Gene symbol as determined by https://www.genenames.org/",
