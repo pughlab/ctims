@@ -92,9 +92,9 @@ export const ClinicalForm = (props: IFormProps) => {
       }
     },
     "type": "object",
-    "required": ["age_numerical", "oncotree_primary_diagnosis"],
+    "required": ["age_expression", "oncotree_primary_diagnosis"],
     "properties": {
-      "age_numerical": {
+      "age_expression": {
         'type': 'string',
         'title': 'Age',
       },
