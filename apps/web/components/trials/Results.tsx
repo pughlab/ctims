@@ -71,7 +71,7 @@ const Results = () => {
     {label: "Trial Id", key: "trialId"},
     {label: "Trial Name", key: "trialName"},
     {label: "Trial Match Date", key: "matchDate"},
-    {label: "Arm Description", key: "code"},
+    {label: "Arm Code", key: "code"},
     {label: "Study ID", key: "study_id"},
     {label: "Patient ID", key: "patient_id"},
     {label: "Sample ID", key: "sample_id"},
