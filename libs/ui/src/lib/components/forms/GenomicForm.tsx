@@ -22,6 +22,7 @@ import CtimsDropdown from "../../custom-rjsf-templates/CtimsDropdown";
 import {CtimsDialogContext, CtimsDialogContextType} from "../CtimsMatchDialog";
 import { Checkbox } from 'primereact/checkbox';
 import { getCurrentOperator } from "../helpers";
+import axios from 'axios';
 
 
 const RjsfForm = withTheme(PrimeTheme)
@@ -88,17 +89,50 @@ export const GenomicForm = (props: IFormProps) => {
 
   const dispatch = useDispatch()
 
+  async function fetchTopSymbols() {
+  try {
+    const response = await axios.get('/api/app/gene'); 
+    return response.data.topSymbols;
+  } catch (error) {
+    console.error('Error fetching topSymbols:', error);
+    return []; 
+  }
+}
+
+let hugoSymbols = [];
+let symbols = [];
+const hugo_gene_component = () => {
+  const [hugoSymbols, setHugoSymbols] = useState([]);
+
+  useEffect(() => {
+    async function fetchTopSymbols() {
+      try {
+        // const response = await axios.get('/api/app/gene');
+        // const topSymbols = response.data.topSymbols;
+        // setHugoSymbols(topSymbols);
+          const response = await fetch(
+          "https://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/json/hgnc_complete_set.json"
+        );        
+        const data = await response.json();
+        const symbols = data.response.docs.map((x) => x.symbol);
+        setHugoSymbols(symbols);
+        console.log("hugoSymbols: ", hugoSymbols);
+        console.log(symbols);
+      } catch (error) {
+        console.error('Error fetching topSymbols:', error);
+      }
+    }
+    console.log("fetching...");
+    fetchTopSymbols();
+  }, []);
+}
+hugo_gene_component();
+
   const genomicFormSchema = {
     'definitions': {
       'hugo_symbol': {
-        "enumNames": [
-          "AAA",
-          "BBB"
-        ],
-        "enum": [
-          "AAA",
-          "BBB"
-        ],
+        "enumNames": hugoSymbols,
+        "enum": hugoSymbols
       },
       "variant_category": {
         "enumNames": [
