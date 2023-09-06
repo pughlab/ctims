@@ -572,6 +572,50 @@ Cypress.Commands.add('deleteExistingTrial', (trialName) => {
   })
 
 })
+Cypress.Commands.add('deleteTrialAdmin', (trialName) => {
+  createCTMLButton().should('have.class','p-disabled')
+  selectTrialGroupButton().click()
+  trialGroupxAdmin().click()
+  let table = cy.get('table tr td')
+  table.each(($el) => {
+    let ee = $el.text()
+
+    if (ee.includes(trialName)) {
+      cy.wrap($el).click()
+        //.then(($prevEl) => {
+       // cy.wrap($prevEl).click();
+     // });
+      trialTableThreeDots().click();
+      trialTableDelete().click();
+      trialTableDialogueDeleteBtn().click();
+      return false;
+    }
+  })
+
+})
+
+Cypress.Commands.add('deleteTrialMember', (trialName) => {
+  createCTMLButton().should('have.class','p-disabled')
+  selectTrialGroupButton().click()
+  ctimsUserTrialGroupxMember().click()
+  let table = cy.get('table tr td')
+  table.each(($el) => {
+    let ee = $el.text()
+
+    if (ee.includes(trialName)) {
+      cy.wrap($el).click()
+      //.then(($prevEl) => {
+      // cy.wrap($prevEl).click();
+      // });
+      trialTableThreeDots().click();
+      trialTableDelete().click();
+      trialTableDialogueDeleteBtn().click();
+      return false;
+    }
+  })
+
+})
+
 Cypress.Commands.add('inputArmDoseLevel', (ctmlTestData,$input, index) => {
   const treatmentList = ctmlTestData.treatment_list.step[0].arm;
   const doseLevels = treatmentList[index].dose_level;
@@ -908,26 +952,29 @@ Cypress.Commands.add('enterClinicalConditionsMultiple', (andConditions) => {
                 break;
               case 'her2_status':
                 if (typeof value === "string") {
-                  getClinicalHER2Status().type(value);
+                  let newValue = value.toLowerCase() === "true" ? "Positive" : "Negative";
+                  cy.log(newValue);
+                  getClinicalHER2Status().click({force:true}).type(newValue);
                 }
                 break;
 
               case 'er_status':
                 if (typeof value === "string") {
-                  let newValue = value.replace(/True/i, "Positive")
-                 cy.log(newValue)
-                  getClinicalERStatus().type(newValue)
-                  // (); // Click the option
-                    // getClinicalERStatus().click()
-                // cy.wait(500)
-                //  getClinicalDropdown().contains(new RegExp(value.replace(/True/i, "Positive"))).click();
-                    //.click().type(value.replace(/True/i, "Positive"));
+                  let newValue = value.toLowerCase() === "true" ? "Positive" : "Negative";
+                  cy.log(newValue);
+                  /*   let newValue = value.replace(/True/i, "Positive")
+                     cy.log(newValue)*/
+                  getClinicalERStatus().click({force: true}).type(newValue)
+
+                  //  getClinicalERStatus().type(value);
                 }
                 break;
 
               case 'pr_status':
                 if (typeof value === "string") {
-                  getClinicalPRStatus().type(value);
+                  let newValue = value.toLowerCase() === "true" ? "Positive" : "Negative";
+                  cy.log(newValue);
+                  getClinicalPRStatus().click({force: true}).type(newValue);
                 }
                 break;
             }
@@ -1049,6 +1096,11 @@ Cypress.Commands.add('enterAndClinical', (testAndConditions) => {
       }
     });
 });
+Cypress.Commands.add('clickMatchAllGenomic', () => {
+  cy.clickParentNode(0)
+  cy.clickGenomic();
+  cy.get('.p-checkbox-box').click()
+})
 //});
 
 

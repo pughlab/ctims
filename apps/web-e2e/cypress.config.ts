@@ -26,7 +26,7 @@ const cypressJsonConfig: EndToEndConfigOptions = {
   chromeWebSecurity: false,
   supportFile: 'src/support/e2e.ts',
   downloadsFolder: 'cypress/downloads',
-  // specPattern: 'src/e2e/CtmTest/**/*.cy.{js,jsx,ts,tsx}',
+   specPattern: 'src/e2e/CtmTest/**/*.cy.{js,jsx,ts,tsx}',
   //specPattern: 'src/e2e/CtmTest/CTM-105-NCT02503722_Osimertinib.cy.ts',
  // specPattern: 'src/e2e/CtmTest/CTM-114-NCT03297606_CAPTUR.cy.ts',
   //specPattern: 'src/e2e/CtmTest/CTM-194-Save-Edit-Delete/CTM-194-NCT03297606_CAPTUR-Edit.cy.ts',
@@ -35,7 +35,7 @@ const cypressJsonConfig: EndToEndConfigOptions = {
  // specPattern: 'src/e2e/CtmTest/User-Roles/**.cy.ts',
   //specPattern: 'src/e2e/CtmTest/User-Roles/member-NCT02503722_Osimertinib.cy.ts',
   //specPattern: 'src/e2e/CtmTest/User-Roles/admin-NCT03114319_TNO155.cy.ts',
-  specPattern: 'src/e2e/CtmTest/User-Roles/admin-NCT03297606_CAPTUR.cy.ts',
+  //specPattern: 'src/e2e/CtmTest/User-Roles/admin-NCT03297606_CAPTUR.cy.ts',
 
 
 

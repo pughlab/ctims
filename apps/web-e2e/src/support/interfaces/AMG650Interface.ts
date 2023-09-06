@@ -1,4 +1,4 @@
-export interface Tresr {
+export interface Amg650 {
   age: string
   drug_list: DrugList
   last_updated: string
@@ -9,7 +9,7 @@ export interface Tresr {
   nct_purpose: string
   phase: string
   prior_treatment_requirements: string[]
-  protocol_no: string
+  protocol_no: number
   short_title: string
   site_list: SiteList
   sponsor_list: SponsorList
@@ -100,31 +100,56 @@ export interface DoseLevel {
 }
 
 export interface Match2 {
+  or?: Or[]
+  and?: And2[]
+}
+
+export interface Or {
   and: And[]
 }
 
 export interface And {
-  clinical?: Clinical2
-  or?: Or[]
-  genomic?: Genomic2
+  genomic?: Genomic
+  or?: Or2[]
+  clinical?: Clinical3
+}
+
+export interface Genomic {
+  match_all?: boolean
+  hugo_symbol?: string
+  variant_category?: string
+}
+
+export interface Or2 {
+  clinical: Clinical2
 }
 
 export interface Clinical2 {
   age_numerical: string
   oncotree_primary_diagnosis: string
+  her2_status?: string
+  er_status?: string
+  pr_status?: string
 }
 
-export interface Or {
-  genomic: Genomic
+export interface Clinical3 {
+  age_numerical: string
+  oncotree_primary_diagnosis: string
 }
 
-export interface Genomic {
-  hugo_symbol: string
-  variant_category: string
-  cnv_call?: string
-  variant_classification?: string
+export interface And2 {
+  clinical?: Clinical4
+  genomic?: Genomic2
+}
+
+export interface Clinical4 {
+  age_numerical: string
+  oncotree_primary_diagnosis: string
+  her2_status?: string
+  er_status?: string
+  pr_status?: string
 }
 
 export interface Genomic2 {
-  match_all: string
+  match_all: boolean
 }

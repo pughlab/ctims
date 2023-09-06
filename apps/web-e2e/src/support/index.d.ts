@@ -59,5 +59,9 @@ declare namespace Cypress {
     enterSingleClinicalCondition(testAndConditions: any)
     enterAndClinical(testAndConditions: any)
     deleteExistingTrial(trialName: string)
+    deleteTrialAdmin(trialName: string)
+    deleteTrialMember(trialName: string)
+    clickMatchAllGenomic()
+
   }
 }
