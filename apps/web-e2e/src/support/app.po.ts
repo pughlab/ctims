@@ -281,7 +281,7 @@ export const getMolecularFunction = () => cy.get('#root_molecular_function')
 //******************* Clinical ********************************************************//
 
 //Age
-export const getClinicalAge = () => cy.get('#root_age_numerical')
+export const getClinicalAge = () => cy.get('#root_age_expression')
 
 //Oncotree Primary Diagnosis
 export const getClinicalOncotreePrimaryDiagnosis = () => cy.get('#root_oncotree_primary_diagnosis')
