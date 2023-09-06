@@ -69,7 +69,7 @@ export const NCT02503722_Osimertinib: Ctml2 = {
   "Ability to understand and the willingness to sign a written informed consent document.",
   "Available for follow-up of their disease after treatment until progressive disease is documented and resolution of related adverse events until < grade 2."
 ],
-  "protocol_no": "123-020",
+  "protocol_no": "PJC-020",
   "short_title": "Testing the Combination of MLN0128 (TAK-228) and AZD9291 in Advanced EGFR (Epidermal Growth Factor Receptor) Mutation Positive Non-small Cell Lung Cancer",
   "site_list": {
   "site": [
