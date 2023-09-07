@@ -76,7 +76,7 @@ const EditorImportTrialPage = () => {
 
   return (
     <>
-      <EditorTopBar isEditMode={true} />
+      <EditorTopBar isEditMode={true} title={"Import CTML"}/>
       <IdleComponent />
       <div style={containerStyle}>
         <LeftMenuEditorComponent />

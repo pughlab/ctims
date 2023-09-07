@@ -13,8 +13,12 @@ import SendCtmlToMatchminerDialog from "./SendCTMLtoMatchminerDialog";
 import useSendCTML from "../../hooks/useSendCTML";
 import { setIsFormChanged } from '../../store/slices/contextSlice';
 
+interface EditorTopBarProps {
+    isEditMode?: boolean;
+    title?: string;
+}
 
-const EditorTopBar = (props: {isEditMode?: boolean}) => {
+const EditorTopBar = (props: EditorTopBarProps) => {
 
   const [isDialogVisible, setIsDialogVisible] = useState<boolean>(false);
   const [isSendDialogVisible, setIsSendDialogVisible] = useState<boolean>(false);
@@ -89,17 +93,6 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
       useSendCTML();
     }
   }, [isOKClicked]);
-
-  const getPageName = () => {
-    const currentURL = window.location.href;
-    if (currentURL.includes('/trials/import')) {
-      return 'Import CTML';
-    }else if (props.isEditMode) {
-      return 'Edit CTML';
-    } else {
-      return 'New CTML';
-    }
-  }
 
   const backClick = (e) => {
     e.preventDefault();
@@ -188,7 +181,7 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
           <div className={styles.backBtn} onClick={(e) => backClick(e)}>
             <i className="pi pi-arrow-left"></i>
           </div>
-          <div className={styles.title}>{getPageName()}</div>
+          <div className={styles.title}>{props.title ? props.title : "New CTML"}</div>
         </div>
         <div className={styles.menuBtnGroup}>
           {/*<Button label="Discard" className="p-button-text p-button-plain" />*/}
