@@ -90,6 +90,17 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
     }
   }, [isOKClicked]);
 
+  const getPageName = () => {
+    const currentURL = window.location.href;
+    if (currentURL.includes('/trials/import')) {
+      return 'Import CTML';
+    }else if (props.isEditMode) {
+      return 'Edit CTML';
+    } else {
+      return 'New CTML';
+    }
+  }
+
   const backClick = (e) => {
     e.preventDefault();
     router.push('/main');
@@ -177,7 +188,7 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
           <div className={styles.backBtn} onClick={(e) => backClick(e)}>
             <i className="pi pi-arrow-left"></i>
           </div>
-          <div className={styles.title}>{props.isEditMode ? 'Edit CTML' : 'New CTML'}</div>
+          <div className={styles.title}>{getPageName()}</div>
         </div>
         <div className={styles.menuBtnGroup}>
           {/*<Button label="Discard" className="p-button-text p-button-plain" />*/}
