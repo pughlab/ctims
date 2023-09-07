@@ -91,7 +91,7 @@ const {
   // return <div>Editing trial {id}</div>
   return (
     <>
-      <EditorTopBar isEditMode={true} />
+      <EditorTopBar isEditMode={true} title={"Edit CTML"}/>
       <IdleComponent />
       <div style={containerStyle}>
         <LeftMenuEditorComponent />
