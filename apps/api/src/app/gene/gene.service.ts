@@ -7,11 +7,20 @@ export class GeneService {
       const response = await fetch(
         "https://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/json/hgnc_complete_set.json"
       );
+      if (!response.ok) {
+        console.error("Client error:", response.status);
+        throw new Error(`Client error: ${response.status}`);
+      }
       const data = await response.json();
       const symbols = data.response.docs.map((x) => x.symbol);
       return symbols;
     } catch (error) {
-      console.error("Error fetching data:", error);
+      if (error instanceof Error) {
+        console.error("Server error:", error.message);
+      } else {
+        console.error("Unknown error:", error);
+      }
+      throw error;
     }
   }
 
@@ -28,5 +37,3 @@ export class GeneService {
     return symbols.slice(0, limit);
   }
 }
-
-// module.exports = new geneService();

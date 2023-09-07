@@ -1,8 +1,6 @@
 import {
   Controller,
   Get,
-  Query,
-  Res,
 } from '@nestjs/common';
 import { GeneService } from './gene.service';
 import {ModuleRef} from "@nestjs/core";
@@ -12,14 +10,11 @@ import {ModuleRef} from "@nestjs/core";
 export class GeneController {
   constructor(private readonly geneService: GeneService) {}
 
-  @Get()
-  async getHugoGenes(@Query('query') query: string, @Res() res) {
+    @Get()
+  async getHugoGenes() {
     try {
       const symbols = await this.geneService.fetchGeneSymbols();
-      const filteredSymbols = this.geneService.filterGeneSymbols(symbols, query);
-      const topSymbols = this.geneService.getTopGeneSymbols(filteredSymbols);
-
-      return topSymbols;
+      return symbols;
     } catch (error) {
       console.error('Error fetching data:', error);
     }
