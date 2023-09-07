@@ -22,7 +22,7 @@ import CtimsDropdown from "../../custom-rjsf-templates/CtimsDropdown";
 import {CtimsDialogContext, CtimsDialogContextType} from "../CtimsMatchDialog";
 import { Checkbox } from 'primereact/checkbox';
 import { getCurrentOperator } from "../helpers";
-import axios from 'axios';
+import axios from "axios";
 
 
 const RjsfForm = withTheme(PrimeTheme)
@@ -89,6 +89,32 @@ export const GenomicForm = (props: IFormProps) => {
 
   const dispatch = useDispatch()
 
+const hugo_gene_component2 = () => {
+  const [hugoSymbols2, setHugoSymbols2] = useState([]);
+  console.log("test1");
+    useEffect(() => {
+      async function fetchTopSymbols2() {
+        try {
+          console.log("test2");
+          const response = await axios.get('http://localhost:3000/api/gene');
+          console.log("test3");
+          const data = await response.data();
+          const symbols = data.response.docs.map((x) => x.symbol);
+          console.log("Symbols: ", symbols);
+          setHugoSymbols2(symbols);
+          hugoSymbols2.push(symbols);
+        } catch (error) {
+          console.error('Error fetching topSymbols:', error);
+        }
+      }
+      console.log("fetching...");
+      fetchTopSymbols2();
+    }, []);
+    console.log(hugoSymbols2);
+    return hugoSymbols2;
+}
+let hugoSymbols2 = hugo_gene_component2();
+console.log("hg2: ", hugoSymbols2);
 
 const hugo_gene_component = () => {
   const [hugoSymbols, setHugoSymbols] = useState([]);
@@ -96,9 +122,6 @@ const hugo_gene_component = () => {
     useEffect(() => {
       async function fetchTopSymbols() {
         try {
-          // const response = await axios.get('/api/app/gene');
-          // const topSymbols = response.data.topSymbols;
-          // setHugoSymbols(topSymbols);
             const response = await fetch(
             "https://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/json/hgnc_complete_set.json"
           );
@@ -120,6 +143,7 @@ const hugo_gene_component = () => {
 let hugoSymbols = hugo_gene_component();
 console.log(hugoSymbols);
 hugo_gene_component();
+
   const genomicFormSchema = {
     'definitions': {
       'hugo_symbol': {
