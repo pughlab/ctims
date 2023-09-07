@@ -60,8 +60,8 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
 
   // disable export OK button if there are errors of if form is changed and not saved
   const shouldDisableExportButton = () => {
-    const importedCtml = sessionStorage.getItem('imported_ctml');
-    return errors.length > 0 || isFormChanged || ctmlModel === null || importedCtml !== null;
+    const currentURL = window.location.href;
+    return errors.length > 0 || isFormChanged || ctmlModel === null || currentURL.includes('/trials/import');
   }
 
   const footer = (props: {exportCtmlClicked: () => void}) => {
