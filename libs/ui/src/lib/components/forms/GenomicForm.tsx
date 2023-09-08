@@ -22,7 +22,7 @@ import CtimsDropdown from "../../custom-rjsf-templates/CtimsDropdown";
 import {CtimsDialogContext, CtimsDialogContextType} from "../CtimsMatchDialog";
 import { Checkbox } from 'primereact/checkbox';
 import { getCurrentOperator } from "../helpers";
-import useAxios from "../../../../../../apps/web/hooks/useAxios";
+import axios from "axios";
 
 
 const RjsfForm = withTheme(PrimeTheme)
@@ -56,9 +56,6 @@ export const GenomicForm = (props: IFormProps) => {
   // console.log('GenomicForm node: ', node)
 
   const [matchAllChecked, setMatchAllChecked] = useState<boolean>(false);
-  const [hugoSymbols, setHugoSymbols] = useState([]);
-  const {loading: loadingHugoSymbols, response: hugoSymbolsResponse, operation: fetchHugoSymbols} = useAxios();
-
 
   const {setSaveBtnState} = useContext(CtimsDialogContext) as CtimsDialogContextType;
 
@@ -92,22 +89,33 @@ export const GenomicForm = (props: IFormProps) => {
 
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    fetchHugoSymbols({
-      method: 'get',
-      url: '/genes'
-    });
-  }, []);
-
-  useEffect(() => {
-    setHugoSymbols(hugoSymbolsResponse == null ? [] : hugoSymbolsResponse.slice(0, 50));
-  }, [hugoSymbolsResponse]);
+const hugo_gene_component = () => {
+  const [hugoSymbols, setHugoSymbols] = useState([]);
+    useEffect(() => {
+      async function fetchTopSymbols() {
+        try {
+          const response = await axios.get('http://localhost:3333/api/genes') 
+          .then(function (response) {
+          console.log(response);
+          const symbols = response.data;
+          setHugoSymbols(symbols);
+          hugoSymbols.push(symbols);
+          })
+        } catch (error) {
+          console.error('Error fetching symbols:', error);
+        }
+      }
+      fetchTopSymbols();
+    }, []);
+    return hugoSymbols;
+}
+let hugoSymbols = hugo_gene_component();
 
   const genomicFormSchema = {
     'definitions': {
       'hugo_symbol': {
-        "enumNames": hugoSymbols,
-        "enum": hugoSymbols
+        "enumNames": hugoSymbols.slice(0,50),
+        "enum": hugoSymbols.slice(0,50)
       },
       "variant_category": {
         "enumNames": [
