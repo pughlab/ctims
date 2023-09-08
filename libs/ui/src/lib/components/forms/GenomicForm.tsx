@@ -92,11 +92,10 @@ export const GenomicForm = (props: IFormProps) => {
 const hugo_gene_component = () => {
   const [hugoSymbols, setHugoSymbols] = useState([]);
     useEffect(() => {
-      async function fetchTopSymbols() {
+      async function fetchHugoSymbols() {
         try {
           const response = await axios.get('http://localhost:3333/api/genes') 
           .then(function (response) {
-          console.log(response);
           const symbols = response.data;
           setHugoSymbols(symbols);
           hugoSymbols.push(symbols);
@@ -105,7 +104,7 @@ const hugo_gene_component = () => {
           console.error('Error fetching symbols:', error);
         }
       }
-      fetchTopSymbols();
+      fetchHugoSymbols();
     }, []);
     return hugoSymbols;
 }

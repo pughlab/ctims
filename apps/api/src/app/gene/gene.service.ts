@@ -9,7 +9,6 @@ export class GeneService {
       );
       if (!response.ok) {
         console.error("Client error:", response.status);
-        throw new Error(`Client error: ${response.status}`);
       }
       const data = await response.json();
       const symbols = data.response.docs.map((x) => x.symbol);
@@ -18,22 +17,9 @@ export class GeneService {
       if (error instanceof Error) {
         console.error("Server error:", error.message);
       } else {
-        console.error("Unknown error:", error);
+        console.error("Unknown error:", error.message);
       }
       throw error;
     }
-  }
-
-  filterGeneSymbols(symbols, query) {
-    if (!query) {
-      return symbols;
-    }
-    return symbols.filter((symbol) =>
-      symbol.toLowerCase().includes(query.toLowerCase())
-    );
-  }
-
-  getTopGeneSymbols(symbols, limit = 10) {
-    return symbols.slice(0, limit);
   }
 }

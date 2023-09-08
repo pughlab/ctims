@@ -13,8 +13,7 @@ export class GeneController {
     @Get()
   async getHugoGenes() {
     try {
-      const symbols = await this.geneService.fetchGeneSymbols();
-      return symbols;
+      return await this.geneService.fetchGeneSymbols();
     } catch (error) {
       console.error('Error fetching data:', error);
     }
