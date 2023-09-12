@@ -87,7 +87,16 @@ export class TrialController implements OnModuleInit{
     if (format !== 'YAML' && format !== 'JSON') {
       throw new NotFoundException(`Format ${format} is not supported.`);
     }
-    this.trialService.recordTrialExported(+id, user, format);
+    // Add event
+    this.eventService.createEvent({
+      type: event_type.TrialExported,
+      description: "Trial exported via Post to /trials/:id/export/:format",
+      user,
+      trial: { id: +id },
+      metadata: {
+        input: { id, format }
+      }
+    });
   }
 
   @Get()

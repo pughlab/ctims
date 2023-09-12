@@ -10,6 +10,8 @@ import {increment} from "../store/slices/counterSlice";
 import {signIn} from "next-auth/react";
 import {Password} from "primereact/password";
 import { Toast } from "primereact/toast";
+import { Dialog } from "primereact/dialog";
+import strings from "../data/strings.json";
 
 const Login = () => {
   const hasMounted = useHasMounted();
@@ -24,10 +26,24 @@ const Login = () => {
 
   const router: NextRouter = useRouter();
 
+  const [dialogVisible, setDialogVisible] = useState(false);
+
+  const componentStrings = strings.components.Login;
+
+  const showDialog = () => {
+    setDialogVisible(true);
+  };
+
+  const hideDialog = () => {
+    setDialogVisible(false);
+  };
+
   const showInvalidLoginToast =  (message) => {
     loginErrorToast.current.show({
       severity: "error",
-      summary: message
+      summary: message,
+      closable: true,
+      sticky: true
     });
   }
 
@@ -68,7 +84,7 @@ const Login = () => {
     if (result.ok) {
       router.push('/main');
     } else {
-      showInvalidLoginToast(`Unauthorized - ${username}`);
+      showInvalidLoginToast(`Unable to sign in. If you have not registered your account please contact ${componentStrings.sign_up_contact} to register your account.`);
     }
   }
 
@@ -80,10 +96,19 @@ const Login = () => {
     e.preventDefault();
     dispatch(increment());
     console.log('Forgot password');
+    showDialog();
   }
 
   return (
     <Layout>
+      <Dialog
+        header="Forgot Password"
+        visible={dialogVisible}
+        onHide={hideDialog}
+        closable={true}
+        footer={<Button label="OK" onClick={hideDialog} style={{background: '#2E72D2'}} />}>
+        <p style={{margin: '25px', width: '50vw' }}>{componentStrings.reset_password_modal}</p>
+      </Dialog>
     <Toast ref={loginErrorToast}></Toast>
     <div className={styles.loginBg}>
       <div className={styles.frame}>
@@ -94,7 +119,7 @@ const Login = () => {
 
           <div className={styles.heading}>
             <div className={styles.signIn}>Sign in</div>
-            <span className={styles.description}>Use your T-ID, RMP ID, Research ID, or UHN email address to sign in.</span>
+            <span className={styles.description}>{componentStrings.login_instructions}</span>
           </div>
           <form>
             <div className={styles.usernameContainer}>

@@ -13,6 +13,8 @@ import { Button } from 'primereact/button';
 import TrialGroupsDropdown from './TrialGroupsDropdown';
 import { Menu } from 'primereact/menu';
 import { Column } from 'primereact/column';
+import {Toast} from "primereact/toast";
+import {parse} from "yaml";
 
 const Trials = () => {
   const { response: deleteTrialResponse, error: deleteTrialError, loading: deleteTrialLoading, deleteTrialOperation } = useDeleteTrial();
@@ -27,6 +29,9 @@ const Trials = () => {
   const dispatch = useDispatch();
   const menu = useRef(null);
 
+  const trialsErrorToast = useRef(null);
+
+
   const createCtmlClick = (e) => {
     e.preventDefault();
     dispatch(setIsFormDisabled(false));
@@ -38,7 +43,6 @@ const Trials = () => {
       label: 'Edit',
       icon: 'pi pi-pencil',
       command: () => {
-        console.log('Edit');
         dispatch(setIsFormDisabled((rowClicked?.user.email !== data.user.email) && !isTrialGroupAdmin));
         router.push(`/trials/edit/${rowClicked.id}`);
       }
@@ -54,11 +58,11 @@ const Trials = () => {
           rejectLabel: 'Cancel',
           acceptLabel: 'Delete',
           accept: () => {
-            console.log('accept', rowClicked);
+            // console.log('accept', rowClicked);
             deleteTrialOperation(rowClicked.id);
           },
           reject: () => {
-            console.log('reject');
+            // console.log('reject');
           }
         });
       }
@@ -110,18 +114,25 @@ const Trials = () => {
       return;
     }
     localStorage.setItem('ctims-accessToken', data['accessToken']);
-    console.log('data', data)
+    sessionStorage.removeItem('imported_ctml');
+    // console.log('data', data)
   }, [data])
 
   useEffect(() => {
     if (getTrialsForUsersInGroupError) {
-      console.error('Error fetching trials:', getTrialsForUsersInGroupError);
+      trialsErrorToast.current.show({
+        severity: "error",
+        summary: 'Error fetching trials',
+      });
     }
   }, [getTrialsForUsersInGroupError]);
 
   useEffect(() => {
     if (deleteTrialError) {
-      console.error('Error deleting trial:', deleteTrialError);
+        trialsErrorToast.current.show({
+            severity: "error",
+            summary: 'Error deleting trial',
+        });
     }
   }, [deleteTrialError]);
 
@@ -138,15 +149,67 @@ const Trials = () => {
     }
   }, [deleteTrialResponse]);
 
+  const onImportClicked = () => {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.style.display = 'none'; // Ensure it's not displayed
+
+    // Attach an event listener to handle file selection
+    fileInput.addEventListener('change', (event) => {
+      // @ts-ignore
+      const file = event.target.files[0];
+      console.log('file type', file.type);
+      if (file && (file.type === 'application/json' || file.type === 'application/x-yaml')) {
+        const reader = new FileReader();
+
+        // If the file is text (e.g., .txt, .csv, .json), use readAsText
+        reader.readAsText(file);
+
+        reader.onload = function() {
+          let ctmlModel = reader.result as string;
+          if (file.type === 'application/x-yaml') {
+            ctmlModel = parse(reader.result as string);
+            ctmlModel = JSON.stringify(ctmlModel, null, 2);
+          }
+          sessionStorage.setItem('imported_ctml', ctmlModel);
+          router.push(`/trials/import`);
+        };
+
+        reader.onerror = function() {
+          trialsErrorToast.current.show({
+            severity: "error",
+            summary: reader.error
+          });
+          sessionStorage.removeItem('imported_ctml')
+        };
+      } else {
+        trialsErrorToast.current.show({
+          severity: "error",
+          summary: 'Please select a valid JSON or YAML file'
+        });
+      }
+
+      // Remove the input element from the document after use
+      document.body.removeChild(fileInput);
+    });
+
+    // Append the input element to the document
+    document.body.appendChild(fileInput);
+
+    // Programmatically trigger a click on the input element
+    fileInput.click();
+  }
+
   return (
     <>
+      <Toast ref={trialsErrorToast}></Toast>
       <ConfirmDialog />
       <div >
         <TrialGroupsDropdown roles={(data as unknown as any).roles} onTrialGroupSelected={onTrialGroupSelected} />
         <div className={styles.titleAndButtonsContainer}>
           <span className={styles.trialsText}>Trials</span>
           <div className={styles.buttonsContainer}>
-            <Button label="Import" className="p-button-text p-button-plain" />
+            <Button disabled={!selectedTrialGroup} label="Import CTML" className="p-button-text p-button-plain" onClick={onImportClicked} />
             <Button disabled={!selectedTrialGroup} label="Create CTML" className={styles.createCtmlButton} onClick={createCtmlClick} />
           </div>
         </div>

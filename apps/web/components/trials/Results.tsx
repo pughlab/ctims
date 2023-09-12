@@ -71,7 +71,7 @@ const Results = () => {
     {label: "Trial Id", key: "trialId"},
     {label: "Trial Name", key: "trialName"},
     {label: "Trial Match Date", key: "matchDate"},
-    {label: "Arm Description", key: "arm_description"},
+    {label: "Arm Code", key: "code"},
     {label: "Study ID", key: "study_id"},
     {label: "Patient ID", key: "patient_id"},
     {label: "Sample ID", key: "sample_id"},
@@ -84,7 +84,12 @@ const Results = () => {
     {label: "PR Status", key: "pr_status"},
     {label: "Genomic Alteration", key: "genomic_alteration"},
     {label: "Hugo Symbol", key: "true_hugo_symbol"},
-    {label: "Mutation Effect", key: "mutation_effect"}
+    {label: "Mutation Effect", key: "mutation_effect"},
+    {label: "True Variant Classification", key: "true_variant_classification"},
+    {label: "Variant Category", key: "variant_category"},
+    {label: "Left Partner Gene", key: "left_partner_gene"},
+    {label: "Right Partner Gene", key: "right_partner_gene"},
+    {label: "CNV Call", key: "cnv_call"},
   ];
   // csv download link ref
   const csvLink = useRef()
@@ -128,7 +133,8 @@ const Results = () => {
         protocol_no: cur.protocol_no,
         trialRetCount: (cur.trialStatus === TrialStatusEnum[TrialStatusEnum.PENDING]) ? '' : cur.trialRetCount,
         matchedDate: cur.matchedDate? cur.matchedDate : '',
-        trialStatus: cur.trialStatus
+        trialStatus: cur.trialStatus,
+        short_title: cur.short_title
       }
       dataCopy.push(curCopy);
     }
@@ -139,7 +145,7 @@ const Results = () => {
   const postProcessCSVData = (data: any) => {
     for (let cur of data) {
       cur.trialId = trialSelected.trialId;
-      cur.trialName = cur.short_title;
+      cur.trialName = trialSelected.short_title;
       cur.matchDate = trialSelected.matchedDate;
     }
     return data;

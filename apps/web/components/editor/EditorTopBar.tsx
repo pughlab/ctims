@@ -13,8 +13,12 @@ import SendCtmlToMatchminerDialog from "./SendCTMLtoMatchminerDialog";
 import useSendCTML from "../../hooks/useSendCTML";
 import { setIsFormChanged } from '../../store/slices/contextSlice';
 
+interface EditorTopBarProps {
+    isEditMode?: boolean;
+    title?: string;
+}
 
-const EditorTopBar = (props: {isEditMode?: boolean}) => {
+const EditorTopBar = (props: EditorTopBarProps) => {
 
   const [isDialogVisible, setIsDialogVisible] = useState<boolean>(false);
   const [isSendDialogVisible, setIsSendDialogVisible] = useState<boolean>(false);
@@ -177,10 +181,10 @@ const EditorTopBar = (props: {isEditMode?: boolean}) => {
           <div className={styles.backBtn} onClick={(e) => backClick(e)}>
             <i className="pi pi-arrow-left"></i>
           </div>
-          <div className={styles.title}>{props.isEditMode ? 'Edit CTML' : 'New CTML'}</div>
+          <div className={styles.title}>{props.title ? props.title : "New CTML"}</div>
         </div>
         <div className={styles.menuBtnGroup}>
-          <Button label="Discard" className="p-button-text p-button-plain" />
+          {/*<Button label="Discard" className="p-button-text p-button-plain" />*/}
           <Button label={isGroupAdmin ? 'Export' : 'Validate'}
                   onClick={onExportClick}
                   className="p-button-text p-button-plain" />

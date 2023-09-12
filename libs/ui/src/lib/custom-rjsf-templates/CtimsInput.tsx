@@ -44,6 +44,7 @@ const CtimsInput = (props: WidgetProps) => {
     const _onFocus = ({
                           target: { value },
                       }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+
     const inputType = (type || schema.type) === "string" ? "text" : `${type || schema.type}`
     const labelValue = uiSchema?.["ui:title"] || schema.title || label;
 

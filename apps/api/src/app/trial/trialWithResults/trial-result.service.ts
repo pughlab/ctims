@@ -8,11 +8,13 @@ import {event_type, user} from "@prisma/client";
 import {getCtmlStatusLabel} from "../../../../../../libs/types/src/CtmlStatusLabels";
 import {CtmlStatusEnum} from "../../../../../../libs/types/src/ctml-status.enum";
 import {TrialStatusEnum} from "../../../../../../libs/types/src/trial-status.enum";
+import {CtmlJsonService} from "../../ctml-json/ctml-json.service";
 
 @Injectable()
 export class TrialResultService implements OnModuleInit {
 
   private eventService: EventService;
+  private ctmlJsonService: CtmlJsonService;
 
   constructor(
     private readonly prismaService: PrismaService,
@@ -22,6 +24,7 @@ export class TrialResultService implements OnModuleInit {
 
   onModuleInit(): any {
     this.eventService = this.moduleRef.get(EventService, {strict: false});
+    this.ctmlJsonService = this.moduleRef.get(CtmlJsonService, {strict: false});
   }
 
   async findAllWithResults(): Promise<trialWithResults[]> {
@@ -31,9 +34,9 @@ export class TrialResultService implements OnModuleInit {
           {trial_status: TrialStatusEnum.PENDING},
           {trial_status: TrialStatusEnum.MATCHED}
         ]
-
       }
     });
+
     let trialResults: trialWithResults[] = [];
     let matchResults: any;
     if (trials.length > 0) {
@@ -45,7 +48,6 @@ export class TrialResultService implements OnModuleInit {
             url: url,
           }
         );
-        console.log(matchResults.data.values);
       } catch (error) {
         console.log(error);
         throw new Error(error);
@@ -53,6 +55,11 @@ export class TrialResultService implements OnModuleInit {
 
       for (let trial of trials) {
         const mm_info = await this.findMatchMinerInfo(trial.protocol_no, matchResults.data.values);
+        // find short title from ctml_json data from trial info
+        const ctmlJsonArray = await this.ctmlJsonService.findByTrialId(trial.id);
+        const ctmlJson = ctmlJsonArray[0];
+        const ctmlData = ctmlJson.data
+
         const result: trialWithResults = {
           trialId: trial.id,
           nct_id: trial.nct_id,
@@ -65,6 +72,7 @@ export class TrialResultService implements OnModuleInit {
           trialRetCount: mm_info.count,
           matchedDate: mm_info.updated,
           trialStatus: TrialStatusEnum[trial.trial_status],
+          short_title: ctmlData['short_title'],
         }
         trialResults.push(result);
       }
@@ -98,11 +106,13 @@ export class TrialResultService implements OnModuleInit {
         }
       );
 
-      await this.prismaService.event.create({
-        data: {
-          type: event_type.ResultDownloaded,
-          trial: {connect: {id}},
-          user: {connect: {id: user.id}}
+      // Add event
+      this.eventService.createEvent({
+        type: event_type.ResultDownloaded,
+        user,
+        trial,
+        metadata: {
+          input: { id }
         }
       });
 
