@@ -10,6 +10,10 @@ import { KeycloakPasswordGuard } from '../auth/KeycloakPasswordGuard';
 @Controller('matchminer')
 @ApiTags('matchminer')
 export class MatchminerController {
+
+  private MM_API_TOKEN = process.env.MM_API_TOKEN;
+
+
   constructor(private matchMinerService: MatchminerService) {
 
   }
@@ -22,7 +26,7 @@ export class MatchminerController {
     const formData = new FormData();
     formData.append('clinical_file', file.buffer, file.originalname);
     const response = await axios.post(`${process.env.MM_API_URL}/load_clinical`, formData, {
-      headers:formData.getHeaders(),
+      headers: {...formData.getHeaders(), 'Authorization': `Bearer ${this.MM_API_TOKEN}`},
     });
     return res.status(200).json({ message: 'File uploaded successfully' });
 
@@ -36,7 +40,7 @@ export class MatchminerController {
     const formData = new FormData();
     formData.append('genomic_file', file.buffer, file.originalname);
     const response = await axios.post(`${process.env.MM_API_URL}/load_genomic`, formData, {
-      headers:formData.getHeaders(),
+      headers: {...formData.getHeaders(), 'Authorization': `Bearer ${this.MM_API_TOKEN}`},
     });
     return response.data;
   }
