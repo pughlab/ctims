@@ -9,12 +9,16 @@ import {getCtmlStatusLabel} from "../../../../../../libs/types/src/CtmlStatusLab
 import {CtmlStatusEnum} from "../../../../../../libs/types/src/ctml-status.enum";
 import {TrialStatusEnum} from "../../../../../../libs/types/src/trial-status.enum";
 import {CtmlJsonService} from "../../ctml-json/ctml-json.service";
+import {headers} from "next/headers";
+import * as process from "process";
 
 @Injectable()
 export class TrialResultService implements OnModuleInit {
 
   private eventService: EventService;
   private ctmlJsonService: CtmlJsonService;
+
+  private MM_API_TOKEN = process.env.MM_API_TOKEN;
 
   constructor(
     private readonly prismaService: PrismaService,
@@ -46,7 +50,10 @@ export class TrialResultService implements OnModuleInit {
           {
             method: 'get',
             url: url,
-          }
+            headers: {
+              'Authorization': `Bearer ${this.MM_API_TOKEN}`
+            }
+          },
         );
       } catch (error) {
         console.log(error);
@@ -103,6 +110,9 @@ export class TrialResultService implements OnModuleInit {
         {
           method: 'get',
           url: url,
+          headers: {
+            'Authorization': `Bearer ${this.MM_API_TOKEN}`
+          }
         }
       );
 

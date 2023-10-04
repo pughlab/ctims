@@ -36,6 +36,7 @@ services:
         PRISMA_FIELD_ENCRYPTION_KEY: ${PRISMA_FIELD_ENCRYPTION_KEY}
         MM_API_URL: ${MM_API_URL}
         CTIMS_ENV: ${CTIMS_ENV}
+        MM_API_TOKEN: ${MM_API_TOKEN}
     environment:
       DATABASE_URL: mysql://ctims:ctims@database:3306/ctims
     ports:

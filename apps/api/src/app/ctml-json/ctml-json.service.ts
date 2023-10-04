@@ -9,6 +9,9 @@ import {TrialStatusEnum} from "../../../../../libs/types/src/trial-status.enum";
 @Injectable()
 export class CtmlJsonService {
 
+  private MM_API_TOKEN = process.env.MM_API_TOKEN;
+
+
   constructor(
     private readonly prismaService: PrismaService
   ) { }
@@ -124,6 +127,9 @@ export class CtmlJsonService {
           method: 'post',
           url: url,
           data: ctml_json,
+          headers: {
+            'Authorization': `Bearer ${this.MM_API_TOKEN}`
+          }
         }
       );
       console.log(results);
@@ -158,6 +164,9 @@ export class CtmlJsonService {
         {
           method: 'get',
           url: url,
+          headers: {
+            'Authorization': `Bearer ${this.MM_API_TOKEN}`
+          }
         }
       );
       console.log(results);
