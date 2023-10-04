@@ -57,7 +57,7 @@ services:
         - my-network
 
   mm_api:
-    image: docker-registry.uhn.ca:443/matchminer-api:ef5ef6c1-ca32-4f06-90a7-e18004d58f0d
+    image: docker-registry.uhn.ca:443/matchminer-api:a62fb924-1356-4c01-b088-1b99491bd12c
     ports:
       - "5000:5000"
     restart: on-failure
