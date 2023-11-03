@@ -75,6 +75,36 @@ services:
     volumes:
       - mm-mongo-db:/data/db
 
+  postgres:
+    image: postgres:13.2
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: keycloakusers
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    networks:
+      - my-network
+
+  keycloak:
+    depends_on:
+      - postgres
+    container_name: local_keycloak
+    environment:
+      DB_VENDOR: postgres
+      DB_ADDR: postgres
+      DB_DATABASE: keycloakusers
+      DB_USER: admin
+      DB_PASSWORD: admin
+    image: quay.io/keycloak/keycloak:22.0.5
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    command:
+      - /opt/keycloak/bin/kc.sh
+      - start-dev
+    networks:
+      - my-network
+
 volumes:
   mm-mongo-db:
 
