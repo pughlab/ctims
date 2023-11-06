@@ -19,6 +19,17 @@ services:
     networks:
         - my-network
 
+  database:
+    container_name: ctims-db
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    ports:
+      - "3306:3306"
+    restart: on-failure
+    networks:
+      - my-network
+
   backend:
     container_name: ctims-api
     build:
@@ -38,20 +49,9 @@ services:
         CTIMS_ENV: ${CTIMS_ENV}
         MM_API_TOKEN: ${MM_API_TOKEN}
     environment:
-      DATABASE_URL: mysql://ctims:ctims@database:3306/ctims
+      DATABASE_URL: mysql://ctims:ctims@database:3306/ctims?connect_timeout=300
     ports:
       - "3333:3333"
-    restart: on-failure
-    networks:
-        - my-network
-
-  database:
-    container_name: ctims-db
-    build:
-      context: ./database
-      dockerfile: Dockerfile
-    ports:
-      - "3306:3306"
     restart: on-failure
     networks:
         - my-network
@@ -88,6 +88,7 @@ services:
   keycloak:
     depends_on:
       - postgres
+    image: quay.io/keycloak/keycloak:22.0.5
     container_name: local_keycloak
     environment:
       DB_VENDOR: postgres
@@ -95,12 +96,12 @@ services:
       DB_DATABASE: keycloakusers
       DB_USER: admin
       DB_PASSWORD: admin
-    image: quay.io/keycloak/keycloak:22.0.5
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
     ports:
       - "8080:8080"
     restart: unless-stopped
     command:
-      - /opt/keycloak/bin/kc.sh
       - start-dev
     networks:
       - my-network

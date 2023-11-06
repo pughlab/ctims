@@ -3,10 +3,13 @@ FROM node:16.14-slim
 #RUN apk add --update python3 make g++ && rm -rf /var/cache/apk/*
 RUN apt-get update && \
     apt-get install -y \
+    openssl libssl-dev \
     python3 \
     make \
     g++ && \
     rm -rf /var/lib/apt/lists/*
+
+
 
 WORKDIR /usr/src
 RUN mkdir -p /usr/src/app
