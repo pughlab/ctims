@@ -47,3 +47,6 @@ apps/web/.env
 
 apps/web-e2e/allure-report
 apps/web-e2e/allure-results
+apps/web-e2e/cypress/downloads
+apps/web-e2e/src/fixtures
+apps/web-e2e/src/support/interfaces
