@@ -21,7 +21,7 @@ import CtimsInput from "../../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../../custom-rjsf-templates/CtimsDropdown";
 import {CtimsDialogContext, CtimsDialogContextType} from "../CtimsMatchDialog";
 import { Checkbox } from 'primereact/checkbox';
-import { getCurrentOperator } from "../helpers";
+import {endsWithANumber, getCurrentOperator} from "../helpers";
 
 
 const RjsfForm = withTheme(PrimeTheme)
@@ -299,6 +299,11 @@ export const GenomicForm = (props: IFormProps) => {
         'title': 'Protein Change',
         "description": "Curate a specific protein change (must be in the correct format ex. p.T70M)",
       },
+      'wildcard_protein_change': {
+        'type': 'string',
+        'title': 'Wildcard Protein Change',
+        "description": "Curate variations of a protein change (must be in the correct format ex. p.T70). This allows matching of any mutation at this site. ",
+      },
       "molecular_function": {
         "$ref": "#/definitions/molecular_function",
         'title': 'Molecular Function',
@@ -426,6 +431,13 @@ export const GenomicForm = (props: IFormProps) => {
     return getCurrentOperator(rootNodes, node);
   }
 
+  const customValidate = (formData: any, errors: any, uiSchema: any) => {
+    if (!endsWithANumber(formData.wildcard_protein_change)) {
+      errors.wildcard_protein_change.addError('Must end with a number');
+    }
+    return errors;
+  }
+
   return (
     <div style={formContainerStyle}>
       <OperatorDropdown
@@ -449,6 +461,7 @@ export const GenomicForm = (props: IFormProps) => {
                   widgets={widgets}
                   onChange={onFormChange}
                   onError={() => {console.log('onError')}}
+                  customValidate={customValidate}
                   validator={localValidator}/>
       </div>
     </div>

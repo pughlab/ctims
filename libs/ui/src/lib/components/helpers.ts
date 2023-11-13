@@ -8,6 +8,13 @@ interface JsonObject {
   [key: string]: any;
 }
 
+export const endsWithANumber = (str: string) => {
+  if (!str) {
+    return true;
+  }
+  return /\d+$/.test(str);
+}
+
 export const stringContains = (str: string, search: string) => {
   return str.toLowerCase().indexOf(search.toLowerCase()) !== -1;
 }

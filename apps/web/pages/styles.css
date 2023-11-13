@@ -286,6 +286,10 @@
   height: 46px !important;
 }
 
+.p-inputtext:enabled:focus {
+  box-shadow: none !important;
+}
+
 .rjsf {
   width: 100%;
 }
