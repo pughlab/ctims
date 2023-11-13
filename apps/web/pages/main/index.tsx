@@ -17,7 +17,7 @@ const Main = () => {
     if (!data) {
       return;
     }
-    localStorage.setItem('ctims-accessToken', data['accessToken']);
+    localStorage.setItem('ctims-accessToken', data['accessToken'] as string);
     console.log('data', data)
 
     setActiveTab(0);

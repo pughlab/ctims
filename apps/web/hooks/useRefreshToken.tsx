@@ -26,7 +26,7 @@ const useRefreshToken = () => {
         headers,
       });
       const token: any = response.data;
-      localStorage.setItem('ctims-accessToken', token.accessToken);
+      localStorage.setItem('ctims-accessToken', token.accessToken as string);
       setResponse(token);
     }
     catch (error) {
