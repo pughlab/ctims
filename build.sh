@@ -9,7 +9,7 @@ echo "GIT_IS_CLEAN: $GIT_IS_CLEAN"
 echo "COMMIT_ISH: $COMMIT_ISH"
 
 #docker-compose build --no-cache
-docker build --no-cache  \
+docker build --no-cache \
 	--build-arg CTIMS_WEB_PORT=3000 \
     --build-arg NEXTAUTH_SECRET=dAbxJF2DRzqwGYn+BWKdj8o9ieMri4FWsmIRn77r2F8= \
     --build-arg REACT_APP_API_URL=https://ctims-api.qa02.technainstitute.net/api \
