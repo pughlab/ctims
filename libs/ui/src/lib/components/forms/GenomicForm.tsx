@@ -254,8 +254,8 @@ export const GenomicForm = (props: IFormProps) => {
           "MMR-Deficient"
         ],
         "enum": [
-          "mmr_proficient",
-          "mmr_deficient",
+          "MMR-Proficient",
+          "MMR-Deficient",
         ]
       },
       "ms_status": {
@@ -265,9 +265,9 @@ export const GenomicForm = (props: IFormProps) => {
           "MSS"
         ],
         "enum": [
-          "msi_h",
-          "msi_l",
-          "mss",
+          "MSI-H",
+          "MSI-L",
+          "MSS",
         ]
       },
       "molecular_function": {

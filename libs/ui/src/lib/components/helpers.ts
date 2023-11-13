@@ -9,10 +9,11 @@ interface JsonObject {
 }
 
 export const endsWithANumber = (str: string) => {
+  const regex = /^p\.[A-Z]\d+$/;
   if (!str) {
     return true;
   }
-  return /\d+$/.test(str);
+  return regex.test(str);
 }
 
 export const stringContains = (str: string, search: string) => {
