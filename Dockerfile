@@ -1,5 +1,5 @@
 #	BUILD STEP
-FROM node:current-alpine3.16 AS base
+FROM node:20-alpine3.17 AS base
 
 RUN apk add --update python3 make g++ && rm -rf /var/cache/apk/*
 

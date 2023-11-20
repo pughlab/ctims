@@ -1,5 +1,6 @@
 domain: qa02.technainstitute.net
 mountRoot: /mnt/k8s/ctims/qa
+ctimsEnv: null
 git:
   ref: null
 ctimsdb:
