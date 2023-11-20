@@ -21,7 +21,7 @@ import CtimsInput from "../../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../../custom-rjsf-templates/CtimsDropdown";
 import {CtimsDialogContext, CtimsDialogContextType} from "../CtimsMatchDialog";
 import { Checkbox } from 'primereact/checkbox';
-import {wildcard_protein_change_validation_func, getCurrentOperator} from "../helpers";
+import {wildcard_protein_change_validation_func, getCurrentOperator, protein_change_validation_func} from "../helpers";
 
 
 const RjsfForm = withTheme(PrimeTheme)
@@ -433,7 +433,10 @@ export const GenomicForm = (props: IFormProps) => {
 
   const customValidate = (formData: any, errors: any, uiSchema: any) => {
     if (!wildcard_protein_change_validation_func(formData.wildcard_protein_change)) {
-      errors.wildcard_protein_change.addError('Must end with a number');
+      errors.wildcard_protein_change.addError('Must be in the form of p.A1');
+    }
+    if (!protein_change_validation_func(formData.protein_change)) {
+      errors.protein_change.addError('Must start with p.');
     }
     return errors;
   }
