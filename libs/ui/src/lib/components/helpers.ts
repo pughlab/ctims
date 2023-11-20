@@ -1,11 +1,18 @@
 import TreeNode from "primereact/treenode";
 import {EComponentType} from "./EComponentType";
-import { v4 as uuidv4 } from 'uuid';
-import {ErrorSchema, RJSFValidationError} from "@rjsf/utils";
-import { OperatorOptions } from "./forms/OperatorDropdown";
+import {v4 as uuidv4} from 'uuid';
+import {RJSFValidationError} from "@rjsf/utils";
+import {OperatorOptions} from "./forms/OperatorDropdown";
 
-interface JsonObject {
-  [key: string]: any;
+
+// Must be in the following format: 'p.A1'
+// string must start with 'p.' followed by a capital letter and then a one or more digits
+export const wildcard_protein_change_validation_func = (str: string) => {
+  const regex = /^p\.[A-Z]\d+$/;
+  if (!str) {
+    return true;
+  }
+  return regex.test(str);
 }
 
 export const stringContains = (str: string, search: string) => {

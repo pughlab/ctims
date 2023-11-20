@@ -21,7 +21,7 @@ import CtimsInput from "../../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../../custom-rjsf-templates/CtimsDropdown";
 import {CtimsDialogContext, CtimsDialogContextType} from "../CtimsMatchDialog";
 import { Checkbox } from 'primereact/checkbox';
-import { getCurrentOperator } from "../helpers";
+import {wildcard_protein_change_validation_func, getCurrentOperator} from "../helpers";
 
 
 const RjsfForm = withTheme(PrimeTheme)
@@ -128,6 +128,7 @@ export const GenomicForm = (props: IFormProps) => {
           "5 Prime UTR",
           "Splice Region",
           "Splice Site",
+          "Nonsense Mutation"
         ],
         "enum": [
           "Missense_Mutation",
@@ -150,6 +151,7 @@ export const GenomicForm = (props: IFormProps) => {
           "5_prime_UTR",
           "Splice_Region",
           "Splice_Site",
+          "Nonsense_Mutation"
         ]
       },
       'cnv_call': {
@@ -252,8 +254,8 @@ export const GenomicForm = (props: IFormProps) => {
           "MMR-Deficient"
         ],
         "enum": [
-          "mmr_proficient",
-          "mmr_deficient",
+          "MMR-Proficient",
+          "MMR-Deficient",
         ]
       },
       "ms_status": {
@@ -263,9 +265,9 @@ export const GenomicForm = (props: IFormProps) => {
           "MSS"
         ],
         "enum": [
-          "msi_h",
-          "msi_l",
-          "mss",
+          "MSI-H",
+          "MSI-L",
+          "MSS",
         ]
       },
       "molecular_function": {
@@ -296,6 +298,11 @@ export const GenomicForm = (props: IFormProps) => {
         'type': 'string',
         'title': 'Protein Change',
         "description": "Curate a specific protein change (must be in the correct format ex. p.T70M)",
+      },
+      'wildcard_protein_change': {
+        'type': 'string',
+        'title': 'Wildcard Protein Change',
+        "description": "Curate variations of a protein change (must be in the correct format ex. p.T70). This allows matching of any mutation at this site. ",
       },
       "molecular_function": {
         "$ref": "#/definitions/molecular_function",
@@ -424,6 +431,13 @@ export const GenomicForm = (props: IFormProps) => {
     return getCurrentOperator(rootNodes, node);
   }
 
+  const customValidate = (formData: any, errors: any, uiSchema: any) => {
+    if (!wildcard_protein_change_validation_func(formData.wildcard_protein_change)) {
+      errors.wildcard_protein_change.addError('Must end with a number');
+    }
+    return errors;
+  }
+
   return (
     <div style={formContainerStyle}>
       <OperatorDropdown
@@ -447,6 +461,7 @@ export const GenomicForm = (props: IFormProps) => {
                   widgets={widgets}
                   onChange={onFormChange}
                   onError={() => {console.log('onError')}}
+                  customValidate={customValidate}
                   validator={localValidator}/>
       </div>
     </div>

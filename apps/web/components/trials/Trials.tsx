@@ -113,7 +113,7 @@ const Trials = () => {
     if (!data) {
       return;
     }
-    localStorage.setItem('ctims-accessToken', data['accessToken']);
+    localStorage.setItem('ctims-accessToken', data['accessToken'] as string);
     sessionStorage.removeItem('imported_ctml');
     // console.log('data', data)
   }, [data])
