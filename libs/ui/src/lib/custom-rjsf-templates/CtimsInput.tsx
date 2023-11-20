@@ -4,7 +4,7 @@ import cn from "clsx";
 import {InputText} from "primereact/inputtext";
 import { Tooltip } from 'primereact/tooltip';
 import styles from "./CtimsInput.module.css";
-import {wildcard_protein_change_validation_func} from "../components/helpers";
+import {protein_change_validation_func, wildcard_protein_change_validation_func} from "../components/helpers";
 
 const CtimsInput = (props: WidgetProps) => {
     let {
@@ -28,6 +28,7 @@ const CtimsInput = (props: WidgetProps) => {
     } = props;
 
     const [wildProteinError, setWildProteinError] = React.useState(false);
+    const [proteinChangeError, setProteinChangeError] = React.useState(false);
 
     useEffect(() => {
       const currentURL = window.location.href;
@@ -43,6 +44,13 @@ const CtimsInput = (props: WidgetProps) => {
         setWildProteinError(true)
       } else {
         setWildProteinError(false)
+      }
+    }
+    if (name === 'protein_change') {
+      if (!protein_change_validation_func(value)) {
+        setProteinChangeError(true)
+      } else {
+        setProteinChangeError(false)
       }
     }
   }, [value]);
@@ -85,7 +93,7 @@ const CtimsInput = (props: WidgetProps) => {
                 disabled={disabled}
                 readOnly={readonly}
                 // className={cn("w-full", rawErrors.length > 0 ? "p-invalid" : "")}
-                className={cn("w-full", wildProteinError ? "p-invalid" : "")}
+                className={cn("w-full", wildProteinError || proteinChangeError ? "p-invalid" : "")}
                 list={schema.examples ? `examples_${id}` : undefined}
                 type={inputType}
                 value={value || value === 0 ? value : ""}
