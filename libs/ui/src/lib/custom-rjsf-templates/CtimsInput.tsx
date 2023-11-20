@@ -4,7 +4,7 @@ import cn from "clsx";
 import {InputText} from "primereact/inputtext";
 import { Tooltip } from 'primereact/tooltip';
 import styles from "./CtimsInput.module.css";
-import {endsWithANumber} from "../components/helpers";
+import {wildcard_protein_change_validation_func} from "../components/helpers";
 
 const CtimsInput = (props: WidgetProps) => {
     let {
@@ -39,7 +39,7 @@ const CtimsInput = (props: WidgetProps) => {
 
   useEffect(() => {
     if (name === 'wildcard_protein_change') {
-      if (!endsWithANumber(value)) {
+      if (!wildcard_protein_change_validation_func(value)) {
         setWildProteinError(true)
       } else {
         setWildProteinError(false)

@@ -21,7 +21,7 @@ import CtimsInput from "../../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../../custom-rjsf-templates/CtimsDropdown";
 import {CtimsDialogContext, CtimsDialogContextType} from "../CtimsMatchDialog";
 import { Checkbox } from 'primereact/checkbox';
-import {endsWithANumber, getCurrentOperator} from "../helpers";
+import {wildcard_protein_change_validation_func, getCurrentOperator} from "../helpers";
 
 
 const RjsfForm = withTheme(PrimeTheme)
@@ -432,7 +432,7 @@ export const GenomicForm = (props: IFormProps) => {
   }
 
   const customValidate = (formData: any, errors: any, uiSchema: any) => {
-    if (!endsWithANumber(formData.wildcard_protein_change)) {
+    if (!wildcard_protein_change_validation_func(formData.wildcard_protein_change)) {
       errors.wildcard_protein_change.addError('Must end with a number');
     }
     return errors;
