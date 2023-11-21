@@ -146,7 +146,10 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             "span": 24
           }
         }
-      ]
+      ],
+      "phase": {
+        multiple: true
+      }
     },
     "prior_treatment_requirements": {
       "ui:ArrayFieldTemplate": CtimsArrayFieldSingleTemplate,
