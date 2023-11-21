@@ -2,6 +2,7 @@ import {Menu} from "primereact/menu";
 import {useRef} from "react";
 import styles from './TopBar.module.scss';
 import {signOut, useSession} from "next-auth/react";
+import * as process from "process";
 
 const TopBar = () => {
 
@@ -14,7 +15,8 @@ const TopBar = () => {
       label: 'Sign Out',
       icon: 'pi pi-sign-out',
       command: () => {
-        signOut({callbackUrl: '/', redirect: true}).then(() => {
+        // signOut({callbackUrl: '/', redirect: true}).then(() => {
+        signOut({callbackUrl: process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL, redirect: true}).then(() => {
           localStorage.removeItem('ctims-accessToken');
         });
       }
