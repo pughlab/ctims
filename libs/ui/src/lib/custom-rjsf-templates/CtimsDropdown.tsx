@@ -97,6 +97,23 @@ const CtimsDropdown = (props: WidgetProps) => {
   }
   const labelValue = label || schema.title;
   const questionMarkStyle = `dropdown-target-icon ${styles['question-mark']} pi pi-question-circle .question-mark-target `;
+  const multiSelectValue = () => {
+    if (typeof value === "undefined") {
+      return emptyValue;
+    }
+    const newArr = value.split(' and ');
+    return newArr;
+  }
+
+  const val = ["I"]
+
+  const cities = [
+    { name: 'New York', code: 'NY' },
+    { name: 'Rome', code: 'RM' },
+    { name: 'London', code: 'LDN' },
+    { name: 'Istanbul', code: 'IST' },
+    { name: 'Paris', code: 'PRS' }
+  ];
 
   return (
     <div className={styles.container}>
@@ -113,7 +130,7 @@ const CtimsDropdown = (props: WidgetProps) => {
       {isMultiple ? (
         <MultiSelect
           id={id}
-          value={typeof value === "undefined" ? emptyValue : value}
+          value={multiSelectValue()}
           options={optionsList}
           disabled={disabled}
           placeholder={placeholder}
@@ -131,7 +148,14 @@ const CtimsDropdown = (props: WidgetProps) => {
             })
           }
           onChange={(event) => {
-            onChange(processValue(schema, getValue(event)));
+            const arrToSentence = (arr: string[]) => {
+              if (arr.length === 1) {
+                return arr[0];
+              }
+              // Join the array elements with ' and '
+              return arr.join(' and ');
+            }
+            onChange(processValue(schema, arrToSentence(getValue(event))));
           }}
         />
       ) : (
