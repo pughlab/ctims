@@ -30,6 +30,7 @@ export default NextAuth({
     authorize: async  (credentials: any) => {
       const api_url = process.env.NEXTAUTH_API_URL || 'http://localhost:3333/api';
       console.log('api_url', api_url)
+      console.log('credentials', JSON.stringify(credentials));
 
       try {
         const response = await fetch(`${api_url}/auth/login`, {
@@ -43,6 +44,7 @@ export default NextAuth({
           }),
         });
 
+        console.log('response', JSON.stringify(response))
         const data = await response.json();
 
         if (data.accessToken && data.user) {
