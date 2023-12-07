@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   frontend:
-    container_name: ctims-web
+    container_name: ctims-web-qa
     build:
       context: ./
       args:
@@ -20,7 +20,7 @@ services:
       - qa-network
 
   backend:
-    container_name: ctims-api
+    container_name: ctims-api-qa
     build:
       context: ./
       dockerfile: ./apps/api/Dockerfile
@@ -38,7 +38,7 @@ services:
         CTIMS_ENV: ${CTIMS_ENV}
         MM_API_TOKEN: ${MM_API_TOKEN}
     environment:
-      DATABASE_URL: mysql://ctims:ctims@database:3306/ctims
+      DATABASE_URL: mysql://ctims:ctims@database:3307/ctims
     ports:
       - "3334:3333"
     restart: on-failure
@@ -46,7 +46,7 @@ services:
       - qa-network
 
   database:
-    container_name: ctims-db
+    container_name: ctims-db-qa
     build:
       context: ./database
       dockerfile: Dockerfile
@@ -58,6 +58,7 @@ services:
 
   mm_api:
     image: docker-registry.uhn.ca:443/matchminer-api:a62fb924-1356-4c01-b088-1b99491bd12c
+    container_name: mm_api_qa
     ports:
       - "5001:5000"
     restart: on-failure
@@ -65,7 +66,7 @@ services:
       - qa-network
 
   mm_mongo_db:
-    container_name: mm_mongo_db
+    container_name: mm_mongo_db_qa
     image: mongo:3.6.10
     restart: on-failure
     ports:
@@ -73,10 +74,10 @@ services:
     networks:
       - qa-network
     volumes:
-      - mm-mongo-db:/data/db
+      - mm-mongo-db-qa:/data/db
 
 volumes:
-  mm-mongo-db:
+  mm-mongo-db-qa:
 
 networks:
   qa-network:
