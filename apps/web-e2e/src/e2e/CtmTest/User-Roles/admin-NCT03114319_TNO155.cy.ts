@@ -88,7 +88,7 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
     cy.clickMultipleFunction(getPriorTreatmentRequirementPlusIconMultiple(),ctmlTestData.prior_treatment_requirements.length)
     getPriorTreatmentRequirementMultiple().each((input, index) => {
       if (ctmlTestData.prior_treatment_requirements[index]) {
-        cy.wrap(input).type(ctmlTestData.prior_treatment_requirements[index]);
+        cy.wrap(input).fill(ctmlTestData.prior_treatment_requirements[index]);
       }
     })
   });
@@ -112,7 +112,7 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
 
      getDrugNameTextBoxMultiple().each((input, index) => {
        if (ctmlTestData.drug_list.drug[index]) {
-         cy.wrap(input).type(ctmlTestData.drug_list.drug[index].drug_name);
+         cy.wrap(input).fill(ctmlTestData.drug_list.drug[index].drug_name);
        }
      })
    });
@@ -157,7 +157,7 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
      trialEditorLeftPanelList().eq(6).should('contain','Sponsor List').click()
      cy.clickMultipleFunction(getSponsorNamePlusIcon(), ctmlTestData.sponsor_list.sponsor.length - 1)
      getSponsorNameMultiple().each(($input, index) => {
-       cy.wrap($input).find('.p-inputtext').type(ctmlTestData.sponsor_list.sponsor[index].sponsor_name)
+       cy.wrap($input).find('.p-inputtext').fill(ctmlTestData.sponsor_list.sponsor[index].sponsor_name)
        cy.wrap($input).find('.p-selectbutton').contains(ctmlTestData.sponsor_list.sponsor[index].is_principal_sponsor).click();
      });
    });
@@ -202,8 +202,8 @@ describe('As a admin, validate CTIMS Trial Editor "NCT03114319_TN0155"',{ testIs
         cy.clickParentNode(1).click()
         let clinicalValue = ctmlTestData.treatment_list.step[0].arm[0].match[0].or[0].and[0]
         cy.clickClinical()
-        getClinicalAge().type(clinicalValue.clinical.age_numerical)
-        getClinicalOncotreePrimaryDiagnosis().type(clinicalValue.clinical.oncotree_primary_diagnosis)
+        getClinicalAge().fill(clinicalValue.clinical.age_numerical)
+        getClinicalOncotreePrimaryDiagnosis().fill(clinicalValue.clinical.oncotree_primary_diagnosis)
         //Save after each subgroup and re-enter
         getSaveMatchingCriteria().click()
         getEditMatchingCriteriaMultiple().eq(index).click()

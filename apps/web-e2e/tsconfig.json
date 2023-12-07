@@ -10,6 +10,7 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.js",
+    "web-e2e/src/**/*",
     "cypress.config.ts",
     "../../node_modules/cypress-delete-downloads-folder/src/index.d.ts",
     "src/cypress/downloads",

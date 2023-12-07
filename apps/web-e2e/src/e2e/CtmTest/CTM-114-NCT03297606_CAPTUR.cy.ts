@@ -90,7 +90,7 @@ let jsonFile = split.concat('_', dateClass.currentDate()).concat('.json');
 let yamlFile = split.concat('_', dateClass.currentDate()).concat('.yaml');
 
 describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() => {
-  baseClass.beforeClass()
+  baseClass.testProd()
   deleteDownloadsFolderBeforeAll()
   const ctmlTestData = NCT03297606_CAPTUR
   const ctmlJson = `./cypress/downloads/${jsonFile}`

@@ -21,6 +21,7 @@ export const validateCtmlOkButton = () => cy.get('button[aria-label="OK"]')
 export const sendCtmlToMatcher = () => cy.get("button[aria-label='Send CTML to Matcher']")
 export const sendCTMLOkButton = () => cy.get("button[aria-label='OK']")
 export const sendCTMLCancelButton = () => cy.get("button[aria-label='Cancel']")
+export const exportButton = () => cy.get('button[aria-label=\'Export\']')
 
 //Trial table
 export const selectTrialGroupButton = () => cy.get('div[aria-label="Select a Trial Group"]')
@@ -30,8 +31,8 @@ export const trialGroupxAdmin = () => cy.get('li[aria-label="trialgroupx (Admin)
 export const validateButton = () => cy.get('button[aria-label="Validate"]')
 export const validateOkButton = () => cy.get('button[aria-label="OK"] span[class="p-button-label p-c"]')
 export const trialTableDots = () => cy.get('tbody>tr:nth-child(1)>td:nth-child(2)')
-  //cy.get(':nth-child(1) > :nth-child(2) > .trials_trailsEllipseBtn__OHV_W')
-  //cy.get('tbody>tr>td:nth-child(2)>div')
+//cy.get(':nth-child(1) > :nth-child(2) > .trials_trailsEllipseBtn__OHV_W')
+//cy.get('tbody>tr>td:nth-child(2)>div')
 export const trialTableEdit = () => cy.get('#popup_menu>ul>li:nth-child(1)')
 export const trialTableDelete = () => cy.get('#popup_menu>ul>li:nth-child(2)')
 export const trialTableExport = () => cy.get('#popup_menu>ul>li:nth-child(3)')
@@ -43,6 +44,17 @@ export const trialTableThreeDots = () => cy.get('tr[draggable=\'false\']>td:nth-
 
 //LeftPanel Trial Editor
 export const trialEditorLeftPanelList = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li') //8 elements
+export const leftPanelTrialInformation = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(1)')
+export const leftPanelPriorTreatmentRequirement = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(2)')
+export const leftPanelAge = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(3)')
+export const leftPanelDrugList = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(4)')
+export const leftPanelManagementGroupList = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(5)')
+export const leftPanelSiteList = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(6)')
+export const leftPanelSponsorList = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(7)')
+export const leftPanelStaffList = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(8)')
+export const leftPanelTreatmentList = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(9)')
+
+
 
 //Trial Information
 export const getTrialId = () => cy.get('#root_trialInformation_trial_id');
@@ -164,6 +176,17 @@ export const getSaveMatchingCriteria = () => cy.get('.p-dialog-footer>div>button
 //div[aria-label="Select a Trial Group"]
 //Validate button Trial Editor
 export const getValidateButton = () => cy.get('button[aria-label="Validate"] span[class="p-button-label p-c"]')
+
+export const getMemberValidateModal = () => {
+  memberValidateButton()
+  validateModalCompleteMessage()
+  validateModalOkButton()
+}
+
+const memberValidateButton = () => cy.get('button[aria-label="Validate"] span[class="p-button-label p-c"]').should('be.visible').click()
+const validateModalCompleteMessage = () => cy.get('#pr_id_6_content').should('be.visible')
+const validateModalOkButton = () => cy.get('.p-dialog-footer > div > .p-button').click()
+
 //******************* Match Modal Criteria ********************************************************//
 
 //Footer Buttons("Discard", "Save matching criteria")
@@ -189,6 +212,8 @@ export const getAddCriteriaList = () => cy.get('.p-tieredmenu>ul>li')
 
 //Add criteria to same group
 export const getAddCriteriaToSameGroup = () => cy.get('.p-tieredmenu>ul>li:nth-child(1)')
+export const addCriteriaToSameGroup = () => cy.get('body > div:nth-child(9) > ul:nth-child(1) > li:nth-child(1) >' +
+  ' a:nth-child(1)')
 
 //Switch group operator
 export const getSwitchGroupOperator = () => cy.get('.p-tieredmenu>ul>li:nth-child(2)')
