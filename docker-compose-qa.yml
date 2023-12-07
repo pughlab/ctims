@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  frontend:
+  frontend_qa:
     container_name: ctims-web-qa
     build:
       context: ./
@@ -19,7 +19,7 @@ services:
     networks:
       - qa-network
 
-  backend:
+  backend_qa:
     container_name: ctims-api-qa
     build:
       context: ./
@@ -45,7 +45,7 @@ services:
     networks:
       - qa-network
 
-  database:
+  database_qa:
     container_name: ctims-db-qa
     build:
       context: ./database
@@ -56,7 +56,7 @@ services:
     networks:
       - qa-network
 
-  mm_api:
+  mm_api_qa:
     image: docker-registry.uhn.ca:443/matchminer-api:a62fb924-1356-4c01-b088-1b99491bd12c
     container_name: mm_api_qa
     ports:
@@ -65,7 +65,7 @@ services:
     networks:
       - qa-network
 
-  mm_mongo_db:
+  mm_mongo_db_qa:
     container_name: mm_mongo_db_qa
     image: mongo:3.6.10
     restart: on-failure
