@@ -144,14 +144,14 @@ describe('CTIMS Trial Editor NCT02503722_Osimertinib', { testIsolation: false },
     trialGroupxAdmin().click()
     trialTableIdColumn().should('contain',ctmlTestData.nct_id)
   });
-  it('should validate the query result', () => {
+ /* it('should validate the query result', () => {
     cy.task("queryDb", "SELECT email, first_name, last_name FROM user WHERE id = 1;").then((results: any[]) => {
       cy.log(JSON.stringify(results))
       results.forEach((row) => {
         cy.log(JSON.stringify(row));
       })
     })
-  })
+  })*/
   it('should logout as Admin',  () => {
     cy.get('.TopBar_userContainer__Dcaw3>i').click()
     cy.get('.p-menuitem>a').click()

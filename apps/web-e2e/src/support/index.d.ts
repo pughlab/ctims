@@ -33,10 +33,14 @@ declare namespace Cypress {
     clickChildOr()
     readJsonFile(fileName: any)
     staffListAttributes(data: any)
-    fillProtocolStaffDetails(input:any, staff:any)
     sponsorListAttributes(data: any)
     siteListAttributes(data: any)
+    fillPriorTreatmentRequirement(input:any, staff:any)
+    fillDrugList(input:any, drugName:any)
+    fillManagementGroup(input: any,managementGroupNameAttribute: any,managementGroupNameIsPrimaryAttribute: any)
     fillSiteDetails(input:any,site:any)
+    fillSponsorDetails($input: any, sponsorName: any,isPrincipalSponsor: any);
+    fillProtocolStaffDetails(input:any, staff:any)
     managementGroupListAttributes(data: any)
     drugListAttributes(data: any)
     ageAttribute(data: any)
@@ -49,6 +53,7 @@ declare namespace Cypress {
     switchGroupOperator()
     processGenomicCondition(condition: any)
     saveAndBackBtn()
+    saveOnly()
     clickSaveEditButtonForTrialGroupAdmin(nickNameVal: string)
     clickSaveEditButtonForTrialGroupMember(nickNameVal: string)
     inputArmDoseLevel(ctmlTestData: any,$input: any, index: any)
@@ -62,6 +67,7 @@ declare namespace Cypress {
     deleteTrialAdmin(trialName: string)
     deleteTrialMember(trialName: string)
     clickMatchAllGenomic()
-
+    deleteTrialMemberTapestry(trialName: string)
+    saveEditButtonForAll(trialGroupName: any, nickNameVal: any)
   }
 }

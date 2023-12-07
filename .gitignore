@@ -50,3 +50,4 @@ apps/web-e2e/allure-results
 apps/web-e2e/cypress/downloads
 apps/web-e2e/src/fixtures
 apps/web-e2e/src/support/interfaces
+apps/web-e2e/src/fixtures2

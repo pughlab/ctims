@@ -9,6 +9,18 @@ class baseClass {
       // Cypress.config('experimentalSessionSupport', true)
     });
   }
+  ctimsTestUser() {
+    before(() => {
+      cy.visit(Cypress.env('baseUrl'), {timeout: 10000})
+      cy.login('ctims_test_user', 'ctims2023')
+    });
+  }
+  testProd() {
+    before(() => {
+      cy.visit(Cypress.env('prod'), {timeout: 10000})
+      cy.login('test', 'test')
+    });
+  }
   adminTrialGroupx() {
     before(() => {
       cy.visit(Cypress.env('baseUrl'), {timeout: 10000})
