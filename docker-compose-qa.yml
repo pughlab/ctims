@@ -10,6 +10,7 @@ services:
         REACT_APP_API_URL: ${REACT_APP_API_URL}
         NEXTAUTH_URL: ${NEXTAUTH_URL}
         NEXTAUTH_API_URL: ${NEXTAUTH_API_URL}
+        NEXT_PUBLIC_SIGNOUT_REDIRECT_URL: ${NEXT_PUBLIC_SIGNOUT_REDIRECT_URL}
       dockerfile: Dockerfile
     ports:
       - "3001:3000"
