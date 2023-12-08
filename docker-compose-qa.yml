@@ -39,7 +39,7 @@ services:
         CTIMS_ENV: ${CTIMS_ENV}
         MM_API_TOKEN: ${MM_API_TOKEN}
     environment:
-      DATABASE_URL: mysql://ctims:ctims@database_qa:3307/ctims
+      DATABASE_URL: mysql://ctims:ctims@database_qa:3306/ctims
     ports:
       - "3334:3333"
     restart: on-failure
