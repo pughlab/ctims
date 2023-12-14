@@ -75,7 +75,10 @@ const selectCtmlStatus = () => cy.get('[aria-label="Draft"]').click();
 
 //Dropdown for Phase
 export const getClickPhase = () => cy.get('#root_trialInformation_phase')
-export const getPhaseDropdownList = () => cy.get('.p-dropdown-items-wrapper>ul>li') //list all the 4 phases
+//export const getPhaseDropdownList = () => cy.get('.p-dropdown-items-wrapper>ul>li') //list all the 4 phases
+export const getPhaseDropdownList = () => cy.get('.p-multiselect-panel>.p-multiselect-items-wrapper>.p-multiselect-items>.p-multiselect-item') //list all the 4
+// phases
+
 //default drop down for Trial Editor page
 export const getDefaultTrialEditorDropDown = () => cy.get('.p-dropdown-item')
 
