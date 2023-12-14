@@ -26,8 +26,8 @@ const cypressJsonConfig: EndToEndConfigOptions = {
   chromeWebSecurity: false,
   supportFile: 'src/support/e2e.ts',
   downloadsFolder: 'cypress/downloads',
-  specPattern: 'src/e2e/CtmTest/**/*.cy.{js,jsx,ts,tsx}',
- // specPattern: 'src/e2e/Ctims-PMatch/**/*.cy.{js,jsx,ts,tsx}',
+  //specPattern: 'src/e2e/CtmTest/**/*.cy.{js,jsx,ts,tsx}',
+  specPattern: 'src/e2e/Ctims-PMatch/**/*.cy.{js,jsx,ts,tsx}',
 
   //specPattern: 'src/e2e/CtmTest/CTM-105-NCT02503722_Osimertinib.cy.ts',
  // specPattern: 'src/e2e/CtmTest/CTM-114-NCT03297606_CAPTUR.cy.ts',
@@ -97,7 +97,8 @@ module.exports = defineConfig({
   //viewportHeight: 1080,
   "env": {
     //"baseUrl": "http://localhost:4200/",
-    baseUrl: 'http://localhost:3000',
+  //  baseUrl: 'http://localhost:3000',
+    baseUrl: "https://qa-app.ctims.ca/",
  // baseUrl: 'https://ctims-web.qa02.technainstitute.net',
  //   prod: 'https://ctims.ca/',
     defaultCommandTimeout: 30000,

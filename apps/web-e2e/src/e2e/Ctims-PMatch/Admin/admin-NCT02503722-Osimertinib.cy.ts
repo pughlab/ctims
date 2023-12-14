@@ -131,7 +131,7 @@ const ctmlJson = `./cypress/downloads/${jsonFile}`
 const ctmlYaml = `./cypress/downloads/${yamlFile}`
 let clauseT;
 describe('Validate as TrialGroupx Admin on "NCT02503722_Osimertinib" ', { testIsolation: false }, () => {
-  baseClass.testProd();
+  baseClass.adminTrialGroupx()
  deleteDownloadsFolderBeforeAll()
 
   it('should "Delete" the existing Ctml file "NCT02503722" as Admin', () => {

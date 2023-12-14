@@ -157,6 +157,8 @@ Cypress.Commands.add('trialInformation', (nctId: string,
   //Phase
   getClickPhase().click()
   getPhaseDropdownList().contains(phase).click()
+  getClickPhase().click()
+  //cy.wait(1000)
   getProtocolNumber().clear().fill(ProtocolNumber)
   getNCTPurpose().clear().fill(protocolPurpose)
   getTrialInformationStatus().click()
