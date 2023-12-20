@@ -65,9 +65,10 @@ services:
       dockerfile: Dockerfile-dev
       args:
         MM_API_TOKEN: ${MM_API_TOKEN}
-    command: python pymm_run.py serve
+#    command: python pymm_run.py serve
+    command: /bin/sh -c "env && tail -f /dev/null"
     volumes:
-      - .:/matchminerAPI
+      - ../matchminer-api:/matchminerAPI
     ports:
       - "5001:5000"
     environment:
