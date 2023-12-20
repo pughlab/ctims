@@ -58,7 +58,7 @@ services:
       - qa-network
 
   mm_api_qa:
-    container_name: mm_api_qa
+    container_name: ctims-mm_api_qa
     restart: "no"
     build:
       context: ../matchminer-api
