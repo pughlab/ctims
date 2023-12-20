@@ -62,7 +62,7 @@ services:
     restart: "no"
     build:
       context: .
-      dockerfile: ..\matchminer-api\Dockerfile-dev
+      dockerfile: ../matchminer-api/Dockerfile-dev
       args:
         MM_API_TOKEN: ${MM_API_TOKEN}
     command: python pymm_run.py serve
