@@ -58,11 +58,20 @@ services:
       - qa-network
 
   mm_api_qa:
-    image: docker-registry.uhn.ca:443/matchminer-api-qa:84bd1c63-70d6-44a4-87e9-163f5a09530d
     container_name: mm_api_qa
+    restart: "no"
+    build:
+      context: .
+      dockerfile: ..\matchminer-api\Dockerfile-dev
+      args:
+        MM_API_TOKEN: ${MM_API_TOKEN}
+    command: python pymm_run.py serve
+    volumes:
+      - .:/matchminerAPI
     ports:
       - "5001:5000"
-    restart: on-failure
+    environment:
+      - SECRETS_JSON=./secrets_json_dev.json
     networks:
       - qa-network
 
