@@ -58,15 +58,14 @@ services:
       - qa-network
 
   mm_api_qa:
-    container_name: ctims-mm_api_qa
+    container_name: mm_api_qa
     restart: "no"
     build:
       context: ../matchminer-api
       dockerfile: Dockerfile-dev
       args:
         MM_API_TOKEN: ${MM_API_TOKEN}
-#    command: python pymm_run.py serve
-    command: /bin/sh -c "env && tail -f /dev/null"
+    command: python pymm_run.py serve
     volumes:
       - ../matchminer-api:/matchminerAPI
     ports:
