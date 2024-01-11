@@ -122,7 +122,8 @@ export class TrialService implements OnModuleInit {
               }
             }
           },
-          protocol_no: (typeof protocol_no === 'string') ? protocol_no : protocol_no.toString()
+          protocol_no: protocol_no === undefined ? '' :
+            (typeof protocol_no !== 'string' ? protocol_no.toString() : protocol_no)
         }
       });
 
