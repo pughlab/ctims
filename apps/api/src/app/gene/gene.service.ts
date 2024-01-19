@@ -1,24 +1,30 @@
 import {Injectable, OnModuleInit} from '@nestjs/common';
+import {PrismaService} from "../prisma.service";
 
 @Injectable()
 export class GeneService {
+  constructor(private prismaService: PrismaService) {}
+
   async fetchGeneSymbols() {
     try {
-      const response = await fetch(
-        "https://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/json/hgnc_complete_set.json"
-      );
-      if (!response.ok) {
-        console.error("Client error:", response.status);
-      }
-      const data = await response.json();
-      const symbols = data.response.docs.map((x) => x.symbol);
+      const hugoJSON = await this.prismaService.hugo.findMany();
+      const symbols = hugoJSON.map((entry) => entry.gene);
       return symbols;
     } catch (error) {
-      if (error instanceof Error) {
-        console.error("Server error:", error.message);
-      } else {
-        console.error("Unknown error:", error.message);
-      }
+      console.error('Error fetching', error);
+      throw error;
+    }
+  }
+
+  async filterGeneSymbols(query: string) {
+    try {
+      const symbols = await this.fetchGeneSymbols();
+      const filteredSymbols = symbols.filter((symbol) =>
+        symbol.toLowerCase().startsWith(query?.toLowerCase())
+      );
+      return filteredSymbols;
+    } catch (error) {
+      console.error('Error filtering', error);
       throw error;
     }
   }

@@ -23,6 +23,9 @@ import {CtimsDialogContext, CtimsDialogContextType} from "../CtimsMatchDialog";
 import { Checkbox } from 'primereact/checkbox';
 import { getCurrentOperator } from "../helpers";
 import axios from "axios";
+import { AutoComplete } from "antd";
+import CtimsAutoCompleteComponent from "../CtimsAutoCompleteComponent"
+import AutocompleteField from "../CtimsAutoCompleteComponent";
 
 
 const RjsfForm = withTheme(PrimeTheme)
@@ -89,35 +92,13 @@ export const GenomicForm = (props: IFormProps) => {
 
   const dispatch = useDispatch()
 
-const hugo_gene_component = () => {
-  const [hugoSymbols, setHugoSymbols] = useState([]);
-    useEffect(() => {
-      async function fetchHugoSymbols() {
-        try {
-          const response = await axios.get('http://localhost:3333/api/genes') 
-          .then(function (response) {
-          const symbols = response.data;
-          setHugoSymbols(symbols);
-          hugoSymbols.push(symbols);
-          })
-        } catch (error) {
-          console.error('Error fetching symbols:', error);
-        }
-      }
-      fetchHugoSymbols();
-    }, []);
-    return hugoSymbols;
-}
-let hugoSymbols = hugo_gene_component();
-
   const genomicFormSchema = {
     'definitions': {
       'hugo_symbol': {
-        "enumNames": hugoSymbols.slice(0,50),
-        "enum": hugoSymbols.slice(0,50)
+        type: 'string',
       },
       "variant_category": {
-        "enumNames": [
+        "enumNames": [  
           "Mutation",
           "CNV",
           "SV",
@@ -391,6 +372,9 @@ let hugoSymbols = hugo_gene_component();
     "ui:submitButtonOptions": {
       "norender": true,
     },
+    "hugo_symbol": {
+      "ui:widget": AutocompleteField,
+    }
   }
 
   const validateFormFromRef = (data?: any) => {
