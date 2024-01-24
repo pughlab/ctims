@@ -17,13 +17,7 @@
     "properties": {
       "trialInformation":{
         "required":[
-          "trial_id",
-          "long_title",
-          "short_title",
-          "phase",
-          "protocol_no",
-          "nct_purpose",
-          "status"
+          "trial_id"
         ],
         "type":"object",
         "properties":{
@@ -111,7 +105,6 @@
       "age_group":{
         "type":"object",
         "required":[
-          "age"
         ],
         "properties":{
           "age":{
@@ -135,7 +128,6 @@
             "items":{
               "type":"object",
               "required":[
-                "drug_name"
               ],
               "properties":{
                 "drug_name":{
@@ -158,7 +150,6 @@
             "items":{
               "type":"object",
               "required":[
-                "management_group_name"
               ],
               "properties":{
                 "management_group_name":{
@@ -200,8 +191,6 @@
             "items":{
               "type":"object",
               "required":[
-                "site_name",
-                "site_status"
               ],
               "properties":{
                 "site_name":{
@@ -271,7 +260,6 @@
             "items":{
               "type":"object",
               "required":[
-                "sponsor_name"
               ],
               "properties":{
                 "sponsor_name":{
@@ -302,11 +290,6 @@
             "items":{
               "type":"object",
               "required":[
-                "first_name",
-                "last_name",
-                "email_address",
-                "institution_name",
-                "staff_role"
               ],
               "properties":{
                 "first_name":{
@@ -367,9 +350,6 @@
                   "items":{
                     "type":"object",
                     "required":[
-                      "arm_code",
-                      "arm_description",
-                      "arm_internal_id"
                     ],
                     "properties":{
                       "arm_code":{
@@ -401,10 +381,6 @@
                         "items":{
                           "type":"object",
                           "required":[
-                            "level_code",
-                            "level_description",
-                            "level_internal_id",
-                            "level_suspended"
                           ],
                           "properties":{
                             "level_code":{
