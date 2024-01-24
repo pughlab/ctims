@@ -282,7 +282,7 @@ export const GenomicForm = (props: IFormProps) => {
       }
     },
     'type': 'object',
-    'required': ['hugo_symbol', "variant_category"],
+    'required': [],
     'properties': {
       'hugo_symbol': {
         'type': 'string',
