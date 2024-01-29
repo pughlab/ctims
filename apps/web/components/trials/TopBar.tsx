@@ -3,10 +3,12 @@ import {useRef} from "react";
 import styles from './TopBar.module.scss';
 import {signOut, useSession} from "next-auth/react";
 import * as process from "process";
+import {useRouter} from "next/router";
 
 const TopBar = () => {
 
   const menu = useRef(null);
+  const router = useRouter();
 
   const {data} = useSession();
 
@@ -16,9 +18,11 @@ const TopBar = () => {
       icon: 'pi pi-sign-out',
       command: () => {
         // signOut({callbackUrl: '/', redirect: true}).then(() => {
-        signOut({callbackUrl: process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL, redirect: true}).then(() => {
+        signOut({redirect: false}).then(() => {
           localStorage.removeItem('ctims-accessToken');
+          router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL)
         });
+
       }
     }
   ]
