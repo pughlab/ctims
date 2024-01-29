@@ -559,22 +559,22 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       }
     ]
 
-    const leafMenuModel = [
-      {
-        label: 'Move criteria to parent group',
-        icon: 'pi pi-angle-double-up',
-        command: () => {
-          moveCriteriaToParentGroup(selectedNode.key as string);
-        },
-      },
-      {
-        label: 'Move criteria to sub group',
-        icon: 'pi pi-angle-double-down',
-        command: () => {
-          moveCriteriaToSubGroup(selectedNode.key as string);
-        }
-      }
-    ]
+    // const leafMenuModel = [
+    //   {
+    //     label: 'Move criteria to parent group',
+    //     icon: 'pi pi-angle-double-up',
+    //     command: () => {
+    //       moveCriteriaToParentGroup(selectedNode.key as string);
+    //     },
+    //   },
+    //   {
+    //     label: 'Move criteria to sub group',
+    //     icon: 'pi pi-angle-double-down',
+    //     command: () => {
+    //       moveCriteriaToSubGroup(selectedNode.key as string);
+    //     }
+    //   }
+    // ]
 
     const divRef = useRef<any>(null)
 
@@ -589,10 +589,10 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         return show ?
           <Button icon="pi pi-ellipsis-h"
                   className={styles.treeMenuBtn}
-                  iconPos="right" onClick={tieredMenuClick} ></Button> :
-          <Button icon="pi pi-ellipsis-h"
-                  className={styles.treeMenuBtn}
-                  iconPos="right" onClick={leafMenuClick}></Button>
+                  iconPos="right" onClick={tieredMenuClick} ></Button> : null;
+          // <Button icon="pi pi-ellipsis-h"
+          //         className={styles.treeMenuBtn}
+          //         iconPos="right" onClick={leafMenuClick}></Button>
       }
 
       let label = <b>{node.label}</b>;
@@ -629,10 +629,10 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
               <span className="p-treenode-label" style={style}>
                 {label}
               </span>
-              <div>{last4}</div>
+              {/*<div>{last4}</div>*/}
               {btnToShow()}
               <TieredMenu model={tieredMenuModel} popup ref={tieredMenu}/>
-              <TieredMenu model={leafMenuModel} popup ref={leafMenu}/>
+              {/*<TieredMenu model={leafMenuModel} popup ref={leafMenu}/>*/}
           </div>
         </>
       );
