@@ -1,5 +1,11 @@
 import styles from "./LeftMenuComponent.module.scss";
-import { Tree, TreeEventNodeParams, TreeExpandedKeysType, TreeTogglerTemplateOptions } from "primereact/tree";
+import {
+  Tree,
+  TreeDragDropParams,
+  TreeEventNodeParams,
+  TreeExpandedKeysType,
+  TreeTogglerTemplateOptions
+} from "primereact/tree";
 import React, {memo, useContext, useEffect, useRef, useState} from "react";
 import TreeNode from "primereact/treenode";
 import {Button} from "primereact/button";
@@ -362,7 +368,6 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   }
 
   const moveCriteriaToAnyGroup = (nodeKey: string, destinationNodeKey: string) => {
-    //mickey
     console.log('moveCriteriaToAnyGroup nodeKey: ', nodeKey)
     console.log('moveCriteriaToAnyGroup targetNodeKey: ', destinationNodeKey)
     const newRootNodes = structuredClone(rootNodes);
@@ -384,16 +389,18 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
               label: foundNode.label,
               icon: foundNode.icon,
               data: foundNode.data,
-              // children: [foundNode]
+              children: foundNode.children
             };
-            const payload = {[key]: true};
-            // dispatch(setMatchDialogErrors(payload))
+
             targetNode.children!.push(newNode);
             setRootNodes([...newRootNodes]);
 
-            setSelectedNode(newNode);
-            setSelectedKeys(newNode.key as string)
-            onTreeNodeClick(newNode.data.type, newNode);
+            // setSelectedNode(newNode);
+            // setSelectedKeys(newNode.key as string)
+            // onTreeNodeClick(newNode.data.type, newNode);
+
+            expandedKeys[targetNode.key] = true;
+            setExpandedKeys(expandedKeys);
 
             const state = store.getState();
             updateReduxViewModelAndCtmlModel(newRootNodes, state);
@@ -648,6 +655,29 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     setExpandedKeys(e.value)
   }
 
+  const onDragDropEvent = (e: TreeDragDropParams) => {
+    console.log('setNodes: ', e)
+    const {dragNode, dropNode} = e;
+    // check it's dropping into a group, ie. not dropped outside of topmost node
+    if (!dropNode) {
+      return;
+    }
+    // check cannot move root node
+    if (rootNodes[0].key === dragNode.key) {
+      return;
+    }
+    // for now just have a criteria node to move to a group, only allow moving to a group
+    if (dropNode.data.type === EComponentType.AndOROperator || dropNode.data.type === undefined) {
+      moveCriteriaToAnyGroup(dragNode.key as string, dropNode.key as string)
+    } else {
+      // if the drop node is a leaf, move to the parent group
+      const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], dropNode.key as string);
+      if (parentNode) {
+        moveCriteriaToAnyGroup(dragNode.key as string, parentNode.key as string)
+      }
+    }
+  }
+
   return (
     <>
         <div className={styles.matchingCriteriaMenuContainer}>
@@ -662,6 +692,8 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
                 expandedKeys={expandedKeys}
                 selectionKeys={selectedKeys}
                 selectionMode="single"
+                dragdropScope="leftMenuScope"
+                onDragDrop={event => onDragDropEvent(event)}
                 onToggle={e => onNodeToggle(e) } />
         </div>
     </>
