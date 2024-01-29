@@ -23,6 +23,8 @@ import {
   deleteNode,
   IAddCriteria,
   IDeleteCriteria,
+  IMoveCriteriaUp,
+  IMoveCriteriaDown,
   IOperatorChange, operatorChange,
   setCtmlDialogModel, setMatchDialogErrors
 } from "../../../../../apps/web/store/slices/modalActionsSlice";
@@ -54,6 +56,8 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
   const newNodeValue: IAddCriteria = useSelector((state: RootState) => state.modalActions.addCriteria);
   const nodeKeyToBeDeleted: IDeleteCriteria = useSelector((state: RootState) => state.modalActions.deleteCriteria);
+  const nodeKeyToBeMovedUp: IMoveCriteriaUp = useSelector((state: RootState) => state.modalActions.moveCriteriaUp);
+  const nodeKeyToBeMovedDown: IMoveCriteriaDown = useSelector((state: RootState) => state.modalActions.moveCriteriaDown);
   const operatorChanged: IOperatorChange = useSelector((state: RootState) => state.modalActions.operatorChange);
   const formChangedCounter: number = useSelector((state: RootState) => state.modalActions.formChangeCounter);
   const matchDialogErrors = useSelector((state: RootState) => state.modalActions.matchDialogErrors);
@@ -80,6 +84,8 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     // convert view model (rootNodes) to ctims format
     const ctimsFormat = convertTreeNodeArrayToCtimsFormat(newRootNodes);
     dispatch(setCtmlDialogModel(ctimsFormat));
+    // console.log('ctimsFormat: ', ctimsFormat)
+    // console.log('newRootNodes: ', newRootNodes)
     if (newRootNodes[0].children && newRootNodes[0].children.length === 0) {
       setSaveBtnState(true);
     }
@@ -151,6 +157,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       if (!isObjectEmpty(currentCtmlMatchModel.match)) {
         setSaveBtnState(false);
         // console.log('currentCtmlMatchModel.match', currentCtmlMatchModel.match)
+        console.log('crash!', rootNodes)
         if (rootNodes.length === 0) {
           const newViewModel = convertCtimsFormatToTreeNodeArray({match: currentCtmlMatchModel.match});
           setRootNodesState(newViewModel);
@@ -197,11 +204,19 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     }
   }, [nodeKeyToBeDeleted]);
 
+  // when a node is moved up we update the root nodes state
+  useEffect(() => {
+    if (nodeKeyToBeMovedUp.nodeKey) {
+
+    }
+  }, [nodeKeyToBeMovedUp]);
+
   // when the operator is changed we update the label of the node (AND/OR)
   useEffect(() => {
     const state = store.getState();
     if (operatorChanged && operatorChanged.nodeKey && operatorChanged.operator && rootNodes.length > 0) {
       const {nodeKey, operator, location} = operatorChanged;
+      // console.log('operatorChanged: ', operatorChanged)
       if (location === 'form') {
         const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
         // operator to lower case and capitalize first letter
@@ -228,7 +243,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   }, [operatorChanged]);
 
   const tieredMenu = useRef(null);
-  const menu = useRef(null);
+  const leafMenu = useRef(null);
 
   // This prop is set from MatchingMenuAndFormComponent
   useEffect(() => {
@@ -322,6 +337,11 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     tieredMenu.current.show(e);
   }
 
+  const leafMenuClick = (e: any) => {
+    // @ts-ignore
+    leafMenu.current.show(e);
+  }
+
   const deleteNodeClicked = (nodeKey: string) => {
     if (nodeKey) {
       const newRootNodes = structuredClone(rootNodes);
@@ -335,6 +355,122 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       const state = store.getState();
       updateReduxViewModelAndCtmlModel(newRootNodes, state);
     }
+  }
+
+  const moveCriteriaToAnyGroup = (nodeKey: string, destinationNodeKey: string) => {
+    //mickey
+    console.log('moveCriteriaToAnyGroup nodeKey: ', nodeKey)
+    console.log('moveCriteriaToAnyGroup targetNodeKey: ', destinationNodeKey)
+    const newRootNodes = structuredClone(rootNodes);
+    if (nodeKey && destinationNodeKey) {
+      const foundNode = findObjectByKeyInTree(newRootNodes[0], nodeKey as string);
+      if (foundNode) {
+        const parentNode = findArrayContainingKeyInsideATree(newRootNodes[0], nodeKey as string);
+        if (parentNode) {
+          // console.log('found parentNode: ', parentNode)
+          const index = parentNode.children!.findIndex((child: any) => child.key === nodeKey);
+          // console.log('index: ', index)
+          parentNode.children!.splice(index, 1);
+          const targetNode = findObjectByKeyInTree(newRootNodes[0], destinationNodeKey as string);
+          console.log('targetNode: ', targetNode)
+          if (targetNode) {
+            const key = uuidv4();
+            const newNode = {
+              key: key,
+              label: foundNode.label,
+              icon: foundNode.icon,
+              data: foundNode.data,
+              // children: [foundNode]
+            };
+            const payload = {[key]: true};
+            // dispatch(setMatchDialogErrors(payload))
+            targetNode.children!.push(newNode);
+            setRootNodes([...newRootNodes]);
+
+            setSelectedNode(newNode);
+            setSelectedKeys(newNode.key as string)
+            onTreeNodeClick(newNode.data.type, newNode);
+
+            const state = store.getState();
+            updateReduxViewModelAndCtmlModel(newRootNodes, state);
+          }
+        }
+      }
+    }
+  }
+
+  const moveCriteriaToParentGroup2 = (nodeKey: string) => {
+    console.log('moveCriteriaToParentGroup nodeKey: ', nodeKey)
+    if (nodeKey) {
+      const foundNode = findObjectByKeyInTree(rootNodes[0], nodeKey as string);
+      console.log('foundNode: ', foundNode)
+      if (foundNode) {
+        const curParentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
+        console.log('parentNode: ', curParentNode)
+        if (curParentNode) {
+          const upperParentNode = findArrayContainingKeyInsideATree(rootNodes[0], curParentNode.key as string);
+          if (upperParentNode) {
+            console.log('upperParentNode: ', upperParentNode)
+            // remove node from current parent
+
+            upperParentNode.children!.push(foundNode);
+            setRootNodes([...rootNodes]);
+          }
+        }
+      }
+    }
+  }
+
+  const moveCriteriaToParentGroup = (nodeKey: string) => {
+    if (nodeKey) {
+      const foundNode = findObjectByKeyInTree(rootNodes[0], nodeKey as string);
+      if (foundNode) {
+        const curParentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
+        if (curParentNode) {
+          const upperParentNode = findArrayContainingKeyInsideATree(rootNodes[0], curParentNode.key as string);
+          if (upperParentNode) {
+            moveCriteriaToAnyGroup(nodeKey, upperParentNode.key as string);
+          }
+        }
+      }
+    }
+  }
+
+  const moveCriteriaToSubGroup = (nodeKey: string) => {
+    console.log('moveCriteriaToSubGroup nodeKey: ', nodeKey)
+    if (nodeKey) {
+      const foundNode = findObjectByKeyInTree(rootNodes[0], nodeKey as string);
+      if (foundNode) {
+        const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
+        if (parentNode) {
+          console.log('parentNode: ', parentNode)
+          const children = parentNode.children;
+          // @ts-ignore
+          for (const child of children) {
+            console.log('child: ', child, child.data.type, EComponentType.AndOROperator)
+            if (child.data.type === EComponentType.AndOROperator || child.data.type === undefined) {
+              moveCriteriaToAnyGroup(nodeKey, child.key as string);
+            }
+          }
+        }
+      }
+    }
+    //     const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
+    //     if (parentNode) {
+    //       const index = parentNode.children!.findIndex((child: any) => child.key === nodeKey);
+    //       parentNode.children!.splice(index, 1);
+    //       const newNode = {
+    //         key: uuidv4(),
+    //         label: foundNode.label,
+    //         icon: foundNode.icon,
+    //         data: foundNode.data,
+    //         children: [foundNode]
+    //       };
+    //       parentNode.children!.push(newNode);
+    //       setRootNodes([...rootNodes]);
+    //     }
+    //   }
+    // }
   }
 
   const isGenomicDisabled = () => {
@@ -373,10 +509,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
             icon: 'genomic-icon in-menu',
             disabled: isGenomicDisabled()
           },
-
         ],
-
-
       },
       {
         label: 'Switch group operator',
@@ -415,6 +548,23 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       }
     ]
 
+    const leafMenuModel = [
+      {
+        label: 'Move criteria to parent group',
+        icon: 'pi pi-angle-double-up',
+        command: () => {
+          moveCriteriaToParentGroup(selectedNode.key as string);
+        },
+      },
+      {
+        label: 'Move criteria to sub group',
+        icon: 'pi pi-angle-double-down',
+        command: () => {
+          moveCriteriaToSubGroup(selectedNode.key as string);
+        }
+      }
+    ]
+
     const divRef = useRef<any>(null)
 
     if (selectedNode) {
@@ -428,7 +578,10 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         return show ?
           <Button icon="pi pi-ellipsis-h"
                   className={styles.treeMenuBtn}
-                  iconPos="right" onClick={tieredMenuClick} ></Button> : null
+                  iconPos="right" onClick={tieredMenuClick} ></Button> :
+          <Button icon="pi pi-ellipsis-h"
+                  className={styles.treeMenuBtn}
+                  iconPos="right" onClick={leafMenuClick}></Button>
       }
 
       let label = <b>{node.label}</b>;
@@ -442,18 +595,22 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       }
 
       const onNodeClick = (e: any) => {
+        // console.log('node: ', node)
+        // const nodeKey = node.key;
+        // const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
+        // console.log('parentNode: ', parentNode)
         setSelectedNode(node);
         setSelectedKeys(node.key as string)
         onTreeNodeClick(node.data.type, node);
-
       }
 
       useEffect(() => {
         divRef.current.addEventListener('click', onNodeClick);
-
       }, [divRef.current])
 
-
+      // get last 4 digit of key as string
+      // @ts-ignore
+      const last4 = node.key!.slice(-4);
 
       return (
         <>
@@ -461,8 +618,10 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
               <span className="p-treenode-label" style={style}>
                 {label}
               </span>
+              <div>{last4}</div>
               {btnToShow()}
-              <TieredMenu model={tieredMenuModel} popup ref={tieredMenu} />
+              <TieredMenu model={tieredMenuModel} popup ref={tieredMenu}/>
+              <TieredMenu model={leafMenuModel} popup ref={leafMenu}/>
           </div>
         </>
       );
@@ -490,7 +649,6 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         <div className={styles.matchingCriteriaMenuContainer}>
           <div className={styles.matchingCriteriaTextContainer}>
             <div className={styles.matchingCriteriaText}>Matching Criteria</div>
-
           </div>
           <Tree value={rootNodes}
                 className="ctims-tree"

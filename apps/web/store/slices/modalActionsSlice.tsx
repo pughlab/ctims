@@ -9,6 +9,14 @@ export interface IDeleteCriteria {
   nodeKey: string;
 }
 
+export interface IMoveCriteriaUp {
+  nodeKey: string;
+}
+
+export interface IMoveCriteriaDown {
+  nodeKey: string;
+}
+
 export interface IOperatorChange {
   nodeKey: string;
   operator: string;
@@ -24,6 +32,8 @@ export interface IMatchDialogErrors {
 export interface TreeActionsState {
   addCriteria: IAddCriteria;
   deleteCriteria: IDeleteCriteria;
+  moveCriteriaUp: IMoveCriteriaUp;
+  moveCriteriaDown: IMoveCriteriaDown;
   operatorChange: IOperatorChange;
   formChangeCounter: number;
   ctmlDialogModel: any;
@@ -36,6 +46,12 @@ const initialState: TreeActionsState = {
     type: ''
   },
   deleteCriteria: {
+    nodeKey: '',
+  },
+  moveCriteriaUp: {
+    nodeKey: '',
+  },
+  moveCriteriaDown: {
     nodeKey: '',
   },
   operatorChange: {
@@ -57,6 +73,12 @@ export const modalActionsSlice = createSlice({
     },
     deleteNode: (state, action: PayloadAction<IDeleteCriteria>) => {
       state.deleteCriteria = action.payload;
+    },
+    moveNodeUp: (state, action: PayloadAction<IMoveCriteriaUp>) => {
+      state.moveCriteriaUp = action.payload;
+    },
+    moveNodeDown: (state, action: PayloadAction<IMoveCriteriaDown>) => {
+      state.moveCriteriaDown = action.payload;
     },
     operatorChange: (state, action: PayloadAction<IOperatorChange>) => {
       state.operatorChange = action.payload;
@@ -85,6 +107,8 @@ export const modalActionsSlice = createSlice({
 export const {
   addAdjacentNode,
   deleteNode,
+  moveNodeUp,
+  moveNodeDown,
   operatorChange,
   formChange,
   setCtmlDialogModel,
