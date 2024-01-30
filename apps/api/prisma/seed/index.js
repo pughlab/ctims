@@ -38,7 +38,9 @@ main().then(() => {
 
 async function fetchAPI() {
   try {
-    const response = await fetch('https://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/json/hgnc_complete_set.json');
+    const response = await fetch(
+      'https://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/json/hgnc_complete_set.json'
+    );
     if (!response.ok) {
       throw new Error('Failed to fetch data');
     }
@@ -46,7 +48,7 @@ async function fetchAPI() {
     return data;
   } catch (error) {
     console.error(error);
-    throw error; 
+    throw error;
   }
 }
 
@@ -58,9 +60,9 @@ async function saveGenes(data: DataItem) {
   try {
     const symbols = data.response.docs.map((x) => x.symbol);
     for (const symbol of symbols) {
-      await prisma.hugo.create({
+      await prisma.gene.create({
         data: {
-          gene: symbol,
+          hugoSymbol: symbol,
         },
       });
     }
@@ -81,5 +83,3 @@ async function fetchAPISaveGenes() {
     throw error;
   }
 }
-
-

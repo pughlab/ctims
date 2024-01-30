@@ -16,7 +16,7 @@ const AutocompleteField = ({onChange, ...props }: ObjectFieldTemplateProps) => {
   const searchSymbols = async (gene) => {
     const query = gene.query;
     try {
-      const response = await axios.get(`http://localhost:3333/api/genes?query=${query}`);
+    const response = await axios.get(`genes?query=${query}`);
       const symbols = response.data;
       setFilteredHugoSymbols(symbols);
     } 
@@ -55,7 +55,7 @@ const AutocompleteField = ({onChange, ...props }: ObjectFieldTemplateProps) => {
       <AutoComplete
         inputStyle={arrayContainer}
         value={selectedHugoSymbol}
-        suggestions={filteredHugoSymbols.slice(0, 10)}
+        suggestions={filteredHugoSymbols}
         completeMethod={searchSymbols}
         onChange={(e) => {
           setSelectedHugoSymbol(e.value);

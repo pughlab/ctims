@@ -7,8 +7,8 @@ export class GeneService {
 
   async fetchGeneSymbols() {
     try {
-      const hugoJSON = await this.prismaService.hugo.findMany();
-      const symbols = hugoJSON.map((entry) => entry.gene);
+      const hugoJSON = await this.prismaService.gene.findMany();
+      const symbols = hugoJSON.map((entry) => entry.hugoSymbol);
       return symbols;
     } catch (error) {
       console.error('Error fetching', error);
@@ -17,6 +17,11 @@ export class GeneService {
   }
 
   async filterGeneSymbols(query: string) {
+    
+    if (query === undefined || query === '') {
+      return [];
+    }
+
     try {
       const symbols = await this.fetchGeneSymbols();
       const filteredSymbols = symbols.filter((symbol) =>

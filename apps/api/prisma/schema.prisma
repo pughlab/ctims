@@ -106,9 +106,9 @@ model event {
   ctml_schemaId Int?
 }
 
-model hugo {
-  id   Int    @id @default(autoincrement())
-  gene String
+model gene {
+  id           Int    @id @default(autoincrement())
+  hugoSymbol   String
 }
 
 enum status {

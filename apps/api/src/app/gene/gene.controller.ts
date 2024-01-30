@@ -11,14 +11,14 @@ import {ModuleRef} from "@nestjs/core";
 export class GeneController {
   constructor(private readonly geneService: GeneService) {}
 
-    @Get()
+  @Get()
   async getHugoGenes(@Query("query") query: string) {
     try {
-      return await this.geneService.filterGeneSymbols(query);
+      return await (await this.geneService.filterGeneSymbols(query)).slice(0,10);
     } catch (error) {
       console.error('Error fetching data:', error);
 
-  throw error;
+      throw error;
     };
   } 
 }
