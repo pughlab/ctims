@@ -52,11 +52,7 @@ async function fetchAPI() {
   }
 }
 
-interface DataItem {
-  response: { docs: Array<{ symbol: string }> };
-}
-
-async function saveGenes(data: DataItem) {
+async function saveGenes(data) {
   try {
     const symbols = data.response.docs.map((x) => x.symbol);
     for (const symbol of symbols) {

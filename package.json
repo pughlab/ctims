@@ -23,7 +23,7 @@
     "seed": "npx prisma db seed"
   },
   "prisma": {
-    "seed": "ts-node apps/api/prisma/seed/index.ts"
+    "seed": "ts-node apps/api/prisma/seed/index.js"
   },
   "private": true,
   "type": "commonjs",
