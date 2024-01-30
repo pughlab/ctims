@@ -1,6 +1,6 @@
 import { WidgetProps, asNumber, guessType } from "@rjsf/utils";
 import { Dropdown, DropdownChangeParams } from "primereact/dropdown";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { MultiSelect, MultiSelectChangeParams } from "primereact/multiselect";
 import styles from "./CtimsDropdown.module.css";
 import {Tooltip} from "primereact/tooltip";
@@ -44,11 +44,13 @@ const CtimsDropdown = (props: WidgetProps) => {
  const {
    schema,
    id,
+   name,
    options,
    label,
    required,
    disabled,
    value,
+   uiSchema,
    multiple,
    autofocus,
    onChange,
@@ -57,6 +59,17 @@ const CtimsDropdown = (props: WidgetProps) => {
    placeholder,
    rawErrors = [],
  } = props;
+
+ const [isMultiple, setIsMultiple] = useState(false);
+
+  useEffect(() => {
+    if (name === 'phase') {
+      console.log('phase uischema', uiSchema)
+      setIsMultiple(uiSchema!.multiple)
+    } else {
+      setIsMultiple(false)
+    }
+  }, [name]);
 
   const { enumOptions, enumDisabled } = options;
   // console.log('CtimsDropdown options', options);
@@ -84,6 +97,23 @@ const CtimsDropdown = (props: WidgetProps) => {
   }
   const labelValue = label || schema.title;
   const questionMarkStyle = `dropdown-target-icon ${styles['question-mark']} pi pi-question-circle .question-mark-target `;
+  const multiSelectValue = () => {
+    if (typeof value === "undefined") {
+      return emptyValue;
+    }
+    const newArr = value.split(' and ');
+    return newArr;
+  }
+
+  const val = ["I"]
+
+  const cities = [
+    { name: 'New York', code: 'NY' },
+    { name: 'Rome', code: 'RM' },
+    { name: 'London', code: 'LDN' },
+    { name: 'Istanbul', code: 'IST' },
+    { name: 'Paris', code: 'PRS' }
+  ];
 
   return (
     <div className={styles.container}>
@@ -97,10 +127,10 @@ const CtimsDropdown = (props: WidgetProps) => {
         )}
         {!required && ( <span className={styles['optional-label']}>Optional</span> )}
       </div>
-      {multiple ? (
+      {isMultiple ? (
         <MultiSelect
           id={id}
-          value={typeof value === "undefined" ? emptyValue : value}
+          value={multiSelectValue()}
           options={optionsList}
           disabled={disabled}
           placeholder={placeholder}
@@ -118,7 +148,14 @@ const CtimsDropdown = (props: WidgetProps) => {
             })
           }
           onChange={(event) => {
-            onChange(processValue(schema, getValue(event)));
+            const arrToSentence = (arr: string[]) => {
+              if (arr.length === 1) {
+                return arr[0];
+              }
+              // Join the array elements with ' and '
+              return arr.join(' and ');
+            }
+            onChange(processValue(schema, arrToSentence(getValue(event))));
           }}
         />
       ) : (

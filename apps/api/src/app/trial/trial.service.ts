@@ -33,7 +33,7 @@ export class TrialService implements OnModuleInit {
         status,
         user: { connect: {id: creatingUser.id } },
         modifiedBy: { connect: {id: creatingUser.id } },
-        protocol_no
+        protocol_no: (typeof protocol_no === 'string') ? protocol_no : protocol_no.toString()
       }
     });
     return newTrial;
@@ -122,7 +122,8 @@ export class TrialService implements OnModuleInit {
               }
             }
           },
-          protocol_no
+          protocol_no: protocol_no === undefined ? '' :
+            (typeof protocol_no !== 'string' ? protocol_no.toString() : protocol_no)
         }
       });
 
@@ -164,7 +165,7 @@ export class TrialService implements OnModuleInit {
             }
           }
         },
-        protocol_no
+        protocol_no: (typeof protocol_no === 'string') ? protocol_no : protocol_no?.toString()
       },
     });
 
@@ -209,27 +210,5 @@ export class TrialService implements OnModuleInit {
     }
   }
 
-  async recordTrialExported(id: number, user: user, format: string) {
-    if (id) {
-      await this.prismaService.event.create({
-        data: {
-          type: event_type.TrialExported,
-          trial: { connect: { id } },
-          user: { connect: { id: user.id } },
-          metadata: {
-            "input": { format }
-          }
-        }
-      });
-    } else {
-      await this.prismaService.event.create({
-        data: {
-          type: event_type.TrialExported,
-          description: "Trial exported as a draft (not yet saved)",
-          user: { connect: { id: user.id } }
-        }
-      });
-    }
-  }
 
 }

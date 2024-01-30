@@ -92,9 +92,9 @@ export const ClinicalForm = (props: IFormProps) => {
       }
     },
     "type": "object",
-    "required": ["age_numerical", "oncotree_primary_diagnosis"],
+    "required": [],
     "properties": {
-      "age_numerical": {
+      "age_expression": {
         'type': 'string',
         'title': 'Age',
       },
@@ -143,7 +143,9 @@ export const ClinicalForm = (props: IFormProps) => {
       const payload = {[nk]: true};
       dispatch(setMatchDialogErrors(payload));
     }
-    if (errorDetails?.errors.length === 0) {
+    // Add a temp fix for CTM-390 as the clinical form is by default not showing the save button enabled
+    // due to errorDetails being undefined when created initially. Kevin-20240124
+    if (errorDetails?.errors.length === 0 || typeof errorDetails === 'undefined') {
       node.data.formValid = true;
       dispatch(deleteMatchDialogError(nk));
       setSaveBtnState(false)

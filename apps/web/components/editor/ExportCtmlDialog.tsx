@@ -22,6 +22,7 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
   const [errors, setErrors] = useState<string[]>([]);
   const [format, setFormat] = useState<string>('JSON');
   const [exportButtonDisabled, setExportButtonDisabled] = useState<boolean>(true);
+  const [isImportedCTML, setIsImportedCTML] = useState<boolean>(false);
 
   const errorSchema: ValidationData<any> = useSelector((state: RootState) => state.finalModelAndErrors.errorSchema);
   const ctmlModel = useSelector((state: RootState) => state.finalModelAndErrors.ctmlModel);
@@ -31,7 +32,7 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
 
   useEffect(() => {
     setExportButtonDisabled(shouldDisableExportButton());
-  }, [ctmlModel, isFormChanged, errors])
+  }, [ctmlModel, isFormChanged, errors, isImportedCTML])
 
   useEffect(() => {
     setIsDialogVisible(props.isDialogVisible);
@@ -41,7 +42,9 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
     let errorObjList: RJSFValidationError[] = errorSchema.errors;
     const filteredErrorObjList = errorObjList.filter((errorObj: RJSFValidationError) => {
       return errorObj.message !== 'must be object';
-    })
+    }).filter((err_two: RJSFValidationError) => {
+      return err_two.property !== '.trialInformation.phase';
+    });
     if (!isObjectEmpty(errorSchema)) {
       const viewModelErrors = extractErrors(filteredErrorObjList);
       setErrors(viewModelErrors)
@@ -49,6 +52,7 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
     else {
       setErrors([]);
     }
+    setIsImportedCTML(sessionStorage.getItem('imported_ctml') !== null);
 
   }, [errorSchema])
 
@@ -58,7 +62,8 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
 
   // disable export OK button if there are errors of if form is changed and not saved
   const shouldDisableExportButton = () => {
-    return errors.length > 0 || isFormChanged || ctmlModel === null;
+    const currentURL = window.location.href;
+    return errors.length > 0 || isFormChanged || ctmlModel === null || currentURL.includes('/trials/import');
   }
 
   const footer = (props: {exportCtmlClicked: () => void}) => {
@@ -98,6 +103,14 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
       <>
         <div>You must save the CTML before you can export it.</div>
       </>
+    )
+  }
+
+  const importedTrialErrorContent = () => {
+    return (
+        <>
+          <div>Unable to export/validate imported CTMLs.</div>
+        </>
     )
   }
 
@@ -179,6 +192,15 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
           }}
           content={notSavedErrorContent}
         />)}
+        {isImportedCTML && (<Message
+          severity="error"
+          style={{
+            whiteSpace: "pre-line",
+            marginLeft: '18px',
+            marginBottom: '10px'
+          }}
+          content={importedTrialErrorContent}
+      />)}
       </div>
       {isGroupAdmin ? <div style={{marginLeft: '30px'}}>
         <h2>Export As</h2>

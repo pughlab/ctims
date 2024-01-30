@@ -1,5 +1,4 @@
 version: "3.8"
-
 services:
   frontend:
     container_name: ctims-web
@@ -17,7 +16,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
     restart: on-failure
     networks:
-        - my-network
+      - my-network
 
   backend:
     container_name: ctims-api
@@ -35,27 +34,12 @@ services:
         KEYCLOAK_CLIENT_UUID: ${KEYCLOAK_CLIENT_UUID}
         PRISMA_FIELD_ENCRYPTION_KEY: ${PRISMA_FIELD_ENCRYPTION_KEY}
         MM_API_URL: ${MM_API_URL}
-        CTIMS_ENV: ${CTIMS_ENV}
-        MM_API_TOKEN: ${MM_API_TOKEN}
     environment:
       DATABASE_URL: mysql://ctims:ctims@database:3306/ctims
     ports:
       - "3333:3333"
     restart: on-failure
     networks:
-        - my-network
-
-  database:
-    container_name: ctims-db
-    build:
-      context: ./database
-      dockerfile: Dockerfile
-    ports:
-      - "3306:3306"
-    restart: on-failure
-    networks:
-        - my-network
-
+      - my-network
 networks:
-    my-network:
-
+  my-network:
