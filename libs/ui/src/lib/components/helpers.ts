@@ -3,6 +3,7 @@ import {EComponentType} from "./EComponentType";
 import {v4 as uuidv4} from 'uuid';
 import {RJSFValidationError} from "@rjsf/utils";
 import {OperatorOptions} from "./forms/OperatorDropdown";
+import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
 
 
 // Must be in the following format: 'p.A1'
@@ -279,3 +280,33 @@ export const getCurrentOperator = (rootNodes: TreeNode[], currentNode: TreeNode)
   }
   return OperatorOptions.AND;
 }
+
+// sort the children of the root nodes by node.data's type property, clinical first, genomic second, and and/or last
+export const sortTreeNode = (treeNode: TreeNode): TreeNode => {
+  console.log('sort is called', treeNode)
+  const newRootNode = structuredClone(treeNode);
+
+  // recursively calls itself and use map to sort the current level of node
+  if (newRootNode.children) {
+    // recursively calls the next level to sort the next level children
+    newRootNode.children = newRootNode.children.map(sortTreeNode);
+
+    // sort the current level
+    newRootNode.children.sort((a, b) => {
+      if (a.data.type === EComponentType.ClinicalForm) {
+        return -1;
+      } else if (a.data.type === EComponentType.GenomicForm && b.data.type === EComponentType.AndOROperator) {
+        return -1;
+      } else if (a.data.type === EComponentType.GenomicForm && b.data.type === EComponentType.ClinicalForm) {
+        return 1;
+      } else if (a.data.type === EComponentType.AndOROperator) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+  }
+
+  return newRootNode;
+}
+

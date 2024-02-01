@@ -367,9 +367,10 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     }
   }
 
+  // mickey
   const moveCriteriaToAnyGroup = (nodeKey: string, destinationNodeKey: string) => {
-    console.log('moveCriteriaToAnyGroup nodeKey: ', nodeKey)
-    console.log('moveCriteriaToAnyGroup targetNodeKey: ', destinationNodeKey)
+    // console.log('moveCriteriaToAnyGroup nodeKey: ', nodeKey)
+    // console.log('moveCriteriaToAnyGroup targetNodeKey: ', destinationNodeKey)
     const newRootNodes = structuredClone(rootNodes);
     if (nodeKey && destinationNodeKey) {
       const foundNode = findObjectByKeyInTree(newRootNodes[0], nodeKey as string);
@@ -381,7 +382,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           // console.log('index: ', index)
           parentNode.children!.splice(index, 1);
           const targetNode = findObjectByKeyInTree(newRootNodes[0], destinationNodeKey as string);
-          console.log('targetNode: ', targetNode)
+          // console.log('targetNode: ', targetNode)
           if (targetNode) {
             const key = uuidv4();
             const newNode = {
@@ -400,6 +401,10 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
             // onTreeNodeClick(newNode.data.type, newNode);
 
             expandedKeys[targetNode.key] = true;
+            // if moving a group, also expand the selected group as well so we can see the new alignment
+            if (newNode.label === 'And' || newNode.label === 'Or') {
+              expandedKeys[newNode.key] = true;
+            }
             setExpandedKeys(expandedKeys);
 
             const state = store.getState();
@@ -619,20 +624,21 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         divRef.current.addEventListener('click', onNodeClick);
       }, [divRef.current])
 
-      // get last 4 digit of key as string
-      // @ts-ignore
-      const last4 = node.key!.slice(-4);
-
+      let temp_label;
+      if (node.label === 'Genomic') {
+        temp_label = <i>{node.data.formData.hugo_symbol}</i>
+      } else if (node.label === 'Clinical') {
+        temp_label = <i>{node.data.formData.age_expression}</i>
+      }
       return (
         <>
           <div ref={divRef} className={styles.treeNodeContainer}>
               <span className="p-treenode-label" style={style}>
                 {label}
               </span>
-              {/*<div>{last4}</div>*/}
+              <div>{temp_label}</div>
               {btnToShow()}
               <TieredMenu model={tieredMenuModel} popup ref={tieredMenu}/>
-              {/*<TieredMenu model={leafMenuModel} popup ref={leafMenu}/>*/}
           </div>
         </>
       );
@@ -651,12 +657,12 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   }
 
   const onNodeToggle = (e: any) => {
-    console.log('selectedKeys', selectedKeys);
+    // console.log('selectedKeys', selectedKeys);
     setExpandedKeys(e.value)
   }
 
   const onDragDropEvent = (e: TreeDragDropParams) => {
-    console.log('setNodes: ', e)
+    // console.log('setNodes: ', e)
     const {dragNode, dropNode} = e;
     // check it's dropping into a group, ie. not dropped outside of topmost node
     if (!dropNode) {

@@ -8,7 +8,7 @@ import TreeNode from "primereact/treenode";
 import {ClinicalForm} from "./forms/ClinicalForm";
 import {GenomicForm} from "./forms/GenomicForm";
 import {EmptyHelper} from "./forms/EmptyHelper";
-
+import {sortTreeNode} from "./helpers";
 
 const RjsfForm = withTheme(PrimeTheme)
 
@@ -83,10 +83,18 @@ const MatchingMenuAndForm = (props: any) => {
     setBuildRootNodeParams({rootLabel: 'And', firstChildLabel: 'Empty Group'})
   }
 
+  const mySetRootNodes = (newRootNodes: TreeNode[]) => {
+    console.log('myNewRootNodes', newRootNodes)
+    // sort the root nodes by node.data's type property, clinical first, genomic second, and and/or last
+    const sorted = sortTreeNode(newRootNodes[0]);
+    newRootNodes[0] = sorted;
+    setRootNodes(newRootNodes);
+  }
+
   return (
     <>
       <div className={styles.matchingMenuAndFormContainer}>
-        <LeftMenuComponent onTreeNodeClick={treeNodeClicked} rootNodesProp={buildRootNodeParams} rootNodes={rootNodes} setRootNodes={setRootNodes} />
+        <LeftMenuComponent onTreeNodeClick={treeNodeClicked} rootNodesProp={buildRootNodeParams} rootNodes={rootNodes} setRootNodes={mySetRootNodes} />
         <div className={styles.matchingCriteriaFormContainer}>
           {isEmpty ? <EmptyForm addCriteriaGroupClicked={addCriteriaGroupClicked} /> : <ComponentToRender node={componentType.node} rootNodes={rootNodes} />}
         </div>
