@@ -63,7 +63,7 @@ export const GenomicForm = (props: IFormProps) => {
   useEffect(() => {
     node.data.formValid = false;
 
-    if (node.data.formData.match_all) {
+    if (node.data.hasOwnProperty('formData') && node.data.formData.hasOwnProperty('match_all') && node.data.formData.match_all) {
       setMatchAllChecked(true);
     }
 
