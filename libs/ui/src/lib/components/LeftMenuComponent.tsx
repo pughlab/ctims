@@ -265,6 +265,10 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         const payload = {[key]: true};
         dispatch(setMatchDialogErrors(payload))
         parentNode.children!.push(newNode);
+
+        setSelectedNode(newNode);
+        setSelectedKeys(newNode.key as string)
+        onTreeNodeClick(newNode.data.type, newNode);
       }
       setRootNodes([...rootNodes]);
     }
