@@ -2,7 +2,6 @@ import styles from "./LeftMenuComponent.module.scss";
 import {
   Tree,
   TreeDragDropParams,
-  TreeEventNodeParams,
   TreeExpandedKeysType,
   TreeTogglerTemplateOptions
 } from "primereact/tree";
@@ -29,9 +28,8 @@ import {
   deleteNode,
   IAddCriteria,
   IDeleteCriteria,
-  IMoveCriteriaUp,
-  IMoveCriteriaDown,
-  IOperatorChange, operatorChange,
+  IMoveCriteriaDnD,
+  IOperatorChange, moveNodeDnD, operatorChange,
   setCtmlDialogModel, setMatchDialogErrors
 } from "../../../../../apps/web/store/slices/modalActionsSlice";
 import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
@@ -62,8 +60,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
   const newNodeValue: IAddCriteria = useSelector((state: RootState) => state.modalActions.addCriteria);
   const nodeKeyToBeDeleted: IDeleteCriteria = useSelector((state: RootState) => state.modalActions.deleteCriteria);
-  const nodeKeyToBeMovedUp: IMoveCriteriaUp = useSelector((state: RootState) => state.modalActions.moveCriteriaUp);
-  const nodeKeyToBeMovedDown: IMoveCriteriaDown = useSelector((state: RootState) => state.modalActions.moveCriteriaDown);
+  const nodeKeyToBeMovedDnD: IMoveCriteriaDnD = useSelector((state: RootState) => state.modalActions.moveCriteriaDnD);
   const operatorChanged: IOperatorChange = useSelector((state: RootState) => state.modalActions.operatorChange);
   const formChangedCounter: number = useSelector((state: RootState) => state.modalActions.formChangeCounter);
   const matchDialogErrors = useSelector((state: RootState) => state.modalActions.matchDialogErrors);
@@ -209,13 +206,6 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       dispatch(deleteNode({nodeKey: ''}));
     }
   }, [nodeKeyToBeDeleted]);
-
-  // when a node is moved up we update the root nodes state
-  useEffect(() => {
-    if (nodeKeyToBeMovedUp.nodeKey) {
-
-    }
-  }, [nodeKeyToBeMovedUp]);
 
   // when the operator is changed we update the label of the node (AND/OR)
   useEffect(() => {
@@ -405,84 +395,11 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
             const state = store.getState();
             updateReduxViewModelAndCtmlModel(newRootNodes, state);
+            dispatch(moveNodeDnD({draggedNodeKey: nodeKey, destinationNodeKey: destinationNodeKey}));
           }
         }
       }
     }
-  }
-
-  const moveCriteriaToParentGroup2 = (nodeKey: string) => {
-    console.log('moveCriteriaToParentGroup nodeKey: ', nodeKey)
-    if (nodeKey) {
-      const foundNode = findObjectByKeyInTree(rootNodes[0], nodeKey as string);
-      console.log('foundNode: ', foundNode)
-      if (foundNode) {
-        const curParentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
-        console.log('parentNode: ', curParentNode)
-        if (curParentNode) {
-          const upperParentNode = findArrayContainingKeyInsideATree(rootNodes[0], curParentNode.key as string);
-          if (upperParentNode) {
-            console.log('upperParentNode: ', upperParentNode)
-            // remove node from current parent
-
-            upperParentNode.children!.push(foundNode);
-            setRootNodes([...rootNodes]);
-          }
-        }
-      }
-    }
-  }
-
-  const moveCriteriaToParentGroup = (nodeKey: string) => {
-    if (nodeKey) {
-      const foundNode = findObjectByKeyInTree(rootNodes[0], nodeKey as string);
-      if (foundNode) {
-        const curParentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
-        if (curParentNode) {
-          const upperParentNode = findArrayContainingKeyInsideATree(rootNodes[0], curParentNode.key as string);
-          if (upperParentNode) {
-            moveCriteriaToAnyGroup(nodeKey, upperParentNode.key as string);
-          }
-        }
-      }
-    }
-  }
-
-  const moveCriteriaToSubGroup = (nodeKey: string) => {
-    console.log('moveCriteriaToSubGroup nodeKey: ', nodeKey)
-    if (nodeKey) {
-      const foundNode = findObjectByKeyInTree(rootNodes[0], nodeKey as string);
-      if (foundNode) {
-        const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
-        if (parentNode) {
-          console.log('parentNode: ', parentNode)
-          const children = parentNode.children;
-          // @ts-ignore
-          for (const child of children) {
-            console.log('child: ', child, child.data.type, EComponentType.AndOROperator)
-            if (child.data.type === EComponentType.AndOROperator || child.data.type === undefined) {
-              moveCriteriaToAnyGroup(nodeKey, child.key as string);
-            }
-          }
-        }
-      }
-    }
-    //     const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
-    //     if (parentNode) {
-    //       const index = parentNode.children!.findIndex((child: any) => child.key === nodeKey);
-    //       parentNode.children!.splice(index, 1);
-    //       const newNode = {
-    //         key: uuidv4(),
-    //         label: foundNode.label,
-    //         icon: foundNode.icon,
-    //         data: foundNode.data,
-    //         children: [foundNode]
-    //       };
-    //       parentNode.children!.push(newNode);
-    //       setRootNodes([...rootNodes]);
-    //     }
-    //   }
-    // }
   }
 
   const isGenomicDisabled = () => {
@@ -560,23 +477,6 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       }
     ]
 
-    // const leafMenuModel = [
-    //   {
-    //     label: 'Move criteria to parent group',
-    //     icon: 'pi pi-angle-double-up',
-    //     command: () => {
-    //       moveCriteriaToParentGroup(selectedNode.key as string);
-    //     },
-    //   },
-    //   {
-    //     label: 'Move criteria to sub group',
-    //     icon: 'pi pi-angle-double-down',
-    //     command: () => {
-    //       moveCriteriaToSubGroup(selectedNode.key as string);
-    //     }
-    //   }
-    // ]
-
     const divRef = useRef<any>(null)
 
     if (selectedNode) {
@@ -586,14 +486,10 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         if ((selectedNode as TreeNode).key === node.key && (node.label === 'And' || node.label === 'Or')) {
           show = true;
         }
-        // show=true
         return show ?
           <Button icon="pi pi-ellipsis-h"
                   className={styles.treeMenuBtn}
-                  iconPos="right" onClick={tieredMenuClick} ></Button> : null;
-          // <Button icon="pi pi-ellipsis-h"
-          //         className={styles.treeMenuBtn}
-          //         iconPos="right" onClick={leafMenuClick}></Button>
+                  iconPos="right" onClick={tieredMenuClick} ></Button> : null
       }
 
       let label = <b>{node.label}</b>;
@@ -621,9 +517,9 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       }, [divRef.current])
 
       let temp_label;
-      if (node.label === 'Genomic') {
+      if (node.label === 'Genomic' && node.data.formData) {
         temp_label = <i>{node.data.formData.hugo_symbol}</i>
-      } else if (node.label === 'Clinical') {
+      } else if (node.label === 'Clinical' && node.data.formData) {
         temp_label = <i>{node.data.formData.age_expression}</i>
       }
       return (
