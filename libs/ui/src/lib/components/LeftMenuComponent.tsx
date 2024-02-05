@@ -342,7 +342,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     const {children} = selectedNode;
     if (children && children.length > 0) {
       children.forEach((child: any) => {
-        if (child.label === 'Genomic' && child.data.formData.match_all) {
+        if (child.label === 'Genomic' && typeof child.data.formData !== 'undefined' && child.data.formData.match_all) {
           isDisabled = true;
           return;
         }
