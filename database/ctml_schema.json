@@ -94,13 +94,26 @@
         },
         "title":"Trial Information"
       },
-      "prior_treatment_requirements":{
-        "type":"array",
-        "title":"Prior treatment requirements",
-        "items":{
-          "type":"string",
-          "title":"Prior treatment requirements"
-        }
+      "prior_treatment_requirements": {
+        "type": "object",
+        "properties": {
+          "prior_treatment_requirement": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [],
+              "properties": {
+                "prior_treatment_requirement_name": {
+                  "type": "string",
+                  "title": "Prior Treatment Requirement Name",
+                  "description": "Prior Treatment Requirement."
+                }
+              }
+            },
+            "title": "Prior Treatment Requirement"
+          }
+        },
+        "title": "Prior Treatment Requirements"
       },
       "age_group":{
         "type":"object",
