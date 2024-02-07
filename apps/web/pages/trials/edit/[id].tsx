@@ -49,6 +49,13 @@ const {
     }
   }, [id])
 
+  useEffect(() => {
+    if (editTrialError) {
+      // Redirect to the home page if the user is unauthenticated
+      editTrialError.statusCode === 401 ? router.push('/') : null
+    }
+  }, [editTrialError]);
+
 
   useEffect(() => {
     if (editTrialResponse) {
