@@ -17,7 +17,7 @@ import {
   deleteNodeFromChildrenArrayByKey,
   findArrayContainingKeyInsideATree,
   findObjectByKeyInTree,
-  isObjectEmpty
+  isObjectEmpty, sortTreeNode
 } from "./helpers";
 import * as jsonpath from "jsonpath";
 import {EComponentType} from "./EComponentType";
@@ -68,7 +68,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   const dispatch = useDispatch();
 
   const setRootNodesState = (newRootNodes: TreeNode[]) => {
-    setRootNodes(newRootNodes);
+    setSortedRootNodes(newRootNodes);
     if (newRootNodes[0].children && newRootNodes[0].children.length > 0) {
       const defaultSelectedNode = getLastVerticalNode(newRootNodes);
       setSelectedNode(defaultSelectedNode);
@@ -77,6 +77,12 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     } else {
       onTreeNodeClick(EComponentType.None, newRootNodes[0]);
     }
+  }
+
+  const setSortedRootNodes = (newRootNodes: TreeNode[]) => {
+    const clonedRootNodes = structuredClone(newRootNodes);
+    const sorted = sortTreeNode(clonedRootNodes[0]);
+    setRootNodes([sorted]);
   }
 
   const updateReduxViewModelAndCtmlModel = (newRootNodes: TreeNode[], state: RootState) => {
@@ -89,8 +95,10 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     dispatch(setCtmlDialogModel(ctimsFormat));
     // console.log('ctimsFormat: ', ctimsFormat)
     // console.log('newRootNodes: ', newRootNodes)
-    if (newRootNodes[0].children && newRootNodes[0].children.length === 0) {
-      setSaveBtnState(true);
+    if (newRootNodes[0].children) {
+      if (newRootNodes[0].children && newRootNodes[0].children.length === 0) {
+        setSaveBtnState(true);
+      }
     }
   }
 
@@ -160,7 +168,6 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       if (!isObjectEmpty(currentCtmlMatchModel.match)) {
         setSaveBtnState(false);
         // console.log('currentCtmlMatchModel.match', currentCtmlMatchModel.match)
-        console.log('crash!', rootNodes)
         if (rootNodes.length === 0) {
           const newViewModel = convertCtimsFormatToTreeNodeArray({match: currentCtmlMatchModel.match});
           setRootNodesState(newViewModel);
@@ -221,7 +228,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           parentNode.label = newOperator;
         }
         updateReduxViewModelAndCtmlModel(rootNodes, state);
-        setRootNodes([...rootNodes]);
+        setSortedRootNodes([...rootNodes]);
       }
 
       if (location === 'tree') {
@@ -232,14 +239,13 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           foundNode.label = newOperator;
         }
         updateReduxViewModelAndCtmlModel(rootNodes, state);
-        setRootNodes([...rootNodes]);
+        setSortedRootNodes([...rootNodes]);
       }
 
     }
   }, [operatorChanged]);
 
   const tieredMenu = useRef(null);
-  const leafMenu = useRef(null);
 
   // This prop is set from MatchingMenuAndFormComponent
   useEffect(() => {
@@ -249,7 +255,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         if (firstChildLabel === 'Empty Group') {
           const roodNodes = buildEmptyGroup(rootLabel);
           const firstSelectedKey = roodNodes[0].key;
-          setRootNodes(roodNodes);
+          setSortedRootNodes(roodNodes);
           setSelectedNode(roodNodes[0]);
           setSelectedKeys(firstSelectedKey)
           onTreeNodeClick(EComponentType.AndOROperator, roodNodes[0]);
@@ -257,7 +263,6 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           const roodNodes = buildRootNodes(rootLabel, firstChildLabel);
           setRootNodesState(roodNodes);
         }
-
       }
     }
   }, [rootNodesProp]);
@@ -277,7 +282,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         dispatch(setMatchDialogErrors(payload))
         parentNode.children!.push(newNode);
       }
-      setRootNodes([...rootNodes]);
+      setSortedRootNodes([...rootNodes]);
     }
   }
 
@@ -305,7 +310,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         onTreeNodeClick(newNode.data.type, newNode);
       }
 
-      setRootNodes([...rootNodes]);
+      setSortedRootNodes([...rootNodes]);
     }
   }
 
@@ -324,7 +329,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         expandedKeys[parentNode.key] = true;
         setExpandedKeys(expandedKeys);
       }
-      setRootNodes([...rootNodes]);
+      setSortedRootNodes([...rootNodes]);
     }
   }
 
@@ -333,16 +338,11 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     tieredMenu.current.show(e);
   }
 
-  const leafMenuClick = (e: any) => {
-    // @ts-ignore
-    leafMenu.current.show(e);
-  }
-
   const deleteNodeClicked = (nodeKey: string) => {
     if (nodeKey) {
       const newRootNodes = structuredClone(rootNodes);
       deleteNodeFromChildrenArrayByKey(newRootNodes[0], nodeKey);
-      setRootNodes(newRootNodes);
+      setSortedRootNodes(newRootNodes);
       // After deleting a node, the new selected node should be chosen vertically.
       const defaultSelectedNode = getLastVerticalNode(newRootNodes);
       setSelectedNode(defaultSelectedNode);
@@ -380,7 +380,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
             };
 
             targetNode.children!.push(newNode);
-            setRootNodes([...newRootNodes]);
+            setSortedRootNodes([...newRootNodes]);
 
             // setSelectedNode(newNode);
             // setSelectedKeys(newNode.key as string)
@@ -577,26 +577,25 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   }
 
   return (
-    <>
-        <div className={styles.matchingCriteriaMenuContainer}>
-          <div className={styles.matchingCriteriaTextContainer}>
-            <div className={styles.matchingCriteriaText}>Matching Criteria</div>
-          </div>
-          <Tree value={rootNodes}
-                className="ctims-tree"
-                contentClassName="ctims-tree-content"
-                nodeTemplate={nodeTemplate}
-                togglerTemplate={togglerTemplate}
-                expandedKeys={expandedKeys}
-                selectionKeys={selectedKeys}
-                selectionMode="single"
-                dragdropScope="leftMenuScope"
-                onDragDrop={event => onDragDropEvent(event)}
-                onToggle={e => onNodeToggle(e) } />
-        </div>
-    </>
-
-    )
+    <div className={styles.matchingCriteriaMenuContainer}>
+      <div className={styles.matchingCriteriaTextContainer}>
+        <div className={styles.matchingCriteriaText}>Matching Criteria</div>
+      </div>
+      <Tree
+        value={rootNodes}
+        className="ctims-tree"
+        contentClassName="ctims-tree-content"
+        nodeTemplate={nodeTemplate}
+        togglerTemplate={togglerTemplate}
+        expandedKeys={expandedKeys}
+        selectionKeys={selectedKeys}
+        selectionMode="single"
+        dragdropScope="leftMenuScope"
+        onDragDrop={(event) => onDragDropEvent(event)}
+        onToggle={(e) => onNodeToggle(e)}
+      />
+    </div>
+  );
 
 }, (prevProps, nextProps) => {
   return false;

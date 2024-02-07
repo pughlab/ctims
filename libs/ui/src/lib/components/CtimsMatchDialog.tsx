@@ -89,7 +89,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   }
 
   const setSaveBtnState = (state: boolean) => {
-    console.log('setSaveBtnState', state);
+    // console.log('setSaveBtnState', state);
     setSaveBtnDisabled(state);
   }
 
