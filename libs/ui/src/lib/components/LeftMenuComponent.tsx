@@ -80,9 +80,8 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   }
 
   const setSortedRootNodes = (newRootNodes: TreeNode[]) => {
-    const clonedRootNodes = structuredClone(newRootNodes);
-    const sorted = sortTreeNode(clonedRootNodes[0]);
-    setRootNodes([sorted]);
+    const sortedNodes = sortTreeNode(newRootNodes[0]);
+    setRootNodes([sortedNodes]);
   }
 
   const updateReduxViewModelAndCtmlModel = (newRootNodes: TreeNode[], state: RootState) => {
@@ -186,7 +185,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
     // if the form was changed, update the redux store with the new view model and ctims format
     if (formChangedCounter > 0) {
-      console.log('form changed in left menu component');
+      // console.log('form changed in left menu component');
       updateReduxViewModelAndCtmlModel(rootNodes, state);
     }
   }, [formChangedCounter]);
@@ -357,7 +356,6 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     }
   }
 
-  // mickey
   const moveCriteriaToAnyGroup = (nodeKey: string, destinationNodeKey: string) => {
     // console.log('moveCriteriaToAnyGroup nodeKey: ', nodeKey)
     // console.log('moveCriteriaToAnyGroup targetNodeKey: ', destinationNodeKey)
@@ -367,12 +365,10 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       if (foundNode) {
         const parentNode = findArrayContainingKeyInsideATree(newRootNodes[0], nodeKey as string);
         if (parentNode) {
-          // console.log('found parentNode: ', parentNode)
           const index = parentNode.children!.findIndex((child: any) => child.key === nodeKey);
           // console.log('index: ', index)
           parentNode.children!.splice(index, 1);
           const targetNode = findObjectByKeyInTree(newRootNodes[0], destinationNodeKey as string);
-          // console.log('targetNode: ', targetNode)
           if (targetNode) {
             const key = uuidv4();
             const newNode = {

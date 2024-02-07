@@ -283,16 +283,13 @@ export const getCurrentOperator = (rootNodes: TreeNode[], currentNode: TreeNode)
 
 // sort the children of the root nodes by node.data's type property, clinical first, genomic second, and and/or last
 export const sortTreeNode = (treeNode: TreeNode): TreeNode => {
-  console.log('sort is called', treeNode)
-  const newRootNode = structuredClone(treeNode);
-
   // recursively calls itself and use map to sort the current level of node
-  if (newRootNode.children) {
+  if (typeof treeNode !== "undefined" && treeNode.children) {
     // recursively calls the next level to sort the next level children
-    newRootNode.children = newRootNode.children.map(sortTreeNode);
+    treeNode.children = treeNode.children.map(sortTreeNode);
 
     // sort the current level
-    newRootNode.children.sort((a, b) => {
+    treeNode.children.sort((a, b) => {
       if (a.data.type === EComponentType.ClinicalForm) {
         return -1;
       } else if (a.data.type === EComponentType.GenomicForm && b.data.type === EComponentType.AndOROperator) {
@@ -307,6 +304,6 @@ export const sortTreeNode = (treeNode: TreeNode): TreeNode => {
     });
   }
 
-  return newRootNode;
+  return treeNode;
 }
 
