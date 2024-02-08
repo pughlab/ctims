@@ -43,18 +43,16 @@ const formContainerStyle: CSSProperties = {
   overflowY: 'scroll'
 }
 
-const matchAllContainerStyle: CSSProperties = {
-  marginLeft: '20px',
-  marginTop: '16px',
-  marginBottom: '16px'
-}
+// const matchAllContainerStyle: CSSProperties = {
+//   marginLeft: '20px',
+//   marginTop: '16px',
+//   marginBottom: '16px'
+// }
 
 export const GenomicForm = (props: IFormProps) => {
   const {node, rootNodes} = props
   const nk = node.key as string;
   // console.log('GenomicForm node: ', node)
-
-  const [matchAllChecked, setMatchAllChecked] = useState<boolean>(false);
 
   const {setSaveBtnState} = useContext(CtimsDialogContext) as CtimsDialogContextType;
 
@@ -62,29 +60,7 @@ export const GenomicForm = (props: IFormProps) => {
 
   useEffect(() => {
     node.data.formValid = false;
-
-    if (node.data.hasOwnProperty('formData') && node.data.formData.hasOwnProperty('match_all') && node.data.formData.match_all) {
-      setMatchAllChecked(true);
-    }
-
-    return () => {
-      setMatchAllChecked(false);
-    }
-
   }, [node]);
-
-  useEffect(() => {
-    if (matchAllChecked) {
-      noErrorsInFormDispatch();
-      node.data.formData = {
-        match_all: true
-      }
-      dispatch(formChange());
-    } else {
-      validateFormFromRef();
-      dispatch(formChange());
-    }
-  }, [matchAllChecked]);
 
   const dispatch = useDispatch()
 
@@ -92,6 +68,7 @@ export const GenomicForm = (props: IFormProps) => {
     'definitions': {
       "variant_category": {
         "enumNames": [
+          " ",
           "Mutation",
           "CNV",
           "SV",
@@ -99,6 +76,7 @@ export const GenomicForm = (props: IFormProps) => {
           "Signature"
         ],
         "enum": [
+          "",
           "Mutation",
           "CNV",
           "Structural Variation",
@@ -108,6 +86,7 @@ export const GenomicForm = (props: IFormProps) => {
       },
       'variant_classification': {
         "enumNames": [
+          " ",
           "Frame Shift Del",
           "Frame Shift Ins",
           "In Frame Del",
@@ -125,6 +104,7 @@ export const GenomicForm = (props: IFormProps) => {
           "Unknown",
         ],
         "enum": [
+          "",
           "Frame_Shift_Del",
           "Frame_Shift_Ins",
           "In_Frame_Del",
@@ -144,12 +124,14 @@ export const GenomicForm = (props: IFormProps) => {
       },
       'cnv_call': {
         "enumNames": [
+          " ",
           "Heterozygous deletion",
           "Homozygous deletion",
           "Gain",
           "High level amplification",
         ],
         "enum": [
+          "",
           "Heterozygous deletion",
           "Homozygous deletion",
           "Gain",
@@ -158,22 +140,26 @@ export const GenomicForm = (props: IFormProps) => {
       },
       'wildtype': {
         "enumNames": [
+          " ",
           "True",
           "False",
         ],
         "enum": [
+          "",
           "True",
           "False"
         ]
       },
       'pole_status': {
         "enumNames": [
+          " ",
           "Yes",
           "No",
           "Cannot Access",
           "Insufficient Variants",
         ],
         "enum": [
+          "",
           "yes",
           "no",
           "cannot_access",
@@ -182,12 +168,14 @@ export const GenomicForm = (props: IFormProps) => {
       },
       'uva_status': {
         "enumNames": [
+          " ",
           "Yes",
           "No",
           "Cannot Access",
           "Insufficient Variants",
         ],
         "enum": [
+          "",
           "yes",
           "no",
           "cannot_access",
@@ -196,12 +184,14 @@ export const GenomicForm = (props: IFormProps) => {
       },
       'tobacco_status': {
         "enumNames": [
+          " ",
           "Yes",
           "No",
           "Cannot Access",
           "Insufficient Variants",
         ],
         "enum": [
+          "",
           "yes",
           "no",
           "cannot_access",
@@ -210,12 +200,14 @@ export const GenomicForm = (props: IFormProps) => {
       },
       'apobec_status': {
         "enumNames": [
+          " ",
           "Yes",
           "No",
           "Cannot Access",
           "Insufficient Variants",
         ],
         "enum": [
+          "",
           "yes",
           "no",
           "cannot_access",
@@ -224,12 +216,14 @@ export const GenomicForm = (props: IFormProps) => {
       },
       'temozolomide_status': {
         "enumNames": [
+          " ",
           "Yes",
           "No",
           "Cannot Access",
           "Insufficient Variants",
         ],
         "enum": [
+          "",
           "yes",
           "no",
           "cannot_access",
@@ -238,21 +232,25 @@ export const GenomicForm = (props: IFormProps) => {
       },
       'mmr_status': {
         "enumNames": [
+          " ",
           "MMR-Proficient",
           "MMR-Deficient"
         ],
         "enum": [
+          "",
           "MMR-Proficient",
           "MMR-Deficient",
         ]
       },
       "ms_status": {
         "enumNames": [
+          " ",
           "MSI-H",
           "MSI-L",
           "MSS"
         ],
         "enum": [
+          "",
           "MSI-H",
           "MSI-L",
           "MSS",
@@ -260,10 +258,12 @@ export const GenomicForm = (props: IFormProps) => {
       },
       "molecular_function": {
         "enumNames": [
+          " ",
           "Activating",
           "Inactivating"
           ],
         "enum": [
+          "",
           "Activating",
           "Inactivating"
         ]
@@ -399,9 +399,6 @@ export const GenomicForm = (props: IFormProps) => {
   const onFormChange = (data: any) => {
     validateFormFromRef(data);
 
-    if (!matchAllChecked) {
-      delete data.formData.match_all;
-    }
     node.data.formData = data.formData;
     dispatch(formChange());
     console.log('onFormChange node: ', node)
@@ -456,15 +453,14 @@ export const GenomicForm = (props: IFormProps) => {
         getCurrentOperator={useCurrentOperator}
         selectedNode={node} />
       <div>
-        <TitleContainer title="Genomic" isAddEnabled={!matchAllChecked} node={node} />
+        <TitleContainer title="Genomic" isAddEnabled node={node} />
       </div>
       <div>
-        <div style={matchAllContainerStyle}>
-          <Checkbox inputId="matchAllChkb" onChange={e => setMatchAllChecked(e.checked)} checked={matchAllChecked}></Checkbox>
-          <label htmlFor="matchAllChkb" style={{marginLeft: '10px'}}>Match with all available genomic criteria</label>
-        </div>
+        {/*<div style={matchAllContainerStyle}>*/}
+        {/*  <Checkbox inputId="matchAllChkb" onChange={e => setMatchAllChecked(e.checked)} checked={matchAllChecked}></Checkbox>*/}
+        {/*  <label htmlFor="matchAllChkb" style={{marginLeft: '10px'}}>Match with all available genomic criteria</label>*/}
+        {/*</div>*/}
         <RjsfForm ref={genomicFormRef}
-                  disabled={matchAllChecked}
                   schema={genomicFormSchema as JSONSchema7}
                   templates={formTemplates}
                   formData={node.data.formData}
