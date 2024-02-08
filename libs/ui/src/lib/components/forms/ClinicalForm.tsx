@@ -62,30 +62,36 @@ export const ClinicalForm = (props: IFormProps) => {
     "definitions": {
       "her2_status": {
         "enumNames": [
+          " ",
           "Positive",
           "Negative"
         ],
         "enum": [
+          "",
           "True",
           "False"
         ]
       },
       "er_status": {
         "enumNames": [
+          " ",
           "Positive",
           "Negative"
         ],
         "enum": [
+          "",
           "True",
           "False"
         ]
       },
       "pr_status": {
         "enumNames": [
+          " ",
           "Positive",
           "Negative"
         ],
         "enum": [
+          "",
           "True",
           "False"
         ]
