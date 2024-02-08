@@ -290,17 +290,19 @@ export const sortTreeNode = (treeNode: TreeNode): TreeNode => {
 
     // sort the current level
     treeNode.children.sort((a, b) => {
+      let ret = 0;
       if (a.data.type === EComponentType.ClinicalForm) {
-        return -1;
-      } else if (a.data.type === EComponentType.GenomicForm && b.data.type === EComponentType.AndOROperator) {
-        return -1;
-      } else if (a.data.type === EComponentType.GenomicForm && b.data.type === EComponentType.ClinicalForm) {
-        return 1;
-      } else if (a.data.type === EComponentType.AndOROperator) {
-        return 1;
-      } else {
-        return 0;
+        ret = -1;
+      } else if (a.data.type === EComponentType.GenomicForm) {
+        if (b.data.hasOwnProperty('type') && b.data.type === EComponentType.ClinicalForm) {
+          ret = 1;
+        } else if (!b.data.hasOwnProperty('type')) { //it's AND/OR operator
+          ret = -1;
+        }
+      } else if (!a.data.hasOwnProperty('type')) { //it's AND/OR operator
+        ret =  1;
       }
+      return ret;
     });
   }
 
