@@ -17,7 +17,7 @@ import {
   deleteNodeFromChildrenArrayByKey,
   findArrayContainingKeyInsideATree,
   findObjectByKeyInTree,
-  isObjectEmpty, sortTreeNode
+  isObjectEmpty
 } from "./helpers";
 import * as jsonpath from "jsonpath";
 import {EComponentType} from "./EComponentType";
@@ -68,7 +68,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   const dispatch = useDispatch();
 
   const setRootNodesState = (newRootNodes: TreeNode[]) => {
-    setSortedRootNodes(newRootNodes);
+    setRootNodes(newRootNodes);
     if (newRootNodes[0].children && newRootNodes[0].children.length > 0) {
       const defaultSelectedNode = getLastVerticalNode(newRootNodes);
       setSelectedNode(defaultSelectedNode);
@@ -77,11 +77,6 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     } else {
       onTreeNodeClick(EComponentType.None, newRootNodes[0]);
     }
-  }
-
-  const setSortedRootNodes = (newRootNodes: TreeNode[]) => {
-    const sortedNodes = sortTreeNode(newRootNodes[0]);
-    setRootNodes([sortedNodes]);
   }
 
   const updateReduxViewModelAndCtmlModel = (newRootNodes: TreeNode[], state: RootState) => {
@@ -227,7 +222,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           parentNode.label = newOperator;
         }
         updateReduxViewModelAndCtmlModel(rootNodes, state);
-        setSortedRootNodes([...rootNodes]);
+        setRootNodes([...rootNodes]);
       }
 
       if (location === 'tree') {
@@ -238,7 +233,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           foundNode.label = newOperator;
         }
         updateReduxViewModelAndCtmlModel(rootNodes, state);
-        setSortedRootNodes([...rootNodes]);
+        setRootNodes([...rootNodes]);
       }
 
     }
@@ -254,7 +249,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         if (firstChildLabel === 'Empty Group') {
           const roodNodes = buildEmptyGroup(rootLabel);
           const firstSelectedKey = roodNodes[0].key;
-          setSortedRootNodes(roodNodes);
+          setRootNodes(roodNodes);
           setSelectedNode(roodNodes[0]);
           setSelectedKeys(firstSelectedKey)
           onTreeNodeClick(EComponentType.AndOROperator, roodNodes[0]);
@@ -285,7 +280,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         setSelectedKeys(newNode.key as string)
         onTreeNodeClick(newNode.data.type, newNode);
       }
-      setSortedRootNodes([...rootNodes]);
+      setRootNodes([...rootNodes]);
     }
   }
 
@@ -313,7 +308,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         onTreeNodeClick(newNode.data.type, newNode);
       }
 
-      setSortedRootNodes([...rootNodes]);
+      setRootNodes([...rootNodes]);
     }
   }
 
@@ -332,7 +327,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         expandedKeys[parentNode.key] = true;
         setExpandedKeys(expandedKeys);
       }
-      setSortedRootNodes([...rootNodes]);
+      setRootNodes([...rootNodes]);
     }
   }
 
@@ -345,7 +340,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     if (nodeKey) {
       const newRootNodes = structuredClone(rootNodes);
       deleteNodeFromChildrenArrayByKey(newRootNodes[0], nodeKey);
-      setSortedRootNodes(newRootNodes);
+      setRootNodes(newRootNodes);
       // After deleting a node, the new selected node should be chosen vertically.
       const defaultSelectedNode = getLastVerticalNode(newRootNodes);
       setSelectedNode(defaultSelectedNode);
@@ -380,7 +375,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
             };
 
             targetNode.children!.push(newNode);
-            setSortedRootNodes([...newRootNodes]);
+            setRootNodes([...newRootNodes]);
 
             // setSelectedNode(newNode);
             // setSelectedKeys(newNode.key as string)
