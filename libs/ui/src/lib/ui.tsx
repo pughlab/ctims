@@ -85,7 +85,7 @@ export const Ui = (props: UiProps) => {
       if (saveTrialError.statusCode === 401) {
         signOut({redirect: false}).then(() => {
           localStorage.removeItem('ctims-accessToken');
-          router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/login');
+          router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
         });
       }
     }
