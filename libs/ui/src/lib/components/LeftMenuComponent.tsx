@@ -350,8 +350,6 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   }
 
   const moveCriteriaToAnyGroup = (nodeKey: string, destinationNodeKey: string) => {
-    // console.log('moveCriteriaToAnyGroup nodeKey: ', nodeKey)
-    // console.log('moveCriteriaToAnyGroup targetNodeKey: ', destinationNodeKey)
     const newRootNodes = structuredClone(rootNodes);
     if (nodeKey && destinationNodeKey) {
       const foundNode = findObjectByKeyInTree(newRootNodes[0], nodeKey as string);
@@ -547,7 +545,6 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   }
 
   const onDragDropEvent = (e: TreeDragDropParams) => {
-    // console.log('setNodes: ', e)
     const {dragNode, dropNode} = e;
     // check it's dropping into a group, ie. not dropped outside of topmost node
     if (!dropNode) {
