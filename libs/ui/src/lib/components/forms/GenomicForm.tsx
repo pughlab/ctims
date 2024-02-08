@@ -68,6 +68,7 @@ export const GenomicForm = (props: IFormProps) => {
     'definitions': {
       "variant_category": {
         "enumNames": [
+          " ",
           "Mutation",
           "CNV",
           "SV",
@@ -75,6 +76,7 @@ export const GenomicForm = (props: IFormProps) => {
           "Signature"
         ],
         "enum": [
+          "",
           "Mutation",
           "CNV",
           "Structural Variation",
@@ -84,6 +86,7 @@ export const GenomicForm = (props: IFormProps) => {
       },
       'variant_classification': {
         "enumNames": [
+          " ",
           "Frame Shift Del",
           "Frame Shift Ins",
           "In Frame Del",
@@ -101,6 +104,7 @@ export const GenomicForm = (props: IFormProps) => {
           "Unknown",
         ],
         "enum": [
+          "",
           "Frame_Shift_Del",
           "Frame_Shift_Ins",
           "In_Frame_Del",
@@ -120,12 +124,14 @@ export const GenomicForm = (props: IFormProps) => {
       },
       'cnv_call': {
         "enumNames": [
+          " ",
           "Heterozygous deletion",
           "Homozygous deletion",
           "Gain",
           "High level amplification",
         ],
         "enum": [
+          "",
           "Heterozygous deletion",
           "Homozygous deletion",
           "Gain",
@@ -134,22 +140,26 @@ export const GenomicForm = (props: IFormProps) => {
       },
       'wildtype': {
         "enumNames": [
+          " ",
           "True",
           "False",
         ],
         "enum": [
+          "",
           "True",
           "False"
         ]
       },
       'pole_status': {
         "enumNames": [
+          " ",
           "Yes",
           "No",
           "Cannot Access",
           "Insufficient Variants",
         ],
         "enum": [
+          "",
           "yes",
           "no",
           "cannot_access",
@@ -158,12 +168,14 @@ export const GenomicForm = (props: IFormProps) => {
       },
       'uva_status': {
         "enumNames": [
+          " ",
           "Yes",
           "No",
           "Cannot Access",
           "Insufficient Variants",
         ],
         "enum": [
+          "",
           "yes",
           "no",
           "cannot_access",
@@ -172,12 +184,14 @@ export const GenomicForm = (props: IFormProps) => {
       },
       'tobacco_status': {
         "enumNames": [
+          " ",
           "Yes",
           "No",
           "Cannot Access",
           "Insufficient Variants",
         ],
         "enum": [
+          "",
           "yes",
           "no",
           "cannot_access",
@@ -186,12 +200,14 @@ export const GenomicForm = (props: IFormProps) => {
       },
       'apobec_status': {
         "enumNames": [
+          " ",
           "Yes",
           "No",
           "Cannot Access",
           "Insufficient Variants",
         ],
         "enum": [
+          "",
           "yes",
           "no",
           "cannot_access",
@@ -200,12 +216,14 @@ export const GenomicForm = (props: IFormProps) => {
       },
       'temozolomide_status': {
         "enumNames": [
+          " ",
           "Yes",
           "No",
           "Cannot Access",
           "Insufficient Variants",
         ],
         "enum": [
+          "",
           "yes",
           "no",
           "cannot_access",
@@ -214,21 +232,25 @@ export const GenomicForm = (props: IFormProps) => {
       },
       'mmr_status': {
         "enumNames": [
+          " ",
           "MMR-Proficient",
           "MMR-Deficient"
         ],
         "enum": [
+          "",
           "MMR-Proficient",
           "MMR-Deficient",
         ]
       },
       "ms_status": {
         "enumNames": [
+          " ",
           "MSI-H",
           "MSI-L",
           "MSS"
         ],
         "enum": [
+          "",
           "MSI-H",
           "MSI-L",
           "MSS",
@@ -236,10 +258,12 @@ export const GenomicForm = (props: IFormProps) => {
       },
       "molecular_function": {
         "enumNames": [
+          " ",
           "Activating",
           "Inactivating"
           ],
         "enum": [
+          "",
           "Activating",
           "Inactivating"
         ]
