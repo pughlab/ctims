@@ -70,9 +70,9 @@ export const GenomicForm = (props: IFormProps) => {
         "enumNames": [
           " ",
           "Mutation",
-          "CNV",
-          "SV",
-          "WT",
+          "Copy Number Variation",
+          "Structural Variation",
+          "Wildtype",
           "Signature"
         ],
         "enum": [
@@ -417,22 +417,22 @@ export const GenomicForm = (props: IFormProps) => {
   }
 
   const customValidate = (formData: any, errors: any, uiSchema: any) => {
-    if (typeof formData.hugo_symbol === 'undefined' && 
-        typeof formData.variant_category === 'undefined' && 
-        typeof formData.protein_change === 'undefined' && 
-        typeof formData.wildcard_protein_change === 'undefined' && 
-        typeof formData.molecular_function === 'undefined' && 
-        typeof formData.variant_classification === 'undefined' && 
-        typeof formData.cnv_call === 'undefined' && 
-        typeof formData.fusion_partner_hugo_symbol === 'undefined' && 
-        typeof formData.true_transcript_exon === 'undefined' && 
-        typeof formData.wildtype === 'undefined' && 
-        typeof formData.pole_status === 'undefined' && 
-        typeof formData.uva_status === 'undefined' && 
-        typeof formData.tobacco_status === 'undefined' && 
-        typeof formData.apobec_status === 'undefined' && 
-        typeof formData.temozolomide_status === 'undefined' && 
-        typeof formData.mmr_status === 'undefined' && 
+    if (typeof formData.hugo_symbol === 'undefined' &&
+        typeof formData.variant_category === 'undefined' &&
+        typeof formData.protein_change === 'undefined' &&
+        typeof formData.wildcard_protein_change === 'undefined' &&
+        typeof formData.molecular_function === 'undefined' &&
+        typeof formData.variant_classification === 'undefined' &&
+        typeof formData.cnv_call === 'undefined' &&
+        typeof formData.fusion_partner_hugo_symbol === 'undefined' &&
+        typeof formData.true_transcript_exon === 'undefined' &&
+        typeof formData.wildtype === 'undefined' &&
+        typeof formData.pole_status === 'undefined' &&
+        typeof formData.uva_status === 'undefined' &&
+        typeof formData.tobacco_status === 'undefined' &&
+        typeof formData.apobec_status === 'undefined' &&
+        typeof formData.temozolomide_status === 'undefined' &&
+        typeof formData.mmr_status === 'undefined' &&
         typeof formData.ms_status === 'undefined') {
       errors.hugo_symbol.addError('Must have at least one field filled.');
     }
