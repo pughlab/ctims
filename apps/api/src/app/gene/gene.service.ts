@@ -5,7 +5,7 @@ import {PrismaService} from "../prisma.service";
 export class GeneService {
   constructor(private prismaService: PrismaService) {}
 
-  async fetchGeneSymbols() {
+  async fetchHugoSymbols() {
     try {
       const hugoJSON = await this.prismaService.gene.findMany();
       const symbols = hugoJSON.map((entry) => entry.hugoSymbol);
@@ -23,7 +23,7 @@ export class GeneService {
     }
 
     try {
-      const symbols = await this.fetchGeneSymbols();
+      const symbols = await this.fetchHugoSymbols();
       const filteredSymbols = symbols.filter((symbol) =>
         symbol.toLowerCase().startsWith(query?.toLowerCase())
       );

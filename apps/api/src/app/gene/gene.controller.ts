@@ -12,7 +12,7 @@ export class GeneController {
   constructor(private readonly geneService: GeneService) {}
 
   @Get()
-  async getHugoGenes(@Query("query") query: string) {
+  async searchGenes(@Query("query") query: string) {
     try {
       return await (await this.geneService.filterGeneSymbols(query)).slice(0,10);
     } catch (error) {

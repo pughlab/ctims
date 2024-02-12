@@ -25,18 +25,14 @@ async function main() {
 
 main().then(() => {
   console.log('done');
-  console.log('running fetchAPISAVE');
-   fetchAPISaveGenes();
+   populateGeneTable();
 }).catch(e => {
   console.error(e)
 }).finally(async () => {
   await prisma.$disconnect()
 })
 
-// const { PrismaClient } = require('@prisma/client');
-// const prisma = new PrismaClient();
-
-async function fetchAPI() {
+async function fetchHgncData() {
   try {
     const response = await fetch(
       'https://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/json/hgnc_complete_set.json'
@@ -54,14 +50,13 @@ async function fetchAPI() {
 
 async function saveGenes(data) {
   try {
-    const symbols = data.response.docs.map((x) => x.symbol);
-    for (const symbol of symbols) {
+    data.response.docs.forEach(async (x) => {
       await prisma.gene.create({
         data: {
-          hugoSymbol: symbol,
+          hugoSymbol: x.symbol,
         },
       });
-    }
+    });
   } catch (error) {
     console.error(error);
     throw error;
@@ -70,9 +65,9 @@ async function saveGenes(data) {
   }
 }
 
-async function fetchAPISaveGenes() {
+async function populateGeneTable() {
   try {
-    const data = await fetchAPI();
+    const data = await fetchHgncData();
     await saveGenes(data);
   } catch (error) {
     console.error(error);
