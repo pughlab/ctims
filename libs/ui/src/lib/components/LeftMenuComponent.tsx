@@ -186,12 +186,11 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   // when a node is deleted we update the root nodes state
   useEffect(() => {
     if (nodeKeyToBeDeleted.nodeKey) {
-      const newRootNodes = structuredClone(rootNodes);
+      const newRootNodes = [...rootNodes];
       deleteNodeFromChildrenArrayByKey(newRootNodes[0], nodeKeyToBeDeleted.nodeKey);
       setRootNodesState(newRootNodes);
       const state = store.getState();
       updateReduxViewModelAndCtmlModel(newRootNodes, state);
-
       dispatch(deleteMatchDialogError(nodeKeyToBeDeleted.nodeKey))
       dispatch(deleteNode({nodeKey: ''}));
     }
@@ -441,8 +440,6 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         divRef.current.addEventListener('click', onNodeClick);
 
       }, [divRef.current])
-
-
 
       return (
         <>
