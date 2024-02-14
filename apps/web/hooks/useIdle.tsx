@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useIdleTimer } from "react-idle-timer";
+import getConfig from "next/config";
 
 // Define an enum for the idle state
 export enum IdleState {
@@ -12,12 +13,14 @@ const convertMinutesToMilliseconds = (minutes) => {
 }
 
 const useIdle = () => {
+  const { publicRuntimeConfig } = getConfig();
   // Define state variables for the idle state, action count, and remaining time
   const [state, setState] = useState<IdleState>(IdleState.Active);
   const [count, setCount] = useState<number>(0);
   const [remaining, setRemaining] = useState<number>(0);
 
-  const TIMEOUT = convertMinutesToMilliseconds(14);
+  // const TIMEOUT = convertMinutesToMilliseconds(14);
+  const TIMEOUT = convertMinutesToMilliseconds(publicRuntimeConfig.REACT_APP_DIALOG_TIMEOUT_MINUTES || 10);
 
   // Define event handlers for idle, active, and action events
   const onIdle = () => {

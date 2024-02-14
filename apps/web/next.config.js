@@ -14,6 +14,7 @@ const nextConfig = {
   publicRuntimeConfig: {
     // Will be available on both server and client
     REACT_APP_API_URL: process.env.REACT_APP_API_URL,
+    REACT_APP_DIALOG_TIMEOUT_MINUTES: process.env.REACT_APP_DIALOG_TIMEOUT_MINUTES,
     NEXT_PUBLIC_SIGNOUT_REDIRECT_URL: process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL,
   },
   env: {

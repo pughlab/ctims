@@ -29,6 +29,9 @@ const IdleComponent = () => {
   };
 
   useEffect(() => {
+
+    let refreshInterval: any;
+
     if (idleState === IdleState.Idle) { // If the idle state is Idle
       setShowDialog(true); // Show the dialog
       setRemainingTime(IDLE_TIMEOUT); // Set the remaining time to the idle timeout
@@ -36,10 +39,20 @@ const IdleComponent = () => {
       refreshTokenOperation(); // Refresh the access token
       setShowDialog(false); // Hide the dialog
       setRemainingTime(0); // Reset the remaining time
+      refreshInterval = setInterval(() => {
+        refreshTokenOperation();
+      }, 300000); // 5 minutes in milliseconds
     }
+
+    return () => {
+      if (refreshInterval) {
+        clearInterval(refreshInterval);
+      }
+    };
   }, [idleState]); // Run the effect whenever the idle state changes
 
   useEffect(() => {
+
     let interval: any;
 
     if (showDialog) { // If the dialog is visible
