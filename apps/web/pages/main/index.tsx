@@ -6,19 +6,13 @@ import TopBar from "../../components/trials/TopBar";
 import styles from './index.module.scss';
 import Trials from '../../components/trials/Trials';
 import Results from '../../components/trials/Results';
-import useGetApiInfo from "apps/web/hooks/useGetApiInfo";
+import FooterComponent from "apps/web/components/FooterComponent";
 
 const Main = () => {
 
   const {data, status: sessionStatus} = useSession()
 
   const [activeTab, setActiveTab] = useState(0);
-
-  const { error, response, loading, operation} = useGetApiInfo();
-
-  useEffect(() => {
-    operation();
-  }, [])
 
   useEffect(() => {
     if (!data) {
@@ -46,7 +40,7 @@ const Main = () => {
             </TabPanel>
           </TabView>
         </div>
-        <div className={styles.versionContainer}>CTIMS version {response}</div>
+        <FooterComponent/>
       </>}
       { sessionStatus === 'unauthenticated' && <div>Please log in to view this page.</div>}
     </>

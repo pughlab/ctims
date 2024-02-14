@@ -7,7 +7,8 @@ import {useSession} from "next-auth/react";
 import {useRouter} from "next/router";
 import useGetCtmlSchema from "../../../hooks/useGetCtmlSchema";
 import IdleComponent from "../../../components/IdleComponent";
-import useGetApiInfo from "apps/web/hooks/useGetApiInfo";
+import FooterComponent from "apps/web/components/FooterComponent";
+
 
 const EditorCreateCtml = () => {
 
@@ -17,15 +18,7 @@ const EditorCreateCtml = () => {
 
   const {data} = useSession()
 
-  const { 
-    error: getApiInfoError,
-    response: getApiInfoResponse,
-    loading: getApiInfoLoading, 
-    operation: getApiInfoOperation
-  } = useGetApiInfo();
-
   useEffect(() => {
-    getApiInfoOperation();
     operation();
   }, [])
 
@@ -63,7 +56,7 @@ const EditorCreateCtml = () => {
         <LeftMenuEditorComponent />
         {response && <Ui ctml_schema={response}></Ui>}
       </div>
-      <div style={versionContainerStyle}>CTIMS version {getApiInfoResponse}</div>
+      <FooterComponent/>
     </>
   )
 }
