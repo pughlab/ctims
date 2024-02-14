@@ -82,6 +82,8 @@ const MatchingMenuAndForm = (props: any) => {
   }
 
   const setSortedRootNodes = (newRootNodes: TreeNode[]) => {
+    // structuredClone wasn't working here, causing UI to not sync after modifying the tree
+    // so pass the rootnode directly
     const sortedNodes = sortTreeNode(newRootNodes[0]);
     setRootNodes([sortedNodes]);
   }

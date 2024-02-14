@@ -394,7 +394,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       }
     }
   }
-    
+
   const nodeTemplate = (node: TreeNode) => {
 
     const tieredMenuModel = [
@@ -541,7 +541,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     if (rootNodes[0].key === dragNode.key) {
       return;
     }
-    // for now just have a criteria node to move to a group, only allow moving to a group
+    // check if dropping into a group
     if (dropNode.data.type === EComponentType.AndOROperator || dropNode.data.type === undefined) {
       moveCriteriaToAnyGroup(dragNode.key as string, dropNode.key as string)
     } else {
