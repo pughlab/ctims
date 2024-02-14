@@ -40,7 +40,7 @@ const AutocompleteField = ({onChange, ...props }: ObjectFieldTemplateProps) => {
     color: '#495057',
   };
 
-  const questionMarkStyle = `dropdown-target-icon ${styles['question-mark']} pi pi-question-circle .question-mark-target `;
+  const questionMarkStyle = `dropdown-target-icon ${styles['question-mark']} pi pi-question-circle question-mark-target `;
 
    return (
     <div>
