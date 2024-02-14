@@ -46,7 +46,7 @@ const formContainerStyle: CSSProperties = {
 export const ClinicalForm = (props: IFormProps) => {
   const {node, rootNodes} = props
   const nk = node.key as string;
-  console.log('ClinicalForm node: ', node)
+  // console.log('ClinicalForm node: ', node)
 
   const {setSaveBtnState} = useContext(CtimsDialogContext) as CtimsDialogContextType;
 
@@ -175,11 +175,11 @@ export const ClinicalForm = (props: IFormProps) => {
   }
 
   const customValidate = (formData: any, errors: any, uiSchema: any) => {
-    if (typeof formData.age_expression === 'undefined' && 
-        typeof formData.oncotree_primary_diagnosis === 'undefined' && 
-        typeof formData.tmb === 'undefined' && 
-        typeof formData.her2_status === 'undefined' && 
-        typeof formData.er_status === 'undefined' && 
+    if (typeof formData.age_expression === 'undefined' &&
+        typeof formData.oncotree_primary_diagnosis === 'undefined' &&
+        typeof formData.tmb === 'undefined' &&
+        typeof formData.her2_status === 'undefined' &&
+        typeof formData.er_status === 'undefined' &&
         typeof formData.pr_status === 'undefined') {
       errors.age_expression.addError('Must have at least one field filled.');
     }

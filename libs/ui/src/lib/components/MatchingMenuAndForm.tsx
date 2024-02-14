@@ -8,7 +8,7 @@ import TreeNode from "primereact/treenode";
 import {ClinicalForm} from "./forms/ClinicalForm";
 import {GenomicForm} from "./forms/GenomicForm";
 import {EmptyHelper} from "./forms/EmptyHelper";
-
+import {sortTreeNode} from "./helpers";
 
 const RjsfForm = withTheme(PrimeTheme)
 
@@ -43,8 +43,6 @@ const MatchingMenuAndForm = (props: any) => {
       </div>
     )
   }
-
-
 
   const EmptyForm = (props: {addCriteriaGroupClicked: () => void}) => {
     const {addCriteriaGroupClicked} = props;
@@ -83,15 +81,29 @@ const MatchingMenuAndForm = (props: any) => {
     setBuildRootNodeParams({rootLabel: 'And', firstChildLabel: 'Empty Group'})
   }
 
+  const setSortedRootNodes = (newRootNodes: TreeNode[]) => {
+    // structuredClone wasn't working here, causing UI to not sync after modifying the tree
+    // so pass the rootnode directly
+    const sortedNodes = sortTreeNode(newRootNodes[0]);
+    setRootNodes([sortedNodes]);
+  }
+
   return (
-    <>
-      <div className={styles.matchingMenuAndFormContainer}>
-        <LeftMenuComponent onTreeNodeClick={treeNodeClicked} rootNodesProp={buildRootNodeParams} rootNodes={rootNodes} setRootNodes={setRootNodes} />
-        <div className={styles.matchingCriteriaFormContainer}>
-          {isEmpty ? <EmptyForm addCriteriaGroupClicked={addCriteriaGroupClicked} /> : <ComponentToRender node={componentType.node} rootNodes={rootNodes} />}
-        </div>
+    <div className={styles.matchingMenuAndFormContainer}>
+      <LeftMenuComponent
+        onTreeNodeClick={treeNodeClicked}
+        rootNodesProp={buildRootNodeParams}
+        rootNodes={rootNodes}
+        setRootNodes={setSortedRootNodes}
+      />
+      <div className={styles.matchingCriteriaFormContainer}>
+        {isEmpty ? (
+          <EmptyForm addCriteriaGroupClicked={addCriteriaGroupClicked} />
+        ) : (
+          <ComponentToRender node={componentType.node} rootNodes={rootNodes} />
+        )}
       </div>
-    </>
-  )
+    </div>
+  );
 };
 export default MatchingMenuAndForm;

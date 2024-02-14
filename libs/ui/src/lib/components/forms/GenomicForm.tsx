@@ -375,7 +375,7 @@ export const GenomicForm = (props: IFormProps) => {
     } else {
       errorDetails = form?.validate(form.state.formData);
     }
-    console.log('onFormChange errorDetails: ', errorDetails);
+    // console.log('onFormChange errorDetails: ', errorDetails);
     if (errorDetails?.errors.length > 0) {
       errorsInFormDispatch();
     }
@@ -442,6 +442,7 @@ export const GenomicForm = (props: IFormProps) => {
     if (!protein_change_validation_func(formData.protein_change)) {
       errors.protein_change.addError('Must start with p.');
     }
+    // console.log('custom validate errors: ', errors)
     return errors;
   }
 

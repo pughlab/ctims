@@ -1,5 +1,10 @@
 import styles from "./LeftMenuComponent.module.scss";
-import { Tree, TreeEventNodeParams, TreeExpandedKeysType, TreeTogglerTemplateOptions } from "primereact/tree";
+import {
+  Tree,
+  TreeDragDropParams,
+  TreeExpandedKeysType,
+  TreeTogglerTemplateOptions
+} from "primereact/tree";
 import React, {memo, useContext, useEffect, useRef, useState} from "react";
 import TreeNode from "primereact/treenode";
 import {Button} from "primereact/button";
@@ -23,7 +28,8 @@ import {
   deleteNode,
   IAddCriteria,
   IDeleteCriteria,
-  IOperatorChange, operatorChange,
+  IMoveCriteriaDnD,
+  IOperatorChange, moveNodeDnD, operatorChange,
   setCtmlDialogModel, setMatchDialogErrors
 } from "../../../../../apps/web/store/slices/modalActionsSlice";
 import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
@@ -54,6 +60,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
   const newNodeValue: IAddCriteria = useSelector((state: RootState) => state.modalActions.addCriteria);
   const nodeKeyToBeDeleted: IDeleteCriteria = useSelector((state: RootState) => state.modalActions.deleteCriteria);
+  const nodeKeyToBeMovedDnD: IMoveCriteriaDnD = useSelector((state: RootState) => state.modalActions.moveCriteriaDnD);
   const operatorChanged: IOperatorChange = useSelector((state: RootState) => state.modalActions.operatorChange);
   const formChangedCounter: number = useSelector((state: RootState) => state.modalActions.formChangeCounter);
   const matchDialogErrors = useSelector((state: RootState) => state.modalActions.matchDialogErrors);
@@ -80,8 +87,10 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     // convert view model (rootNodes) to ctims format
     const ctimsFormat = convertTreeNodeArrayToCtimsFormat(newRootNodes);
     dispatch(setCtmlDialogModel(ctimsFormat));
+    // console.log('ctimsFormat: ', ctimsFormat)
+    // console.log('newRootNodes: ', newRootNodes)
     if (newRootNodes[0].children && newRootNodes[0].children.length === 0) {
-      setSaveBtnState(true);
+        setSaveBtnState(true);
     }
   }
 
@@ -169,7 +178,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
     // if the form was changed, update the redux store with the new view model and ctims format
     if (formChangedCounter > 0) {
-      console.log('form changed in left menu component');
+      // console.log('form changed in left menu component');
       updateReduxViewModelAndCtmlModel(rootNodes, state);
     }
   }, [formChangedCounter]);
@@ -204,6 +213,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     const state = store.getState();
     if (operatorChanged && operatorChanged.nodeKey && operatorChanged.operator && rootNodes.length > 0) {
       const {nodeKey, operator, location} = operatorChanged;
+      // console.log('operatorChanged: ', operatorChanged)
       if (location === 'form') {
         const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
         // operator to lower case and capitalize first letter
@@ -230,7 +240,6 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   }, [operatorChanged]);
 
   const tieredMenu = useRef(null);
-  const menu = useRef(null);
 
   // This prop is set from MatchingMenuAndFormComponent
   useEffect(() => {
@@ -248,7 +257,6 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           const roodNodes = buildRootNodes(rootLabel, firstChildLabel);
           setRootNodesState(roodNodes);
         }
-
       }
     }
   }, [rootNodesProp]);
@@ -343,6 +351,50 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     }
   }
 
+  const moveCriteriaToAnyGroup = (nodeKey: string, destinationNodeKey: string) => {
+    const newRootNodes = structuredClone(rootNodes);
+    if (nodeKey && destinationNodeKey) {
+      const foundNode = findObjectByKeyInTree(newRootNodes[0], nodeKey as string);
+      if (foundNode) {
+        const parentNode = findArrayContainingKeyInsideATree(newRootNodes[0], nodeKey as string);
+        if (parentNode) {
+          const index = parentNode.children!.findIndex((child: any) => child.key === nodeKey);
+          // console.log('index: ', index)
+          parentNode.children!.splice(index, 1);
+          const targetNode = findObjectByKeyInTree(newRootNodes[0], destinationNodeKey as string);
+          if (targetNode) {
+            const key = uuidv4();
+            const newNode = {
+              key: key,
+              label: foundNode.label,
+              icon: foundNode.icon,
+              data: foundNode.data,
+              children: foundNode.children
+            };
+
+            targetNode.children!.push(newNode);
+            setRootNodes([...newRootNodes]);
+
+            // setSelectedNode(newNode);
+            // setSelectedKeys(newNode.key as string)
+            // onTreeNodeClick(newNode.data.type, newNode);
+
+            expandedKeys[targetNode.key] = true;
+            // if moving a group, also expand the selected group as well so we can see the new alignment
+            if (newNode.label === 'And' || newNode.label === 'Or') {
+              expandedKeys[newNode.key] = true;
+            }
+            setExpandedKeys(expandedKeys);
+
+            const state = store.getState();
+            updateReduxViewModelAndCtmlModel(newRootNodes, state);
+            dispatch(moveNodeDnD({draggedNodeKey: nodeKey, destinationNodeKey: destinationNodeKey}));
+          }
+        }
+      }
+    }
+  }
+
   const nodeTemplate = (node: TreeNode) => {
 
     const tieredMenuModel = [
@@ -364,10 +416,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
             },
             icon: 'genomic-icon in-menu',
           },
-
         ],
-
-
       },
       {
         label: 'Switch group operator',
@@ -415,7 +464,6 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         if ((selectedNode as TreeNode).key === node.key && (node.label === 'And' || node.label === 'Or')) {
           show = true;
         }
-        // show=true
         return show ?
           <Button icon="pi pi-ellipsis-h"
                   className={styles.treeMenuBtn}
@@ -433,25 +481,34 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       }
 
       const onNodeClick = (e: any) => {
+        // console.log('node: ', node)
+        // const nodeKey = node.key;
+        // const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
+        // console.log('parentNode: ', parentNode)
         setSelectedNode(node);
         setSelectedKeys(node.key as string)
         onTreeNodeClick(node.data.type, node);
-
       }
 
       useEffect(() => {
         divRef.current.addEventListener('click', onNodeClick);
-
       }, [divRef.current])
 
+      let temp_label;
+      if (node.label === 'Genomic' && node.data.formData) {
+        temp_label = <i>{node.data.formData.hugo_symbol}</i>
+      } else if (node.label === 'Clinical' && node.data.formData) {
+        temp_label = <i>{node.data.formData.age_expression}</i>
+      }
       return (
         <>
           <div ref={divRef} className={styles.treeNodeContainer}>
               <span className="p-treenode-label" style={style}>
                 {label}
               </span>
+              <div>{temp_label}</div>
               {btnToShow()}
-              <TieredMenu model={tieredMenuModel} popup ref={tieredMenu} />
+              <TieredMenu model={tieredMenuModel} popup ref={tieredMenu}/>
           </div>
         </>
       );
@@ -470,30 +527,52 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   }
 
   const onNodeToggle = (e: any) => {
-    console.log('selectedKeys', selectedKeys);
+    // console.log('selectedKeys', selectedKeys);
     setExpandedKeys(e.value)
   }
 
+  const onDragDropEvent = (e: TreeDragDropParams) => {
+    const {dragNode, dropNode} = e;
+    // check it's dropping into a group, ie. not dropped outside of topmost node
+    if (!dropNode) {
+      return;
+    }
+    // check cannot move root node
+    if (rootNodes[0].key === dragNode.key) {
+      return;
+    }
+    // check if dropping into a group
+    if (dropNode.data.type === EComponentType.AndOROperator || dropNode.data.type === undefined) {
+      moveCriteriaToAnyGroup(dragNode.key as string, dropNode.key as string)
+    } else {
+      // if the drop node is a leaf, move to the parent group
+      const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], dropNode.key as string);
+      if (parentNode) {
+        moveCriteriaToAnyGroup(dragNode.key as string, parentNode.key as string)
+      }
+    }
+  }
+
   return (
-    <>
-        <div className={styles.matchingCriteriaMenuContainer}>
-          <div className={styles.matchingCriteriaTextContainer}>
-            <div className={styles.matchingCriteriaText}>Matching Criteria</div>
-
-          </div>
-          <Tree value={rootNodes}
-                className="ctims-tree"
-                contentClassName="ctims-tree-content"
-                nodeTemplate={nodeTemplate}
-                togglerTemplate={togglerTemplate}
-                expandedKeys={expandedKeys}
-                selectionKeys={selectedKeys}
-                selectionMode="single"
-                onToggle={e => onNodeToggle(e) } />
-        </div>
-    </>
-
-    )
+    <div className={styles.matchingCriteriaMenuContainer}>
+      <div className={styles.matchingCriteriaTextContainer}>
+        <div className={styles.matchingCriteriaText}>Matching Criteria</div>
+      </div>
+      <Tree
+        value={rootNodes}
+        className="ctims-tree"
+        contentClassName="ctims-tree-content"
+        nodeTemplate={nodeTemplate}
+        togglerTemplate={togglerTemplate}
+        expandedKeys={expandedKeys}
+        selectionKeys={selectedKeys}
+        selectionMode="single"
+        dragdropScope="leftMenuScope"
+        onDragDrop={(event) => onDragDropEvent(event)}
+        onToggle={(e) => onNodeToggle(e)}
+      />
+    </div>
+  );
 
 }, (prevProps, nextProps) => {
   return false;
