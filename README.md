@@ -20,18 +20,8 @@ CTIMS uses Nx Next Nest as a monorepo. The details about the frameworks are give
 <details>
   <summary>Table of Contents</summary>
   <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
+    <li><a href="#about-the-CTIMS-project">About The CTIMS Project</a></li>
+    <li><a href="#built-with">Built With</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -41,11 +31,19 @@ CTIMS uses Nx Next Nest as a monorepo. The details about the frameworks are give
 
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+## About The CTIMS Project
+CTIMS is a multi-institutional project in collaboration with top research instutions around the world such as 
+* Princess Margaret Cancer Center (PMCC) (University Health Network and University of Toronto)
+* Dana Farber Cancer Insitute (DFCI) (Harvard University, Boston)
+* Memorial Sloan Kettering Cancer Center (MSKCC) (Cornell University, New York)
+
+CTIMS website(https://www.ctims.ca)
+CTIMS documentation(https://pughlab.gitbook.io/ctims)
+
+
+## Built With
 
 This is a monorepo build with Nx, in apps/ you will find a Next.js client and a Nest.js server
-
-### Built With
 
 * [Nx](https://nx.dev).
 * [TypeScript](https://www.typescriptlang.org/)
@@ -53,23 +51,15 @@ This is a monorepo build with Nx, in apps/ you will find a Next.js client and a 
 * [React.js](https://reactjs.org/)
 * [Nest.js](https://nestjs.com/)
 
-
+Project Link: [Nx-Next-Nest-Template](https://github.com/Louis3797/nx-next-nest-template)
 
 <!-- LICENSE -->
 ## License
 Apache 2.0 License
 
-
-
-
 <!-- CONTACT -->
 ## Contact
-Pugh Lab, UHN.
-
-Project Link: [Nx-Next-Nest-Template](https://github.com/Louis3797/nx-next-nest-template)
-
-
-
+Pugh Lab, UHN. (https://www.pughlab.org)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
