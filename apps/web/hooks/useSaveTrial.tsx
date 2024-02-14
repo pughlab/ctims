@@ -8,9 +8,12 @@ import {setTrialId} from "../store/slices/contextSlice";
 import getConfig from 'next/config';
 import {v4 as uuidv4} from "uuid";
 import {store} from "../store/store";
+import useRefreshToken from "./useRefreshToken";
 
 
 const useSaveTrial = () => {
+
+  const {refreshTokenOperation} = useRefreshToken();
 
   const { publicRuntimeConfig } = getConfig();
   axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
@@ -74,6 +77,7 @@ const useSaveTrial = () => {
       }
     } finally {
       setLoading(false);
+      refreshTokenOperation();
     }
 
   };

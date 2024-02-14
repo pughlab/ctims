@@ -3,8 +3,11 @@ import axios from 'axios';
 import {useEffect, useState} from 'react';
 import {useRouter} from 'next/router';
 import {useSession} from 'next-auth/react';
+import useRefreshToken from "./useRefreshToken";
 
 const useDownloadResults = () => {
+  const { refreshTokenOperation } = useRefreshToken();
+
   const {publicRuntimeConfig} = getConfig();
   axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
 
@@ -46,6 +49,7 @@ const useDownloadResults = () => {
       }
     } finally {
       setLoading(false);
+      refreshTokenOperation();
     }
   }
 

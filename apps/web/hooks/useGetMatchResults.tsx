@@ -5,8 +5,11 @@ import {useRouter} from 'next/router';
 import {useSession} from 'next-auth/react';
 import {getCtmlStatusLabel} from "../../../libs/types/src/CtmlStatusLabels";
 import {getTrialStatusLabel} from "../../../libs/types/src/TrialStatusLabels";
+import useRefreshToken from "./useRefreshToken";
 
 const useGetMatchResults = () => {
+  const { refreshTokenOperation } = useRefreshToken();
+
   const {publicRuntimeConfig} = getConfig();
   axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
 
@@ -85,6 +88,7 @@ const useGetMatchResults = () => {
       }
     } finally {
       setLoading(false);
+      refreshTokenOperation();
     }
   }
 

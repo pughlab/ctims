@@ -4,8 +4,11 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { v4 as uuidv4 } from 'uuid';
+import useRefreshToken from "./useRefreshToken";
 
 const useDeleteTrial = () => {
+
+  const { refreshTokenOperation } = useRefreshToken();
   const { publicRuntimeConfig } = getConfig();
   axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
 
@@ -24,6 +27,7 @@ const useDeleteTrial = () => {
   }, [status])
 
   const deleteTrialOperation = async (trialId: number) => {
+
     setLoading(true);
     const accessToken = localStorage.getItem('ctims-accessToken');
     const headers = {
@@ -48,6 +52,7 @@ const useDeleteTrial = () => {
     }
     finally {
       setLoading(false);
+      refreshTokenOperation();
     }
   }
 

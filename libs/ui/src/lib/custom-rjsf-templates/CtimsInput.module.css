@@ -3,6 +3,10 @@
   flex-direction: column;
 }
 
+.uuidInput {
+  display: none;
+}
+
 .label-container {
   display: flex;
   flex-direction: row;

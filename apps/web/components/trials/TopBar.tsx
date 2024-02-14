@@ -17,7 +17,6 @@ const TopBar = () => {
       label: 'Sign Out',
       icon: 'pi pi-sign-out',
       command: () => {
-        // signOut({callbackUrl: '/', redirect: true}).then(() => {
         signOut({redirect: false}).then(() => {
           localStorage.removeItem('ctims-accessToken');
           router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL)

@@ -4,8 +4,10 @@ import {useEffect, useState} from "react";
 import {useRouter} from "next/router";
 import getConfig from 'next/config';
 import { getCtmlStatusLabel } from "../../../libs/types/src/CtmlStatusLabels";
+import useRefreshToken from "./useRefreshToken";
 
 const useGetUserTrials = () => {
+  const { refreshTokenOperation } = useRefreshToken();
   const { publicRuntimeConfig } = getConfig();
   axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
 
@@ -71,6 +73,7 @@ const useGetUserTrials = () => {
     }
     finally {
       setLoading(false);
+      refreshTokenOperation();
     }
   }
 

@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import SendCtmlToMatchminerDialog from "./SendCTMLtoMatchminerDialog";
 import useSendCTML from "../../hooks/useSendCTML";
 import { setIsFormChanged } from '../../store/slices/contextSlice';
+import * as process from "process";
 
 interface EditorTopBarProps {
     isEditMode?: boolean;
@@ -60,8 +61,9 @@ const EditorTopBar = (props: EditorTopBarProps) => {
     if(saveTrialError) {
       console.log('error', saveTrialError);
       if (saveTrialError.statusCode === 401) {
-        signOut({callbackUrl: '/#/login', redirect: false}).then(() => {
+        signOut({redirect: false}).then(() => {
           localStorage.removeItem('ctims-accessToken');
+          router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL)
         });
       }
     }
@@ -81,8 +83,9 @@ const EditorTopBar = (props: EditorTopBarProps) => {
     if(sendCTMLError) {
       console.log('error', sendCTMLError);
       if (sendCTMLError.statusCode === 401) {
-        signOut({callbackUrl: '/#/login', redirect: false}).then(() => {
+        signOut({redirect: false}).then(() => {
           localStorage.removeItem('ctims-accessToken');
+          router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL)
         });
       }
     }

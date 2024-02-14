@@ -50,6 +50,13 @@ const {
   }, [id])
 
   useEffect(() => {
+    if (getCtmlSchemaError) {
+      // Redirect to the home page if the user is unauthenticated
+      getCtmlSchemaError.statusCode === 401 ? router.push('/') : null
+    }
+  }, [getCtmlSchemaError]);
+
+  useEffect(() => {
     if (editTrialError) {
       // Redirect to the home page if the user is unauthenticated
       editTrialError.statusCode === 401 ? router.push('/') : null

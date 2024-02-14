@@ -3,8 +3,11 @@ import axios from "axios";
 import {useEffect, useState} from "react";
 import {useSession} from "next-auth/react";
 import {useRouter} from "next/router";
+import useRefreshToken from "./useRefreshToken";
 
 const useEditTrial = () => {
+  const { refreshTokenOperation } = useRefreshToken();
+
   const { publicRuntimeConfig } = getConfig();
   axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
 
@@ -48,6 +51,7 @@ const useEditTrial = () => {
     }
     finally {
       setLoading(false);
+      refreshTokenOperation();
     }
   }
 

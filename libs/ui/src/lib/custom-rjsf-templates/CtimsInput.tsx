@@ -5,6 +5,7 @@ import {InputText} from "primereact/inputtext";
 import { Tooltip } from 'primereact/tooltip';
 import styles from "./CtimsInput.module.css";
 import {protein_change_validation_func, wildcard_protein_change_validation_func} from "../components/helpers";
+import { v4 as uuidv4 } from 'uuid';
 
 const CtimsInput = (props: WidgetProps) => {
     let {
@@ -36,7 +37,23 @@ const CtimsInput = (props: WidgetProps) => {
       if (label === 'Nickname' && currentURL.includes('/trials/create')) {
        onChange('')
       }
+
+      // needed uuid to tie the matching criteria to the arm after arm code became optional
+      if (name === 'uuid') {
+        value = uuidv4()
+        onChange(value)
+      }
     }, [])
+
+  const getValue = () => {
+      let r;
+      if (name  === 'uuid') {
+        r = uuidv4()
+      } else {
+        r = value || value === 0 ? value : ""
+      }
+      return r;
+  }
 
   useEffect(() => {
     if (name === 'wildcard_protein_change') {
@@ -73,7 +90,7 @@ const CtimsInput = (props: WidgetProps) => {
     const questionMarkStyle = `input-target-icon ${styles['question-mark']} pi pi-question-circle .question-mark-target `;
 
     return (
-        <div className={styles.container}>
+        <div className={name === 'uuid' ? styles.uuidInput : styles.container}>
           <div className={styles['label-container']}>
             {labelValue && (
               <span className={styles.label}>{labelValue}</span>
@@ -96,7 +113,7 @@ const CtimsInput = (props: WidgetProps) => {
                 className={cn("w-full", wildProteinError || proteinChangeError ? "p-invalid" : "")}
                 list={schema.examples ? `examples_${id}` : undefined}
                 type={inputType}
-                value={value || value === 0 ? value : ""}
+                value={getValue()}
                 onChange={_onChange}
                 onBlur={_onBlur}
                 onFocus={_onFocus}

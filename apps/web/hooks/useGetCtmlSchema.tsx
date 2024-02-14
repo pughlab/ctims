@@ -4,8 +4,11 @@ import {useSession} from "next-auth/react";
 import {store} from "../store/store";
 import getConfig from 'next/config';
 import {useRouter} from "next/router";
+import useRefreshToken from "./useRefreshToken";
 
 const useGetCtmlSchema = () => {
+  const { refreshTokenOperation } = useRefreshToken();
+
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -48,6 +51,7 @@ const useGetCtmlSchema = () => {
       })
       .finally(() => {
         setLoading(false);
+        refreshTokenOperation();
       })
   }
 
