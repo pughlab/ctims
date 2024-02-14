@@ -6,6 +6,7 @@ import TopBar from "../../components/trials/TopBar";
 import styles from './index.module.scss';
 import Trials from '../../components/trials/Trials';
 import Results from '../../components/trials/Results';
+import FooterComponent from "apps/web/components/FooterComponent";
 
 const Main = () => {
 
@@ -39,6 +40,7 @@ const Main = () => {
             </TabPanel>
           </TabView>
         </div>
+        <FooterComponent/>
       </>}
       { sessionStatus === 'unauthenticated' && <div>Please log in to view this page.</div>}
     </>
