@@ -10,6 +10,7 @@ import { UserModule } from './user/user.module';
 import {AuthModule} from "./auth/auth.module";
 import { EventModule } from "./event/event.module";
 import { MatchminerModule } from './matchminer/matchminer.module';
+import { InfoModule } from './info/info.module';
 
 @Global()
 @Module({
@@ -21,6 +22,7 @@ import { MatchminerModule } from './matchminer/matchminer.module';
     UserModule,
     MatchminerModule,
     EventModule,
+    InfoModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

@@ -6,6 +6,7 @@ import EditorTopBar from '../../../components/editor/EditorTopBar';
 import LeftMenuEditorComponent from '../../../components/editor/LeftMenuEditorComponent';
 import { Ui } from '@ctims-mono-repo/ui';
 import IdleComponent from "../../../components/IdleComponent";
+import useGetApiInfo from 'apps/web/hooks/useGetApiInfo';
 
 const EditorCreateCtmlForGroup = () => {
   const router = useRouter()
@@ -15,7 +16,15 @@ const EditorCreateCtmlForGroup = () => {
 
   const {data} = useSession()
 
+  const { 
+    error: getApiInfoError,
+    response: getApiInfoResponse,
+    loading: getApiInfoLoading, 
+    operation: getApiInfoOperation
+  } = useGetApiInfo();
+
   useEffect(() => {
+    getApiInfoOperation();
     operation();
   }, [])
 
@@ -33,7 +42,19 @@ const EditorCreateCtmlForGroup = () => {
     paddingTop: '20px',
   }
 
-
+  const versionContainerStyle: React.CSSProperties = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignSelf: 'stretch',
+    textAlign: 'center',
+    fontFamily: 'sans-serif',
+    fontSize: '12px',
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: '16px',
+    marginTop: '20px',
+    marginBottom: '10px',
+  }
 
   return (
     <>
@@ -43,7 +64,7 @@ const EditorCreateCtmlForGroup = () => {
         <LeftMenuEditorComponent />
         {response && <Ui ctml_schema={response}></Ui>}
       </div>
-
+      <div style={versionContainerStyle}>CTIMS version {getApiInfoResponse}</div>
     </>
   )
 }

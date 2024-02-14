@@ -10,6 +10,7 @@ import {setTrialId} from "../../../store/slices/contextSlice";
 import {useDispatch} from "react-redux";
 import IdleComponent from "../../../components/IdleComponent";
 import { setCtmlModel } from '../../../store/slices/ctmlModelSlice';
+import useGetApiInfo from "apps/web/hooks/useGetApiInfo";
 
 const containerStyle: React.CSSProperties = {
   display: 'flex',
@@ -18,6 +19,21 @@ const containerStyle: React.CSSProperties = {
   paddingRight: '80px',
   paddingTop: '20px',
 }
+
+const versionContainerStyle: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignSelf: 'stretch',
+  textAlign: 'center',
+  fontFamily: 'sans-serif',
+  fontSize: '12px',
+  fontStyle: 'normal',
+  fontWeight: '400',
+  lineHeight: '16px',
+  marginTop: '20px',
+  marginBottom: '10px',
+}
+
 
 const EditorEditTrialPage = () => {
   const router = useRouter()
@@ -33,14 +49,25 @@ const EditorEditTrialPage = () => {
     response: getCtmlSchemaResponse,
     loading: getCtmlSchemaLoading,
     operation: getCtmlSchemaOperation
-} = useGetCtmlSchema();
+  } = useGetCtmlSchema();
 
-const {
-    error: editTrialError,
-    response: editTrialResponse,
-    loading: editTrialLoading,
-    editTrialOperation
-} = useEditTrial();
+  const {
+      error: editTrialError,
+      response: editTrialResponse,
+      loading: editTrialLoading,
+      editTrialOperation
+  } = useEditTrial();
+
+  const { 
+    error: getApiInfoError,
+    response: getApiInfoResponse,
+    loading: getApiInfoLoading, 
+    operation: getApiInfoOperation
+  } = useGetApiInfo();
+
+  useEffect(() => {
+    getApiInfoOperation();
+  }, [])
 
   useEffect(() => {
     if (id) {
@@ -97,7 +124,7 @@ const {
         <LeftMenuEditorComponent />
         {(getCtmlSchemaResponse && formData) && <Ui ctml_schema={getCtmlSchemaResponse} formData={formData}></Ui>}
       </div>
-
+      <div style={versionContainerStyle}>CTIMS version {getApiInfoResponse}</div>
     </>
   )
 }

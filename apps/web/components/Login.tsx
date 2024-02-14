@@ -1,6 +1,6 @@
 import styles from './Login.module.scss';
 import { InputText } from "primereact/inputtext";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {NextRouter, useRouter} from "next/router";
 import useHasMounted from "../hooks/useHasMounted";
 import Layout from "./Layout";
@@ -12,6 +12,7 @@ import {Password} from "primereact/password";
 import { Toast } from "primereact/toast";
 import { Dialog } from "primereact/dialog";
 import strings from "../data/strings.json";
+import useGetApiInfo from '../hooks/useGetApiInfo';
 
 const Login = () => {
   const hasMounted = useHasMounted();
@@ -27,6 +28,13 @@ const Login = () => {
   const router: NextRouter = useRouter();
 
   const [dialogVisible, setDialogVisible] = useState(false);
+
+  const { error, response, loading, operation} = useGetApiInfo();
+
+  useEffect(() => {
+    operation();
+  }, [])
+
 
   const componentStrings = strings.components.Login;
 
@@ -139,9 +147,10 @@ const Login = () => {
               <Button label="Sign In" onClick={(e) => handleLogin(e)} />
             <div className={styles.forgotPassword} onClick={handleForgotPassword}>Forgot Password</div>
           </form>
-
         </div>
+
       </div>
+      <div className={styles.version}>CTIMS version {response}</div>
     </div>
     </Layout>
   );
