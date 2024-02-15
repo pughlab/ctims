@@ -26,23 +26,25 @@ const Main = () => {
 
   return (
     <>
-      <IdleComponent />
-      {sessionStatus === 'loading' && <div>Loading...</div>}
-      {sessionStatus === 'authenticated' && <>
-        <TopBar/>
-        <div className={styles.pageContainer}>
-          <TabView activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
-            <TabPanel header="Trials">
-              <Trials/>
-            </TabPanel>
-            <TabPanel header="Results">
-              <Results/>
-            </TabPanel>
-          </TabView>
-        </div>
-        <FooterComponent/>
-      </>}
-      { sessionStatus === 'unauthenticated' && <div>Please log in to view this page.</div>}
+      <div className={styles.container}>
+        <IdleComponent />
+        {sessionStatus === 'loading' && <div>Loading...</div>}
+        {sessionStatus === 'authenticated' && <>
+          <TopBar/>
+          <div className={styles.pageContainer}>
+            <TabView activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
+              <TabPanel header="Trials">
+                <Trials/>
+              </TabPanel>
+              <TabPanel header="Results">
+                <Results/>
+              </TabPanel>
+            </TabView>
+          </div>
+          <FooterComponent/>
+        </>}
+        { sessionStatus === 'unauthenticated' && <div>Please log in to view this page.</div>}
+      </div>
     </>
   );
 }
