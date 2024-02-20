@@ -312,10 +312,10 @@ export const sortTreeNode = (treeNode: TreeNode): TreeNode => {
       } else if (a.data.type === EComponentType.GenomicForm) {
         if (b.data.hasOwnProperty('type') && b.data.type === EComponentType.ClinicalForm) {
           ret = 1;
-        } else if (!b.data.hasOwnProperty('type')) { //it's AND/OR operator
+        } else if (!b.data.hasOwnProperty('type') || b.data.type === EComponentType.AndOROperator) {
           ret = -1;
         }
-      } else if (!a.data.hasOwnProperty('type')) { //it's AND/OR operator
+      } else if (!a.data.hasOwnProperty('type') || b.data.type === EComponentType.AndOROperator) {
         ret =  1;
       }
       return ret;
