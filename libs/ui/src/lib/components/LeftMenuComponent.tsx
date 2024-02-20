@@ -17,7 +17,7 @@ import {
   deleteNodeFromChildrenArrayByKey,
   findArrayContainingKeyInsideATree,
   findObjectByKeyInTree,
-  isObjectEmpty
+  isObjectEmpty, traverseNode
 } from "./helpers";
 import * as jsonpath from "jsonpath";
 import {EComponentType} from "./EComponentType";
@@ -339,6 +339,9 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   const deleteNodeClicked = (nodeKey: string) => {
     if (nodeKey) {
       const newRootNodes = structuredClone(rootNodes);
+      // before removing, find all the children keys and clear the errors
+      // we track the names now so we can clear the errors, since the keys will be different after structureClone
+      const keysRemoved = traverseNode(rootNodes[0], nodeKey);
       deleteNodeFromChildrenArrayByKey(newRootNodes[0], nodeKey);
       setRootNodes(newRootNodes);
       // After deleting a node, the new selected node should be chosen vertically.
@@ -347,6 +350,9 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       setSelectedKeys(defaultSelectedNode.key)
       onTreeNodeClick(defaultSelectedNode.data.type, defaultSelectedNode);
       const state = store.getState();
+      keysRemoved.forEach((key: string) => {
+        dispatch(deleteMatchDialogError(key))
+      });
       updateReduxViewModelAndCtmlModel(newRootNodes, state);
     }
   }

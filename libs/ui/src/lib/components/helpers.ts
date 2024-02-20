@@ -162,6 +162,22 @@ export const deleteNodeFromChildrenArrayByKey = (tree: TreeNode, key: string) =>
   traverse(tree, key);
 }
 
+// given a tree node, find all the keys of its leaf nodes
+export const traverseNode = (tree: TreeNode, key: string): string[] => {
+  let result: string[] = [];
+  const traverse = (tree: TreeNode, key: string) => {
+    if (tree.children) {
+      tree.children.forEach((child) => {
+        traverse(child, key);
+      });
+    } else {
+      result.push(tree.key as string);
+    }
+  }
+  traverse(tree, key);
+  return result;
+}
+
 export const convertTreeNodeArrayToCtimsFormat = (input: any[]): any => {
   let result: any = { match: [] };
   input.forEach((item: any) => {
