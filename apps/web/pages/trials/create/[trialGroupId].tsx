@@ -34,19 +34,6 @@ const EditorCreateCtmlForGroup = () => {
     paddingTop: '20px',
   }
 
-  const versionContainerStyle: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: 'column',
-    alignSelf: 'stretch',
-    textAlign: 'center',
-    fontFamily: 'sans-serif',
-    fontSize: '12px',
-    fontStyle: 'normal',
-    fontWeight: '400',
-    lineHeight: '16px',
-    marginTop: '20px',
-    marginBottom: '10px',
-  }
 
   return (
     <>
