@@ -338,10 +338,14 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
   const deleteNodeClicked = (nodeKey: string) => {
     if (nodeKey) {
+      let keysRemoved: string[] = [];
       const newRootNodes = rootNodes;
       // before removing, find all the children keys and clear the errors
       // we track the names now so we can clear the errors, since the keys will be different or gone after modification of the tree
-      const keysRemoved = traverseNode(rootNodes[0], nodeKey);
+      const parentNode = findObjectByKeyInTree(rootNodes[0], nodeKey as string);
+      if (parentNode) {
+        keysRemoved = traverseNode(parentNode, nodeKey);
+      }
       deleteNodeFromChildrenArrayByKey(newRootNodes[0], nodeKey);
       setRootNodes(newRootNodes);
       // After deleting a node, the new selected node should be chosen vertically.
@@ -349,10 +353,11 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       setSelectedNode(defaultSelectedNode);
       setSelectedKeys(defaultSelectedNode.key)
       onTreeNodeClick(defaultSelectedNode.data.type, defaultSelectedNode);
-      const state = store.getState();
+      // clear the errors from the previously tracked keys
       keysRemoved.forEach((key: string) => {
         dispatch(deleteMatchDialogError(key))
       });
+      const state = store.getState();
       updateReduxViewModelAndCtmlModel(newRootNodes, state);
     }
   }
