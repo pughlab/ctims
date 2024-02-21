@@ -338,9 +338,9 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
   const deleteNodeClicked = (nodeKey: string) => {
     if (nodeKey) {
-      const newRootNodes = structuredClone(rootNodes);
+      const newRootNodes = rootNodes;
       // before removing, find all the children keys and clear the errors
-      // we track the names now so we can clear the errors, since the keys will be different after structureClone
+      // we track the names now so we can clear the errors, since the keys will be different or gone after modification of the tree
       const keysRemoved = traverseNode(rootNodes[0], nodeKey);
       deleteNodeFromChildrenArrayByKey(newRootNodes[0], nodeKey);
       setRootNodes(newRootNodes);
