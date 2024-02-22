@@ -317,6 +317,10 @@ export const sortTreeNode = (treeNode: TreeNode): TreeNode => {
         }
       } else if (!a.data.hasOwnProperty('type') || b.data.type === EComponentType.AndOROperator) {
         ret =  1;
+      } else if (a.data.type === b.data.type) {
+        const aKey = a.key as string;
+        const bKey = b.key as string;
+        ret = aKey.localeCompare(bKey);
       }
       return ret;
     });
