@@ -37,15 +37,15 @@ const CtimsInputWithExcludeToggle = (props: WidgetProps) => {
     }
   }, [])
 
-  useEffect(() => {
-    console.log('value', value)
-  }, [value])
+  // useEffect(() => {
+  //   console.log('value', value)
+  // }, [value])
 
 
   const _onChange = ({
                        target: { value },
                      }: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('value', value)
+    // console.log('value', value)
     setValueState(value)
     // return onChange(value === "" ? options.emptyValue : value)
     return onChange(value === "" ? options.emptyValue : value)

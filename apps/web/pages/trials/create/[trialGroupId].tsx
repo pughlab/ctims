@@ -6,6 +6,7 @@ import EditorTopBar from '../../../components/editor/EditorTopBar';
 import LeftMenuEditorComponent from '../../../components/editor/LeftMenuEditorComponent';
 import { Ui } from '@ctims-mono-repo/ui';
 import IdleComponent from "../../../components/IdleComponent";
+import FooterComponent from 'apps/web/components/FooterComponent';
 
 const EditorCreateCtmlForGroup = () => {
   const router = useRouter()
@@ -34,7 +35,6 @@ const EditorCreateCtmlForGroup = () => {
   }
 
 
-
   return (
     <>
       <EditorTopBar />
@@ -43,7 +43,7 @@ const EditorCreateCtmlForGroup = () => {
         <LeftMenuEditorComponent />
         {response && <Ui ctml_schema={response}></Ui>}
       </div>
-
+      <FooterComponent/>
     </>
   )
 }

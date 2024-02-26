@@ -6,6 +6,7 @@ import React, {useEffect, useState} from "react";
 import useGetCtmlSchema from "../../../hooks/useGetCtmlSchema";
 import {setCtmlModel} from "../../../store/slices/ctmlModelSlice";
 import {useDispatch} from "react-redux";
+import FooterComponent from "apps/web/components/FooterComponent";
 
 
 const containerStyle: React.CSSProperties = {
@@ -82,7 +83,7 @@ const EditorImportTrialPage = () => {
         <LeftMenuEditorComponent />
         {(getCtmlSchemaResponse && formData) && <Ui ctml_schema={getCtmlSchemaResponse} formData={formData}></Ui>}
       </div>
-
+      <FooterComponent/>
     </>
   )
 }

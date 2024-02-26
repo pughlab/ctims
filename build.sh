@@ -15,6 +15,7 @@ docker build --no-cache \
     --build-arg REACT_APP_API_URL=https://ctims-api.qa02.technainstitute.net/api \
     --build-arg NEXTAUTH_URL=http://localhost:3000 \
     --build-arg NEXTAUTH_API_URL=http://localhost:3333/api \
+    --build-arg NEXT_PUBLIC_SIGNOUT_REDIRECT_URL=https://ctims-web.qa02.technainstitute.net \
 	-t $CTIMS_WEB_CONTAINER_IMAGE_LOCATION:latest \
 	-t $CTIMS_WEB_CONTAINER_IMAGE_LOCATION:$GIT_REF \
 	-t $CTIMS_WEB_CONTAINER_IMAGE_LOCATION:$COMMIT_ISH \

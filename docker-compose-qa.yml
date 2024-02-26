@@ -1,0 +1,95 @@
+version: "3.8"
+
+services:
+  frontend_qa:
+    container_name: ctims-web-qa
+    build:
+      context: ./
+      args:
+        NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+        REACT_APP_API_URL: ${REACT_APP_API_URL}
+        NEXTAUTH_URL: ${NEXTAUTH_URL}
+        NEXTAUTH_API_URL: ${NEXTAUTH_API_URL}
+        NEXT_PUBLIC_SIGNOUT_REDIRECT_URL: ${NEXT_PUBLIC_SIGNOUT_REDIRECT_URL}
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    restart: on-failure
+    networks:
+      - qa-network
+
+  backend_qa:
+    container_name: ctims-api-qa
+    build:
+      context: ./
+      dockerfile: ./apps/api/Dockerfile
+      args:
+        KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+        KEYCLOAK_URL: ${KEYCLOAK_URL}
+        KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
+        KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
+        KEYCLOAK_ADMIN_CLIENT_ID: ${KEYCLOAK_ADMIN_CLIENT_ID}
+        KEYCLOAK_ADMIN_CLIENT_SECRET: ${KEYCLOAK_ADMIN_CLIENT_SECRET}
+        KEYCLOAK_TOKEN_ENDPOINT: ${KEYCLOAK_TOKEN_ENDPOINT}
+        KEYCLOAK_CLIENT_UUID: ${KEYCLOAK_CLIENT_UUID}
+        PRISMA_FIELD_ENCRYPTION_KEY: ${PRISMA_FIELD_ENCRYPTION_KEY}
+        MM_API_URL: ${MM_API_URL}
+        CTIMS_ENV: ${CTIMS_ENV}
+        MM_API_TOKEN: ${MM_API_TOKEN}
+        CTIMS_API_VERSION: ${CTIMS_API_VERSION}
+    environment:
+      DATABASE_URL: mysql://ctims:ctims@database_qa:3306/ctims
+    ports:
+      - "3334:3333"
+    restart: on-failure
+    networks:
+      - qa-network
+
+  database_qa:
+    container_name: ctims-db-qa
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    ports:
+      - "3307:3306"
+    restart: on-failure
+    networks:
+      - qa-network
+
+  mm_api_qa:
+    container_name: mm_api_qa
+    restart: "no"
+    build:
+      context: ../matchminer-api
+      dockerfile: Dockerfile-dev
+      args:
+        MM_API_TOKEN: ${MM_API_TOKEN}
+    command: python pymm_run.py serve
+    volumes:
+      - ../matchminer-api:/matchminerAPI
+    ports:
+      - "5001:5000"
+    environment:
+      - SECRETS_JSON=./secrets_json_dev.json
+    networks:
+      - qa-network
+
+  mm_mongo_db_qa:
+    container_name: mm_mongo_db_qa
+    image: mongo:3.6.10
+    restart: on-failure
+    ports:
+      - "27020:27017"
+    networks:
+      - qa-network
+    volumes:
+      - mm-mongo-db-qa:/data/db
+
+volumes:
+  mm-mongo-db-qa:
+
+networks:
+  qa-network:
+

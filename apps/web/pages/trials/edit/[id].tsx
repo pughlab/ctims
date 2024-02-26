@@ -10,6 +10,7 @@ import {setTrialId} from "../../../store/slices/contextSlice";
 import {useDispatch} from "react-redux";
 import IdleComponent from "../../../components/IdleComponent";
 import { setCtmlModel } from '../../../store/slices/ctmlModelSlice';
+import FooterComponent from "apps/web/components/FooterComponent";
 
 const containerStyle: React.CSSProperties = {
   display: 'flex',
@@ -18,6 +19,7 @@ const containerStyle: React.CSSProperties = {
   paddingRight: '80px',
   paddingTop: '20px',
 }
+
 
 const EditorEditTrialPage = () => {
   const router = useRouter()
@@ -33,14 +35,14 @@ const EditorEditTrialPage = () => {
     response: getCtmlSchemaResponse,
     loading: getCtmlSchemaLoading,
     operation: getCtmlSchemaOperation
-} = useGetCtmlSchema();
+  } = useGetCtmlSchema();
 
-const {
-    error: editTrialError,
-    response: editTrialResponse,
-    loading: editTrialLoading,
-    editTrialOperation
-} = useEditTrial();
+  const {
+      error: editTrialError,
+      response: editTrialResponse,
+      loading: editTrialLoading,
+      editTrialOperation
+  } = useEditTrial();
 
   useEffect(() => {
     if (id) {
@@ -48,7 +50,6 @@ const {
       editTrialOperation(id as string)
     }
   }, [id])
-
 
   useEffect(() => {
     if (editTrialResponse) {
@@ -97,7 +98,7 @@ const {
         <LeftMenuEditorComponent />
         {(getCtmlSchemaResponse && formData) && <Ui ctml_schema={getCtmlSchemaResponse} formData={formData}></Ui>}
       </div>
-
+      <FooterComponent/>
     </>
   )
 }

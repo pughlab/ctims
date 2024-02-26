@@ -42,7 +42,9 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
     let errorObjList: RJSFValidationError[] = errorSchema.errors;
     const filteredErrorObjList = errorObjList.filter((errorObj: RJSFValidationError) => {
       return errorObj.message !== 'must be object';
-    })
+    }).filter((err_two: RJSFValidationError) => {
+      return err_two.property !== '.trialInformation.phase';
+    });
     if (!isObjectEmpty(errorSchema)) {
       const viewModelErrors = extractErrors(filteredErrorObjList);
       setErrors(viewModelErrors)

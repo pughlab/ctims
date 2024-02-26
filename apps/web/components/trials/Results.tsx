@@ -90,6 +90,7 @@ const Results = () => {
     {label: "Left Partner Gene", key: "left_partner_gene"},
     {label: "Right Partner Gene", key: "right_partner_gene"},
     {label: "CNV Call", key: "cnv_call"},
+    {label: "MS Status", key: "ms_status"},
   ];
   // csv download link ref
   const csvLink = useRef()

@@ -3,12 +3,21 @@ import {EComponentType} from "./EComponentType";
 import {v4 as uuidv4} from 'uuid';
 import {RJSFValidationError} from "@rjsf/utils";
 import {OperatorOptions} from "./forms/OperatorDropdown";
+import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
 
 
 // Must be in the following format: 'p.A1'
 // string must start with 'p.' followed by a capital letter and then a one or more digits
 export const wildcard_protein_change_validation_func = (str: string) => {
   const regex = /^p\.[A-Z]\d+$/;
+  if (!str) {
+    return true;
+  }
+  return regex.test(str);
+}
+
+export const protein_change_validation_func = (str: string) => {
+  const regex = /^p\..*$/;
   if (!str) {
     return true;
   }
@@ -153,6 +162,22 @@ export const deleteNodeFromChildrenArrayByKey = (tree: TreeNode, key: string) =>
   traverse(tree, key);
 }
 
+// given a tree node, find all the keys of its leaf nodes
+export const traverseNode = (tree: TreeNode, key: string): string[] => {
+  let result: string[] = [];
+  const traverse = (tree: TreeNode, key: string) => {
+    if (tree.children) {
+      tree.children.forEach((child) => {
+        traverse(child, key);
+      });
+    } else {
+      result.push(tree.key as string);
+    }
+  }
+  traverse(tree, key);
+  return result;
+}
+
 export const convertTreeNodeArrayToCtimsFormat = (input: any[]): any => {
   let result: any = { match: [] };
   input.forEach((item: any) => {
@@ -214,6 +239,7 @@ export const isObjectEmpty = (obj: any) => {
 }
 
 export const extractErrors = (errors: RJSFValidationError[]): string[] => {
+  console.log('extractErrors: ', errors);
   const keyToStringDict: any = {
     trialInformation: 'Trial information',
     prior_treatment_requirements: 'Prior treatment requirements',
@@ -270,3 +296,36 @@ export const getCurrentOperator = (rootNodes: TreeNode[], currentNode: TreeNode)
   }
   return OperatorOptions.AND;
 }
+
+// sort the children of the root nodes by node.data's type property, clinical first, genomic second, and and/or last
+export const sortTreeNode = (treeNode: TreeNode): TreeNode => {
+  // recursively calls itself and use map to sort the current level of node
+  if (typeof treeNode !== "undefined" && treeNode.children) {
+    // recursively calls the next level to sort the next level children
+    treeNode.children = treeNode.children.map(sortTreeNode);
+
+    // sort the current level
+    treeNode.children.sort((a, b) => {
+      let ret = 0;
+      if (a.data.type === EComponentType.ClinicalForm) {
+        ret = -1;
+      } else if (a.data.type === EComponentType.GenomicForm) {
+        if (b.data.hasOwnProperty('type') && b.data.type === EComponentType.ClinicalForm) {
+          ret = 1;
+        } else if (!b.data.hasOwnProperty('type') || b.data.type === EComponentType.AndOROperator) {
+          ret = -1;
+        }
+      } else if (!a.data.hasOwnProperty('type') || b.data.type === EComponentType.AndOROperator) {
+        ret =  1;
+      } else if (a.data.type === b.data.type) {
+        const aKey = a.key as string;
+        const bKey = b.key as string;
+        ret = aKey.localeCompare(bKey);
+      }
+      return ret;
+    });
+  }
+
+  return treeNode;
+}
+

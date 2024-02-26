@@ -369,6 +369,29 @@
 
     }
   }
+
+  .version {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0px;
+
+    position: absolute;
+    width: 1280px;
+    height: 18px;
+    left: 50%;
+    top: 95%;
+    transform: translate(-50%, -50%);
+
+
+    color: rgba(255, 255, 255, 0.65);
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px; /* 133.333% */
+  }
 }
 
 
