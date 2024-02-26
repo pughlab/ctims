@@ -105,7 +105,7 @@ export class TrialResultService implements OnModuleInit {
       );
       console.log('trial: ', trial);
       const protocol_no = trial.protocol_no;
-      const url = `${process.env.MM_API_URL}/ctims_trial_match?where={"protocol_no":"${protocol_no}"}`;
+      const url = `${process.env.MM_API_URL}/ctims_trial_match?where={"protocol_no":"${protocol_no}", "is_disabled": false}`
       const matchResults = await axios.request(
         {
           method: 'get',
