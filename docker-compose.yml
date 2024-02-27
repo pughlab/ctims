@@ -72,7 +72,7 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - SECRETS_JSON=./secrets_json_dev.json
+      - SECRETS_JSON=./secrets_json_prod.json
     networks:
       - my-network
 
