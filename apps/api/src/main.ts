@@ -13,7 +13,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
-  let origin = process.env.CTIMS_ENV === 'development' ? '*' : 'https://apps.ctims.ca';
+  let origin = process.env.CTIMS_ENV === 'development' ? '*' : 'https://app.ctims.ca';
   app.enableCors({origin})
 
   if (process.env.CTIMS_ENV === 'development') {
