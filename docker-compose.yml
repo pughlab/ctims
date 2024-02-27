@@ -10,6 +10,7 @@ services:
         REACT_APP_API_URL: ${REACT_APP_API_URL}
         NEXTAUTH_URL: ${NEXTAUTH_URL}
         NEXTAUTH_API_URL: ${NEXTAUTH_API_URL}
+        NEXT_PUBLIC_SIGNOUT_REDIRECT_URL: ${NEXT_PUBLIC_SIGNOUT_REDIRECT_URL}
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
@@ -37,6 +38,7 @@ services:
         MM_API_URL: ${MM_API_URL}
         CTIMS_ENV: ${CTIMS_ENV}
         MM_API_TOKEN: ${MM_API_TOKEN}
+        CTIMS_API_VERSION: ${CTIMS_API_VERSION}
     environment:
       DATABASE_URL: mysql://ctims:ctims@database:3306/ctims
     ports:
@@ -56,6 +58,38 @@ services:
     networks:
         - my-network
 
+  mm_api:
+    container_name: mm_api
+    restart: "no"
+    build:
+      context: ../matchminer-api
+      dockerfile: Dockerfile-dev
+      args:
+        MM_API_TOKEN: ${MM_API_TOKEN}
+    command: python pymm_run.py serve
+    volumes:
+      - ../matchminer-api:/matchminerAPI
+    ports:
+      - "5000:5000"
+    environment:
+      - SECRETS_JSON=./secrets_json_dev.json
+    networks:
+      - my-network
+
+  mm_mongo_db:
+    container_name: mm_mongo_db
+    image: mongo:3.6.10
+    restart: on-failure
+    ports:
+      - "27017:27017"
+    networks:
+      - my-network
+    volumes:
+      - mm-mongo-db:/data/db
+
+volumes:
+  mm-mongo-db:
+
 networks:
-    my-network:
+  my-network:
 
