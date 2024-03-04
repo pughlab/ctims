@@ -9,8 +9,9 @@ import { Column } from 'primereact/column';
 import { CSVLink } from "react-csv";
 import {TrialStatusEnum} from "../../../../libs/types/src/trial-status.enum";
 
-const Results = () => {
+const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) => {
   const {data, status: sessionStatus} = useSession()
+
   useEffect(() => {
     if (!data) {
       return;
@@ -18,8 +19,13 @@ const Results = () => {
     localStorage.setItem('ctims-accessToken', data['accessToken'] as string);
 
     console.log('results page loaded')
-    getMatchResultsOperation();
   }, [data])
+
+  useEffect(() => {
+    if (props.trials && props.trials.length > 0) {
+      getMatchResultsOperation(props.trials);
+    }
+  }, [props.trials]);
 
   // retrieve trial match results
   const {
@@ -159,7 +165,7 @@ const Results = () => {
 
         <div className={styles.tableContainer}>
           <DataTable value={results} rowHover={true}
-                     loading={getMatchResultsLoading}
+                     loading={props.getTrialsForUsersInGroupLoading || getMatchResultsLoading}
                      sortField="createdOn" sortOrder={-1}
                      emptyMessage={'No match results.'}
           >

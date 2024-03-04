@@ -21,7 +21,6 @@ const useGetApiInfo = () => {
     })
       .then(response => {
         setResponse(response.data.version);
-        console.log('response:', response.data.version);
       })
       .catch(error => {
         if(error.response) {
