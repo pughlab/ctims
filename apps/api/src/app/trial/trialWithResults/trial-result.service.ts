@@ -77,6 +77,7 @@ export class TrialResultService implements OnModuleInit {
 
     let trialResults: trialWithResults[] = [];
     let matchResults: any;
+    const protocol_no_array = protocol_nos.split(",")
     if (trials.length > 0) {
       try {
         const url = `${process.env.MM_API_URL}/ctims_trial_summary`;
@@ -88,7 +89,7 @@ export class TrialResultService implements OnModuleInit {
               'Authorization': `Bearer ${this.MM_API_TOKEN}`
             },
             data: {
-              protocol_no_list: protocol_nos
+              protocol_no_list: protocol_no_array
             }
           },
         );
@@ -96,7 +97,7 @@ export class TrialResultService implements OnModuleInit {
         console.log(error);
         throw new Error(error);
       }
-      trialResults = await this.convertMatchResultsToTrialWithResults(trials, matchResults.data.values);
+      trialResults = await this.convertMatchResultsToTrialWithResults(trials, matchResults);
     }
     return trialResults;
   }
