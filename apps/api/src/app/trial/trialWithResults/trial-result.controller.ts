@@ -4,7 +4,7 @@ import {
   Get,
   NotFoundException,
   OnModuleInit,
-  Param, Post,
+  Param, Post, Query,
   UseGuards
 } from '@nestjs/common';
 import {
@@ -39,7 +39,7 @@ export class TrialResultController implements OnModuleInit{
     this.eventService = this.moduleRef.get(EventService, { strict: false });
   }
 
-  @Get()
+  @Get('get_all')
   @UseGuards(KeycloakPasswordGuard)
   @ApiBearerAuth("KeycloakPasswordGuard")
   @ApiOperation({ summary: "Get all trials and results" })
@@ -52,6 +52,23 @@ export class TrialResultController implements OnModuleInit{
     });
 
     const trials = await this.trialResultService.findAllWithResults();
+    return trials;
+  }
+
+  @Get()
+  @UseGuards(KeycloakPasswordGuard)
+  @ApiBearerAuth("KeycloakPasswordGuard")
+  @ApiOperation({ summary: "Get trials results for given protocol numbers" })
+  @ApiOkResponse({ description: "List of trials results found for given protocol numbers." })
+  async findResultsForProtocolNumbers(@CurrentUser() user: user,
+                                      @Query('protocol_nos') protocol_nos: string) {
+    this.eventService.createEvent({
+      type: event_type.TrialReadMany,
+      description: "Trials with results read for matching protocol numbers",
+      user
+    });
+
+    const trials = await this.trialResultService.findResultsForProtocolNumbers(protocol_nos);
     return trials;
   }
 
