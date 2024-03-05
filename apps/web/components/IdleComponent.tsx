@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import {useState, useEffect, useRef} from 'react';
 import useIdle, { IdleState } from "../hooks/useIdle";
 import { Dialog } from 'primereact/dialog';
 import {useRouter} from "next/router";
 import useRefreshToken from "../hooks/useRefreshToken";
 import useSaveTrial from "../hooks/useSaveTrial";
 import {RootState, store} from "../store/store";
+import {Toast} from "primereact/toast";
 
 const IdleComponent = () => {
   const { state: idleState, remaining, count } = useIdle(); // Get the idle state, remaining time, and count from the useIdle hook
@@ -12,6 +13,8 @@ const IdleComponent = () => {
   const [remainingTime, setRemainingTime] = useState(0); // Create a state variable for the remaining time
 
   const { error, response, loading, refreshTokenOperation } = useRefreshToken(); // Get the error, response, loading, and refreshTokenOperation from the useRefreshToken hook
+
+  const toast = useRef(null);
 
   const {
     response: saveTrialResponse,
@@ -115,11 +118,14 @@ const IdleComponent = () => {
   }
 
   return (
-    <div>
-      <Dialog data-testid="dialog" header="Idle Warning" visible={showDialog} onHide={onHide} closable={false}>
-        <p style={{margin: '10px'}}>You will timeout in {remainingTime} seconds. Please note, any unsaved work will be lost.</p>
-      </Dialog>
-    </div>
+    <>
+      <Toast ref={toast} position="top-center" />
+      <div>
+        <Dialog data-testid="dialog" header="Idle Warning" visible={showDialog} onHide={onHide} closable={false}>
+          <p style={{margin: '10px'}}>You will timeout in {remainingTime} seconds. Please note, any unsaved work will be lost.</p>
+        </Dialog>
+      </div>
+    </>
   );
 };
 
