@@ -40,6 +40,7 @@ const Main = () => {
 
   useEffect(() => {
     if (selectedTrialGroupFromState) {
+      setSelectedTrialGroup({ plainRole: selectedTrialGroupFromState, isAdmin: selectedTrialGroupIsAdminFromState });
       getTrialsForUsersInGroupOperation(selectedTrialGroupFromState);
     }
   }, [selectedTrialGroupFromState, selectedTrialGroupIsAdminFromState]);
