@@ -1,13 +1,38 @@
 import { useEffect, useState } from "react";
 import { Dropdown } from 'primereact/dropdown';
-import { useDispatch } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import { selectedTrialGroupId, setIsTrialGroupAdmin } from './../../store/slices/contextSlice';
-export const TrialGroupsDropdown = (props: {roles?: string[], onTrialGroupSelected: (selectedTrialGroup: {role: string, code: string}) => void}) => {
+import {RootState} from "../../store/store";
+import {json} from "express";
+
+export const TrialGroupsDropdown = (props: {
+  roles?: string[],
+  onTrialGroupSelected: (selectedTrialGroup: { role: string, code: string }) => void,
+  initialValue?: string
+}) => {
 
     const [trialGroups, setTrialGroups] = useState<any>([]);
     const [selectedTrialGroup, setSelectedTrialGroup] = useState<any>(null);
+    // grab the value from store
+    const selectedTrialGroupFromState = useSelector((state: RootState) => state.context.seletedTrialGroupId);
+    const selectedTrialGroupIsAdminFromState = useSelector((state: RootState) => state.context.isTrialGroupAdmin);
 
     const dispatch = useDispatch();
+
+    // sync the dropdown default value to the store value
+    useEffect(() => {
+      if (selectedTrialGroupFromState) {
+        // convert {"name":"groupABC","code":true} to {"name":"groupABC (Admin)","code":"groupABC-admin"}
+        // or if {"name":"groupDEF", "code":false} to  {"name":"groupDEF","code":"groupDEF"}
+        let groupName = selectedTrialGroupFromState;
+        let groupCode = selectedTrialGroupFromState;
+        if (selectedTrialGroupIsAdminFromState) {
+          groupName += ' (Admin)';
+          groupCode += '-admin';
+        }
+        setSelectedTrialGroup({ name: groupName, code: groupCode });
+      }
+    }, [selectedTrialGroupFromState, selectedTrialGroupIsAdminFromState]);
 
     useEffect(() => {
       const tg = props.roles.map((role) => {

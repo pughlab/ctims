@@ -10,6 +10,8 @@ import FooterComponent from "apps/web/components/FooterComponent";
 import TrialGroupsDropdown from "../../components/trials/TrialGroupsDropdown";
 import useGetTrialsForUsersInGroup from "../../hooks/useGetTrialsForUsersInGroup";
 import {Toast} from "primereact/toast";
+import {useSelector} from "react-redux";
+import {RootState} from "../../store/store";
 
 const Main = () => {
 
@@ -23,6 +25,9 @@ const Main = () => {
   const retrieveTrialsErrorToast = useRef(null);
   const [trials, setTrials] = useState<any>([]);
 
+  const selectedTrialGroupFromState = useSelector((state: RootState) => state.context.seletedTrialGroupId);
+  const selectedTrialGroupIsAdminFromState = useSelector((state: RootState) => state.context.isTrialGroupAdmin);
+
   useEffect(() => {
     if (!data) {
       return;
@@ -32,6 +37,12 @@ const Main = () => {
 
     setActiveTab(0);
   }, [data])
+
+  useEffect(() => {
+    if (selectedTrialGroupFromState) {
+      getTrialsForUsersInGroupOperation(selectedTrialGroupFromState);
+    }
+  }, [selectedTrialGroupFromState, selectedTrialGroupIsAdminFromState]);
 
   const onTrialGroupSelected = (selectedTrialGroup: {role: string, code: string}) => {
     // get the trials
