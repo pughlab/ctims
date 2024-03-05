@@ -121,6 +121,12 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
     }
   }, [deleteTrialError]);
 
+  useEffect(() => {
+    if (deleteTrialResponse) {
+      props.onTrialDeleted();
+    }
+  }, [deleteTrialResponse]);
+
   const onImportClicked = () => {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
