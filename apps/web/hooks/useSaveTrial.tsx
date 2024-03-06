@@ -1,6 +1,6 @@
 import axios from "axios";
 import {useEffect, useState} from "react";
-import {useSession} from "next-auth/react";
+import {signOut, useSession} from "next-auth/react";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store/store";
 import {useRouter} from "next/router";
@@ -8,6 +8,7 @@ import {setTrialId} from "../store/slices/contextSlice";
 import getConfig from 'next/config';
 import {v4 as uuidv4} from "uuid";
 import {store} from "../store/store";
+import process from "process";
 
 
 const useSaveTrial = () => {
@@ -31,7 +32,10 @@ const useSaveTrial = () => {
 
   useEffect(() => {
     if(status === 'unauthenticated') {
-      router.push('/');
+      // router.push('/');
+      signOut({redirect: false}).then(() => {
+        router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+      });
     }
   }, [status])
 
