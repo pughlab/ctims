@@ -33,7 +33,10 @@ const useGetMatchResults = () => {
       }
 
       // join each trials.protocol_no with a comma
-      const protocol_nos = trials.map((trial: any) => trial.protocol_no).join(',');
+      const protocol_nos = trials.filter((trial: any) => trial.protocol_no)
+        .map((trial: any) => trial.protocol_no)
+        .join(',');
+
       const trialsWithResults = await axios.request({
         method: 'get',
         url: `/trial-result/?protocol_nos=${protocol_nos}`,
