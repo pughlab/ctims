@@ -42,6 +42,7 @@ export const contextSlice = createSlice({
       state.isFormChanged = action.payload
     }
   },
+  // use extraReducers to listen to other action types
   extraReducers: (builder) => {
     builder.addCase(logout, () => {
       localStorage.removeItem('ctims-accessToken');
