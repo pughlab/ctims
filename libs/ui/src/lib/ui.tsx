@@ -34,6 +34,7 @@ const containerStyle: CSSProperties = {
 export interface UiProps {
   ctml_schema: {schema: any, version: any};
   formData?: any;
+  setLastSaved?: any;
 }
 
 export const Ui = (props: UiProps) => {
@@ -45,6 +46,7 @@ export const Ui = (props: UiProps) => {
   const toast = useRef(null);
 
   const {
+    uuid: saveUuid,
     response: saveTrialResponse,
     error: saveTrialError,
     loading: saveTrialLoading,
@@ -69,7 +71,7 @@ export const Ui = (props: UiProps) => {
   }, []);
 
   useEffect(() => {
-    if (saveTrialResponse) {
+    if (saveUuid) {
       console.log('response', saveTrialResponse);
       // @ts-ignore
       toast.current.show({
@@ -77,6 +79,8 @@ export const Ui = (props: UiProps) => {
           'info',
         summary: 'Trial saved',
       });
+
+      props.setLastSaved(saveTrialResponse.updatedAt);
       dispatch(setIsFormChanged(false));
     }
     if(saveTrialError) {

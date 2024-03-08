@@ -18,7 +18,7 @@ const useSaveTrial = () => {
   const schemaVersion = useSelector((state: RootState) => state.context.schema_version);
   const trialId = useSelector((state: RootState) => state.context.trialId);
 
-
+  const [uuid, setUuid] = useState(null);
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -51,6 +51,20 @@ const useSaveTrial = () => {
         data: {ctml_schema_version: schemaVersion, group_id, ...trialModel}
       });
 
+        let updatedAtDate = new Date(trialResponse.data.updatedAt)
+        let updatedAtFormatted = updatedAtDate.toLocaleString(undefined, {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric'
+        });
+        const mappedTrialResponse = {
+          ...trialResponse.data,
+          updatedAt: updatedAtFormatted
+        }
+
+
       dispatch(setTrialId(trialResponse.data.id));
 
       const updateCtmlResponse = await axios.request({
@@ -64,7 +78,8 @@ const useSaveTrial = () => {
         }
       });
 
-      setResponse(uuidv4())
+      setUuid(uuidv4())
+      setResponse(mappedTrialResponse)
     } catch (error) {
       console.log('response', error.response)
       if(error.response) {
@@ -78,7 +93,7 @@ const useSaveTrial = () => {
 
   };
 
-  return { response, error, loading, saveTrialOperation };
+  return { uuid, response, error, loading, saveTrialOperation };
 
 }
 export default useSaveTrial;
