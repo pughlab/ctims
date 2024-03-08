@@ -6,7 +6,6 @@ import {RootState} from "../store/store";
 import {useRouter} from "next/router";
 import {setTrialId} from "../store/slices/contextSlice";
 import getConfig from 'next/config';
-import {v4 as uuidv4} from "uuid";
 import {store} from "../store/store";
 
 
@@ -18,7 +17,6 @@ const useSaveTrial = () => {
   const schemaVersion = useSelector((state: RootState) => state.context.schema_version);
   const trialId = useSelector((state: RootState) => state.context.trialId);
 
-  const [uuid, setUuid] = useState(null);
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -78,7 +76,6 @@ const useSaveTrial = () => {
         }
       });
 
-      setUuid(uuidv4())
       setResponse(mappedTrialResponse)
     } catch (error) {
       console.log('response', error.response)
@@ -93,7 +90,7 @@ const useSaveTrial = () => {
 
   };
 
-  return { uuid, response, error, loading, saveTrialOperation };
+  return { response, error, loading, saveTrialOperation };
 
 }
 export default useSaveTrial;

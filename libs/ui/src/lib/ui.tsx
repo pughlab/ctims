@@ -46,7 +46,6 @@ export const Ui = (props: UiProps) => {
   const toast = useRef(null);
 
   const {
-    uuid: saveUuid,
     response: saveTrialResponse,
     error: saveTrialError,
     loading: saveTrialLoading,
@@ -71,7 +70,7 @@ export const Ui = (props: UiProps) => {
   }, []);
 
   useEffect(() => {
-    if (saveUuid) {
+    if (saveTrialResponse) {
       console.log('response', saveTrialResponse);
       // @ts-ignore
       toast.current.show({

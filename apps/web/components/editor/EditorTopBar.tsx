@@ -26,7 +26,6 @@ const EditorTopBar = (props: EditorTopBarProps) => {
   const [isSendDialogVisible, setIsSendDialogVisible] = useState<boolean>(false);
   const [isOKClicked, setIsOKClicked] = useState<boolean>(false);
   const {
-    uuid: saveUuid,
     response: saveTrialResponse,
     error: saveTrialError,
     loading: saveTrialLoading,
@@ -51,14 +50,13 @@ const EditorTopBar = (props: EditorTopBarProps) => {
   const toast = useRef(null);
 
   useEffect(() => {
-    if (saveUuid) {
+    if (saveTrialResponse) {
       console.log('response', saveTrialResponse);
       toast.current.show({
         severity:
           'info',
         summary: 'Trial saved',
       });
-      //setLastSaveTimestamp(saveTrialResponse.data.updatedAt);
       props.setLastSaved(saveTrialResponse.updatedAt);
       dispatch(setIsFormChanged(false));
     }
