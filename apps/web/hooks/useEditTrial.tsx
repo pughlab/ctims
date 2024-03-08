@@ -30,12 +30,25 @@ const useEditTrial = () => {
     }
 
     try {
-      const response = await axios.request({
+      const trialResponse = await axios.request({
         method: 'get',
         url: `/trials/${trialId}`,
         headers,
       });
-      const trial: any = response.data;
+      let updatedAtDate = new Date(trialResponse.data.updatedAt)
+      let updatedAtFormatted = updatedAtDate.toLocaleString(undefined, {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric'
+      });
+      const mappedTrialResponse = {
+        ...trialResponse.data,
+        updatedAt: updatedAtFormatted
+      }
+      
+      const trial: any = mappedTrialResponse;
       setResponse(trial);
     }
     catch (error) {

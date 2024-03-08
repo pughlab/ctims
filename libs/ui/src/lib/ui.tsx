@@ -34,6 +34,7 @@ const containerStyle: CSSProperties = {
 export interface UiProps {
   ctml_schema: {schema: any, version: any};
   formData?: any;
+  setLastSaved?: any;
 }
 
 export const Ui = (props: UiProps) => {
@@ -77,6 +78,8 @@ export const Ui = (props: UiProps) => {
           'info',
         summary: 'Trial saved',
       });
+
+      props.setLastSaved(saveTrialResponse.updatedAt);
       dispatch(setIsFormChanged(false));
     }
     if(saveTrialError) {

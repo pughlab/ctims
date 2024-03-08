@@ -6,7 +6,6 @@ import {RootState} from "../store/store";
 import {useRouter} from "next/router";
 import {setTrialId} from "../store/slices/contextSlice";
 import getConfig from 'next/config';
-import {v4 as uuidv4} from "uuid";
 import {store} from "../store/store";
 
 
@@ -17,7 +16,6 @@ const useSaveTrial = () => {
 
   const schemaVersion = useSelector((state: RootState) => state.context.schema_version);
   const trialId = useSelector((state: RootState) => state.context.trialId);
-
 
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
@@ -51,6 +49,20 @@ const useSaveTrial = () => {
         data: {ctml_schema_version: schemaVersion, group_id, ...trialModel}
       });
 
+        let updatedAtDate = new Date(trialResponse.data.updatedAt)
+        let updatedAtFormatted = updatedAtDate.toLocaleString(undefined, {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric'
+        });
+        const mappedTrialResponse = {
+          ...trialResponse.data,
+          updatedAt: updatedAtFormatted
+        }
+
+
       dispatch(setTrialId(trialResponse.data.id));
 
       const updateCtmlResponse = await axios.request({
@@ -64,7 +76,7 @@ const useSaveTrial = () => {
         }
       });
 
-      setResponse(uuidv4())
+      setResponse(mappedTrialResponse)
     } catch (error) {
       console.log('response', error.response)
       if(error.response) {
