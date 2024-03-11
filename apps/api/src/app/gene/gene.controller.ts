@@ -14,7 +14,7 @@ export class GeneController {
   @Get()
   async searchGenes(@Query("query") query: string) {
     try {
-      return await (await this.geneService.filterGeneSymbols(query)).slice(0,10);
+      return (await this.geneService.filterGeneSymbols(query)).slice(0,10);
     } catch (error) {
       console.error('Error fetching data:', error);
 

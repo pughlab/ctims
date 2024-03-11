@@ -1,36 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { AutoComplete } from 'primereact/autocomplete';
 import axios from 'axios';
 import {getTemplate, getUiOptions, ObjectFieldTemplatePropertyType, ObjectFieldTemplateProps} from "@rjsf/utils";
 import { Tooltip } from 'antd';
 import styles from "./CtimsAutoCompleteComponent.module.css";
+import useGetGenes from '../../../../../apps/web/hooks/useGetGenes'; 
 
-const AutocompleteField = ({onChange, ...props }: ObjectFieldTemplateProps) => {
-      const {
-    schema,
-  } = props;
-
-  const [filteredHugoSymbols, setFilteredHugoSymbols] = useState([]);
+const AutocompleteField = ({ onChange, ...props }) => {
+  const { filteredHugoSymbols, loading, searchSymbols } = useGetGenes();
   const [selectedHugoSymbol, setSelectedHugoSymbol] = useState([]);
 
-  const searchSymbols = async (gene) => {
-    const query = gene.query;
-    try {
-    const response = await axios.get(`genes?query=${query}`);
-      const symbols = response.data;
-      setFilteredHugoSymbols(symbols);
-    } 
-    catch (error) {
-      console.error('Error:', error);
-    }
-  };
-
-  const arrayContainer: React.CSSProperties = {
+  const arrayContainer = {
     width: '640px',
     marginLeft: 'auto',
   };
 
-  const labelStyle: React.CSSProperties = {
+  const labelStyle = {
     height: '36px',
     fontFamily: "'Inter', sans-serif",
     fontStyle: 'normal',
@@ -42,13 +27,17 @@ const AutocompleteField = ({onChange, ...props }: ObjectFieldTemplateProps) => {
 
   const questionMarkStyle = `dropdown-target-icon ${styles['question-mark']} pi pi-question-circle question-mark-target `;
 
-   return (
+  return (
     <div>
-      {schema.title && (
+      {props.schema.title && (
         <label style={labelStyle}>
           Hugo Gene
-          <Tooltip title={schema.description} placement="topLeft">
-            <i className={questionMarkStyle} data-pr-tooltip={schema.description} data-pr-position="top"></i>
+          <Tooltip title={props.schema.description} placement="topLeft">
+            <i
+              className={questionMarkStyle}
+              data-pr-tooltip={props.schema.description}
+              data-pr-position="top"
+            ></i>
           </Tooltip>
         </label>
       )}
@@ -56,11 +45,12 @@ const AutocompleteField = ({onChange, ...props }: ObjectFieldTemplateProps) => {
         inputStyle={arrayContainer}
         value={selectedHugoSymbol}
         suggestions={filteredHugoSymbols}
-        completeMethod={searchSymbols}
+        completeMethod={(e) => searchSymbols(e.query)}
         onChange={(e) => {
           setSelectedHugoSymbol(e.value);
           onChange(e.value);
         }}
+        loading={loading}
       />
     </div>
   );
