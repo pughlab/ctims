@@ -1,6 +1,4 @@
 import React, {useEffect, useState} from "react";
-import {useSelector} from "react-redux";
-import {RootState} from "../../store/store";
 import {Dialog} from "primereact/dialog";
 import styles from "./NewNctidDialog.module.scss";
 import {Button} from "primereact/button";
@@ -16,10 +14,11 @@ interface NewNctidDialogProps {
 const NewNctidDialog = (props: NewNctidDialogProps) => {
   const [isDialogVisible, setIsDialogVisible] = useState<boolean>(props.isNctidDialogVisible);
   const [createButtonDisabled, setCreateButtonDisabled] = useState<boolean>(true);
-  const [nctidValue, setNctidValue] = useState<string>(null);
+  const [nctidValue, setNctidValue] = useState<string>('');
 
   useEffect(() => {
     setIsDialogVisible(props.isNctidDialogVisible);
+    setNctidValue('')
   }, [props.isNctidDialogVisible])
 
   useEffect(() => {
@@ -42,7 +41,7 @@ const NewNctidDialog = (props: NewNctidDialogProps) => {
   const errorContent = () => {
     return (
       <>
-        <div>You must enter a valid nct id number.</div>
+        <div>You must enter a valid NCT ID number.</div>
       </>
     )
   }
@@ -68,15 +67,12 @@ const NewNctidDialog = (props: NewNctidDialogProps) => {
     <Dialog header="Create CTML"
             footer={() => footer({createCtmlClicked: doCreateCtml})}
             visible={isDialogVisible}
-            style={{width: '700px', minHeight: '200px'}}
+            style={{width: '350px', minHeight: '200px'}}
             onHide={onDialogHide}>
       <div className={styles['dialog-content']}>
-        <div className="flex flex-column gap-2">
-            <label htmlFor="nctid">NCTID:</label>
+        <div className="mb-2">
+            <label htmlFor="nctid">NCT ID: </label>
             <InputText id="nctid" aria-describedby="nctid-help" value={nctidValue} onChange={(e) => setNctidValue(e.target.value)}/>
-            <small id="nctid-help">
-                Please enter the NCTID for your trial.
-            </small>
         </div>
       </div>
     </Dialog>
