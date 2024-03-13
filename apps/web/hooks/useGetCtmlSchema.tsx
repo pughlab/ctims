@@ -1,9 +1,10 @@
 import axios, {AxiosRequestConfig} from "axios";
 import {useEffect, useState} from "react";
-import {useSession} from "next-auth/react";
+import {signOut, useSession} from "next-auth/react";
 import {store} from "../store/store";
 import getConfig from 'next/config';
 import {useRouter} from "next/router";
+import process from "process";
 
 const useGetCtmlSchema = () => {
   const [response, setResponse] = useState(null);
@@ -16,7 +17,10 @@ const useGetCtmlSchema = () => {
 
   useEffect(() => {
     if(status === 'unauthenticated') {
-      router.push('/');
+      // router.push('/');
+      signOut({redirect: false}).then(() => {
+        router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+      });
     }
   }, [status])
 

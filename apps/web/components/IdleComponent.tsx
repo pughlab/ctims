@@ -7,6 +7,7 @@ import useSaveTrial from "../hooks/useSaveTrial";
 import {RootState, store} from "../store/store";
 import {Toast} from "primereact/toast";
 import {signOut} from "next-auth/react";
+import process from "process";
 
 const IdleComponent = () => {
   const { state: idleState, remaining, count } = useIdle(); // Get the idle state, remaining time, and count from the useIdle hook
@@ -70,8 +71,11 @@ const IdleComponent = () => {
       const currentState = store.getState();
       const {trialModel, ctmlJson} = saveToServer(currentState)
       saveTrialOperation(trialModel, ctmlJson).then(() => {
-        localStorage.removeItem('ctims-accessToken') // Remove the access token from local storage
-        router.push('/'); // Redirect to the home page
+        //localStorage.removeItem('ctims-accessToken') // Remove the access token from local storage
+        //router.push('/'); // Redirect to the home page
+        signOut({redirect: false}).then(() => {
+          router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+        });
       });
     }
 
