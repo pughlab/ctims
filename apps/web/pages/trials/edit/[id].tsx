@@ -29,6 +29,7 @@ const EditorEditTrialPage = () => {
   dispatch(setTrialId(+id));
 
   const [formData, setFormData] = useState(null);
+  const [lastSaved, setLastSaved] = useState<string>(null);
 
   const {
     error: getCtmlSchemaError,
@@ -53,6 +54,7 @@ const EditorEditTrialPage = () => {
 
   useEffect(() => {
     if (editTrialResponse) {
+      setLastSaved(editTrialResponse.updatedAt);
       const trial = structuredClone(editTrialResponse)
       const ctml_json = trial.ctml_jsons[0].data;
       let editTrialObject = {
@@ -92,11 +94,11 @@ const EditorEditTrialPage = () => {
   // return <div>Editing trial {id}</div>
   return (
     <>
-      <EditorTopBar isEditMode={true} title={"Edit CTML"}/>
+      <EditorTopBar isEditMode={true} title={"Edit CTML"} lastSaved={lastSaved} setLastSaved={setLastSaved}/>
       <IdleComponent />
       <div style={containerStyle}>
         <LeftMenuEditorComponent />
-        {(getCtmlSchemaResponse && formData) && <Ui ctml_schema={getCtmlSchemaResponse} formData={formData}></Ui>}
+        {(getCtmlSchemaResponse && formData) && <Ui ctml_schema={getCtmlSchemaResponse} formData={formData} setLastSaved={setLastSaved}></Ui>}
       </div>
       <FooterComponent/>
     </>

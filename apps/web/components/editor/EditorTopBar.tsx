@@ -17,6 +17,8 @@ import process from "process";
 interface EditorTopBarProps {
     isEditMode?: boolean;
     title?: string;
+    lastSaved?: string;
+    setLastSaved?: any;
 }
 
 const EditorTopBar = (props: EditorTopBarProps) => {
@@ -56,6 +58,7 @@ const EditorTopBar = (props: EditorTopBarProps) => {
           'info',
         summary: 'Trial saved',
       });
+      props.setLastSaved(saveTrialResponse.updatedAt);
       dispatch(setIsFormChanged(false));
     }
     if(saveTrialError) {
@@ -184,6 +187,7 @@ const EditorTopBar = (props: EditorTopBarProps) => {
           </div>
           <div className={styles.title}>{props.title ? props.title : "New CTML"}</div>
         </div>
+        <div className={styles.lastsaved}>Last saved: {props.lastSaved}</div>
         <div className={styles.menuBtnGroup}>
           {/*<Button label="Discard" className="p-button-text p-button-plain" />*/}
           <Button label={isGroupAdmin ? 'Export' : 'Validate'}
