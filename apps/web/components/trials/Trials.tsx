@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { DataTable, DataTableRowMouseEventParams } from 'primereact/datatable';
 import { useRouter } from 'next/router';
-import { setIsFormDisabled } from '../../store/slices/contextSlice';
+import { setIsFormDisabled, setNctId } from '../../store/slices/contextSlice';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import styles from './Trials.module.scss';
 import { Button } from 'primereact/button';
@@ -15,6 +15,7 @@ import { Menu } from 'primereact/menu';
 import { Column } from 'primereact/column';
 import {Toast} from "primereact/toast";
 import {parse} from "yaml";
+import NewNctidDialog from './NewNctidDialog';
 
 // property selectedTrialGroup from parent component when dropdown changed
 // trials is the list of trials for the selected trial group
@@ -30,12 +31,18 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
   const dispatch = useDispatch();
   const menu = useRef(null);
 
+  const [isDialogVisible, setIsDialogVisible] = useState<boolean>(false);
+  const [isNctidDialogVisible, setIsNctidDialogVisible] = useState<boolean>(false);
+  const [isOKClicked, setIsOKClicked] = useState<boolean>(false);
+
+
   const trialsErrorToast = useRef(null);
 
   const createCtmlClick = (e) => {
-    e.preventDefault();
-    dispatch(setIsFormDisabled(false));
-    router.push(`/trials/create/${props.selectedTrialGroup.plainRole}`);
+    //e.preventDefault();
+    setIsNctidDialogVisible(true);
+    //dispatch(setIsFormDisabled(false));
+    //router.push(`/trials/create/${props.selectedTrialGroup.plainRole}`);
   }
 
   const trialMenuItems = [
@@ -127,6 +134,18 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
     }
   }, [deleteTrialResponse]);
 
+  const onCreateCTMLClick = () => {
+    setIsNctidDialogVisible(true);
+  }
+
+  const handleCreateCTMLClicked = (val: string) => {
+    if (val) {
+      dispatch(setIsFormDisabled(false));
+      dispatch(setNctId(val));
+      router.push(`/trials/create/${props.selectedTrialGroup.plainRole}`);
+    }
+  }
+
   const onImportClicked = () => {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
@@ -182,6 +201,11 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
     <>
       <Toast ref={trialsErrorToast}></Toast>
       <ConfirmDialog />
+      <NewNctidDialog
+        isNctidDialogVisible={isNctidDialogVisible}
+        createCTMLClicked={onCreateCTMLClick}
+        onNctidDialogHide={() => setIsNctidDialogVisible(false)}
+        onIsOKClicked={handleCreateCTMLClicked}/>
       <div >
         <div className={styles.titleAndButtonsContainer}>
           <span className={styles.trialsText}>Trials</span>
