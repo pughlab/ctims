@@ -41,10 +41,11 @@ const MatchMinerConsole = () => {
 
   return (
     <div className={styles.mmContainer}>
-      <label>Enter trial <b>protocol number(s)</b>: comma seperated, leave blank to run all trials.</label>
+      <label>Enter trial <b>protocol number(s)</b>, comma seperated.</label>
         <InputText value={protocol_nos} onChange={(e) => onProtocolEntered(e.target.value)}>
         </InputText>
-        <Button className={styles.mmSubmitBtn} onClick={runMatchClicked} style={{background: '#2E72D2'}} label="Run Match"/>
+        <Button className={styles.mmSubmitBtn} onClick={runMatchClicked} disabled={protocol_nos.length === 0}
+                style={{background: '#2E72D2'}} label="Run Match"/>
         <div>Status: {runMessage}</div>
     </div>
   );
