@@ -15,7 +15,7 @@ const initialState: ContextSliceState = {
   seletedTrialGroupId: '',
   isTrialGroupAdmin: false,
   isFormDisabled: false,
-  isFormChanged: false
+  isFormChanged: false,
 }
 
 export const contextSlice = createSlice({

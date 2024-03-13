@@ -7,6 +7,8 @@ import {useSession} from "next-auth/react";
 import {useRouter} from "next/router";
 import useGetCtmlSchema from "../../../hooks/useGetCtmlSchema";
 import IdleComponent from "../../../components/IdleComponent";
+import FooterComponent from "apps/web/components/FooterComponent";
+
 
 const EditorCreateCtml = () => {
 
@@ -34,8 +36,6 @@ const EditorCreateCtml = () => {
     paddingTop: '20px',
   }
 
-
-
   return (
     <>
       <EditorTopBar />
@@ -44,7 +44,7 @@ const EditorCreateCtml = () => {
         <LeftMenuEditorComponent />
         {response && <Ui ctml_schema={response}></Ui>}
       </div>
-
+      <FooterComponent/>
     </>
   )
 }

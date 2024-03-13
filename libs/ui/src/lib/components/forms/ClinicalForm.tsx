@@ -46,7 +46,7 @@ const formContainerStyle: CSSProperties = {
 export const ClinicalForm = (props: IFormProps) => {
   const {node, rootNodes} = props
   const nk = node.key as string;
-  console.log('ClinicalForm node: ', node)
+  // console.log('ClinicalForm node: ', node)
 
   const {setSaveBtnState} = useContext(CtimsDialogContext) as CtimsDialogContextType;
 
@@ -62,30 +62,36 @@ export const ClinicalForm = (props: IFormProps) => {
     "definitions": {
       "her2_status": {
         "enumNames": [
+          " ",
           "Positive",
           "Negative"
         ],
         "enum": [
+          "",
           "True",
           "False"
         ]
       },
       "er_status": {
         "enumNames": [
+          " ",
           "Positive",
           "Negative"
         ],
         "enum": [
+          "",
           "True",
           "False"
         ]
       },
       "pr_status": {
         "enumNames": [
+          " ",
           "Positive",
           "Negative"
         ],
         "enum": [
+          "",
           "True",
           "False"
         ]
@@ -138,14 +144,12 @@ export const ClinicalForm = (props: IFormProps) => {
     const form: Form = clinicalFormRef.current;
     form?.validateForm();
     const errorDetails: ValidationData<any> = form?.validate(data.formData);
-    if (errorDetails?.errors.length > 0) {
+    if (typeof errorDetails === 'undefined' || errorDetails?.errors.length > 0) {
       node.data.formValid = false;
       const payload = {[nk]: true};
       dispatch(setMatchDialogErrors(payload));
     }
-    // Add a temp fix for CTM-390 as the clinical form is by default not showing the save button enabled
-    // due to errorDetails being undefined when created initially. Kevin-20240124
-    if (errorDetails?.errors.length === 0 || typeof errorDetails === 'undefined') {
+    if (errorDetails?.errors.length === 0) {
       node.data.formValid = true;
       dispatch(deleteMatchDialogError(nk));
       setSaveBtnState(false)
@@ -170,6 +174,17 @@ export const ClinicalForm = (props: IFormProps) => {
     return getCurrentOperator(rootNodes, node);
   }
 
+  const customValidate = (formData: any, errors: any, uiSchema: any) => {
+    if (typeof formData.age_expression === 'undefined' &&
+        typeof formData.oncotree_primary_diagnosis === 'undefined' &&
+        typeof formData.tmb === 'undefined' &&
+        typeof formData.her2_status === 'undefined' &&
+        typeof formData.er_status === 'undefined' &&
+        typeof formData.pr_status === 'undefined') {
+      errors.age_expression.addError('Must have at least one field filled.');
+    }
+    return errors;
+  }
 
   return (
     <div style={formContainerStyle}>
@@ -189,6 +204,7 @@ export const ClinicalForm = (props: IFormProps) => {
                   widgets={widgets}
                   onChange={onFormChange}
                   onError={() => {console.log('onError')}}
+                  customValidate={customValidate}
                   validator={localValidator}/>
       </div>
     </div>

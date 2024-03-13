@@ -16,26 +16,26 @@ import { Column } from 'primereact/column';
 import {Toast} from "primereact/toast";
 import {parse} from "yaml";
 
-const Trials = () => {
+// property selectedTrialGroup from parent component when dropdown changed
+// trials is the list of trials for the selected trial group
+// onTrialDeleted is a callback to parent component when a trial is deleted
+// getTrialsForUsersInGroupLoading indicate if the trials are being fetched
+const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolean }, trials: [], onTrialDeleted: () => void, getTrialsForUsersInGroupLoading: boolean}) => {
   const { response: deleteTrialResponse, error: deleteTrialError, loading: deleteTrialLoading, deleteTrialOperation } = useDeleteTrial();
-  const { response: getTrialsForUsersInGroupResponse, error: getTrialsForUsersInGroupError, loading: getTrialsForUsersInGroupLoading, getTrialsForUsersInGroupOperation } = useGetTrialsForUsersInGroup();
   const isTrialGroupAdmin = useSelector((state: RootState) => state.context.isTrialGroupAdmin);
   const {data, status: sessionStatus} = useSession()
-  const [trials, setTrials] = useState<any>([]);
   const [rowEntered, setRowEntered] = useState<DataTableRowMouseEventParams>(null);
   const [rowClicked, setRowClicked] = useState<any>(null);
-  const [selectedTrialGroup, setSelectedTrialGroup] = useState<{ plainRole: string, isAdmin: boolean }>(null);
   const router = useRouter();
   const dispatch = useDispatch();
   const menu = useRef(null);
 
   const trialsErrorToast = useRef(null);
 
-
   const createCtmlClick = (e) => {
     e.preventDefault();
     dispatch(setIsFormDisabled(false));
-    router.push(`/trials/create/${selectedTrialGroup.plainRole}`);
+    router.push(`/trials/create/${props.selectedTrialGroup.plainRole}`);
   }
 
   const trialMenuItems = [
@@ -103,12 +103,6 @@ const Trials = () => {
     setRowEntered(null);
   }
 
-  const onTrialGroupSelected = ({ role, code }) => {
-    const plainRole = code.replace('-admin', '');
-    setSelectedTrialGroup({ plainRole, isAdmin: code.includes('admin') });
-    getTrialsForUsersInGroupOperation(plainRole);
-  }
-
   useEffect(() => {
     if (!data) {
       return;
@@ -117,15 +111,6 @@ const Trials = () => {
     sessionStorage.removeItem('imported_ctml');
     // console.log('data', data)
   }, [data])
-
-  useEffect(() => {
-    if (getTrialsForUsersInGroupError) {
-      trialsErrorToast.current.show({
-        severity: "error",
-        summary: 'Error fetching trials',
-      });
-    }
-  }, [getTrialsForUsersInGroupError]);
 
   useEffect(() => {
     if (deleteTrialError) {
@@ -137,15 +122,8 @@ const Trials = () => {
   }, [deleteTrialError]);
 
   useEffect(() => {
-    if (getTrialsForUsersInGroupResponse) {
-      setTrials(getTrialsForUsersInGroupResponse);
-      console.log('response', getTrialsForUsersInGroupResponse);
-    }
-  }, [getTrialsForUsersInGroupResponse]);
-
-  useEffect(() => {
     if (deleteTrialResponse) {
-      getTrialsForUsersInGroupOperation(selectedTrialGroup.plainRole);
+      props.onTrialDeleted();
     }
   }, [deleteTrialResponse]);
 
@@ -205,12 +183,11 @@ const Trials = () => {
       <Toast ref={trialsErrorToast}></Toast>
       <ConfirmDialog />
       <div >
-        <TrialGroupsDropdown roles={(data as unknown as any).roles} onTrialGroupSelected={onTrialGroupSelected} />
         <div className={styles.titleAndButtonsContainer}>
           <span className={styles.trialsText}>Trials</span>
           <div className={styles.buttonsContainer}>
-            <Button disabled={!selectedTrialGroup} label="Import CTML" className="p-button-text p-button-plain" onClick={onImportClicked} />
-            <Button disabled={!selectedTrialGroup} label="Create CTML" className={styles.createCtmlButton} onClick={createCtmlClick} />
+            <Button disabled={!props.selectedTrialGroup} label="Import CTML" className="p-button-text p-button-plain" onClick={onImportClicked} />
+            <Button disabled={!props.selectedTrialGroup} label="Create CTML" className={styles.createCtmlButton} onClick={createCtmlClick} />
           </div>
         </div>
 
@@ -218,12 +195,12 @@ const Trials = () => {
               onHide={clearRowClicked} />
 
         <div className={styles.tableContainer}>
-          <DataTable value={trials} rowHover={true}
-                     loading={getTrialsForUsersInGroupLoading || deleteTrialLoading}
+          <DataTable value={props.trials} rowHover={true}
+                     loading={props.getTrialsForUsersInGroupLoading || deleteTrialLoading}
                      onRowMouseEnter={(event) => setRowEntered(event.data)}
                      onRowMouseLeave={() => setRowEntered(null)}
                      sortField="createdOn" sortOrder={-1}
-                     emptyMessage={!selectedTrialGroup ? 'Select a Trial Group to start' : 'No CTML files. Select the \'Create\' button to start.'}
+                     emptyMessage={!props.selectedTrialGroup ? 'Select a Trial Group to start' : 'No CTML files. Select the \'Create\' button to start.'}
           >
             <Column field="nct_id" header="ID"></Column>
             <Column field="id" header="" body={subMenuTemplate}></Column>

@@ -9,6 +9,11 @@ export interface IDeleteCriteria {
   nodeKey: string;
 }
 
+export interface IMoveCriteriaDnD {
+  draggedNodeKey: string;
+  destinationNodeKey: string;
+}
+
 export interface IOperatorChange {
   nodeKey: string;
   operator: string;
@@ -24,6 +29,7 @@ export interface IMatchDialogErrors {
 export interface TreeActionsState {
   addCriteria: IAddCriteria;
   deleteCriteria: IDeleteCriteria;
+  moveCriteriaDnD: IMoveCriteriaDnD;
   operatorChange: IOperatorChange;
   formChangeCounter: number;
   ctmlDialogModel: any;
@@ -37,6 +43,10 @@ const initialState: TreeActionsState = {
   },
   deleteCriteria: {
     nodeKey: '',
+  },
+  moveCriteriaDnD: {
+    draggedNodeKey: '',
+    destinationNodeKey: ''
   },
   operatorChange: {
     nodeKey: '',
@@ -57,6 +67,9 @@ export const modalActionsSlice = createSlice({
     },
     deleteNode: (state, action: PayloadAction<IDeleteCriteria>) => {
       state.deleteCriteria = action.payload;
+    },
+    moveNodeDnD: (state, action: PayloadAction<IMoveCriteriaDnD>) => {
+      state.moveCriteriaDnD = action.payload;
     },
     operatorChange: (state, action: PayloadAction<IOperatorChange>) => {
       state.operatorChange = action.payload;
@@ -85,6 +98,7 @@ export const modalActionsSlice = createSlice({
 export const {
   addAdjacentNode,
   deleteNode,
+  moveNodeDnD,
   operatorChange,
   formChange,
   setCtmlDialogModel,

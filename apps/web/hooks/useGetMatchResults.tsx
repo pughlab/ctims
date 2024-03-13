@@ -24,16 +24,22 @@ const useGetMatchResults = () => {
     }
   }, [status])
 
-  const getMatchResultsOperation = async () => {
+  const getMatchResultsOperation = async (trials: []) => {
     setLoading(true);
     try {
       const accessToken = localStorage.getItem('ctims-accessToken');
       const headers = {
         'Authorization': 'Bearer ' + accessToken,
       }
+
+      // join each trials.protocol_no with a comma
+      const protocol_nos = trials.filter((trial: any) => trial.protocol_no)
+        .map((trial: any) => trial.protocol_no)
+        .join(',');
+
       const trialsWithResults = await axios.request({
         method: 'get',
-        url: `/trial-result`,
+        url: `/trial-result/?protocol_nos=${protocol_nos}`,
         headers
       })
       const mapped = trialsWithResults.data.map((trial) => {

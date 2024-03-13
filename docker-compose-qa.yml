@@ -38,6 +38,7 @@ services:
         MM_API_URL: ${MM_API_URL}
         CTIMS_ENV: ${CTIMS_ENV}
         MM_API_TOKEN: ${MM_API_TOKEN}
+        CTIMS_API_VERSION: ${CTIMS_API_VERSION}
     environment:
       DATABASE_URL: mysql://ctims:ctims@database_qa:3306/ctims
     ports:

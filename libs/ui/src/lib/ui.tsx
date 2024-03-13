@@ -14,6 +14,13 @@ import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/struc
 import Form from "@rjsf/core";
 import {ValidationData} from "@rjsf/utils";
 import { setIsFormChanged, setTrialId } from "../../../../apps/web/store/slices/contextSlice";
+import {RootState, store} from "../../../../apps/web/store/store";
+import {signOut} from "next-auth/react";
+import process from "process";
+import useSaveTrial from "../../../../apps/web/hooks/useSaveTrial";
+import {useRouter} from "next/router";
+import { Toast } from 'primereact/toast';
+
 
 
 const containerStyle: CSSProperties = {
@@ -27,6 +34,7 @@ const containerStyle: CSSProperties = {
 export interface UiProps {
   ctml_schema: {schema: any, version: any};
   formData?: any;
+  setLastSaved?: any;
 }
 
 export const Ui = (props: UiProps) => {
@@ -34,6 +42,15 @@ export const Ui = (props: UiProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [armCode, setArmCode] = useState('');
   const [formData, setFormData] = useState({});
+  const router = useRouter();
+  const toast = useRef(null);
+
+  const {
+    response: saveTrialResponse,
+    error: saveTrialError,
+    loading: saveTrialLoading,
+    saveTrialOperation
+  } = useSaveTrial();
 
   const formRef = useRef<any>();
 
@@ -51,6 +68,31 @@ export const Ui = (props: UiProps) => {
       dispatch(setErrorSchema(errorDetails));
     }
   }, []);
+
+  useEffect(() => {
+    if (saveTrialResponse) {
+      console.log('response', saveTrialResponse);
+      // @ts-ignore
+      toast.current.show({
+        severity:
+          'info',
+        summary: 'Trial saved',
+      });
+
+      props.setLastSaved(saveTrialResponse.updatedAt);
+      dispatch(setIsFormChanged(false));
+    }
+    if(saveTrialError) {
+      console.log('error', saveTrialError);
+      // @ts-ignore
+      if (saveTrialError.statusCode === 401) {
+        signOut({redirect: false}).then(() => {
+          localStorage.removeItem('ctims-accessToken');
+          router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+        });
+      }
+    }
+  }, [saveTrialError, saveTrialResponse]);
 
   const handleSpecialClick = (formD: any, id: string) => {
     const formData = formD
@@ -84,11 +126,54 @@ export const Ui = (props: UiProps) => {
     const formDataClone = structuredClone(formRef.current.state.formData)
     console.log('formRef state', formRef.current.state)
     dispatch(setCtmlModel(formDataClone))
+
+    const currentState = store.getState();
+    saveToServer(currentState)
+  }
+
+  const saveToServer = (state: RootState) => {
+    const ctmlModel = state.finalModelAndErrors.ctmlModel;
+    if (!ctmlModel.trialInformation.trial_id) {
+      // @ts-ignore
+      toast.current.show({
+        severity:
+          'error',
+        summary: 'Error Saving',
+        detail: 'Trial ID is required',
+      });
+      return;
+    }
+
+    const getCtmlJsonOnly = () => {
+      let ctmlModelCopy;
+      const age_group = ctmlModel.age_group;
+      const trialInformation = ctmlModel.trialInformation;
+      ctmlModelCopy = {...ctmlModel, ...trialInformation, ...age_group};
+      delete ctmlModelCopy.age_group;
+      delete ctmlModelCopy.trialInformation;
+      delete ctmlModelCopy.ctml_status;
+      delete ctmlModelCopy.nickname;
+      return ctmlModelCopy;
+    }
+
+    const getTrialModelOnly = () => {
+      return {
+        nct_id: ctmlModel.trialInformation.trial_id,
+        nickname: ctmlModel.trialInformation.nickname,
+        principal_investigator: ctmlModel.trialInformation.principal_investigator,
+        status: ctmlModel.trialInformation.ctml_status,
+        protocol_no: ctmlModel.trialInformation.protocol_no,
+      }
+    }
+
+    saveTrialOperation(getTrialModelOnly(), getCtmlJsonOnly());
+
   }
 
   // @ts-ignore
   return (
     <div style={containerStyle}>
+      <Toast ref={toast} />
       <CtimsFormComponentMemo
         ref={formRef}
         schema={props.ctml_schema.schema}

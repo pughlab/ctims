@@ -10,6 +10,7 @@ import {setTrialId} from "../../../store/slices/contextSlice";
 import {useDispatch} from "react-redux";
 import IdleComponent from "../../../components/IdleComponent";
 import { setCtmlModel } from '../../../store/slices/ctmlModelSlice';
+import FooterComponent from "apps/web/components/FooterComponent";
 
 const containerStyle: React.CSSProperties = {
   display: 'flex',
@@ -19,6 +20,7 @@ const containerStyle: React.CSSProperties = {
   paddingTop: '20px',
 }
 
+
 const EditorEditTrialPage = () => {
   const router = useRouter()
   const dispatch = useDispatch();
@@ -27,20 +29,21 @@ const EditorEditTrialPage = () => {
   dispatch(setTrialId(+id));
 
   const [formData, setFormData] = useState(null);
+  const [lastSaved, setLastSaved] = useState<string>(null);
 
   const {
     error: getCtmlSchemaError,
     response: getCtmlSchemaResponse,
     loading: getCtmlSchemaLoading,
     operation: getCtmlSchemaOperation
-} = useGetCtmlSchema();
+  } = useGetCtmlSchema();
 
-const {
-    error: editTrialError,
-    response: editTrialResponse,
-    loading: editTrialLoading,
-    editTrialOperation
-} = useEditTrial();
+  const {
+      error: editTrialError,
+      response: editTrialResponse,
+      loading: editTrialLoading,
+      editTrialOperation
+  } = useEditTrial();
 
   useEffect(() => {
     if (id) {
@@ -49,9 +52,9 @@ const {
     }
   }, [id])
 
-
   useEffect(() => {
     if (editTrialResponse) {
+      setLastSaved(editTrialResponse.updatedAt);
       const trial = structuredClone(editTrialResponse)
       const ctml_json = trial.ctml_jsons[0].data;
       let editTrialObject = {
@@ -91,13 +94,13 @@ const {
   // return <div>Editing trial {id}</div>
   return (
     <>
-      <EditorTopBar isEditMode={true} title={"Edit CTML"}/>
+      <EditorTopBar isEditMode={true} title={"Edit CTML"} lastSaved={lastSaved} setLastSaved={setLastSaved}/>
       <IdleComponent />
       <div style={containerStyle}>
         <LeftMenuEditorComponent />
-        {(getCtmlSchemaResponse && formData) && <Ui ctml_schema={getCtmlSchemaResponse} formData={formData}></Ui>}
+        {(getCtmlSchemaResponse && formData) && <Ui ctml_schema={getCtmlSchemaResponse} formData={formData} setLastSaved={setLastSaved}></Ui>}
       </div>
-
+      <FooterComponent/>
     </>
   )
 }

@@ -151,8 +151,38 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
         multiple: true
       }
     },
+    // "prior_treatment_requirements": {
+    //   "ui:ArrayFieldTemplate": CtimsArrayFieldSingleTemplate,
+    // },
     "prior_treatment_requirements": {
-      "ui:ArrayFieldTemplate": CtimsArrayFieldSingleTemplate,
+      "ui:ObjectFieldTemplate": CtimsObjectFieldTemplate,
+      "ui:spacing": 16,
+      "ui:layout": [
+        {
+          "prior_treatment_requirement": {
+            "span": 24
+          },
+          "ui:order": [
+            "prior_treatment_requirement"
+          ]
+        }
+      ],
+      "prior_treatment_requirement": {
+        "items": {
+          "ui:ObjectFieldTemplate": CtimsItemObjectFieldTemplate,
+          "ui:spacing": 16,
+          "ui:layout": [
+            {
+              "prior_treatment_requirement_name": {
+                "span": 24
+              },
+              "ui:order": [
+                "prior_treatment_requirement_name"
+              ]
+            }
+          ]
+        }
+      }
     },
     "age_group": {
       "ui:ObjectFieldTemplate": RjsfGridFieldTemplate,
