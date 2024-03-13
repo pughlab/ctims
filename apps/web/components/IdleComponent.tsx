@@ -45,6 +45,15 @@ const IdleComponent = () => {
   }, [idleState]); // Run the effect whenever the idle state changes
 
   useEffect(() => {
+    if (error) {
+      // for when unable to fresh with expired refresh token
+      signOut({redirect: false}).then(() => {
+        router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+      });
+    }
+  }, [error]);
+
+  useEffect(() => {
     let interval: any;
 
     if (showDialog) { // If the dialog is visible
@@ -80,7 +89,7 @@ const IdleComponent = () => {
 
   const saveToServer = (state: RootState) => {
     const ctmlModel = state.finalModelAndErrors.ctmlModel;
-    if (!ctmlModel.trialInformation.trial_id) {
+    if (ctmlModel && !ctmlModel.trialInformation.trial_id) {
       // @ts-ignore
       toast.current.show({
         severity:
