@@ -121,6 +121,10 @@ export const Ui = (props: UiProps) => {
 
   const onDialogHideCallback = () => {
     setIsOpen(false);
+  }
+  
+  const onSaveCTMLHideCallback = () => {
+    setIsOpen(false);
     dispatch(resetFormChangeCounter())
     dispatch(resetActiveArmId())
     const formDataClone = structuredClone(formRef.current.state.formData)
@@ -183,6 +187,7 @@ export const Ui = (props: UiProps) => {
       />
       <CtimsMatchDialog
                       onDialogHide={onDialogHideCallback}
+                      onSaveCTMLHide={onSaveCTMLHideCallback}
                       isDialogVisible={isOpen}
                       armCode={armCode}
                       formData={formData}
