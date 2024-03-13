@@ -1,0 +1,13 @@
+.mmContainer {
+  display: flex;
+  flex-direction: column;
+  height: 50vh;
+  width: 40vw;
+  gap: .5rem;
+  margin-left: .7rem;
+}
+
+.mmSubmitBtn {
+  align-self: flex-end;
+  justify-self: flex-end;
+}
