@@ -63,16 +63,20 @@ const NewNctidDialog = (props: NewNctidDialogProps) => {
     )
   }
 
+  const inputStyle = {
+    width: '82%'
+  }
+
   return (
     <Dialog header="Create CTML"
             footer={() => footer({createCtmlClicked: doCreateCtml})}
             visible={isDialogVisible}
-            style={{width: '350px', minHeight: '200px'}}
+            style={{width: '400px', minHeight: '200px'}}
             onHide={onDialogHide}>
       <div className={styles['dialog-content']}>
         <div className="mb-2">
             <label htmlFor="nctid">NCT ID: </label>
-            <InputText id="nctid" aria-describedby="nctid-help" value={nctidValue} onChange={(e) => setNctidValue(e.target.value)}/>
+            <InputText id="nctid" aria-describedby="nctid-help" style={inputStyle} value={nctidValue} onChange={(e) => setNctidValue(e.target.value)}/>
         </div>
       </div>
     </Dialog>
