@@ -76,7 +76,7 @@ const NewNctidDialog = (props: NewNctidDialogProps) => {
       <div className={styles['dialog-content']}>
         <div className="mb-2">
             <label htmlFor="nctid">NCT ID: </label>
-            <InputText id="nctid" aria-describedby="nctid-help" style={inputStyle} value={nctidValue} onChange={(e) => setNctidValue(e.target.value)}/>
+            <InputText id="nctid" aria-describedby="nctid-help" style={inputStyle} value={nctidValue} onChange={(e) => setNctidValue(e.target.value.trim())}/>
         </div>
       </div>
     </Dialog>
