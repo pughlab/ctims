@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, OnModuleInit, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import {Body, Controller, Delete, Get, OnModuleInit, Param, Patch, Post, Query, UseGuards} from '@nestjs/common';
 import {CtmlJsonService} from './ctml-json.service';
 import {CreateCtmlJsonDto} from './dto/create-ctml-json.dto';
 import {UpdateCtmlJsonDto} from './dto/update-ctml-json.dto';
@@ -202,9 +202,11 @@ export class CtmlJsonController implements OnModuleInit {
   @ApiBearerAuth("KeycloakPasswordGuard")
   @ApiOperation({ summary: "Triggers matchminer to run matches" })
   @ApiFoundResponse({ description: "Triggers matchminer to run matches" })
+  // optional query protocol_nos
   async run_matchminer(
     @CurrentUser() user: user,
+    @Query('protocol_nos') protocol_nos: string
   ) {
-    await this.ctmlJsonService.run_match();
+    await this.ctmlJsonService.run_match(protocol_nos);
   }
 }

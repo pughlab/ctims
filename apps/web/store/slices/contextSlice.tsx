@@ -1,4 +1,5 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {logout} from "../../pages/api/auth/[...nextauth]";
 
 export interface ContextSliceState {
   schema_version: number;
@@ -40,6 +41,13 @@ export const contextSlice = createSlice({
     setIsFormChanged: (state, action: PayloadAction<boolean>) => {
       state.isFormChanged = action.payload
     }
+  },
+  // use extraReducers to listen to other action types
+  extraReducers: (builder) => {
+    builder.addCase(logout, () => {
+      localStorage.removeItem('ctims-accessToken');
+      return initialState
+    })
   }
 });
 

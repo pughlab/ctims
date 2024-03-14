@@ -12,6 +12,7 @@ import useGetTrialsForUsersInGroup from "../../hooks/useGetTrialsForUsersInGroup
 import {Toast} from "primereact/toast";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/store";
+import MatchMinerConsole from "../../components/matchminer/MatchMinerConsole";
 
 const Main = () => {
 
@@ -89,6 +90,11 @@ const Main = () => {
               <TabPanel header="Results">
                 <Results trials={trials} getTrialsForUsersInGroupLoading={getTrialsForUsersInGroupLoading}/>
               </TabPanel>
+              {data.user.name === 'CTIMS Test' && (
+                <TabPanel header="Matchminer Console">
+                  <MatchMinerConsole/>
+                </TabPanel>
+              )}
             </TabView>
           </div>
           <FooterComponent/>

@@ -6,6 +6,8 @@ import useRefreshToken from "../hooks/useRefreshToken";
 import useSaveTrial from "../hooks/useSaveTrial";
 import {RootState, store} from "../store/store";
 import {Toast} from "primereact/toast";
+import {signOut} from "next-auth/react";
+import process from "process";
 
 const IdleComponent = () => {
   const { state: idleState, remaining, count } = useIdle(); // Get the idle state, remaining time, and count from the useIdle hook
@@ -43,6 +45,15 @@ const IdleComponent = () => {
   }, [idleState]); // Run the effect whenever the idle state changes
 
   useEffect(() => {
+    if (error) {
+      // for when unable to fresh with expired refresh token
+      signOut({redirect: false}).then(() => {
+        router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+      });
+    }
+  }, [error]);
+
+  useEffect(() => {
     let interval: any;
 
     if (showDialog) { // If the dialog is visible
@@ -60,8 +71,11 @@ const IdleComponent = () => {
       const currentState = store.getState();
       const {trialModel, ctmlJson} = saveToServer(currentState)
       saveTrialOperation(trialModel, ctmlJson).then(() => {
-        localStorage.removeItem('ctims-accessToken') // Remove the access token from local storage
-        router.push('/'); // Redirect to the home page
+        //localStorage.removeItem('ctims-accessToken') // Remove the access token from local storage
+        //router.push('/'); // Redirect to the home page
+        signOut({redirect: false}).then(() => {
+          router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+        });
       });
     }
 
@@ -75,7 +89,7 @@ const IdleComponent = () => {
 
   const saveToServer = (state: RootState) => {
     const ctmlModel = state.finalModelAndErrors.ctmlModel;
-    if (!ctmlModel.trialInformation.trial_id) {
+    if (ctmlModel && !ctmlModel.trialInformation.trial_id) {
       // @ts-ignore
       toast.current.show({
         severity:

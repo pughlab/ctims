@@ -2,9 +2,10 @@ import getConfig from 'next/config';
 import axios from 'axios';
 import {useEffect, useState} from 'react';
 import {useRouter} from 'next/router';
-import {useSession} from 'next-auth/react';
+import {signOut, useSession} from 'next-auth/react';
 import {useSelector} from "react-redux";
 import {RootState} from "../store/store";
+import process from "process";
 
 const useSendCTML = () => {
   const {publicRuntimeConfig} = getConfig();
@@ -22,7 +23,10 @@ const useSendCTML = () => {
 
   useEffect(() => {
     if(status === 'unauthenticated') {
-      router.push('/');
+      // router.push('/');
+      signOut({redirect: false}).then(() => {
+        router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+      });
     }
   }, [status])
 
