@@ -6,6 +6,7 @@ import {signOut, useSession} from 'next-auth/react';
 import {getCtmlStatusLabel} from "../../../libs/types/src/CtmlStatusLabels";
 import {getTrialStatusLabel} from "../../../libs/types/src/TrialStatusLabels";
 import process from "process";
+import {TrialStatusEnum} from "../../../libs/types/src/trial-status.enum";
 
 const useGetMatchResults = () => {
   const {publicRuntimeConfig} = getConfig();
@@ -46,43 +47,55 @@ const useGetMatchResults = () => {
         url: `/trial-result/?protocol_nos=${protocol_nos}`,
         headers
       })
-      const mapped = trialsWithResults.data.map((trial) => {
-        let createdAtDate = new Date(trial.createdAt)
-        let updatedAtDate = new Date(trial.updatedAt)
-        let matchedDateFormatted = null;
-        const createdAtFormatted = createdAtDate.toLocaleString(undefined, {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric',
-          hour: 'numeric',
-          minute: 'numeric'
-        });
-        const updatedAtFormatted = updatedAtDate.toLocaleString(undefined, {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric',
-          hour: 'numeric',
-          minute: 'numeric'
-        });
-        if (trial.matchedDate) {
-          let matchedDate = new Date(trial.matchedDate);
-          matchedDateFormatted = matchedDate.toLocaleString(undefined, {
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric'
-          });
-        }
-        const ctml_status_label = getCtmlStatusLabel(trial.status);
-        const trial_status_label = getTrialStatusLabel(trial.status);
-        return {
-          ...trial,
-          createdAt: createdAtFormatted,
-          updatedAt: updatedAtFormatted,
-          matchedDate: matchedDateFormatted,
-          ctml_status_label,
-          trial_status_label
+
+      // Only return trials that are pending or matched
+      const filteredTrials = trials.filter((trial: any) =>
+        trial.trial_status === TrialStatusEnum.PENDING || trial.trial_status === TrialStatusEnum.MATCHED);
+      const mapped = filteredTrials.map((filteredTrial: any) => {
+        // lookup the trial with results
+        const trialWithResult = trialsWithResults.data.find(trial => trial.nct_id === filteredTrial.nct_id);
+        if (trialWithResult) {
+          const createdAtDate = new Date(trialWithResult.createdAt);
+          const updatedAtDate = new Date(trialWithResult.updatedAt);
+          const matchedDateFormatted = trialWithResult.matchedDate ? new Date(trialWithResult.matchedDate).toLocaleString(undefined, {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
+                  hour: 'numeric',
+                  minute: 'numeric'
+                }) : null;
+          const createdAtFormatted = createdAtDate.toLocaleString(undefined, {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric'
+              });
+          const updatedAtFormatted = updatedAtDate.toLocaleString(undefined, {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric'
+              });
+          const ctml_status_label = trialWithResult.ctml_status;
+          const trial_status_label = trialWithResult.status;
+          const status_label = filteredTrial.trial_status;
+          return {
+            ...filteredTrial,
+            trialStatus: status_label,
+            createdAt: createdAtFormatted,
+            updatedAt: updatedAtFormatted,
+            matchedDate: matchedDateFormatted,
+            ctml_status_label,
+            trial_status_label
+          };
+        } else {
+          const status_label = filteredTrial.trial_status;
+          return {
+            ...filteredTrial,
+            trialStatus: status_label
+          };
         }
       });
       setResponse(mapped);
