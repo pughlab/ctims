@@ -81,6 +81,7 @@ const useGetMatchResults = () => {
           const ctml_status_label = trialWithResult.ctml_status;
           const trial_status_label = trialWithResult.status;
           const status_label = filteredTrial.trial_status;
+          const trial_ret_count = trialWithResult.trialRetCount;
           return {
             ...filteredTrial,
             trialStatus: status_label,
@@ -88,7 +89,8 @@ const useGetMatchResults = () => {
             updatedAt: updatedAtFormatted,
             matchedDate: matchedDateFormatted,
             ctml_status_label,
-            trial_status_label
+            trial_status_label,
+            trialRetCount: trial_ret_count
           };
         } else {
           const status_label = filteredTrial.trial_status;
@@ -98,6 +100,7 @@ const useGetMatchResults = () => {
           };
         }
       });
+      console.log('mapped', mapped);
       setResponse(mapped);
     } catch (error) {
       setLoading(false)
