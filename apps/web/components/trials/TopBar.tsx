@@ -4,6 +4,8 @@ import styles from './TopBar.module.scss';
 import {signOut, useSession} from "next-auth/react";
 import * as process from "process";
 import {useRouter} from "next/router";
+import {store} from "../../store/store";
+import {logout} from "../../pages/api/auth/[...nextauth]";
 
 const TopBar = () => {
 
@@ -19,7 +21,7 @@ const TopBar = () => {
       command: () => {
         // signOut({callbackUrl: '/', redirect: true}).then(() => {
         signOut({redirect: false}).then(() => {
-          localStorage.removeItem('ctims-accessToken');
+          store.dispatch(logout());
           router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL)
         });
 

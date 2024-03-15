@@ -10,6 +10,7 @@ import {resetMatchDialogErrors} from "../../../../../apps/web/store/slices/modal
 interface CtimsMatchDialogProps {
   isDialogVisible: boolean;
   onDialogHide: () => void;
+  onSaveCTMLHide: () => void;
   armCode?: string;
   formData?: any;
 }
@@ -85,7 +86,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     const ctmlModel = currentState.modalActions.ctmlDialogModel;
     console.log('callback from footer', currentState.modalActions.ctmlDialogModel);
     formData.match = ctmlModel.match;
-    onDialogHide();
+    props.onSaveCTMLHide();
   }
 
   const setSaveBtnState = (state: boolean) => {

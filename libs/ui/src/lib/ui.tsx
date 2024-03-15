@@ -87,7 +87,6 @@ export const Ui = (props: UiProps) => {
       // @ts-ignore
       if (saveTrialError.statusCode === 401) {
         signOut({redirect: false}).then(() => {
-          localStorage.removeItem('ctims-accessToken');
           router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
         });
       }
@@ -120,6 +119,10 @@ export const Ui = (props: UiProps) => {
   }
 
   const onDialogHideCallback = () => {
+    setIsOpen(false);
+  }
+  
+  const onSaveCTMLHideCallback = () => {
     setIsOpen(false);
     dispatch(resetFormChangeCounter())
     dispatch(resetActiveArmId())
@@ -183,6 +186,7 @@ export const Ui = (props: UiProps) => {
       />
       <CtimsMatchDialog
                       onDialogHide={onDialogHideCallback}
+                      onSaveCTMLHide={onSaveCTMLHideCallback}
                       isDialogVisible={isOpen}
                       armCode={armCode}
                       formData={formData}

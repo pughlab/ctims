@@ -89,7 +89,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     dispatch(setCtmlDialogModel(ctimsFormat));
     // console.log('ctimsFormat: ', ctimsFormat)
     // console.log('newRootNodes: ', newRootNodes)
-    if (newRootNodes[0].children && newRootNodes[0].children.length === 0) {
+    if (newRootNodes.length > 0 && newRootNodes[0].children && newRootNodes[0].children.length === 0) {
         setSaveBtnState(true);
     }
   }

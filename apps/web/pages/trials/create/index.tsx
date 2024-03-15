@@ -3,11 +3,12 @@ import {Ui} from "@ctims-mono-repo/ui";
 
 import React, {useEffect} from "react";
 import LeftMenuEditorComponent from "../../../components/editor/LeftMenuEditorComponent";
-import {useSession} from "next-auth/react";
+import {signOut, useSession} from "next-auth/react";
 import {useRouter} from "next/router";
 import useGetCtmlSchema from "../../../hooks/useGetCtmlSchema";
 import IdleComponent from "../../../components/IdleComponent";
 import FooterComponent from "apps/web/components/FooterComponent";
+import process from "process";
 
 
 const EditorCreateCtml = () => {
@@ -24,7 +25,10 @@ const EditorCreateCtml = () => {
 
   useEffect(() => {
     if(!data) {
-      router.push('/');
+      // router.push('/');
+      signOut({redirect: false}).then(() => {
+        router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+      });
     }
   }, [data])
 

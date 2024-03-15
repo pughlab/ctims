@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import useGetCtmlSchema from '../../../hooks/useGetCtmlSchema';
-import { useSession } from 'next-auth/react';
+import {signOut, useSession} from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import EditorTopBar from '../../../components/editor/EditorTopBar';
 import LeftMenuEditorComponent from '../../../components/editor/LeftMenuEditorComponent';
@@ -9,6 +9,7 @@ import IdleComponent from "../../../components/IdleComponent";
 import FooterComponent from 'apps/web/components/FooterComponent';
 import { useSelector } from 'react-redux';
 import { RootState } from 'apps/web/store/store';
+import process from "process";
 
 const EditorCreateCtmlForGroup = () => {
   const router = useRouter()
@@ -32,7 +33,10 @@ const EditorCreateCtmlForGroup = () => {
 
   useEffect(() => {
     if(!data) {
-      router.push('/');
+      // router.push('/');
+      signOut({redirect: false}).then(() => {
+        router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+      });
     }
   }, [data])
 

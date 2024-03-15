@@ -157,7 +157,15 @@ export class CtmlJsonService {
     }
   }
 
-  async run_match() {
+  async run_match(protocol_no_str: string) {
+    let protocol_no_array = undefined;
+    if (protocol_no_str !== undefined && protocol_no_str === '') {
+      // if it's empty string or not defined, make it undefined, which will run ALL trials in matchminer
+      protocol_no_array = undefined;
+    } else {
+      protocol_no_array = protocol_no_str.split(",")
+    }
+
     try {
       const url = `${process.env.MM_API_URL}/run_ctims_matchengine`;
       const results = await axios.request(
@@ -166,20 +174,28 @@ export class CtmlJsonService {
           url: url,
           headers: {
             'Authorization': `Bearer ${this.MM_API_TOKEN}`
+          },
+          data: {
+            protocol_no_list: protocol_no_array
           }
         }
       );
       console.log(results);
 
       // update the trial's status from pending to matched
-      const trial = await this.prismaService.trial.updateMany({
+      const args = {
         where: {
-          trial_status: TrialStatusEnum.PENDING
+          trial_status: TrialStatusEnum.PENDING,
         },
         data: {
           trial_status: TrialStatusEnum.MATCHED
         }
-      });
+      }
+      // add in check to update trials with matching protocol_no if it's defined
+      if (protocol_no_str) {
+        args.where['protocol_no'] = protocol_no_str;
+      }
+      const trial = await this.prismaService.trial.updateMany(args);
     } catch (error) {
       console.log(error);
       throw new Error(error);
