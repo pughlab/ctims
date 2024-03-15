@@ -22,7 +22,7 @@ const NewNctidDialog = (props: NewNctidDialogProps) => {
   }, [props.isNctidDialogVisible])
 
   useEffect(() => {
-    if (nctidValue) {
+    if (nctidValue.trim()) {
       setCreateButtonDisabled(false);
     } else {
       setCreateButtonDisabled(true);
@@ -76,7 +76,7 @@ const NewNctidDialog = (props: NewNctidDialogProps) => {
       <div className={styles['dialog-content']}>
         <div className="mb-2">
             <label htmlFor="nctid">NCT ID: </label>
-            <InputText id="nctid" aria-describedby="nctid-help" style={inputStyle} value={nctidValue} onChange={(e) => setNctidValue(e.target.value.trim())}/>
+            <InputText id="nctid" aria-describedby="nctid-help" style={inputStyle} value={nctidValue} onChange={(e) => setNctidValue(e.target.value)}/>
         </div>
       </div>
     </Dialog>
