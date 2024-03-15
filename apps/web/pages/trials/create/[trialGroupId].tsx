@@ -7,6 +7,8 @@ import LeftMenuEditorComponent from '../../../components/editor/LeftMenuEditorCo
 import { Ui } from '@ctims-mono-repo/ui';
 import IdleComponent from "../../../components/IdleComponent";
 import FooterComponent from 'apps/web/components/FooterComponent';
+import { useSelector } from 'react-redux';
+import { RootState } from 'apps/web/store/store';
 import process from "process";
 
 const EditorCreateCtmlForGroup = () => {
@@ -14,11 +16,19 @@ const EditorCreateCtmlForGroup = () => {
   const { trialGroupId } = router.query
   const { error, response, loading, operation} = useGetCtmlSchema();
   const [lastSaved, setLastSaved] = useState<string>("Unsaved");
+  const nctId = useSelector((state: RootState) => state.context.nctId);
+  const [formData, setFormData] = useState(null);
 
   const {data} = useSession()
 
   useEffect(() => {
     operation();
+    let createTrialObject = {
+      trialInformation: {
+        trial_id: nctId,
+      }
+    }
+    setFormData(createTrialObject)
   }, [])
 
   useEffect(() => {
@@ -45,7 +55,7 @@ const EditorCreateCtmlForGroup = () => {
       <IdleComponent />
       <div style={containerStyle}>
         <LeftMenuEditorComponent />
-        {response && <Ui ctml_schema={response} setLastSaved={setLastSaved}></Ui>}
+        {response && <Ui ctml_schema={response} formData={formData} setLastSaved={setLastSaved}></Ui>}
       </div>
       <FooterComponent/>
     </>

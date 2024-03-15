@@ -4,6 +4,7 @@ import {logout} from "../../pages/api/auth/[...nextauth]";
 export interface ContextSliceState {
   schema_version: number;
   trialId: number;
+  nctId: string;
   seletedTrialGroupId: string;
   isTrialGroupAdmin: boolean;
   isFormDisabled: boolean;
@@ -13,6 +14,7 @@ export interface ContextSliceState {
 const initialState: ContextSliceState = {
   schema_version: 1,
   trialId: 0,
+  nctId: '',
   seletedTrialGroupId: '',
   isTrialGroupAdmin: false,
   isFormDisabled: false,
@@ -28,6 +30,9 @@ export const contextSlice = createSlice({
     },
     setTrialId: (state, action: PayloadAction<number>) => {
       state.trialId = action.payload
+    },
+    setNctId: (state, action: PayloadAction<string>) => {
+      state.nctId = action.payload
     },
     selectedTrialGroupId: (state, action: PayloadAction<string>) => {
       state.seletedTrialGroupId = action.payload
@@ -54,6 +59,7 @@ export const contextSlice = createSlice({
 export const {
   setSchemaVersion,
   setTrialId,
+  setNctId,
   selectedTrialGroupId,
   setIsTrialGroupAdmin,
   setIsFormDisabled,
