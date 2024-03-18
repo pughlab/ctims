@@ -54,7 +54,7 @@ const NewNctidDialog = (props: NewNctidDialogProps) => {
       <div>
         <Button label="Cancel" className={cancelBtn} onClick={onDialogHide} />
         <Button
-          label="Create CTML"
+          label="OK"
           disabled={createButtonDisabled}
           onClick={createCtmlClicked}
           className={createBtn}
