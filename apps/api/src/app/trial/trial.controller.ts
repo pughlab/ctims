@@ -29,10 +29,13 @@ import {CurrentUser} from "../auth/CurrentUser";
 import {UpdateTrialSchemasDto} from "./dto/update-trial-schemas.dto";
 import { EventService } from "../event/event.service";
 import { ModuleRef } from "@nestjs/core";
+import axios from 'axios';
 
 @Controller('trials')
 @ApiTags("Trial")
 export class TrialController implements OnModuleInit{
+
+  private MM_API_TOKEN = process.env.MM_API_TOKEN;
 
   private eventService: EventService;
 
@@ -237,6 +240,18 @@ export class TrialController implements OnModuleInit{
       }
     });
 
-    await this.trialService.delete(+id);
+    const foundTrial = await this.trialService.findOne(+id);
+
+    const p1 = this.trialService.delete(+id);
+    const p2 = axios.get(`${process.env.MM_API_URL}/delete_trial_by_protocol`, 
+    {
+      headers: {'Authorization': `Bearer ${this.MM_API_TOKEN}`},
+      params: {
+        protocol_no: foundTrial.protocol_no,
+      },
+    });
+
+    await Promise.all([p1, p2]);
+
   }
 }
