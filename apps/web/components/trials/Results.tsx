@@ -97,6 +97,7 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
     {label: "Right Partner Gene", key: "right_partner_gene"},
     {label: "CNV Call", key: "cnv_call"},
     {label: "MS Status", key: "ms_status"},
+    {label: "Match Type", key: "match_type"},
   ];
   // csv download link ref
   const csvLink = useRef()
@@ -130,7 +131,7 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
     let dataCopy = [];
     for (let cur of data) {
       const curCopy = {
-        id: cur.trialId,
+        id: cur.id,
         trialId: cur.nct_id,
         nickname: cur.nickname,
         principal_investigator: cur.principal_investigator,
