@@ -26,7 +26,46 @@ const EditorCreateCtmlForGroup = () => {
     let createTrialObject = {
       trialInformation: {
         trial_id: nctId,
-      }
+      },
+      drug_list: {
+        drug: [
+          {}
+        ]
+      },
+      management_group_list: {
+        management_group: [
+          {}
+        ]
+      },
+      site_list: {
+        site: [
+          {}
+        ]
+      },
+      sponsor_list: {
+        sponsor: [
+          {}
+        ]
+      },
+      staff_list: {
+        protocol_staff: [
+          {}
+        ]
+      },
+      treatment_list: {
+        step: [
+            {
+                arm: [
+                    {
+                        dose_level: [
+                            {}
+                        ],
+                        match: {}
+                    }
+                ]
+            }
+        ]
+      },
     }
     setFormData(createTrialObject)
   }, [])
