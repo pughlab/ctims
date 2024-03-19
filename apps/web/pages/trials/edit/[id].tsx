@@ -29,7 +29,7 @@ const EditorEditTrialPage = () => {
   dispatch(setTrialId(+id));
 
   const [formData, setFormData] = useState(null);
-  const [lastSaved, setLastSaved] = useState<string>("unsaved");
+  const [lastSaved, setLastSaved] = useState<string>("Unsaved");
 
   const {
     error: getCtmlSchemaError,
