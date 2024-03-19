@@ -17,8 +17,8 @@ import process from "process";
 interface EditorTopBarProps {
     isEditMode?: boolean;
     title?: string;
-    lastSaved?: string;
-    setLastSaved?: any;
+    lastSaved: string;
+    setLastSaved: any;
 }
 
 const EditorTopBar = (props: EditorTopBarProps) => {

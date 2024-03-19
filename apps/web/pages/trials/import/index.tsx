@@ -21,6 +21,8 @@ const EditorImportTrialPage = () => {
 
   const dispatch = useDispatch();
 
+  const [lastSaved, setLastSaved] = useState<string>("Unsaved");
+
   const [formData, setFormData] = useState(null);
 
   useEffect(() => {
@@ -77,7 +79,7 @@ const EditorImportTrialPage = () => {
 
   return (
     <>
-      <EditorTopBar isEditMode={true} title={"Import CTML"}/>
+      <EditorTopBar isEditMode={true} lastSaved={lastSaved} setLastSaved={setLastSaved} title={"Import CTML"}/>
       <IdleComponent />
       <div style={containerStyle}>
         <LeftMenuEditorComponent />

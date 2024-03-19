@@ -1,7 +1,7 @@
 import EditorTopBar from "../../../components/editor/EditorTopBar";
 import {Ui} from "@ctims-mono-repo/ui";
 
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import LeftMenuEditorComponent from "../../../components/editor/LeftMenuEditorComponent";
 import {signOut, useSession} from "next-auth/react";
 import {useRouter} from "next/router";
@@ -15,6 +15,8 @@ const EditorCreateCtml = () => {
 
   const { error, response, loading, operation} = useGetCtmlSchema();
 
+  const [lastSaved, setLastSaved] = useState<string>("Unsaved");
+  
   const router = useRouter();
 
   const {data} = useSession()
@@ -42,7 +44,7 @@ const EditorCreateCtml = () => {
 
   return (
     <>
-      <EditorTopBar />
+      <EditorTopBar lastSaved={lastSaved} setLastSaved={setLastSaved}/>
       <IdleComponent />
       <div style={containerStyle}>
         <LeftMenuEditorComponent />
