@@ -304,10 +304,17 @@ export const sortTreeNode = (treeNode: TreeNode): TreeNode => {
     // recursively calls the next level to sort the next level children
     treeNode.children = treeNode.children.map(sortTreeNode);
 
+    // add an index to track original order
+    treeNode.children.forEach((child, index) => {
+      child.data.originalIndex = index;
+    });
+
     // sort the current level
     treeNode.children.sort((a, b) => {
       let ret = 0;
-      if (a.data.type === EComponentType.ClinicalForm) {
+      if (a.data.type === b.data.type) {
+        ret = a.data.originalIndex - b.data.originalIndex;
+      } else if (a.data.type === EComponentType.ClinicalForm) {
         ret = -1;
       } else if (a.data.type === EComponentType.GenomicForm) {
         if (b.data.hasOwnProperty('type') && b.data.type === EComponentType.ClinicalForm) {
@@ -317,10 +324,8 @@ export const sortTreeNode = (treeNode: TreeNode): TreeNode => {
         }
       } else if (!a.data.hasOwnProperty('type') || b.data.type === EComponentType.AndOROperator) {
         ret =  1;
-      } else if (a.data.type === b.data.type) {
-        const aKey = a.key as string;
-        const bKey = b.key as string;
-        ret = aKey.localeCompare(bKey);
+      } else {
+        ret = 0;
       }
       return ret;
     });
