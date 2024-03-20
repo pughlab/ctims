@@ -19,6 +19,7 @@ const MatchMinerConsole = () => {
 
   const runMatchClicked = () => {
     console.log('run match clicked', protocol_nos);
+    setRunMessage('')
     runMatchOperation(protocol_nos);
   }
 
