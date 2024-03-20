@@ -120,6 +120,7 @@ export const Ui = (props: UiProps) => {
 
   const onDialogHideCallback = () => {
     setIsOpen(false);
+    dispatch(resetFormChangeCounter())
   }
   
   const onSaveCTMLHideCallback = () => {
