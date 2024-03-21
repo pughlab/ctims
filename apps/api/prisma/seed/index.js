@@ -24,9 +24,53 @@ async function main() {
 }
 
 main().then(() => {
-  console.log('done')
+  console.log('done');
+   populateGeneTable();
 }).catch(e => {
   console.error(e)
 }).finally(async () => {
   await prisma.$disconnect()
 })
+
+async function fetchHgncData() {
+  try {
+    const response = await fetch(
+      'https://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/json/hgnc_complete_set.json'
+    );
+    if (!response.ok) {
+      throw new Error('Failed to fetch data');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+async function saveGenes(data) {
+  try {
+    data.response.docs.forEach(async (x) => {
+      await prisma.gene.create({
+        data: {
+          hugoSymbol: x.symbol,
+        },
+      });
+    });
+  } catch (error) {
+    console.error(error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+async function populateGeneTable() {
+  try {
+    const data = await fetchHgncData();
+    await saveGenes(data);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}

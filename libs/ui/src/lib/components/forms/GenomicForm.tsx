@@ -22,6 +22,10 @@ import CtimsDropdown from "../../custom-rjsf-templates/CtimsDropdown";
 import {CtimsDialogContext, CtimsDialogContextType} from "../CtimsMatchDialog";
 import { Checkbox } from 'primereact/checkbox';
 import {wildcard_protein_change_validation_func, getCurrentOperator, protein_change_validation_func} from "../helpers";
+import axios from "axios";
+import { AutoComplete } from "antd";
+import CtimsAutoCompleteComponent from "../CtimsAutoCompleteComponent"
+import AutocompleteField from "../CtimsAutoCompleteComponent";
 
 
 const RjsfForm = withTheme(PrimeTheme)
@@ -66,6 +70,9 @@ export const GenomicForm = (props: IFormProps) => {
 
   const genomicFormSchema = {
     'definitions': {
+      'hugo_symbol': {
+        type: 'string',
+      },
       "variant_category": {
         "enumNames": [
           " ",
@@ -273,7 +280,7 @@ export const GenomicForm = (props: IFormProps) => {
     'required': [],
     'properties': {
       'hugo_symbol': {
-        'type': 'string',
+        "$ref": "#/definitions/hugo_symbol",
         'title': 'Hugo Symbol',
         "description": "Gene symbol as determined by https://www.genenames.org/",
       },
@@ -364,6 +371,9 @@ export const GenomicForm = (props: IFormProps) => {
     "ui:submitButtonOptions": {
       "norender": true,
     },
+    "hugo_symbol": {
+      "ui:widget": AutocompleteField,
+    }
   }
 
   const validateFormFromRef = (data?: any) => {

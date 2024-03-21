@@ -15,7 +15,6 @@ async function bootstrap() {
   app.setGlobalPrefix(globalPrefix);
   let origin = process.env.CTIMS_ENV === 'development' ? '*' : 'https://ctims.ca';
   app.enableCors({origin})
-
   if (process.env.CTIMS_ENV === 'development') {
     setupSwagger(app);
   }
