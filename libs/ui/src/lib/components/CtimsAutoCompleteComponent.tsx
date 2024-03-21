@@ -1,17 +1,17 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { AutoComplete } from 'primereact/autocomplete';
-import axios from 'axios';
-import {getTemplate, getUiOptions, ObjectFieldTemplatePropertyType, ObjectFieldTemplateProps} from "@rjsf/utils";
 import { Tooltip } from 'antd';
 import styles from "./CtimsAutoCompleteComponent.module.css";
-import useGetGenes from '../../../../../apps/web/hooks/useGetGenes'; 
+import useGetGenes from '../../../../../apps/web/hooks/useGetGenes';
 
 const AutocompleteField = ({ onChange, ...props }) => {
   const { filteredHugoSymbols, loading, searchSymbols } = useGetGenes();
   const [selectedHugoSymbol, setSelectedHugoSymbol] = useState([]);
 
   const arrayContainer = {
-    width: '640px',
+    // width: '640px',
+    flexGrow: 1,
+    minWidth: 0,
     marginLeft: 'auto',
   };
 
@@ -25,10 +25,11 @@ const AutocompleteField = ({ onChange, ...props }) => {
     color: '#495057',
   };
 
+
   const questionMarkStyle = `dropdown-target-icon ${styles['question-mark']} pi pi-question-circle question-mark-target `;
 
   return (
-    <div>
+    <div className={styles.container}>
       {props.schema.title && (
         <label style={labelStyle}>
           Hugo Gene
@@ -50,7 +51,6 @@ const AutocompleteField = ({ onChange, ...props }) => {
           setSelectedHugoSymbol(e.value);
           onChange(e.value);
         }}
-        loading={loading}
       />
     </div>
   );

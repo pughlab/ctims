@@ -22,9 +22,6 @@ import CtimsDropdown from "../../custom-rjsf-templates/CtimsDropdown";
 import {CtimsDialogContext, CtimsDialogContextType} from "../CtimsMatchDialog";
 import { Checkbox } from 'primereact/checkbox';
 import {wildcard_protein_change_validation_func, getCurrentOperator, protein_change_validation_func} from "../helpers";
-import axios from "axios";
-import { AutoComplete } from "antd";
-import CtimsAutoCompleteComponent from "../CtimsAutoCompleteComponent"
 import AutocompleteField from "../CtimsAutoCompleteComponent";
 
 

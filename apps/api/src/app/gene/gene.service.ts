@@ -3,7 +3,7 @@ import {PrismaService} from "../prisma.service";
 
 @Injectable()
 export class GeneService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   async fetchHugoSymbols() {
     try {
@@ -16,7 +16,7 @@ export class GeneService {
   }
 
   async filterGeneSymbols(query: string) {
-    
+
     if (query === undefined || query === '') {
       return [];
     }

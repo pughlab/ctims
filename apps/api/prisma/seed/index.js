@@ -1,19 +1,26 @@
 const { PrismaClient } = require('@prisma/client')
 const fs = require('fs');
+const {get} = require("axios");
 
-
-const prisma = new PrismaClient()
+const prisma = new PrismaClient({
+  datasources: {
+      db: {
+        url: `${process.env.DATABASE_URL}?connection_limit=40&pool_timeout=60`,
+      },
+    }
+  }
+)
 
 async function main() {
   try {
     const ctml_json = fs.readFileSync('database/ctml_schema.json', 'utf8');
 
-    const ctmlSchema = await prisma.ctml_schema.create({
-      data: {
-        version: 1,
-        schema: ctml_json,
-      },
-    });
+    // const ctmlSchema = await prisma.ctml_schema.create({
+    //   data: {
+    //     version: 1,
+    //     schema: ctml_json,
+    //   },
+    // });
 
     console.log('Database seeded successfully.');
   } catch (error) {
@@ -34,13 +41,13 @@ main().then(() => {
 
 async function fetchHgncData() {
   try {
-    const response = await fetch(
+    const response = await get(
       'https://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/json/hgnc_complete_set.json'
     );
-    if (!response.ok) {
+    if (response.status != 200) {
       throw new Error('Failed to fetch data');
     }
-    const data = await response.json();
+    const data = await response.data;
     return data;
   } catch (error) {
     console.error(error);
@@ -49,6 +56,7 @@ async function fetchHgncData() {
 }
 
 async function saveGenes(data) {
+  console.log('finish fetching data, seeding gene table')
   try {
     data.response.docs.forEach(async (x) => {
       await prisma.gene.create({
