@@ -5,7 +5,7 @@ const {get} = require("axios");
 const prisma = new PrismaClient({
   datasources: {
       db: {
-        url: `${process.env.DATABASE_URL}?connection_limit=200&pool_timeout=90`,
+        url: `${process.env.DATABASE_URL}?connection_limit=100&pool_timeout=90`,
       },
     }
   }
