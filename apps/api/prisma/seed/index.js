@@ -58,12 +58,15 @@ async function fetchHgncData() {
 async function saveGenes(data) {
   console.log('finish fetching data, seeding gene table')
   try {
-    data.response.docs.forEach(async (x) => {
-      await prisma.gene.create({
-        data: {
-          hugoSymbol: x.symbol,
-        },
-      });
+    const genesData = data.response.docs.map((x) => {
+      return {
+        hugoSymbol: x.symbol,
+      };
+    });
+    
+    await prisma.gene.createMany({
+      data: genesData,
+      skipDuplicates: true,
     });
   } catch (error) {
     console.error(error);
