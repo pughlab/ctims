@@ -533,9 +533,13 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           }
         }
         const style: React.CSSProperties = {
-          width: '70%',
-          flexGrow: 1,
-          alignSelf: 'flex-end'
+          width: '100px',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          display: 'inline-block',
+          textAlign: 'end',
+          verticalAlign: 'bottom'
         }
         return <i style={style}>{label}</i>;
       }
