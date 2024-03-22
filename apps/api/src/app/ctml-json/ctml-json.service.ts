@@ -192,10 +192,13 @@ export class CtmlJsonService {
         }
       }
       // add in check to update trials with matching protocol_no if it's defined
-      if (protocol_no_str) {
-        args.where['protocol_no'] = protocol_no_str;
+      // if no protocol defined, then update all trials
+      if (protocol_no_array) {
+        args.where['protocol_no'] = {
+          in: protocol_no_array
+        };
       }
-      const trial = await this.prismaService.trial.updateMany(args);
+      await this.prismaService.trial.updateMany(args);
     } catch (error) {
       console.log(error);
       throw new Error(error);
