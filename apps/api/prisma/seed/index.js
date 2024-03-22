@@ -31,8 +31,8 @@ async function main() {
 }
 
 main().then(() => {
-  console.log('done');
-   populateGeneTable();
+  console.log('Populating Gene Table ...');
+  populateGeneTable();
 }).catch(e => {
   console.error(e)
 }).finally(async () => {
