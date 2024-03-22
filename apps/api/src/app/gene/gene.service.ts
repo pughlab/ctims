@@ -32,4 +32,33 @@ export class GeneService {
       throw error;
     }
   }
+
+  async removeDuplicates() {
+    try {
+      const genes = await this.prismaService.gene.findMany();
+
+      // group records of genes by hugoSymbol
+      const groupedRecords = genes.reduce((acc, record) => {
+        acc[record.hugoSymbol] = (acc[record.hugoSymbol] || []).concat(record);
+        return acc;
+      }, []);
+
+      // Iterate over grouped records and keep only the first record of each group
+      for (const [key, records] of Object.entries(groupedRecords)) {
+        if (records.length > 1) {
+          // Keep the first record and delete the rest
+          const recordsToDelete = records.slice(1);
+          for (const recordToDelete of recordsToDelete) {
+            await this.prismaService.gene.delete({
+              where: { id: recordToDelete.id },
+            });
+          }
+        }
+      }
+
+    } catch (error) {
+      console.error('Error removing duplicates', error);
+      throw error;
+    }
+  }
 }

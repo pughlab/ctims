@@ -1,11 +1,9 @@
 import {
   Controller,
   Get,
-  Param,
   Query,
 } from '@nestjs/common';
 import { GeneService } from './gene.service';
-import {ModuleRef} from "@nestjs/core";
 
 @Controller('genes')
 export class GeneController {
@@ -20,5 +18,16 @@ export class GeneController {
 
       throw error;
     };
-  } 
+  }
+
+  @Get('/removeDuplicates')
+  async removeDuplicates() {
+    try {
+      return await this.geneService.removeDuplicates();
+    } catch (error) {
+      console.error('Error removing data:', error);
+
+      throw error;
+    };
+  }
 }
