@@ -48,11 +48,11 @@ export class GeneService {
         if (records.length > 1) {
           // Keep the first record and delete the rest
           const recordsToDelete = records.slice(1);
-          for (const recordToDelete of recordsToDelete) {
-            await this.prismaService.gene.delete({
-              where: { id: recordToDelete.id },
-            });
-          }
+          const idsToDelete = recordsToDelete.map((record) => record.id);
+
+          await this.prismaService.gene.deleteMany({
+              where: { id: { in: idsToDelete.id } },
+          }); 
         }
       }
 
