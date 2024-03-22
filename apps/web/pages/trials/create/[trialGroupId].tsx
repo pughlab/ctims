@@ -16,7 +16,7 @@ const EditorCreateCtmlForGroup = () => {
   const { trialGroupId } = router.query
   const { error, response, loading, operation} = useGetCtmlSchema();
   const [lastSaved, setLastSaved] = useState<string>("Unsaved");
-  const nctId = useSelector((state: RootState) => state.context.nctId);
+  const trialId = useSelector((state: RootState) => state.context.trialNctId);
   const [formData, setFormData] = useState(null);
 
   const {data} = useSession()
@@ -25,7 +25,7 @@ const EditorCreateCtmlForGroup = () => {
     operation();
     let createTrialObject = {
       trialInformation: {
-        trial_id: nctId,
+        trial_id: trialId,
       },
       drug_list: {
         drug: [

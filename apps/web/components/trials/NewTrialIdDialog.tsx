@@ -1,47 +1,47 @@
 import React, {useEffect, useState} from "react";
 import {Dialog} from "primereact/dialog";
-import styles from "./NewNctidDialog.module.scss";
+import styles from "./NewTrialIdDialog.module.scss";
 import {Button} from "primereact/button";
 import { InputText } from 'primereact/inputtext';
 
-interface NewNctidDialogProps {
-  isNctidDialogVisible: boolean;
+interface NewTrialIdDialogProps {
+  isTrialIdDialogVisible: boolean;
   createCTMLClicked: () => void;
-  onNctidDialogHide: () => void;
+  onTrialIdDialogHide: () => void;
   onIsOKClicked: (val) => void;
 }
 
-const NewNctidDialog = (props: NewNctidDialogProps) => {
-  const [isDialogVisible, setIsDialogVisible] = useState<boolean>(props.isNctidDialogVisible);
+const NewTrialIdDialog = (props: NewTrialIdDialogProps) => {
+  const [isDialogVisible, setIsDialogVisible] = useState<boolean>(props.isTrialIdDialogVisible);
   const [createButtonDisabled, setCreateButtonDisabled] = useState<boolean>(true);
-  const [nctidValue, setNctidValue] = useState<string>('');
+  const [trialIdValue, setTrialIdValue] = useState<string>('');
 
   useEffect(() => {
-    setIsDialogVisible(props.isNctidDialogVisible);
-    setNctidValue('')
-  }, [props.isNctidDialogVisible])
+    setIsDialogVisible(props.isTrialIdDialogVisible);
+    setTrialIdValue('')
+  }, [props.isTrialIdDialogVisible])
 
   useEffect(() => {
-    if (nctidValue.trim()) {
+    if (trialIdValue.trim()) {
       setCreateButtonDisabled(false);
     } else {
       setCreateButtonDisabled(true);
     }
-  }, [nctidValue])
+  }, [trialIdValue])
 
   const onDialogHide = () => {
-    props.onNctidDialogHide();
+    props.onTrialIdDialogHide();
   }
 
   const doCreateCtml = () => {
-    props.onIsOKClicked(nctidValue);
+    props.onIsOKClicked(trialIdValue);
     onDialogHide();
   }
 
   const errorContent = () => {
     return (
       <>
-        <div>You must enter a valid NCT ID number.</div>
+        <div>You must enter a valid Trial ID number.</div>
       </>
     )
   }
@@ -75,8 +75,8 @@ const NewNctidDialog = (props: NewNctidDialogProps) => {
             onHide={onDialogHide}>
       <div className={styles['dialog-content']}>
         <div className="mb-2">
-            <label htmlFor="nctid">NCT ID: </label>
-            <InputText id="nctid" aria-describedby="nctid-help" style={inputStyle} value={nctidValue} onChange={(e) => setNctidValue(e.target.value)}/>
+            <label htmlFor="trialId">Trial ID: </label>
+            <InputText id="trialId" aria-describedby="trialId-help" style={inputStyle} value={trialIdValue} onChange={(e) => setTrialIdValue(e.target.value)}/>
         </div>
       </div>
     </Dialog>
@@ -84,4 +84,4 @@ const NewNctidDialog = (props: NewNctidDialogProps) => {
 
 }
 
-export default NewNctidDialog;
+export default NewTrialIdDialog;
