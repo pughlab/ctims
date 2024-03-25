@@ -26,8 +26,10 @@ export class EventService {
         }
       });
       // add the trial groups to the metadata
-      data.metadata["user"] = {
-        trialGroups: trialGroups.map(t => ({ "name": t.name, "id": t.id }))
+      if (data.metadata) {
+        data.metadata["user"] = {
+          trialGroups: trialGroups.map(t => ({ "name": t.name, "id": t.id }))
+        }
       }
       return this.prismaService.event.create({
         data: {
