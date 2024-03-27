@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import useGetCtmlSchema from '../../../hooks/useGetCtmlSchema';
 import {signOut, useSession} from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import EditorTopBar from '../../../components/editor/EditorTopBar';
 import LeftMenuEditorComponent from '../../../components/editor/LeftMenuEditorComponent';
 import { Ui } from '@ctims-mono-repo/ui';
@@ -27,6 +28,7 @@ const EditorCreateCtmlForGroup = () => {
     let createTrialObject = {
       trialInformation: {
         trial_id: trialId,
+        trial_internal_id: uuidv4(),
       },
       drug_list: {
         drug: [

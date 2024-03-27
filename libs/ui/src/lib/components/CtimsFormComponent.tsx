@@ -97,6 +97,11 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
           }
         },
         {
+          "trial_internal_id": {
+            "span": 24
+          }
+        },
+        {
           "nickname": {
             "span": 24
           }

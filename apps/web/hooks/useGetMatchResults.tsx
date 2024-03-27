@@ -40,14 +40,14 @@ const useGetMatchResults = () => {
         'Authorization': 'Bearer ' + accessToken,
       }
 
-      // join each trials.protocol_no with a comma
-      const protocol_nos = trials.filter((trial: any) => trial.protocol_no)
-        .map((trial: any) => trial.protocol_no)
+      // join each trials.trial_internal_id with a comma
+      const trial_internal_ids = trials.filter((trial: any) => trial.trial_internal_id)
+        .map((trial: any) => trial.trial_internal_id)
         .join(',');
 
       const trialsWithResults = await operation({
         method: 'get',
-        url: `/trial-result/?protocol_nos=${protocol_nos}`,
+        url: `/trial-result/?trial_internal_ids=${trial_internal_ids}`,
         headers
       })
 

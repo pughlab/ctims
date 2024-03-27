@@ -25,7 +25,7 @@ const useRunMatch = () => {
   //   }
   // }, [status])
 
-  const runMatchOperation = async (protocol_nos: string) => {
+  const runMatchOperation = async (trial_internal_ids: string) => {
     setLoading(true);
     try {
       const accessToken = localStorage.getItem('ctims-accessToken');
@@ -34,7 +34,7 @@ const useRunMatch = () => {
       }
       const matchRun = await operation({
         method: 'get',
-        url: `/ctml-jsons/mm/run_match?protocol_nos=${protocol_nos}`,
+        url: `/ctml-jsons/mm/run_match?trial_internal_ids=${trial_internal_ids}`,
         headers,
       })
       console.log('response: ' + JSON.stringify(matchRun));

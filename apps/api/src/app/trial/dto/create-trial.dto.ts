@@ -3,6 +3,9 @@ import {status, trial_status} from "@prisma/client";
 
 export class CreateTrialDto {
   @ApiProperty()
+  trial_internal_id: string;
+
+  @ApiProperty()
   nct_id: string;
 
   @ApiPropertyOptional({

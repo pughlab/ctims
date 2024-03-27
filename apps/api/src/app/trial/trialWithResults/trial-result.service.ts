@@ -11,6 +11,7 @@ import {TrialStatusEnum} from "../../../../../../libs/types/src/trial-status.enu
 import {CtmlJsonService} from "../../ctml-json/ctml-json.service";
 import {headers} from "next/headers";
 import * as process from "process";
+import { match } from "assert";
 
 @Injectable()
 export class TrialResultService implements OnModuleInit {
@@ -65,19 +66,19 @@ export class TrialResultService implements OnModuleInit {
     return trialResults;
   }
 
-  async findResultsForProtocolNumbers(protocol_nos: string): Promise<trialWithResults[]> {
+  async findResultsForTrialInternalIds(trial_internal_ids: string): Promise<trialWithResults[]> {
     // protocol_nos is a comma separated list of protocol numbers
     // find trials with protocol_no matching the protocol_nos, and with trial_status of PENDING or MATCHED
     const trials = await this.prismaService.trial.findMany({
       where: {
-        protocol_no: {in: protocol_nos.split(',')},
+        trial_internal_id: {in: trial_internal_ids.split(',')},
         trial_status: {in: [TrialStatusEnum.PENDING, TrialStatusEnum.MATCHED]}
       }
     });
 
     let trialResults: trialWithResults[] = [];
     let matchResults: any;
-    const protocol_no_array = protocol_nos.split(",")
+    const trial_internal_id_array = trial_internal_ids.split(",")
     if (trials.length > 0) {
       try {
         const url = `${process.env.MM_API_URL}/ctims_trial_summary`;
@@ -89,7 +90,7 @@ export class TrialResultService implements OnModuleInit {
               'Authorization': `Bearer ${this.MM_API_TOKEN}`
             },
             data: {
-              protocol_no_list: protocol_no_array
+              trial_internal_id_list: trial_internal_id_array
             }
           },
         );
@@ -105,7 +106,7 @@ export class TrialResultService implements OnModuleInit {
   async convertMatchResultsToTrialWithResults(trials: trial[], matchResults: any): Promise<trialWithResults[]> {
     let trialResults: trialWithResults[] = [];
     for (let trial of trials) {
-      const mm_info = await this.findMatchMinerInfo(trial.protocol_no, matchResults.data.values);
+      const mm_info = await this.findMatchMinerInfo(trial.trial_internal_id, matchResults.data.values);
       // find short title from ctml_json data from trial info
       const ctmlJsonArray = await this.ctmlJsonService.findByTrialId(trial.id);
       const ctmlJson = ctmlJsonArray[0];
@@ -114,6 +115,7 @@ export class TrialResultService implements OnModuleInit {
       const result: trialWithResults = {
         trialId: trial.id,
         nct_id: trial.nct_id,
+        trial_internal_id: trial.trial_internal_id,
         nickname: trial.nickname,
         principal_investigator: trial.principal_investigator,
         status: CtmlStatusEnum[trial.status],
@@ -130,9 +132,9 @@ export class TrialResultService implements OnModuleInit {
     return trialResults;
   }
 
-  findMatchMinerInfo = async (protocol_no: string, matchResults: trialWithResultsMiner[]) => {
+  findMatchMinerInfo = async (trial_internal_id: string, matchResults: trialWithResultsMiner[]) => {
     for (let matchResult of matchResults) {
-      if (matchResult.protocol_no === protocol_no) {
+      if (matchResult.trial_internal_id === trial_internal_id) {
         return {'updated': matchResult._updated, 'count': matchResult.count};
       }
     }
@@ -147,8 +149,8 @@ export class TrialResultService implements OnModuleInit {
         }
       );
       console.log('trial: ', trial);
-      const protocol_no = trial.protocol_no;
-      const url = `${process.env.MM_API_URL}/ctims_trial_match?where={"protocol_no":"${protocol_no}", "is_disabled": false}`
+      const trial_internal_id = trial.trial_internal_id;
+      const url = `${process.env.MM_API_URL}/ctims_trial_match?where={"trial_internal_id":"${trial_internal_id}", "is_disabled": false}`
       const matchResults = await axios.request(
         {
           method: 'get',
