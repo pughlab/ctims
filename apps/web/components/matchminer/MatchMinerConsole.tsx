@@ -6,7 +6,7 @@ import { Button } from 'primereact/button';
 
 const MatchMinerConsole = () => {
 
-  const [protocol_nos, setProtocolNos] = useState('');
+  const [trialInternalIds, setTrialInternalIds] = useState('');
   const [runMessage, setRunMessage] = useState('');
 
   // initiate match to run
@@ -18,13 +18,13 @@ const MatchMinerConsole = () => {
   } = useRunMatch();
 
   const runMatchClicked = () => {
-    console.log('run match clicked', protocol_nos);
+    console.log('run match clicked', trialInternalIds);
     setRunMessage('')
-    runMatchOperation(protocol_nos);
+    runMatchOperation(trialInternalIds);
   }
 
-  const onProtocolEntered = (protocol_str: string) => {
-    setProtocolNos(protocol_str);
+  const onTrialInternalIdEntered = (trial_internal_id_str: string) => {
+    setTrialInternalIds(trial_internal_id_str);
     setRunMessage('');
   }
 
@@ -42,10 +42,10 @@ const MatchMinerConsole = () => {
 
   return (
     <div className={styles.mmContainer}>
-      <label>Enter trial <b>protocol number(s)</b>, comma seperated.</label>
-        <InputText value={protocol_nos} onChange={(e) => onProtocolEntered(e.target.value)}>
+      <label>Enter trial <b>internal Id(s)</b>, comma seperated.</label>
+        <InputText value={trialInternalIds} onChange={(e) => onTrialInternalIdEntered(e.target.value)}>
         </InputText>
-        <Button className={styles.mmSubmitBtn} onClick={runMatchClicked} disabled={protocol_nos.length === 0}
+        <Button className={styles.mmSubmitBtn} onClick={runMatchClicked} disabled={trialInternalIds.length === 0}
                 style={{background: '#2E72D2'}} label="Run Match"/>
         <div>Status: {runMessage}</div>
     </div>

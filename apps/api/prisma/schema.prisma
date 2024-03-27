@@ -38,6 +38,7 @@ model ctml_json {
 
 model trial {
   id                     Int           @id @default(autoincrement())
+  trial_internal_id      String?  
   nct_id                 String
   nickname               String?
   principal_investigator String?

@@ -6,6 +6,7 @@ export type status = (typeof CtmlStatusEnum)[keyof typeof CtmlStatusEnum];
 export type trialWithResults = {
   trialId: number
   nct_id: string
+  trial_internal_id: string
   nickname: string | null
   principal_investigator: string | null
   status: status | null
@@ -20,6 +21,7 @@ export type trialWithResults = {
 
 // the matchminer api returns the following format
 export type trialWithResultsMiner = {
+  trial_internal_id: string
   protocol_no: string
   _updated: Date
   count: number

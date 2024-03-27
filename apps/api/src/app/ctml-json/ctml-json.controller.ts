@@ -202,11 +202,11 @@ export class CtmlJsonController implements OnModuleInit {
   @ApiBearerAuth("KeycloakPasswordGuard")
   @ApiOperation({ summary: "Triggers matchminer to run matches" })
   @ApiFoundResponse({ description: "Triggers matchminer to run matches" })
-  // optional query protocol_nos
+  // optional query trial_internal_ids
   async run_matchminer(
     @CurrentUser() user: user,
-    @Query('protocol_nos') protocol_nos: string
+    @Query('trial_internal_ids') trial_internal_ids: string
   ) {
-    await this.ctmlJsonService.run_match(protocol_nos);
+    await this.ctmlJsonService.run_match(trial_internal_ids);
   }
 }

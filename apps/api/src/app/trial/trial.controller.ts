@@ -243,11 +243,11 @@ export class TrialController implements OnModuleInit{
     const foundTrial = await this.trialService.findOne(+id);
 
     const p1 = this.trialService.delete(+id);
-    const p2 = axios.delete(`${process.env.MM_API_URL}/delete_trial_by_protocol`, 
+    const p2 = axios.delete(`${process.env.MM_API_URL}/delete_trial_by_internal_id`, 
     {
       headers: {'Authorization': `Bearer ${this.MM_API_TOKEN}`},
       params: {
-        protocol_no: foundTrial.protocol_no,
+        trial_internal_id: foundTrial.trial_internal_id,
       },
     });
 

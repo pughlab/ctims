@@ -60,15 +60,15 @@ export class TrialResultController implements OnModuleInit{
   @ApiBearerAuth("KeycloakPasswordGuard")
   @ApiOperation({ summary: "Get trials results for given protocol numbers" })
   @ApiOkResponse({ description: "List of trials results found for given protocol numbers." })
-  async findResultsForProtocolNumbers(@CurrentUser() user: user,
-                                      @Query('protocol_nos') protocol_nos: string) {
+  async findResultsForTrialInternalIds(@CurrentUser() user: user,
+                                      @Query('trial_internal_ids') trial_internal_ids: string) {
     this.eventService.createEvent({
       type: event_type.TrialReadMany,
-      description: "Trials with results read for matching protocol numbers",
+      description: "Trials with results read for matching trial internal ids",
       user
     });
 
-    const trials = await this.trialResultService.findResultsForProtocolNumbers(protocol_nos);
+    const trials = await this.trialResultService.findResultsForTrialInternalIds(trial_internal_ids);
     return trials;
   }
 

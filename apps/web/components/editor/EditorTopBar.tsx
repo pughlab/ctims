@@ -143,6 +143,7 @@ const EditorTopBar = (props: EditorTopBarProps) => {
     const getTrialModelOnly = () => {
       return {
         nct_id: ctmlModel.trialInformation.trial_id,
+        trial_internal_id: ctmlModel.trialInformation.trial_internal_id,
         nickname: ctmlModel.trialInformation.nickname,
         principal_investigator: ctmlModel.trialInformation.principal_investigator,
         status: ctmlModel.trialInformation.ctml_status,

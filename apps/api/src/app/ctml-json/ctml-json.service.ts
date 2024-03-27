@@ -157,13 +157,13 @@ export class CtmlJsonService {
     }
   }
 
-  async run_match(protocol_no_str: string) {
-    let protocol_no_array = undefined;
-    if (protocol_no_str !== undefined && protocol_no_str === '') {
+  async run_match(trial_internal_id_str: string) {
+    let trial_internal_id_array = undefined;
+    if (trial_internal_id_str !== undefined && trial_internal_id_str === '') {
       // if it's empty string or not defined, make it undefined, which will run ALL trials in matchminer
-      protocol_no_array = undefined;
+      trial_internal_id_array = undefined;
     } else {
-      protocol_no_array = protocol_no_str.split(",")
+      trial_internal_id_array = trial_internal_id_str.split(",")
     }
 
     try {
@@ -176,7 +176,7 @@ export class CtmlJsonService {
             'Authorization': `Bearer ${this.MM_API_TOKEN}`
           },
           data: {
-            protocol_no_list: protocol_no_array
+            trial_internal_id_list: trial_internal_id_array
           }
         }
       );
@@ -191,11 +191,11 @@ export class CtmlJsonService {
           trial_status: TrialStatusEnum.MATCHED
         }
       }
-      // add in check to update trials with matching protocol_no if it's defined
-      // if no protocol defined, then update all trials
-      if (protocol_no_array) {
-        args.where['protocol_no'] = {
-          in: protocol_no_array
+      // add in check to update trials with matching trial_internal_id if it's defined
+      // if no trial_internal_id defined, then update all trials
+      if (trial_internal_id_array) {
+        args.where['trial_internal_id'] = {
+          in: trial_internal_id_array
         };
       }
       await this.prismaService.trial.updateMany(args);
