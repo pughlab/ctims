@@ -163,6 +163,7 @@ export const Ui = (props: UiProps) => {
     const getTrialModelOnly = () => {
       return {
         nct_id: ctmlModel.trialInformation.trial_id,
+        trial_internal_id: ctmlModel.trialInformation.trial_internal_id,
         nickname: ctmlModel.trialInformation.nickname,
         principal_investigator: ctmlModel.trialInformation.principal_investigator,
         status: ctmlModel.trialInformation.ctml_status,

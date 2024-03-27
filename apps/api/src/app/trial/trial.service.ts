@@ -23,10 +23,11 @@ export class TrialService implements OnModuleInit {
   }
 
   async createTrial(createTrialDto: CreateTrialDto, creatingUser: user) {
-    const { nct_id, nickname, principal_investigator, status, protocol_no } = createTrialDto;
+    const { trial_internal_id, nct_id, nickname, principal_investigator, status, protocol_no } = createTrialDto;
 
     const newTrial = await this.prismaService.trial.create({
       data: {
+        trial_internal_id,
         nct_id,
         nickname,
         principal_investigator,
