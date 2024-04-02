@@ -4,21 +4,24 @@ import {UserService} from "../user/user.service";
 import {PrismaService} from "../prisma.service";
 import jwt_decode from "jwt-decode";
 import * as jwtEncode from "jwt-encode";
+import {EventService} from "../event/event.service";
 
 const EXPIRES_IN = 60;
 
 describe('KeycloakPasswordStrategy', () => {
   let strategy: KeycloakPasswordStrategy;
   let usersService: UserService;
+  let eventService: EventService;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
-      providers: [KeycloakPasswordStrategy, UserService, PrismaService],
+      providers: [KeycloakPasswordStrategy, UserService, PrismaService, EventService],
     }).compile();
 
     strategy = module.get<KeycloakPasswordStrategy>(KeycloakPasswordStrategy);
     await strategy.onModuleInit();
     usersService = module.get<UserService>(UserService);
+    eventService = module.get<EventService>(EventService);
   });
 
 
