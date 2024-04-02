@@ -7,10 +7,11 @@ import {getCtmlStatusLabel} from "../../../libs/types/src/CtmlStatusLabels";
 import {getTrialStatusLabel} from "../../../libs/types/src/TrialStatusLabels";
 import process from "process";
 import {TrialStatusEnum} from "../../../libs/types/src/trial-status.enum";
+import useAxios from "./useAxios";
 
 const useGetMatchResults = () => {
-  const {publicRuntimeConfig} = getConfig();
-  axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
+  // const {publicRuntimeConfig} = getConfig();
+  // axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
 
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
@@ -20,14 +21,16 @@ const useGetMatchResults = () => {
 
   const {data,status} = useSession()
 
-  useEffect(() => {
-    if(status === 'unauthenticated') {
-      // router.push('/');
-      signOut({redirect: false}).then(() => {
-        router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-      });
-    }
-  }, [status])
+  const { operation } = useAxios();
+
+  // useEffect(() => {
+  //   if(status === 'unauthenticated') {
+  //     // router.push('/');
+  //     signOut({redirect: false}).then(() => {
+  //       router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+  //     });
+  //   }
+  // }, [status])
 
   const getMatchResultsOperation = async (trials: []) => {
     setLoading(true);
@@ -42,7 +45,7 @@ const useGetMatchResults = () => {
         .map((trial: any) => trial.protocol_no)
         .join(',');
 
-      const trialsWithResults = await axios.request({
+      const trialsWithResults = await operation({
         method: 'get',
         url: `/trial-result/?protocol_nos=${protocol_nos}`,
         headers

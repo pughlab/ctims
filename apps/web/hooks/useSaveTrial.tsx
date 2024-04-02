@@ -8,12 +8,13 @@ import {setTrialId} from "../store/slices/contextSlice";
 import getConfig from 'next/config';
 import {store} from "../store/store";
 import process from "process";
+import useAxios from "./useAxios";
 
 
 const useSaveTrial = () => {
 
-  const { publicRuntimeConfig } = getConfig();
-  axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
+  // const { publicRuntimeConfig } = getConfig();
+  // axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
 
   const schemaVersion = useSelector((state: RootState) => state.context.schema_version);
   const trialId = useSelector((state: RootState) => state.context.trialId);
@@ -28,14 +29,16 @@ const useSaveTrial = () => {
 
   const {data, status} = useSession()
 
-  useEffect(() => {
-    if(status === 'unauthenticated') {
-      // router.push('/');
-      signOut({redirect: false}).then(() => {
-        router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-      });
-    }
-  }, [status])
+  const { operation } = useAxios();
+
+  // useEffect(() => {
+  //   if(status === 'unauthenticated') {
+  //     // router.push('/');
+  //     signOut({redirect: false}).then(() => {
+  //       router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+  //     });
+  //   }
+  // }, [status])
 
   const saveTrialOperation = async (trialModel: any, ctmlJson: any) => {
     const state = store.getState();
@@ -46,7 +49,7 @@ const useSaveTrial = () => {
     }
 
     try {
-     const trialResponse =  await axios.request({
+     const trialResponse =  await operation({
         method: 'patch',
         url: `/trials/${trialId}`,
         headers,

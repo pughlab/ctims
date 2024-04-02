@@ -5,10 +5,11 @@ import {useRouter} from "next/router";
 import getConfig from 'next/config';
 import { getCtmlStatusLabel } from "../../../libs/types/src/CtmlStatusLabels";
 import process from "process";
+import useAxios from "./useAxios";
 
 const useGetUserTrials = () => {
-  const { publicRuntimeConfig } = getConfig();
-  axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
+  // const { publicRuntimeConfig } = getConfig();
+  // axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
 
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
@@ -18,14 +19,16 @@ const useGetUserTrials = () => {
 
   const {data, status} = useSession()
 
-  useEffect(() => {
-    if(status === 'unauthenticated') {
-      // router.push('/');
-      signOut({redirect: false}).then(() => {
-        router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-      });
-    }
-  }, [status])
+  const { operation } = useAxios();
+
+  // useEffect(() => {
+  //   if(status === 'unauthenticated') {
+  //     // router.push('/');
+  //     signOut({redirect: false}).then(() => {
+  //       router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+  //     });
+  //   }
+  // }, [status])
 
 
   const getAllTrialsOperation = async () => {
@@ -35,7 +38,7 @@ const useGetUserTrials = () => {
     }
 
     try {
-      const userTrials = await axios.request({
+      const userTrials = await operation({
         method: 'get',
         url: `/users/trials`,
         headers

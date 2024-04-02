@@ -6,10 +6,11 @@ import {signOut, useSession} from 'next-auth/react';
 import {useSelector} from "react-redux";
 import {RootState} from "../store/store";
 import process from "process";
+import useAxios from "./useAxios";
 
 const useSendCTML = () => {
-  const {publicRuntimeConfig} = getConfig();
-  axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
+  // const {publicRuntimeConfig} = getConfig();
+  // axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
 
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
@@ -21,14 +22,16 @@ const useSendCTML = () => {
 
   const {data,status} = useSession()
 
-  useEffect(() => {
-    if(status === 'unauthenticated') {
-      // router.push('/');
-      signOut({redirect: false}).then(() => {
-        router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-      });
-    }
-  }, [status])
+  const { operation } = useAxios();
+
+  // useEffect(() => {
+  //   if(status === 'unauthenticated') {
+  //     // router.push('/');
+  //     signOut({redirect: false}).then(() => {
+  //       router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+  //     });
+  //   }
+  // }, [status])
 
   const move = () => {
     let ctmlModelCopy;
@@ -50,7 +53,7 @@ const useSendCTML = () => {
       const headers = {
         'Authorization': 'Bearer ' + accessToken,
       }
-      const ret = await axios.request({
+      const ret = await operation({
         method: 'post',
         url: `/ctml-jsons/${trialId}/send_to_matchminer`,
         headers,

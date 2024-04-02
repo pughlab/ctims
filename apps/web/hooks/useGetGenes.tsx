@@ -1,15 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import useAxios from "./useAxios";
 
 const useGetGenes = () => {
   const [filteredHugoSymbols, setFilteredHugoSymbols] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const { operation } = useAxios();
+
   const searchSymbols = async (query) => {
     try {
       setLoading(true);
-      const response = await axios.get(`genes?query=${query}`);
+      const response = await operation(
+        {
+          method: 'get',
+          url: `genes?query=${query}`
+        }
+        );
       const symbols = response.data;
       setFilteredHugoSymbols(symbols);
     } catch (error) {

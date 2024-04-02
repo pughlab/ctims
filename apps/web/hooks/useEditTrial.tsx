@@ -4,10 +4,11 @@ import {useEffect, useState} from "react";
 import {signOut, useSession} from "next-auth/react";
 import {useRouter} from "next/router";
 import process from "process";
+import useAxios from "./useAxios";
 
 const useEditTrial = () => {
-  const { publicRuntimeConfig } = getConfig();
-  axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
+  // const { publicRuntimeConfig } = getConfig();
+  // axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
 
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
@@ -17,16 +18,19 @@ const useEditTrial = () => {
 
   const {data, status} = useSession()
 
-  useEffect(() => {
-    if(status === 'unauthenticated') {
-      // router.push('/');
-      signOut({redirect: false}).then(() => {
-        router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-      });
-    }
-  }, [status])
+  const { operation } = useAxios();
+
+  // useEffect(() => {
+  //   if(status === 'unauthenticated') {
+  //     // router.push('/');
+  //     signOut({redirect: false}).then(() => {
+  //       router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+  //     });
+  //   }
+  // }, [status])
 
   const editTrialOperation = async (trialId: string) => {
+    setLoading(true);
     console.log('editTrialOperation trialId', trialId)
     const accessToken = localStorage.getItem('ctims-accessToken');
     const headers = {
@@ -34,7 +38,7 @@ const useEditTrial = () => {
     }
 
     try {
-      const trialResponse = await axios.request({
+      const trialResponse = await operation({
         method: 'get',
         url: `/trials/${trialId}`,
         headers,
@@ -51,7 +55,7 @@ const useEditTrial = () => {
         ...trialResponse.data,
         updatedAt: updatedAtFormatted
       }
-      
+
       const trial: any = mappedTrialResponse;
       setResponse(trial);
     }

@@ -1,6 +1,6 @@
-import {useState, useEffect, useRef} from 'react';
-import useIdle, { IdleState } from "../hooks/useIdle";
-import { Dialog } from 'primereact/dialog';
+import {useEffect, useRef, useState} from 'react';
+import useIdle, {IdleState} from "../hooks/useIdle";
+import {Dialog} from 'primereact/dialog';
 import {useRouter} from "next/router";
 import useRefreshToken from "../hooks/useRefreshToken";
 import useSaveTrial from "../hooks/useSaveTrial";
@@ -8,15 +8,20 @@ import {RootState, store} from "../store/store";
 import {Toast} from "primereact/toast";
 import {signOut} from "next-auth/react";
 import process from "process";
+import {useSelector} from "react-redux";
 
 const IdleComponent = () => {
   const { state: idleState, remaining, count } = useIdle(); // Get the idle state, remaining time, and count from the useIdle hook
   const [showDialog, setShowDialog] = useState(false); // Create a state variable for the dialog visibility
   const [remainingTime, setRemainingTime] = useState(0); // Create a state variable for the remaining time
 
+  const [accessTokenRefreshedTime, setAccessTokenRefreshedTime] = useState(0);
+
   const { error, response, loading, refreshTokenOperation } = useRefreshToken(); // Get the error, response, loading, and refreshTokenOperation from the useRefreshToken hook
 
   const toast = useRef(null);
+
+  const accessTokenRefreshedFromState = useSelector((state: RootState) => state.context.tokenRefreshTime);
 
   const {
     response: saveTrialResponse,
@@ -29,6 +34,9 @@ const IdleComponent = () => {
 
   const IDLE_TIMEOUT = 60; // Set the idle timeout to 60 seconds
 
+  // const TOKEN_TIMEOUT = 14 * 60 * 1000;
+  const TOKEN_TIMEOUT = 10 * 1000;
+
   const onHide = () => {
     setShowDialog(false); // Hide the dialog
   };
@@ -37,12 +45,29 @@ const IdleComponent = () => {
     if (idleState === IdleState.Idle) { // If the idle state is Idle
       setShowDialog(true); // Show the dialog
       setRemainingTime(IDLE_TIMEOUT); // Set the remaining time to the idle timeout
-    } else { // If the idle state is not Idle
+    } else if (idleState === IdleState.Active) { // If the idle state is not Idle
       refreshTokenOperation(); // Refresh the access token
+      setAccessTokenRefreshedTime(Date.now()); // Set the token refreshed time
       setShowDialog(false); // Hide the dialog
       setRemainingTime(0); // Reset the remaining time
     }
   }, [idleState]); // Run the effect whenever the idle state changes
+
+  useEffect(() => {
+    if (accessTokenRefreshedTime > 0) {
+      const diff = Date.now() - accessTokenRefreshedTime;
+      if (Date.now() - accessTokenRefreshedTime >= TOKEN_TIMEOUT) {
+        refreshTokenOperation();
+        setAccessTokenRefreshedTime(Date.now());
+      }
+    }
+  }, [count]);
+
+  useEffect(() => {
+    if (accessTokenRefreshedFromState) {
+      setAccessTokenRefreshedTime(accessTokenRefreshedFromState);
+    }
+  }, [accessTokenRefreshedFromState]);
 
   useEffect(() => {
     if (error) {

@@ -13,11 +13,11 @@ const convertMinutesToMilliseconds = (minutes) => {
 
 const useIdle = () => {
   // Define state variables for the idle state, action count, and remaining time
-  const [state, setState] = useState<IdleState>(IdleState.Active);
+  const [state, setState] = useState<IdleState>(null);
   const [count, setCount] = useState<number>(0);
   const [remaining, setRemaining] = useState<number>(0);
 
-  const TIMEOUT = convertMinutesToMilliseconds(14);
+  const TIMEOUT = convertMinutesToMilliseconds(1);
 
   // Define event handlers for idle, active, and action events
   const onIdle = () => {
@@ -31,6 +31,9 @@ const useIdle = () => {
   };
 
   const onAction = (event?: Event) => {
+    if (state === null) {
+      setState(IdleState.Active);
+    }
     setCount(count + 1);
     // console.log('user did something', count, event);
     // console.log(event);
