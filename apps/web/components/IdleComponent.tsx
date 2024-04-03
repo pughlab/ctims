@@ -8,7 +8,6 @@ import {RootState, store} from "../store/store";
 import {Toast} from "primereact/toast";
 import {signOut} from "next-auth/react";
 import process from "process";
-import {useSelector} from "react-redux";
 
 const IdleComponent = () => {
   const { state: idleState, remaining, count } = useIdle(); // Get the idle state, remaining time, and count from the useIdle hook
@@ -20,8 +19,6 @@ const IdleComponent = () => {
   const { error, response, loading, refreshTokenOperation } = useRefreshToken(); // Get the error, response, loading, and refreshTokenOperation from the useRefreshToken hook
 
   const toast = useRef(null);
-
-  const accessTokenRefreshedFromState = useSelector((state: RootState) => state.context.tokenRefreshTime);
 
   const {
     response: saveTrialResponse,
@@ -62,12 +59,6 @@ const IdleComponent = () => {
       }
     }
   }, [count]);
-
-  useEffect(() => {
-    if (accessTokenRefreshedFromState) {
-      setAccessTokenRefreshedTime(accessTokenRefreshedFromState);
-    }
-  }, [accessTokenRefreshedFromState]);
 
   useEffect(() => {
     if (error) {
