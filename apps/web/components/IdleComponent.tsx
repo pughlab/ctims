@@ -31,8 +31,8 @@ const IdleComponent = () => {
 
   const IDLE_TIMEOUT = 60; // Set the idle timeout to 60 seconds
 
-  // const TOKEN_TIMEOUT = 14 * 60 * 1000;
-  const TOKEN_TIMEOUT = 10 * 1000;
+  const TOKEN_TIMEOUT = 14 * 60 * 1000;
+  // const TOKEN_TIMEOUT = 10 * 1000;
 
   const onHide = () => {
     setShowDialog(false); // Hide the dialog

@@ -11,46 +11,20 @@ const useAxios = () => {
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  // count to retry once
+  let [count, setCount] = useState(0);
 
-  const {data} = useSession()
+  const { error: refreshTokenError, response: refreshTokenResponse, loading: refreshTokenLoading, refreshTokenOperation } = useRefreshToken();
 
   const router = useRouter();
 
-  // let count = 0;
-  // axios.interceptors.response.use(
-  //   response,
-  //   async error => {
-  //     // console.log('error in useAxios', error)
-  //     // console.log('status text', error.statusText)
-  //     // console.log('error message', error.message)
-  //     // console.log('err response data', error.response.data);
-  //     // console.log('err response status', error.response.status);
-  //     // console.log('err response header', error.response.headers)
-  //     if (error.response && error.response.status === 401 && error.response.data.message === "jwt expired") {
-  //       console.log('unauthenticated')
-  //       // try to refresh token
-  //       if (count === 0) {
-  //         console.log('this is called')
-  //         count++;
-  //         await refreshTokenOperation();
-  //
-  //         setTimeout(() => {
-  //           count = 0;
-  //         }, 2000);
-  //       }
-  //
-  //       if (refreshTokenError) {
-  //         console.log('refreshTokenError', refreshTokenError)
-  //         signOut({redirect: false}).then(() => {
-  //           router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-  //         });
-  //         return Promise.reject(refreshTokenError);
-  //       }
-  //       return Promise.reject(error);
-  //     }
-  //     return Promise.reject(error);
-  //   }
-  // )
+  useEffect(() => {
+    if (error === 'unauthenticated') {
+      // signOut({redirect: false}).then(() => {
+      //   router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+      // });
+    }
+  }, []);
 
   const operation = async(params: AxiosRequestConfig): Promise<any> => {
     // params.headers = {
@@ -63,7 +37,32 @@ const useAxios = () => {
     }).catch(async error => {
       console.log('response', error.response)
       if (error.response) {
-        setError(error.response.data);
+        // setError(error.response.data);
+        if (error.response.data.message === 'jwt expired') {
+          // retry once
+          if (count === 0) {
+            count++;
+            refreshTokenOperation().then(() => {
+              if (!refreshTokenError) {
+                const accessToken = localStorage.getItem('ctims-accessToken');
+                params.headers = {
+                    'Authorization': 'Bearer ' + accessToken,
+                }
+                return axios.request(params).then(response => {
+                  setCount(0);
+                  setResponse(response);
+                  return response;
+                }).catch(error => {
+                  setError(error.response.data);
+                }).finally(() => {
+                  setLoading(false);
+                });
+              }
+            });
+          } else {
+            setError(error.response.data);
+          }
+        }
       } else {
         setError(error);
       }
