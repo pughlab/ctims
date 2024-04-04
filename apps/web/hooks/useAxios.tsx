@@ -2,10 +2,12 @@ import {useEffect, useState} from "react";
 import axios, {AxiosRequestConfig} from "axios";
 import {signOut, useSession} from "next-auth/react";
 import { useRouter } from 'next/router';
+import getConfig from "next/config";
 
 const useAxios = () => {
 
-  axios.defaults.baseURL = process.env.REACT_APP_API_URL || "http://localhost:3333/api"
+  const { publicRuntimeConfig } = getConfig();
+  axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
 
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
