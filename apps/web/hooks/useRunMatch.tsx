@@ -3,10 +3,11 @@ import axios from 'axios';
 import {useEffect, useState} from 'react';
 import {useRouter} from 'next/router';
 import {useSession} from 'next-auth/react';
+import useAxios from "./useAxios";
 
 const useRunMatch = () => {
-  const {publicRuntimeConfig} = getConfig();
-  axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
+  // const {publicRuntimeConfig} = getConfig();
+  // axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
 
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
@@ -14,13 +15,15 @@ const useRunMatch = () => {
 
   const router = useRouter();
 
+  const { operation } = useAxios();
+
   const {data,status} = useSession()
 
-  useEffect(() => {
-    if(status === 'unauthenticated') {
-      router.push('/');
-    }
-  }, [status])
+  // useEffect(() => {
+  //   if(status === 'unauthenticated') {
+  //     router.push('/');
+  //   }
+  // }, [status])
 
   const runMatchOperation = async (protocol_nos: string) => {
     setLoading(true);
@@ -29,7 +32,7 @@ const useRunMatch = () => {
       const headers = {
         'Authorization': 'Bearer ' + accessToken,
       }
-      const matchRun = await axios.request({
+      const matchRun = await operation({
         method: 'get',
         url: `/ctml-jsons/mm/run_match?protocol_nos=${protocol_nos}`,
         headers,

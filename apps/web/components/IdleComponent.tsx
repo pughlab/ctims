@@ -1,6 +1,6 @@
-import {useState, useEffect, useRef} from 'react';
-import useIdle, { IdleState } from "../hooks/useIdle";
-import { Dialog } from 'primereact/dialog';
+import {useEffect, useRef, useState} from 'react';
+import useIdle, {IdleState} from "../hooks/useIdle";
+import {Dialog} from 'primereact/dialog';
 import {useRouter} from "next/router";
 import useRefreshToken from "../hooks/useRefreshToken";
 import useSaveTrial from "../hooks/useSaveTrial";
@@ -73,9 +73,12 @@ const IdleComponent = () => {
       saveTrialOperation(trialModel, ctmlJson).then(() => {
         //localStorage.removeItem('ctims-accessToken') // Remove the access token from local storage
         //router.push('/'); // Redirect to the home page
-        signOut({redirect: false}).then(() => {
-          router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-        });
+        if (!error) {
+          // check if there is error, if there's error from useAxios then no need to router.push a 2nd time
+          signOut({redirect: false}).then(() => {
+            router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+          });
+        }
       });
     }
 

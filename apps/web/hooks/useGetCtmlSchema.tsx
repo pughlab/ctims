@@ -5,6 +5,7 @@ import {store} from "../store/store";
 import getConfig from 'next/config';
 import {useRouter} from "next/router";
 import process from "process";
+import useAxios from "./useAxios";
 
 const useGetCtmlSchema = () => {
   const [response, setResponse] = useState(null);
@@ -15,25 +16,27 @@ const useGetCtmlSchema = () => {
 
   const {data,status} = useSession()
 
-  useEffect(() => {
-    if(status === 'unauthenticated') {
-      // router.push('/');
-      signOut({redirect: false}).then(() => {
-        router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-      });
-    }
-  }, [status])
+  const { operation } = useAxios();
+
+  // useEffect(() => {
+  //   if(status === 'unauthenticated') {
+  //     // router.push('/');
+  //     signOut({redirect: false}).then(() => {
+  //       router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+  //     });
+  //   }
+  // }, [status])
 
   const getCtmlSchemaOperation = async() => {
 
     const state = store.getState();
     const schemaVersion = state.context.schema_version
 
-    const { publicRuntimeConfig } = getConfig();
-    axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
+    // const { publicRuntimeConfig } = getConfig();
+    // axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
     const accessToken = localStorage.getItem('ctims-accessToken');
 
-    axios.request({
+    await operation({
       method: 'get',
       url: `/ctml-schemas/schema-version/${schemaVersion}`,
       headers: {

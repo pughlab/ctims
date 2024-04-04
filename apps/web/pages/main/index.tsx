@@ -13,10 +13,12 @@ import {Toast} from "primereact/toast";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import MatchMinerConsole from "../../components/matchminer/MatchMinerConsole";
+import useRefreshToken from "../../hooks/useRefreshToken";
+import jwt_decode from "jwt-decode";
 
 const Main = () => {
 
-  const {data, status: sessionStatus} = useSession()
+  const {data: sessionData, status: sessionStatus} = useSession()
 
   const [activeTab, setActiveTab] = useState(0);
 
@@ -29,15 +31,21 @@ const Main = () => {
   const selectedTrialGroupFromState = useSelector((state: RootState) => state.context.seletedTrialGroupId);
   const selectedTrialGroupIsAdminFromState = useSelector((state: RootState) => state.context.isTrialGroupAdmin);
 
+  const { error, response, loading, refreshTokenOperation } = useRefreshToken();
+  const refreshTokenTimeout = useRef(null);
+
+  // TODO: abstract the refreshTokenOperation set and clear interval to a hook
   useEffect(() => {
-    if (!data) {
+    if (!sessionData) {
+      stopRefreshTokenTimer();
       return;
     }
-    localStorage.setItem('ctims-accessToken', data['accessToken'] as string);
-    console.log('data', data)
+    localStorage.setItem('ctims-accessToken', sessionData['accessToken'] as string);
+    startRefreshTokenTimer();
+    console.log('data', sessionData)
 
     setActiveTab(0);
-  }, [data])
+  }, [sessionData])
 
   useEffect(() => {
     if (selectedTrialGroupFromState) {
@@ -73,6 +81,28 @@ const Main = () => {
     getTrialsForUsersInGroupOperation(selectedTrialGroup.plainRole);
   }
 
+  useEffect(() => {
+    // Cleanup function to stop the timer when the component unmounts
+    return () => stopRefreshTokenTimer();
+  }, []);
+
+  // refresh access token that runs periodically
+  const startRefreshTokenTimer = () => {
+
+    const token: any = jwt_decode(localStorage.getItem('ctims-accessToken'));
+    const expires = new Date(token.exp * 1000);
+    // refresh token 2 minutes before it expires
+    const timeout = expires.getTime() - Date.now() - (2 * 60 * 1000);
+    stopRefreshTokenTimer();
+    refreshTokenTimeout.current = setInterval(() => refreshTokenOperation(), timeout);
+  }
+
+  const stopRefreshTokenTimer = () => {
+    if (refreshTokenTimeout.current) {
+      clearInterval(refreshTokenTimeout.current);
+    }
+  }
+
   return (
     <>
       <div className={styles.container}>
@@ -82,7 +112,7 @@ const Main = () => {
         {sessionStatus === 'authenticated' && <>
           <TopBar/>
           <div className={styles.pageContainer}>
-            <TrialGroupsDropdown roles={(data as unknown as any).roles} onTrialGroupSelected={onTrialGroupSelected} />
+            <TrialGroupsDropdown roles={(sessionData as unknown as any).roles} onTrialGroupSelected={onTrialGroupSelected} />
             <TabView activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
               <TabPanel header="Trials">
                 <Trials selectedTrialGroup={selectedTrialGroup} trials={trials} onTrialDeleted={onTrialDeleted} getTrialsForUsersInGroupLoading={getTrialsForUsersInGroupLoading}/>
@@ -90,7 +120,7 @@ const Main = () => {
               <TabPanel header="Results">
                 <Results trials={trials} getTrialsForUsersInGroupLoading={getTrialsForUsersInGroupLoading}/>
               </TabPanel>
-              {data.user.name === 'CTIMS Test' && (
+              {sessionData.user.name === 'CTIMS Test' && (
                 <TabPanel header="Matchminer Console">
                   <MatchMinerConsole/>
                 </TabPanel>

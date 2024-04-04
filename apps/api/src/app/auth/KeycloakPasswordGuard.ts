@@ -12,6 +12,9 @@ export class KeycloakPasswordGuard extends PassportAuthGuard('keycloak') {
     if (err || !user) {
       console.log('Error:', err);
       console.log('Info:', info);
+      if (info) {
+        throw new UnauthorizedException(info.message);
+      }
       throw err || new UnauthorizedException();
     }
     return user;

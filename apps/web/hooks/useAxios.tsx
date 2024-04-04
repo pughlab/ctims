@@ -1,6 +1,7 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import axios, {AxiosRequestConfig} from "axios";
-import {useSession} from "next-auth/react";
+import {signOut, useSession} from "next-auth/react";
+import { useRouter } from 'next/router';
 
 const useAxios = () => {
 
@@ -10,29 +11,37 @@ const useAxios = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const {data} = useSession()
+  const router = useRouter();
 
-
-  const operation = async(params: AxiosRequestConfig) => {
-    params.headers = {
-      'Authorization': 'Bearer ' + data['accessToken'],
+  useEffect(() => {
+    if (error === 'unauthenticated') {
+      signOut({redirect: false}).then(() => {
+        router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+      });
     }
-    axios.request(params).then(response => {
-      setResponse(response.data);
-    }).catch(error => {
-      console.log('response', error.response)
-      if(error.response) {
+  }, [error]);
+
+  const operation = async (params: AxiosRequestConfig) => {
+    // params.headers = {
+    //   'Authorization': 'Bearer ' + data['accessToken'],
+    // }
+    try {
+      const res = await axios.request(params);
+      setResponse(res);
+      return res;
+    } catch (error) {
+      console.log('useAxios err response', error.response)
+      if (error.response) {
         setError(error.response.data);
       } else {
         setError(error);
       }
-    })
-      .finally(() => {
-        setLoading(false);
-      })
+    } finally {
+      setLoading(false);
+    }
   };
 
-  return { response, error, loading, operation };
+  return {response, error, loading, operation};
 }
 
 export default useAxios;
