@@ -20,9 +20,9 @@ const useAxios = () => {
 
   useEffect(() => {
     if (error === 'unauthenticated') {
-      // signOut({redirect: false}).then(() => {
-      //   router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-      // });
+      signOut({redirect: false}).then(() => {
+        router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+      });
     }
   }, []);
 
@@ -32,10 +32,11 @@ const useAxios = () => {
     // }
 
     return axios.request(params).then(response => {
+      console.log('useAxio response', response)
       setResponse(response);
       return response;
     }).catch(async error => {
-      console.log('response', error.response)
+      console.log('useAxio err response', error.response)
       if (error.response) {
         // setError(error.response.data);
         if (error.response.data.message === 'jwt expired') {
@@ -49,12 +50,12 @@ const useAxios = () => {
                     'Authorization': 'Bearer ' + accessToken,
                 }
                 return axios.request(params).then(response => {
-                  setCount(0);
                   setResponse(response);
                   return response;
                 }).catch(error => {
                   setError(error.response.data);
                 }).finally(() => {
+                  setCount(0);
                   setLoading(false);
                 });
               }

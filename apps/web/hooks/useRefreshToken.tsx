@@ -11,7 +11,6 @@ const useRefreshToken = () => {
   const [loading, setLoading] = useState(false);
 
   const refreshTokenOperation = async () => {
-    console.log('refresh was called')
     const accessToken = localStorage.getItem('ctims-accessToken');
     if (!accessToken) {
       return;
@@ -27,7 +26,6 @@ const useRefreshToken = () => {
         headers,
       });
       const token: any = response.data;
-      console.log('-----------------got token', token)
       localStorage.setItem('ctims-accessToken', token.accessToken as string);
       setResponse(token);
     }

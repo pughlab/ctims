@@ -89,9 +89,12 @@ const IdleComponent = () => {
       saveTrialOperation(trialModel, ctmlJson).then(() => {
         //localStorage.removeItem('ctims-accessToken') // Remove the access token from local storage
         //router.push('/'); // Redirect to the home page
-        signOut({redirect: false}).then(() => {
-          router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-        });
+        if (!error) {
+          // check if there is error, if there's error from useAxio then no need to router.push a 2nd time
+          signOut({redirect: false}).then(() => {
+            router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+          });
+        }
       });
     }
 

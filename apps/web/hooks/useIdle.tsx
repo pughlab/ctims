@@ -22,12 +22,10 @@ const useIdle = () => {
   // Define event handlers for idle, active, and action events
   const onIdle = () => {
     setState(IdleState.Idle);
-    console.log('user is idle');
   };
 
   const onActive = () => {
     setState(IdleState.Active);
-    console.log('user is active');
   };
 
   const onAction = (event?: Event) => {

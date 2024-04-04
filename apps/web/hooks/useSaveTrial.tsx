@@ -56,7 +56,9 @@ const useSaveTrial = () => {
         data: {ctml_schema_version: schemaVersion, group_id, ...trialModel}
       });
 
+     console.log('useSaveTrial trialResponse', trialResponse)
         let updatedAtDate = new Date(trialResponse.data.updatedAt)
+      console.log('useSaveTrial trialResponse2', trialResponse)
         let updatedAtFormatted = updatedAtDate.toLocaleString(undefined, {
           month: 'short',
           day: 'numeric',
@@ -85,7 +87,7 @@ const useSaveTrial = () => {
 
       setResponse(mappedTrialResponse)
     } catch (error) {
-      console.log('response', error.response)
+      console.log('err response', error)
       if(error.response) {
         setError(error.response.data);
       } else {
