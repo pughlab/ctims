@@ -37,7 +37,7 @@ const IdleComponent = () => {
     if (idleState === IdleState.Idle) { // If the idle state is Idle
       setShowDialog(true); // Show the dialog
       setRemainingTime(IDLE_TIMEOUT); // Set the remaining time to the idle timeout
-    } else if (idleState === IdleState.Active) { // If the idle state is not Idle
+    } else { // If the idle state is not Idle
       refreshTokenOperation(); // Refresh the access token
       setShowDialog(false); // Hide the dialog
       setRemainingTime(0); // Reset the remaining time
