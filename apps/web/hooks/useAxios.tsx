@@ -1,7 +1,6 @@
 import {useEffect, useState} from "react";
 import axios, {AxiosRequestConfig} from "axios";
 import {signOut, useSession} from "next-auth/react";
-import useRefreshToken from "./useRefreshToken";
 import { useRouter } from 'next/router';
 
 const useAxios = () => {
@@ -11,10 +10,6 @@ const useAxios = () => {
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  // count to retry once
-  let [count, setCount] = useState(0);
-
-  const { error: refreshTokenError, response: refreshTokenResponse, loading: refreshTokenLoading, refreshTokenOperation } = useRefreshToken();
 
   const router = useRouter();
 
@@ -24,56 +19,29 @@ const useAxios = () => {
         router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
       });
     }
-  }, []);
+  }, [error]);
 
-  const operation = async(params: AxiosRequestConfig): Promise<any> => {
+  const operation = async (params: AxiosRequestConfig) => {
     // params.headers = {
     //   'Authorization': 'Bearer ' + data['accessToken'],
     // }
-
-    return axios.request(params).then(response => {
-      console.log('useAxio response', response)
-      setResponse(response);
-      return response;
-    }).catch(async error => {
-      console.log('useAxio err response', error.response)
+    try {
+      const res = await axios.request(params);
+      setResponse(res);
+      return res;
+    } catch (error) {
+      console.log('useAxios err response', error.response)
       if (error.response) {
-        // setError(error.response.data);
-        if (error.response.data.message === 'jwt expired') {
-          // retry once
-          if (count === 0) {
-            count++;
-            refreshTokenOperation().then(() => {
-              if (!refreshTokenError) {
-                const accessToken = localStorage.getItem('ctims-accessToken');
-                params.headers = {
-                    'Authorization': 'Bearer ' + accessToken,
-                }
-                return axios.request(params).then(response => {
-                  setResponse(response);
-                  return response;
-                }).catch(error => {
-                  setError(error.response.data);
-                }).finally(() => {
-                  setCount(0);
-                  setLoading(false);
-                });
-              }
-            });
-          } else {
-            setError(error.response.data);
-          }
-        }
+        setError(error.response.data);
       } else {
         setError(error);
       }
-    })
-      .finally(() => {
-        setLoading(false);
-      })
+    } finally {
+      setLoading(false);
+    }
   };
 
-  return { response, error, loading, operation };
+  return {response, error, loading, operation};
 }
 
 export default useAxios;

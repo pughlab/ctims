@@ -10,7 +10,7 @@ const useGetApiInfo = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const { operation } = useAxios();
+  const { operation  } = useAxios();
 
   const getApiInfoOperation = async() => {
 
@@ -19,15 +19,14 @@ const useGetApiInfo = () => {
 
     try {
 
-      const response = await operation({
+      const axiosResponse = await operation({
         method: 'get',
         url: `/info`,
       });
-
-      setResponse(response.data.version);
+      setResponse(axiosResponse.data.version);
     }
     catch (error) {
-      console.log('response', error.response)
+      console.log('useGetApiInfo err response', error)
       if(error.response) {
         setError(error.response.data);
       } else {

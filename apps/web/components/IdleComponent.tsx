@@ -14,8 +14,6 @@ const IdleComponent = () => {
   const [showDialog, setShowDialog] = useState(false); // Create a state variable for the dialog visibility
   const [remainingTime, setRemainingTime] = useState(0); // Create a state variable for the remaining time
 
-  const [accessTokenRefreshedTime, setAccessTokenRefreshedTime] = useState(0);
-
   const { error, response, loading, refreshTokenOperation } = useRefreshToken(); // Get the error, response, loading, and refreshTokenOperation from the useRefreshToken hook
 
   const toast = useRef(null);
@@ -31,9 +29,6 @@ const IdleComponent = () => {
 
   const IDLE_TIMEOUT = 60; // Set the idle timeout to 60 seconds
 
-  const TOKEN_TIMEOUT = 14 * 60 * 1000;
-  // const TOKEN_TIMEOUT = 10 * 1000;
-
   const onHide = () => {
     setShowDialog(false); // Hide the dialog
   };
@@ -44,21 +39,10 @@ const IdleComponent = () => {
       setRemainingTime(IDLE_TIMEOUT); // Set the remaining time to the idle timeout
     } else if (idleState === IdleState.Active) { // If the idle state is not Idle
       refreshTokenOperation(); // Refresh the access token
-      setAccessTokenRefreshedTime(Date.now()); // Set the token refreshed time
       setShowDialog(false); // Hide the dialog
       setRemainingTime(0); // Reset the remaining time
     }
   }, [idleState]); // Run the effect whenever the idle state changes
-
-  useEffect(() => {
-    if (accessTokenRefreshedTime > 0) {
-      const diff = Date.now() - accessTokenRefreshedTime;
-      if (Date.now() - accessTokenRefreshedTime >= TOKEN_TIMEOUT) {
-        refreshTokenOperation();
-        setAccessTokenRefreshedTime(Date.now());
-      }
-    }
-  }, [count]);
 
   useEffect(() => {
     if (error) {
@@ -90,7 +74,7 @@ const IdleComponent = () => {
         //localStorage.removeItem('ctims-accessToken') // Remove the access token from local storage
         //router.push('/'); // Redirect to the home page
         if (!error) {
-          // check if there is error, if there's error from useAxio then no need to router.push a 2nd time
+          // check if there is error, if there's error from useAxios then no need to router.push a 2nd time
           signOut({redirect: false}).then(() => {
             router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
           });

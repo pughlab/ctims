@@ -13,6 +13,8 @@ import {Toast} from "primereact/toast";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import MatchMinerConsole from "../../components/matchminer/MatchMinerConsole";
+import useRefreshToken from "../../hooks/useRefreshToken";
+let jwt = require('jwt-simple');
 
 const Main = () => {
 
@@ -29,11 +31,16 @@ const Main = () => {
   const selectedTrialGroupFromState = useSelector((state: RootState) => state.context.seletedTrialGroupId);
   const selectedTrialGroupIsAdminFromState = useSelector((state: RootState) => state.context.isTrialGroupAdmin);
 
+  const { error, response, loading, refreshTokenOperation } = useRefreshToken();
+  const refreshTokenTimeout = useRef(null);
+
   useEffect(() => {
     if (!data) {
+      stopRefreshTokenTimer();
       return;
     }
     localStorage.setItem('ctims-accessToken', data['accessToken'] as string);
+    startRefreshTokenTimer();
     console.log('data', data)
 
     setActiveTab(0);
@@ -71,6 +78,28 @@ const Main = () => {
 
   const onTrialDeleted = () => {
     getTrialsForUsersInGroupOperation(selectedTrialGroup.plainRole);
+  }
+
+  useEffect(() => {
+    // Cleanup function to stop the timer when the component unmounts
+    return () => stopRefreshTokenTimer();
+  }, []);
+
+  // refresh access token that runs periodically
+  const startRefreshTokenTimer = () => {
+
+    const token: any = jwt.decode(localStorage.getItem('ctims-accessToken'), '', true);
+    const expires = new Date(token.exp * 1000);
+    // refresh token 2 minutes before it expires
+    const timeout = expires.getTime() - Date.now() - (2 * 60 * 1000);
+    stopRefreshTokenTimer();
+    refreshTokenTimeout.current = setInterval(() => refreshTokenOperation(), timeout);
+  }
+
+  const stopRefreshTokenTimer = () => {
+    if (refreshTokenTimeout.current) {
+      clearInterval(refreshTokenTimeout.current);
+    }
   }
 
   return (

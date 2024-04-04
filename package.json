@@ -53,6 +53,7 @@
     "jsonpath": "^1.1.1",
     "jwt-decode": "^3.1.2",
     "jwt-encode": "^1.0.1",
+    "jwt-simple": "^0.5.6",
     "keycloak-connect": "^21.1.0",
     "multer": "^1.4.5-lts.1",
     "next": "13.0.0",
