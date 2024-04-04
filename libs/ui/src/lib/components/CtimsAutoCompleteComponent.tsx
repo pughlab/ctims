@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AutoComplete } from 'primereact/autocomplete';
 import { Tooltip } from 'antd';
 import styles from "./CtimsAutoCompleteComponent.module.css";
@@ -6,7 +6,12 @@ import useGetGenes from '../../../../../apps/web/hooks/useGetGenes';
 
 const AutocompleteField = ({ onChange, ...props }) => {
   const { filteredHugoSymbols, loading, searchSymbols } = useGetGenes();
-  const [selectedHugoSymbol, setSelectedHugoSymbol] = useState([]);
+  const [selectedHugoSymbol, setSelectedHugoSymbol] = useState([props.value]);
+ console.log("Props",props.value);
+
+ useEffect(() => {
+  setSelectedHugoSymbol([props.value]);
+}, [props.value]);
 
   const arrayContainer = {
     // width: '640px',
@@ -32,8 +37,8 @@ const AutocompleteField = ({ onChange, ...props }) => {
     <div className={styles.container}>
       {props.schema.title && (
         <label style={labelStyle}>
-          Hugo Gene
-          <Tooltip title={props.schema.description} placement="topLeft">
+          Hugo Symbol
+          <Tooltip>
             <i
               className={questionMarkStyle}
               data-pr-tooltip={props.schema.description}
