@@ -10,11 +10,10 @@ import FooterComponent from "apps/web/components/FooterComponent";
 import TrialGroupsDropdown from "../../components/trials/TrialGroupsDropdown";
 import useGetTrialsForUsersInGroup from "../../hooks/useGetTrialsForUsersInGroup";
 import {Toast} from "primereact/toast";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import MatchMinerConsole from "../../components/matchminer/MatchMinerConsole";
-import useRefreshToken from "../../hooks/useRefreshToken";
-import jwt_decode from "jwt-decode";
+import {setIsAccessTokenSet} from "../../store/slices/contextSlice";
 
 const Main = () => {
 
@@ -31,17 +30,15 @@ const Main = () => {
   const selectedTrialGroupFromState = useSelector((state: RootState) => state.context.seletedTrialGroupId);
   const selectedTrialGroupIsAdminFromState = useSelector((state: RootState) => state.context.isTrialGroupAdmin);
 
-  const { error, response, loading, refreshTokenOperation } = useRefreshToken();
-  const refreshTokenTimeout = useRef(null);
+  const dispatch = useDispatch();
 
   // TODO: abstract the refreshTokenOperation set and clear interval to a hook
   useEffect(() => {
     if (!sessionData) {
-      stopRefreshTokenTimer();
       return;
     }
     localStorage.setItem('ctims-accessToken', sessionData['accessToken'] as string);
-    startRefreshTokenTimer();
+    dispatch(setIsAccessTokenSet(true));
     console.log('data', sessionData)
 
     setActiveTab(0);
@@ -79,28 +76,6 @@ const Main = () => {
 
   const onTrialDeleted = () => {
     getTrialsForUsersInGroupOperation(selectedTrialGroup.plainRole);
-  }
-
-  useEffect(() => {
-    // Cleanup function to stop the timer when the component unmounts
-    return () => stopRefreshTokenTimer();
-  }, []);
-
-  // refresh access token that runs periodically
-  const startRefreshTokenTimer = () => {
-
-    const token: any = jwt_decode(localStorage.getItem('ctims-accessToken'));
-    const expires = new Date(token.exp * 1000);
-    // refresh token 2 minutes before it expires
-    const timeout = expires.getTime() - Date.now() - (2 * 60 * 1000);
-    stopRefreshTokenTimer();
-    refreshTokenTimeout.current = setInterval(() => refreshTokenOperation(), timeout);
-  }
-
-  const stopRefreshTokenTimer = () => {
-    if (refreshTokenTimeout.current) {
-      clearInterval(refreshTokenTimeout.current);
-    }
   }
 
   return (

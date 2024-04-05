@@ -9,6 +9,7 @@ export interface ContextSliceState {
   isTrialGroupAdmin: boolean;
   isFormDisabled: boolean;
   isFormChanged: boolean;
+  isAccessTokenSet: boolean;
 }
 
 const initialState: ContextSliceState = {
@@ -19,6 +20,7 @@ const initialState: ContextSliceState = {
   isTrialGroupAdmin: false,
   isFormDisabled: false,
   isFormChanged: false,
+  isAccessTokenSet: false,
 }
 
 export const contextSlice = createSlice({
@@ -45,6 +47,9 @@ export const contextSlice = createSlice({
     },
     setIsFormChanged: (state, action: PayloadAction<boolean>) => {
       state.isFormChanged = action.payload
+    },
+    setIsAccessTokenSet: (state, action: PayloadAction<boolean>) => {
+      state.isAccessTokenSet = action.payload
     }
   },
   // use extraReducers to listen to other action types
@@ -63,5 +68,6 @@ export const {
   selectedTrialGroupId,
   setIsTrialGroupAdmin,
   setIsFormDisabled,
-  setIsFormChanged} = contextSlice.actions;
+  setIsFormChanged,
+  setIsAccessTokenSet} = contextSlice.actions;
 export default contextSlice.reducer;

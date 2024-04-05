@@ -9,6 +9,7 @@ import {useRouter} from "next/router";
 import {useEffect} from "react";
 import useRefreshToken from "../hooks/useRefreshToken";
 import process from "process";
+import RefreshTokenComponent from "../components/RefreshTokenComponent";
 
 function CustomApp({ Component, pageProps: { session, ...pageProps }, }: AppProps) {
   const AnyComponent = Component as any;
@@ -48,6 +49,7 @@ function CustomApp({ Component, pageProps: { session, ...pageProps }, }: AppProp
       <main className="app">
         <SessionProvider session={session}>
         <Provider store={store}>
+          <RefreshTokenComponent/>
           <AnyComponent {...pageProps} />
         </Provider>
         </SessionProvider>
