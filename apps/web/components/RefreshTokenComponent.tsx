@@ -23,12 +23,6 @@ const RefreshTokenComponent = () => {
     }
     console.log('logged in now start timer')
     startRefreshTokenTimer();
-
-    // Cleanup function to stop the timer when the component unmounts
-    return () => {
-      console.log('unmounting, stopping timer')
-      stopRefreshTokenTimer();
-    }
   }, [isLoggedInFromState]);
 
   useEffect(() => {
@@ -39,6 +33,14 @@ const RefreshTokenComponent = () => {
     }
   }, [error]);
 
+  useEffect(() => {
+    // Cleanup function to stop the timer when the component unmounts
+    return () => {
+      console.log('unmounting, stopping timer')
+      stopRefreshTokenTimer();
+    }
+  }, []);
+
   // refresh access token that runs periodically
   const startRefreshTokenTimer = () => {
     if (localStorage.getItem('ctims-accessToken') && count === 0) {
@@ -47,8 +49,14 @@ const RefreshTokenComponent = () => {
       const expires = new Date(token.exp * 1000);
       // refresh token 2 minutes before it expires
       const timeout = expires.getTime() - Date.now() - (2 * 60 * 1000);
-      refreshTokenTimeout.current = setInterval(() => refreshTokenOperation(), timeout);
+      console.log('setInterval start at timeout ', timeout)
+      refreshTokenTimeout.current = setInterval(() => myCallback(), timeout);
     }
+  }
+
+  const myCallback = () => {
+    console.log(' in callback ', new Date().toLocaleString())
+    refreshTokenOperation();
   }
 
   const stopRefreshTokenTimer = () => {

@@ -9,6 +9,8 @@ import useGetCtmlSchema from "../../../hooks/useGetCtmlSchema";
 import IdleComponent from "../../../components/IdleComponent";
 import FooterComponent from "apps/web/components/FooterComponent";
 import process from "process";
+import {store} from "../../../store/store";
+import {logout} from "../../api/auth/[...nextauth]";
 
 
 const EditorCreateCtml = () => {
@@ -16,7 +18,7 @@ const EditorCreateCtml = () => {
   const { error, response, loading, operation} = useGetCtmlSchema();
 
   const [lastSaved, setLastSaved] = useState<string>("Unsaved");
-  
+
   const router = useRouter();
 
   const {data} = useSession()
@@ -29,6 +31,7 @@ const EditorCreateCtml = () => {
     if(!data) {
       // router.push('/');
       signOut({redirect: false}).then(() => {
+        store.dispatch(logout());
         router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
       });
     }

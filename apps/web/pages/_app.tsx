@@ -10,6 +10,7 @@ import {useEffect} from "react";
 import useRefreshToken from "../hooks/useRefreshToken";
 import process from "process";
 import RefreshTokenComponent from "../components/RefreshTokenComponent";
+import {logout} from "./api/auth/[...nextauth]";
 
 function CustomApp({ Component, pageProps: { session, ...pageProps }, }: AppProps) {
   const AnyComponent = Component as any;
@@ -26,6 +27,7 @@ function CustomApp({ Component, pageProps: { session, ...pageProps }, }: AppProp
         if (!accessToken) {
           // router.push('/');
           signOut({redirect: false}).then(() => {
+            store.dispatch(logout());
             router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
           });
         }

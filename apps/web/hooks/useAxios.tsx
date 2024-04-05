@@ -1,8 +1,10 @@
 import {useEffect, useState} from "react";
 import axios, {AxiosRequestConfig} from "axios";
-import {signOut, useSession} from "next-auth/react";
+import {signOut} from "next-auth/react";
 import { useRouter } from 'next/router';
 import getConfig from "next/config";
+import {store} from "../store/store";
+import {logout} from "../pages/api/auth/[...nextauth]";
 
 const useAxios = () => {
 
@@ -16,10 +18,13 @@ const useAxios = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (error === 'unauthenticated') {
-      signOut({redirect: false}).then(() => {
-        router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-      });
+    if (error) {
+      if (error.statusCode === 401) {
+        signOut({redirect: false}).then(() => {
+          store.dispatch(logout());
+          router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+        });
+      }
     }
   }, [error]);
 
@@ -34,7 +39,7 @@ const useAxios = () => {
     } catch (error) {
       console.log('useAxios err response', error.response)
       if (error.response) {
-        setError(error.response.data);
+        setError(error.response.data)
       } else {
         setError(error);
       }

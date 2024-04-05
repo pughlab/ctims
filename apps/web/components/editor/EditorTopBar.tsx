@@ -13,6 +13,7 @@ import SendCtmlToMatchminerDialog from "./SendCTMLtoMatchminerDialog";
 import useSendCTML from "../../hooks/useSendCTML";
 import { setIsFormChanged } from '../../store/slices/contextSlice';
 import process from "process";
+import {logout} from "../../pages/api/auth/[...nextauth]";
 
 interface EditorTopBarProps {
     isEditMode?: boolean;
@@ -65,6 +66,7 @@ const EditorTopBar = (props: EditorTopBarProps) => {
       console.log('error', saveTrialError);
       if (saveTrialError.statusCode === 401) {
         signOut({callbackUrl: '/#/login', redirect: false}).then(() => {
+          store.dispatch(logout());
           router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
         });
       }
@@ -86,6 +88,7 @@ const EditorTopBar = (props: EditorTopBarProps) => {
       console.log('error', sendCTMLError);
       if (sendCTMLError.statusCode === 401) {
         signOut({callbackUrl: '/#/login', redirect: false}).then(() => {
+          store.dispatch(logout());
           router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
         });
       }

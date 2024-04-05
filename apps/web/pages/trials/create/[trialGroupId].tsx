@@ -8,8 +8,9 @@ import { Ui } from '@ctims-mono-repo/ui';
 import IdleComponent from "../../../components/IdleComponent";
 import FooterComponent from 'apps/web/components/FooterComponent';
 import { useSelector } from 'react-redux';
-import { RootState } from 'apps/web/store/store';
+import {RootState, store} from 'apps/web/store/store';
 import process from "process";
+import {logout} from "../../api/auth/[...nextauth]";
 
 const EditorCreateCtmlForGroup = () => {
   const router = useRouter()
@@ -74,6 +75,7 @@ const EditorCreateCtmlForGroup = () => {
     if(!data) {
       // router.push('/');
       signOut({redirect: false}).then(() => {
+        store.dispatch(logout());
         router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
       });
     }

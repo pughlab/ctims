@@ -8,6 +8,7 @@ import {RootState, store} from "../store/store";
 import {Toast} from "primereact/toast";
 import {signOut} from "next-auth/react";
 import process from "process";
+import {logout} from "../pages/api/auth/[...nextauth]";
 
 const IdleComponent = () => {
   const { state: idleState, remaining, count } = useIdle(); // Get the idle state, remaining time, and count from the useIdle hook
@@ -48,6 +49,7 @@ const IdleComponent = () => {
     if (error) {
       // for when unable to fresh with expired refresh token
       signOut({redirect: false}).then(() => {
+        store.dispatch(logout());
         router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
       });
     }
@@ -76,6 +78,7 @@ const IdleComponent = () => {
         if (!error) {
           // check if there is error, if there's error from useAxios then no need to router.push a 2nd time
           signOut({redirect: false}).then(() => {
+            store.dispatch(logout());
             router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
           });
         }

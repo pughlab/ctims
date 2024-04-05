@@ -20,6 +20,7 @@ import process from "process";
 import useSaveTrial from "../../../../apps/web/hooks/useSaveTrial";
 import {useRouter} from "next/router";
 import { Toast } from 'primereact/toast';
+import {logout} from "../../../../apps/web/pages/api/auth/[...nextauth]";
 
 
 
@@ -87,6 +88,7 @@ export const Ui = (props: UiProps) => {
       // @ts-ignore
       if (saveTrialError.statusCode === 401) {
         signOut({redirect: false}).then(() => {
+          store.dispatch(logout());
           router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
         });
       }
@@ -122,7 +124,7 @@ export const Ui = (props: UiProps) => {
     setIsOpen(false);
     dispatch(resetFormChangeCounter())
   }
-  
+
   const onSaveCTMLHideCallback = () => {
     setIsOpen(false);
     dispatch(resetFormChangeCounter())
