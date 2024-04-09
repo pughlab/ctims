@@ -39,7 +39,6 @@ const Main = () => {
     }
     localStorage.setItem('ctims-accessToken', sessionData['accessToken'] as string);
     dispatch(setIsAccessTokenSet(true));
-    console.log('data', sessionData)
 
     setActiveTab(0);
   }, [sessionData])
@@ -70,7 +69,6 @@ const Main = () => {
   useEffect(() => {
     if (getTrialsForUsersInGroupResponse) {
       setTrials(getTrialsForUsersInGroupResponse);
-      console.log('response', getTrialsForUsersInGroupResponse);
     }
   }, [getTrialsForUsersInGroupResponse]);
 

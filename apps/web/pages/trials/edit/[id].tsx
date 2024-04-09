@@ -85,7 +85,6 @@ const EditorEditTrialPage = () => {
       editTrialObject = {...editTrialObject, ...ctml_json}
       setFormData(editTrialObject)
       dispatch(setCtmlModel(editTrialObject))
-      console.log('editTrialObject', editTrialObject)
     }
 
 

@@ -55,7 +55,6 @@ const RefreshTokenComponent = () => {
   }
 
   const myCallback = () => {
-    console.log(' in callback ', new Date().toLocaleString())
     refreshTokenOperation();
   }
 

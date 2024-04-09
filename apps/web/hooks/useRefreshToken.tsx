@@ -26,7 +26,10 @@ const useRefreshToken = () => {
         headers,
       });
       const token: any = response.data;
+      const oldToken = localStorage.getItem('ctims-accessToken');
       localStorage.setItem('ctims-accessToken', token.accessToken as string);
+      const newToken = localStorage.getItem('ctims-accessToken');
+      console.log('useRefreshToken:',new Date().toLocaleString(), oldToken?.slice(-6), newToken?.slice(-6));
       setResponse(token);
     }
     catch (error) {

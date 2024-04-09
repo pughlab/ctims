@@ -239,7 +239,6 @@ export const isObjectEmpty = (obj: any) => {
 }
 
 export const extractErrors = (errors: RJSFValidationError[]): string[] => {
-  console.log('extractErrors: ', errors);
   const keyToStringDict: any = {
     trialInformation: 'Trial information',
     prior_treatment_requirements: 'Prior treatment requirements',
