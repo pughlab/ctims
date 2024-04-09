@@ -22,15 +22,10 @@ function CustomApp({ Component, pageProps: { session, ...pageProps }, }: AppProp
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
-        const accessToken = localStorage.getItem('ctims-accessToken');
-        refreshTokenOperation();
-        if (!accessToken) {
-          // router.push('/');
-          signOut({redirect: false}).then(() => {
-            store.dispatch(logout());
-            router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-          });
-        }
+        setTimeout(() => {
+          refreshTokenOperation();
+        }, 1);
+        //refreshTokenOperation();
       }
     };
 
@@ -42,6 +37,15 @@ function CustomApp({ Component, pageProps: { session, ...pageProps }, }: AppProp
     };
   }, []);
 
+  useEffect(() => {
+    if (error) {
+      // router.push('/');
+      signOut({redirect: false}).then(() => {
+        store.dispatch(logout());
+        router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+      });
+    }
+  }, [error]);
 
   return (
     <Layout>
