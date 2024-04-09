@@ -29,6 +29,7 @@ const Main = () => {
 
   const selectedTrialGroupFromState = useSelector((state: RootState) => state.context.seletedTrialGroupId);
   const selectedTrialGroupIsAdminFromState = useSelector((state: RootState) => state.context.isTrialGroupAdmin);
+  const isLoggedInFromState = useSelector((state: RootState) => state.context.isAccessTokenSet);
 
   const dispatch = useDispatch();
 
@@ -37,8 +38,11 @@ const Main = () => {
     if (!sessionData) {
       return;
     }
-    localStorage.setItem('ctims-accessToken', sessionData['accessToken'] as string);
-    dispatch(setIsAccessTokenSet(true));
+    // only set the access token first time from login
+    if (!isLoggedInFromState) {
+      localStorage.setItem('ctims-accessToken', sessionData['accessToken'] as string);
+      dispatch(setIsAccessTokenSet(true));
+    }
 
     setActiveTab(0);
   }, [sessionData])

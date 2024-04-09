@@ -71,18 +71,20 @@ const IdleComponent = () => {
 
       // Auto save before timeout and logout if there's trial to save
       const currentState = store.getState();
-      const {trialModel, ctmlJson} = saveToServer(currentState)
-      saveTrialOperation(trialModel, ctmlJson).then(() => {
-        //localStorage.removeItem('ctims-accessToken') // Remove the access token from local storage
-        //router.push('/'); // Redirect to the home page
-        if (!error) {
-          // check if there is error, if there's error from useAxios then no need to router.push a 2nd time
-          signOut({redirect: false}).then(() => {
-            store.dispatch(logout());
-            router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-          });
-        }
-      });
+      if (currentState.finalModelAndErrors.ctmlModel) {
+        const {trialModel, ctmlJson} = saveToServer(currentState)
+        saveTrialOperation(trialModel, ctmlJson).then(() => {
+          //localStorage.removeItem('ctims-accessToken') // Remove the access token from local storage
+          //router.push('/'); // Redirect to the home page
+          if (!error) {
+            // check if there is error, if there's error from useAxios then no need to router.push a 2nd time
+            signOut({redirect: false}).then(() => {
+              store.dispatch(logout());
+              router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+            });
+          }
+        });
+      }
     }
 
     return () => {
@@ -107,7 +109,6 @@ const IdleComponent = () => {
     }
 
     const getCtmlJsonOnly = () => {
-      if (!ctmlModel) return;
       let ctmlModelCopy;
       const age_group = ctmlModel.age_group;
       const trialInformation = ctmlModel.trialInformation;
@@ -120,7 +121,6 @@ const IdleComponent = () => {
     }
 
     const getTrialModelOnly = () => {
-      if (!ctmlModel) return;
       return {
         nct_id: ctmlModel.trialInformation.trial_id,
         nickname: ctmlModel.trialInformation.nickname,
@@ -130,13 +130,10 @@ const IdleComponent = () => {
       }
     }
 
-
-
     const trialModel = getTrialModelOnly();
     const ctmlJson = getCtmlJsonOnly();
 
     return { trialModel, ctmlJson };
-
   }
 
   return (
