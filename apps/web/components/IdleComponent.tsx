@@ -69,7 +69,7 @@ const IdleComponent = () => {
         clearInterval(interval); // Clear the interval
       }
 
-      // Auto save before timeout and logout
+      // Auto save before timeout and logout if there's trial to save
       const currentState = store.getState();
       const {trialModel, ctmlJson} = saveToServer(currentState)
       saveTrialOperation(trialModel, ctmlJson).then(() => {
@@ -107,6 +107,7 @@ const IdleComponent = () => {
     }
 
     const getCtmlJsonOnly = () => {
+      if (!ctmlModel) return;
       let ctmlModelCopy;
       const age_group = ctmlModel.age_group;
       const trialInformation = ctmlModel.trialInformation;
@@ -119,6 +120,7 @@ const IdleComponent = () => {
     }
 
     const getTrialModelOnly = () => {
+      if (!ctmlModel) return;
       return {
         nct_id: ctmlModel.trialInformation.trial_id,
         nickname: ctmlModel.trialInformation.nickname,
