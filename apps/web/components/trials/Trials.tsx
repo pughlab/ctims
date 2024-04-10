@@ -48,6 +48,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
       icon: 'pi pi-pencil',
       command: () => {
         dispatch(setIsFormDisabled((rowClicked?.user.email !== data.user.email) && !isTrialGroupAdmin));
+       // console.log(" /trials/edit/${rowClicked.id}",rowClicked.id )
         router.push(`/trials/edit/${rowClicked.id}`);
       }
     },
@@ -85,6 +86,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
     let isShown = (rowEntered === rowData);
     if (rowClicked) {
       isShown = rowData.id === rowClicked.id;
+      //console.log("Row Id",  rowClicked.id)
     }
     return (
       <div className={styles.trailsEllipseBtn}>
@@ -113,7 +115,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
     }
     localStorage.setItem('ctims-accessToken', data['accessToken'] as string);
     sessionStorage.removeItem('imported_ctml');
-    // console.log('data', data)
+    //console.log('data1', data)
   }, [data])
 
   useEffect(() => {
@@ -136,14 +138,18 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
   }
 
   const handleCreateCTMLClicked = (val: string) => {
+ 
     if (val) {
-      dispatch(setIsFormDisabled(false));
-      dispatch(setTrialNctId(val));
+     dispatch(setIsFormDisabled(false));
+     dispatch(setTrialNctId(val));
+
+
       router.push(`/trials/create/${props.selectedTrialGroup.plainRole}`);
     }
   }
 
   const onImportClicked = () => {
+
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.style.display = 'none'; // Ensure it's not displayed
@@ -166,7 +172,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
             ctmlModel = JSON.stringify(ctmlModel, null, 2);
           }
           sessionStorage.setItem('imported_ctml', ctmlModel);
-          router.push(`/trials/import`);
+          router.push(`/trials/create/import`);
         };
 
         reader.onerror = function() {
@@ -192,6 +198,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
 
     // Programmatically trigger a click on the input element
     fileInput.click();
+
   }
 
   return (
