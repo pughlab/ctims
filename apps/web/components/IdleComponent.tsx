@@ -84,6 +84,12 @@ const IdleComponent = () => {
             });
           }
         });
+      } else {
+        // no trial to save, just logout
+        signOut({redirect: false}).then(() => {
+          store.dispatch(logout());
+          router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+        });
       }
     }
 
