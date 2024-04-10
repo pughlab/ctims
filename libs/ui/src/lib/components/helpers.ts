@@ -313,7 +313,11 @@ export const sortTreeNode = (treeNode: TreeNode): TreeNode => {
     treeNode.children.sort((a, b) => {
       let ret = 0;
       if (a.data.type === b.data.type) {
-        ret = a.data.originalIndex - b.data.originalIndex;
+        if (a.data.nodeLabel && b.data.nodeLabel) {
+          ret = a.data.nodeLabel.localeCompare(b.data.nodeLabel);
+        } else {
+          ret = a.data.originalIndex - b.data.originalIndex;
+        }
       } else if (a.data.type === EComponentType.ClinicalForm) {
         ret = -1;
       } else if (a.data.type === EComponentType.GenomicForm) {
@@ -325,7 +329,11 @@ export const sortTreeNode = (treeNode: TreeNode): TreeNode => {
       } else if (!a.data.hasOwnProperty('type') || b.data.type === EComponentType.AndOROperator) {
         ret =  1;
       } else {
-        ret = 0;
+        if (a.data.nodeLabel && b.data.nodeLabel) {
+          ret = a.data.nodeLabel.localeCompare(b.data.nodeLabel);
+        } else {
+          ret = 0;
+        }
       }
       return ret;
     });
