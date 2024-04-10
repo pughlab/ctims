@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {useSession} from "next-auth/react";
+import {signOut, useSession} from "next-auth/react";
 import {TabPanel, TabView} from "primereact/tabview";
 import IdleComponent from "../../components/IdleComponent";
 import TopBar from "../../components/trials/TopBar";
@@ -11,9 +11,12 @@ import TrialGroupsDropdown from "../../components/trials/TrialGroupsDropdown";
 import useGetTrialsForUsersInGroup from "../../hooks/useGetTrialsForUsersInGroup";
 import {Toast} from "primereact/toast";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../store/store";
+import {RootState, store} from "../../store/store";
 import MatchMinerConsole from "../../components/matchminer/MatchMinerConsole";
 import {setIsAccessTokenSet} from "../../store/slices/contextSlice";
+import {logout} from "../api/auth/[...nextauth]";
+import process from "process";
+import {useRouter} from "next/router";
 
 const Main = () => {
 
@@ -32,14 +35,20 @@ const Main = () => {
   const isLoggedInFromState = useSelector((state: RootState) => state.context.isAccessTokenSet);
 
   const dispatch = useDispatch();
+  const router = useRouter();
 
   // TODO: abstract the refreshTokenOperation set and clear interval to a hook
   useEffect(() => {
+    console.log('sessionData', sessionData)
     if (!sessionData) {
-      return;
+      // if there's no session, should also log out
+      signOut({redirect: false}).then(() => {
+        store.dispatch(logout());
+        router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+      });
     }
     // only set the access token first time from login
-    if (!isLoggedInFromState) {
+    if (sessionData && !isLoggedInFromState) {
       localStorage.setItem('ctims-accessToken', sessionData['accessToken'] as string);
       dispatch(setIsAccessTokenSet(true));
     }

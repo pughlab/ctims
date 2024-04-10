@@ -1,6 +1,5 @@
 import useRefreshToken from "../hooks/useRefreshToken";
 import {useEffect, useRef, useState} from "react";
-import jwt_decode from "jwt-decode";
 import {useSelector} from "react-redux";
 import {RootState} from "../store/store";
 
@@ -14,6 +13,8 @@ const RefreshTokenComponent = () => {
   const isLoggedInFromState = useSelector((state: RootState) => state.context.isAccessTokenSet);
   // only run this once
   const [count, setCount] = useState(0);
+
+  const TIMEOUT = 13 * 60 * 1000;
 
   useEffect(() => {
     if (!isLoggedInFromState) {
@@ -45,12 +46,12 @@ const RefreshTokenComponent = () => {
   const startRefreshTokenTimer = () => {
     if (localStorage.getItem('ctims-accessToken') && count === 0) {
       setCount(count + 1);
-      const token: any = jwt_decode(localStorage.getItem('ctims-accessToken'));
-      const expires = new Date(token.exp * 1000);
-      // refresh token 2 minutes before it expires
-      const timeout = expires.getTime() - Date.now() - (2 * 60 * 1000);
-      console.log('setInterval start at timeout ', timeout)
-      refreshTokenTimeout.current = setInterval(() => myCallback(), timeout);
+      // clear the previous interval
+      if (refreshTokenTimeout.current) {
+        clearInterval(refreshTokenTimeout.current);
+      }
+
+      refreshTokenTimeout.current = setInterval(() => myCallback(), TIMEOUT);
     }
   }
 
