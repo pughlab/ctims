@@ -10,6 +10,8 @@ import FooterComponent from "apps/web/components/FooterComponent";
 import TrialGroupsDropdown from "../../components/trials/TrialGroupsDropdown";
 import useGetTrialsForUsersInGroup from "../../hooks/useGetTrialsForUsersInGroup";
 import {Toast} from "primereact/toast";
+import {BlockUI} from "primereact/blockui";
+import {ProgressSpinner} from "primereact/progressspinner";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import MatchMinerConsole from "../../components/matchminer/MatchMinerConsole";
@@ -29,7 +31,8 @@ const Main = () => {
 
   const selectedTrialGroupFromState = useSelector((state: RootState) => state.context.seletedTrialGroupId);
   const selectedTrialGroupIsAdminFromState = useSelector((state: RootState) => state.context.isTrialGroupAdmin);
-
+  const isLongOperationFromState = useSelector((state: RootState) => state.appContext.isLongOperation);
+  
   const dispatch = useDispatch();
 
   // TODO: abstract the refreshTokenOperation set and clear interval to a hook
@@ -81,6 +84,8 @@ const Main = () => {
   return (
     <>
       <div className={styles.container}>
+        <BlockUI blocked={isLongOperationFromState}>
+        { isLongOperationFromState && (<ProgressSpinner></ProgressSpinner>)}
         <IdleComponent />
         <Toast ref={retrieveTrialsErrorToast}></Toast>
         {sessionStatus === 'loading' && <div>Loading...</div>}
@@ -105,6 +110,7 @@ const Main = () => {
           <FooterComponent/>
         </>}
         { sessionStatus === 'unauthenticated' && <div>Please log in to view this page.</div>}
+        </BlockUI>
       </div>
     </>
   );

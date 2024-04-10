@@ -8,10 +8,13 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { CSVLink } from "react-csv";
 import {TrialStatusEnum} from "../../../../libs/types/src/trial-status.enum";
+import { setIsLoading } from 'apps/web/store/slices/appContextSlice';
+import { useDispatch } from 'react-redux';
 
 const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) => {
   const {data, status: sessionStatus} = useSession()
-
+  const dispatch = useDispatch();
+  
   useEffect(() => {
     if (!data) {
       return;
@@ -55,6 +58,7 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
       setResultFileName(trialSelected.protocol_no + '_result.csv');
       const processedData = postProcessCSVData(getDownloadResultsResponse);
       setDownloadResults(processedData);
+      dispatch(setIsLoading(false));
     }
   }, [getDownloadResultsResponse])
 
@@ -122,6 +126,7 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
 
   const downloadClicked = (e: any) => {
     setTrialSelected(e);
+    dispatch(setIsLoading(true));
     getDownloadResultsOperation(e.id, e.protocol_no);
   }
 
