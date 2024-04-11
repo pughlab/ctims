@@ -39,8 +39,9 @@ const Main = () => {
 
   // TODO: abstract the refreshTokenOperation set and clear interval to a hook
   useEffect(() => {
-    console.log('sessionData', sessionData)
-    if (!sessionData) {
+    // sessionData gets callback twice, 1st time is server side rendering (denoted by loading status)
+    // 2nd time is client side which will be either authenticated or unauthenticated
+    if (!sessionData && sessionStatus !== 'loading') {
       // if there's no session, should also log out
       signOut({redirect: false}).then(() => {
         store.dispatch(logout());
