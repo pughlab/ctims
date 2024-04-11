@@ -746,7 +746,9 @@ Cypress.Commands.add( 'enterGenomicConditions', (orConditions) => {
   cy.clickMultipleFunction(getAddCriteriaToSameList(), orConditions.length - 1);
 
   getSubGroup()
-    .find('.p-treenode-children>li').each((childElement, index) => {
+    .find('.p-treenode-children>li>div').each((childElement, index) => {
+    cy.log(`Number of child elements: ${childElement.length}`);
+
       if (Cypress.$(childElement).length > 0) {
         cy.wrap(childElement).click(); // click on each child element
         const condition = orConditions[index % orConditions.length]; // get the corresponding and condition
@@ -755,7 +757,11 @@ Cypress.Commands.add( 'enterGenomicConditions', (orConditions) => {
           switch (key) {
             case 'hugo_symbol':
               if (typeof value === "string") {
-                getHugoSymbol().fill(value);
+                const firstThreeChars = value.substring(0, 3); // Extract first three characters
+                getHugoSymbol().clear().type(firstThreeChars);
+                cy.wait(1000);
+                //locator to select the value from auto droplist
+                cy.get('.p-autocomplete-panel>ul>li').contains(value).click({force: true})
               }
               break;
 
@@ -774,7 +780,7 @@ Cypress.Commands.add( 'enterGenomicConditions', (orConditions) => {
 
             case 'molecular_function':
               if (typeof value === "string") {
-                getMolecularFunction().click();
+                getMolecularFunction().click({force: true});
                 getGenomicDropDown().contains(value).click()
 
               }
@@ -782,7 +788,7 @@ Cypress.Commands.add( 'enterGenomicConditions', (orConditions) => {
 
             case 'variant_classification':
               if (typeof value === "string") {
-                getVariantClassification().click();
+                getVariantClassification().click({force: true});
                 getGenomicDropDown().contains(value.replace(/_/g, ' ')).click();
               }
               break;
@@ -807,65 +813,67 @@ Cypress.Commands.add( 'enterGenomicConditions', (orConditions) => {
 
             case 'wildtype':
               if (typeof value === "string") {
-                getWildType().click();
+                getWildType().click({force: true});
                 getGenomicDropDown().contains(value).click();
               }
               break;
 
             case 'pole_status':
               if (typeof value === "string") {
-                getPoleStatus().click();
+                getPoleStatus().click({force: true});
                 getGenomicDropDown().contains(value).click();
               }
               break;
 
             case 'uva_status':
               if (typeof value === "string") {
-                getUVAStatus().click()
+                getUVAStatus().click({force: true})
                 getGenomicDropDown().contains(value).click()
               }
               break;
 
             case 'tobacco_status':
               if (typeof value === "string") {
-                getTobaccoStatus().click()
+                getTobaccoStatus().click({force: true})
                 getGenomicDropDown().contains(value).click()
               }
               break;
 
             case 'apobec_status':
               if (typeof value === "string") {
-                getApobecStatus().click()
+                getApobecStatus().click({force: true})
                 getGenomicDropDown().contains(value).click()
               }
               break;
 
             case 'temozolomide_status':
               if (typeof value === "string") {
-                getTemozolomideStatus().click()
+                getTemozolomideStatus().click({force: true})
                 getGenomicDropDown().contains(value).click()
               }
               break;
 
             case 'mmr_status':
               if (typeof value === "string") {
-                getMMRStatus().click()
+                getMMRStatus().click({force: true})
                 getGenomicDropDown().contains(value).click()
               }
               break;
 
             case 'ms_status':
               if (typeof value === "string") {
-                getMSStatus().click()
+                getMSStatus().click({force: true})
                 getGenomicDropDown().contains(value).click()
               }
-              break;
-
+              break
           }
         });
-      } else {
+      }
+  //  } //first if
+     else {
         return false;
       }
+
     });
 })
 

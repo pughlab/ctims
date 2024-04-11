@@ -154,11 +154,11 @@ describe('Validate as TrialGroupx Admin on "NCT02503722_Osimertinib" ', { testIs
       ctmlTestData.nct_purpose,
       ctmlTestData.status)
   })
-   /*it('should Save Trial information values, click edit NCT02503722_Osimertinib to re-enter, as Admin',() => {
+   it('should Save Trial information values, click edit NCT02503722_Osimertinib to re-enter, as Admin',() => {
     cy.clickSaveEditButtonForTrialGroupAdmin("NCT02503722_Osimertinib TrialGroupx Admin role")
   })
 
-  //!**************Prior Treatment Requirement
+  //**************Prior Treatment Requirement
   it('should enter the Prior Treatment Requirement values of NCT02503722_Osimertinib as Admin', () => {
     customCommands.enterPriorTreatmentRequirements(ctmlTestData, priorTreatmentRequirement)
   });
@@ -219,7 +219,7 @@ describe('Validate as TrialGroupx Admin on "NCT02503722_Osimertinib" ', { testIs
 
   it('should Save Trial information values, click edit NCT02503722_Osimertinib to re-enter, as Admin',() => {
     cy.clickSaveEditButtonForTrialGroupAdmin("NCT02503722_Osimertinib TrialGroupx Admin role")
-  })*/
+  })
 
 //!************ Arm 1  *****************
   it('should enter the values in "Treatment List and Matching criteria modal" for Arm 1 "NCT02503722_Osimertinib" as Admin' , () => {
