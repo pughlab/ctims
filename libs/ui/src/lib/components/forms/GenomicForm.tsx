@@ -281,21 +281,62 @@ export const GenomicForm = (props: IFormProps) => {
         'title': 'Hugo Symbol',
         "description": "Gene symbol as determined by https://www.genenames.org/",
       },
-      "variant_category": {
-        "$ref": "#/definitions/variant_category",
-        'title': 'Variant Category',
-        "description": "Type of alteration",
+      // "variant_category": {
+      //   "$ref": "#/definitions/variant_category",
+      //   'title': 'Variant Category',
+      //   "description": "Type of alteration",
+      // },
+      "containerObject": {
+        'title': '',
+        'type': 'object',
+        'properties': {
+          "variant_category": {
+            "$ref": "#/definitions/variant_category",
+            'title': 'Variant Category',
+            "description": "Type of alteration",
+          },
+        },
+        "dependencies": {
+          "variant_category": {
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "variant_category": {
+                      "const": "Mutation"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    'protein_change': {
+                      'type': 'string',
+                      'title': 'Protein Change',
+                      "description": "Curate a specific protein change (must be in the correct format ex. p.V600E, p.E684_E686del, p.G29_T35delinsA, p.X893_splice, p.L281_H282insAAR, p.L28Ifs*30, p.P162_D166dup)",
+                    },
+                    'wildcard_protein_change': {
+                      'type': 'string',
+                      'title': 'Wildcard Protein Change',
+                      "description": "Curate variations of a protein change (must be in the correct format ex. p.T70). This allows matching of any mutation at this site. ",
+                    },
+                  },
+                  "required": []
+                }
+              },
+            ]
+          }
+        }
       },
-      'protein_change': {
-        'type': 'string',
-        'title': 'Protein Change',
-        "description": "Curate a specific protein change (must be in the correct format ex. p.V600E, p.E684_E686del, p.G29_T35delinsA, p.X893_splice, p.L281_H282insAAR, p.L28Ifs*30, p.P162_D166dup)",
-      },
-      'wildcard_protein_change': {
-        'type': 'string',
-        'title': 'Wildcard Protein Change',
-        "description": "Curate variations of a protein change (must be in the correct format ex. p.T70). This allows matching of any mutation at this site. ",
-      },
+      // 'protein_change': {
+      //   'type': 'string',
+      //   'title': 'Protein Change',
+      //   "description": "Curate a specific protein change (must be in the correct format ex. p.V600E, p.E684_E686del, p.G29_T35delinsA, p.X893_splice, p.L281_H282insAAR, p.L28Ifs*30, p.P162_D166dup)",
+      // },
+      // 'wildcard_protein_change': {
+      //   'type': 'string',
+      //   'title': 'Wildcard Protein Change',
+      //   "description": "Curate variations of a protein change (must be in the correct format ex. p.T70). This allows matching of any mutation at this site. ",
+      // },
       "molecular_function": {
         "$ref": "#/definitions/molecular_function",
         'title': 'Molecular Function',
@@ -361,7 +402,37 @@ export const GenomicForm = (props: IFormProps) => {
         '$ref': '#/definitions/ms_status',
         "description": "Curate a specific microsatellite stability status",
       }
-    }
+    },
+    // "dependencies": {
+    //   "variant_category": {
+    //     "allOf": [
+    //       {
+    //         "if": {
+    //           "properties": {
+    //             "variant_category": {
+    //               "const": "Mutation"
+    //             }
+    //           }
+    //         },
+    //         "then": {
+    //           "properties": {
+    //             'protein_change': {
+    //               'type': 'string',
+    //               'title': 'Protein Change',
+    //               "description": "Curate a specific protein change (must be in the correct format ex. p.V600E, p.E684_E686del, p.G29_T35delinsA, p.X893_splice, p.L281_H282insAAR, p.L28Ifs*30, p.P162_D166dup)",
+    //             },
+    //             'wildcard_protein_change': {
+    //               'type': 'string',
+    //               'title': 'Wildcard Protein Change',
+    //               "description": "Curate variations of a protein change (must be in the correct format ex. p.T70). This allows matching of any mutation at this site. ",
+    //             },
+    //           },
+    //           "required": []
+    //         }
+    //       },
+    //     ]
+    //   }
+    // }
   };
   const genomicUiSchema = {
     "ui:ObjectFieldTemplate": CtimsMatchDialogObjectFieldTemplate,
