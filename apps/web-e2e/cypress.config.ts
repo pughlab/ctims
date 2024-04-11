@@ -93,13 +93,13 @@ const cypressJsonConfig: EndToEndConfigOptions = {
 
 };
 module.exports = defineConfig({
-  //viewportWidth: 1920,
-  //viewportHeight: 1080,
+ // viewportWidth: 1200,
+ // viewportHeight: 800,
   "env": {
     //"baseUrl": "http://localhost:4200/",
   //  baseUrl: 'http://localhost:3000',
-    baseUrl: "https://qa-app.ctims.ca/",
- // baseUrl: 'https://ctims-web.qa02.technainstitute.net',
+  //  baseUrl: "https://qa-app.ctims.ca/",
+  baseUrl: 'https://ctims-web.qa02.technainstitute.net',
  //   prod: 'https://ctims.ca/',
     defaultCommandTimeout: 30000,
     allureReuseAfterSpec: true,

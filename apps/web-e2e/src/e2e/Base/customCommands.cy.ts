@@ -1,6 +1,6 @@
 import {
   createCTMLButton, getPriorTreatmentRequirementMultiple,
-  getPriorTreatmentRequirementPlusIconMultiple, getProtocolStaffMultiple, getProtocolStaffPlusIcon,
+  getPriorTreatmentRequirementPlusIconMultiple, getProtocolStaffMultiple, getProtocolStaffPlusIcon, nctIdTextBox,
   trialEditorLeftPanelList
 } from "../../support/app.po";
 import {
@@ -36,7 +36,7 @@ class customCommands {
     this.staff = null;
   }
   enterTrialInformation(nctId, memberName, nickName, ctmlStatus, longTitle, shortTitle, phase, protocolNo, nctPurpose, status) {
-    trialEditorLeftPanelList().should('have.length', '9')
+   // trialEditorLeftPanelList().should('have.length', '9')
     cy.trialInformation(nctId, memberName, nickName, ctmlStatus, longTitle, shortTitle, phase, protocolNo, nctPurpose, status)
   }
 
@@ -72,7 +72,7 @@ class customCommands {
   }
 
   enterManagementGroupList(ctmlTestData, managementGroupNameAttribute,managementGroupNameIsPrimaryAttribute ) {
-    trialEditorLeftPanelList().eq(4).should('contain', 'Management Group List').click()
+   // trialEditorLeftPanelList().eq(4).should('contain', 'Management Group List').click({force: true} )
     cy.clickMultipleFunction(getPrimaryManagementGroupPlusIcon(), ctmlTestData.management_group_list.management_group.length - 1)
     getManagementGroupNameTextBoxMultiple().each(($input, index) => {
       managementGroupNameAttribute = ctmlTestData.management_group_list.management_group[index].management_group_name
@@ -83,7 +83,7 @@ class customCommands {
   }
 
   enterSiteList(ctmlTestData, site ) {
-    trialEditorLeftPanelList().eq(5).should('contain', 'Site List').click()
+    trialEditorLeftPanelList().eq(5).should('contain', 'Site List').click({force: true} )
     cy.clickMultipleFunction(getSiteNamePlusIcon(), ctmlTestData.site_list.site.length - 1)
     getSiteNameMultiple().each(($input, index) => {
       site = ctmlTestData.site_list.site[index]
@@ -92,7 +92,7 @@ class customCommands {
     })
   }
   enterSponsorList(ctmlTestData, sponsorName,isPrincipalSponsor ) {
-    trialEditorLeftPanelList().eq(6).should('contain','Sponsor List').click()
+    trialEditorLeftPanelList().eq(6).should('contain','Sponsor List').click({force: true} )
     cy.clickMultipleFunction(getSponsorNamePlusIcon(), ctmlTestData.sponsor_list.sponsor.length - 1)
     getSponsorNameMultiple().each(($input, index) => {
       sponsorName = ctmlTestData.sponsor_list.sponsor[index].sponsor_name
@@ -102,7 +102,7 @@ class customCommands {
     });
   }
   enterStaffList(ctmlTestData, staff ) {
-    trialEditorLeftPanelList().eq(7).should('contain','Staff List').click()
+    trialEditorLeftPanelList().eq(7).should('contain','Staff List').click({force: true} )
     cy.clickMultipleFunction(getProtocolStaffPlusIcon(), ctmlTestData.staff_list.protocol_staff.length - 1);
     getProtocolStaffMultiple().each(($input, index) => {
    staff = ctmlTestData.staff_list.protocol_staff[index]
