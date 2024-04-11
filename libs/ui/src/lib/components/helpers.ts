@@ -24,6 +24,14 @@ export const protein_change_validation_func = (str: string) => {
   return regex.test(str);
 }
 
+export const all_protein_change_validation_func = (str: string) => {
+  const regex = /^p\.(?:[A-Z]?\d+_[A-Z]?\d+ins)[a-zA-Z]+$|^p\.(?:(?!ins).)*(?:(?!ins)[a-zA-Z])+((\d*\*)|(\*\d*))?$|^p\.(?:.*delins[a-zA-Z]*)/;
+  if (!str) {
+    return true;
+  }
+  return regex.test(str);
+}
+
 export const stringContains = (str: string, search: string) => {
   return str.toLowerCase().indexOf(search.toLowerCase()) !== -1;
 }

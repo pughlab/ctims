@@ -21,7 +21,12 @@ import CtimsInput from "../../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../../custom-rjsf-templates/CtimsDropdown";
 import {CtimsDialogContext, CtimsDialogContextType} from "../CtimsMatchDialog";
 import { Checkbox } from 'primereact/checkbox';
-import {wildcard_protein_change_validation_func, getCurrentOperator, protein_change_validation_func} from "../helpers";
+import {
+  wildcard_protein_change_validation_func,
+  getCurrentOperator,
+  protein_change_validation_func,
+  all_protein_change_validation_func
+} from "../helpers";
 import AutocompleteField from "../CtimsAutoCompleteComponent";
 
 
@@ -519,6 +524,13 @@ export const GenomicForm = (props: IFormProps) => {
     }
     if (!protein_change_validation_func(formData.protein_change)) {
       errors.protein_change.addError('Must start with p.');
+    }
+    if (formData.protein_change && formData.wildcard_protein_change) {
+      errors.protein_change.addError('Cannot have both protein change and wildcard protein change filled.');
+    }
+    if (!all_protein_change_validation_func(formData.protein_change)
+      || !all_protein_change_validation_func(formData.wildcard_protein_change)) {
+      errors.protein_change.addError('Invalid protein change format.');
     }
     // console.log('custom validate errors: ', errors)
     return errors;
