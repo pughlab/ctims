@@ -259,7 +259,7 @@ export const getClinicalDropdown = () => cy.get('.p-dropdown-panel>div>ul>li') /
 //******************* Genomic ********************************************************//
 
 //Hugo Symbol
-export const getHugoSymbol = () => cy.get('#root_hugo_symbol')
+export const getHugoSymbol = () => cy.get('input[role="combobox"]')
 
 //Variant Category
 export const getVariantCategory = () => cy.get('#root_variant_category')
