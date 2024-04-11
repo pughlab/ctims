@@ -7,6 +7,8 @@ export const createCTMLButton = () => cy.get('button[aria-label=\'Create CTML\']
 export const trialTableUsername = () => cy.get('.TopBar_userContainer__Dcaw3')
 export const result = () => cy.get('a[id=\'pr_id_17_header_1\'] span[class=\'p-tabview-title\']')
 
+export const nctIdTextBox = () => cy.get('#trialId')
+export const OkButton = () => cy.get('button[aria-label="OK"]')
 //TrialEditor Header
 export const trialEditorHeader = () => cy.get('.EditorTopBar_title__kDE8R')
 
@@ -106,7 +108,7 @@ export const getCheckBoxLevelIsSuspended = () => cy.get('#object-field-template-
 export const getPriorTreatmentRequirement = () => cy.get('#root_prior_treatment_requirements_0')
 export const getPriorTreatmentRequirementRegularExpression = () => cy.get('[id^="root_prior_treatment_requirements_"]')
 export const getPriorTreatmentRequirementPlusIcon = () => cy.get('#array-item-list-root_prior_treatment_requirements>div>i:nth-child(1)')
-export const getPriorTreatmentRequirementPlusIconMultiple = () => cy.get('#array-item-list-root_prior_treatment_requirements>div>.pi-plus-circle')
+export const getPriorTreatmentRequirementPlusIconMultiple = () => cy.get('#array-item-list-root_prior_treatment_requirements_prior_treatment_requirement>div>.pi-plus-circle')
 export const getPriorTreatmentRequirementMultiple = () => cy.get('[id^=root_prior_treatment_requirements]')
 
 //Age
@@ -187,7 +189,7 @@ export const getMemberValidateModal = () => {
 }
 
 const memberValidateButton = () => cy.get('button[aria-label="Validate"] span[class="p-button-label p-c"]').should('be.visible').click()
-const validateModalCompleteMessage = () => cy.get('#pr_id_6_content').should('be.visible')
+const validateModalCompleteMessage = () => cy.get('.p-dialog-content').should('be.visible')
 const validateModalOkButton = () => cy.get('.p-dialog-footer > div > .p-button').click()
 
 //******************* Match Modal Criteria ********************************************************//

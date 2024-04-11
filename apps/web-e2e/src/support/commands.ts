@@ -114,7 +114,7 @@ import {
   getOncotreeExclamation,
   getClinicalTMB,
   createCTMLButton,
-  ctimsUserTapestryMember
+  ctimsUserTapestryMember, nctIdTextBox, OkButton
 } from './app.po';
 import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib";
 import {NCT03297606_CAPTUR} from "../fixtures/NCT03297606_CAPTUR";
@@ -144,25 +144,27 @@ Cypress.Commands.add('trialInformation', (nctId: string,
                                           ProtocolNumber: string,
                                           protocolPurpose: string,
                                           status: string) => {
-  trialEditorLeftPanelList().eq(0).should('contain','Trial Information').click()
-  getTrialId().clear().fill(nctId);
-  getTrialNickname().clear().fill(nickName);
-  getPrincipalInvestigator().clear().fill(principalInvestigator);
+  nctIdTextBox().fill(nctId)
+  OkButton().click()
+ // trialEditorLeftPanelList().eq(0).should('contain','Trial Information').click()
+ // getTrialId().clear().fill(nctId);
+  getTrialNickname().fill(nickName);
+  getPrincipalInvestigator().fill(principalInvestigator);
   //ctml status
-  getCtmlStatusDropdown().click()
+  getCtmlStatusDropdown().click({force: true} )
   // cy.wait(1000)
-  getCtmlStatusDropdownList().contains(ctmlStatus).click()
-  getLongTitle().clear().fill(longTitle)
-  getShortTitle().clear().fill(shortTitle)
+  getCtmlStatusDropdownList().contains(ctmlStatus).click({force: true} )
+  getLongTitle().fill(longTitle)
+  getShortTitle().fill(shortTitle)
   //Phase
-  getClickPhase().click()
-  getPhaseDropdownList().contains(phase).click()
-  getClickPhase().click()
+  getClickPhase().click({force: true} )
+  getPhaseDropdownList().contains(phase).click({force: true} )
+  getClickPhase().click({force: true} )
   //cy.wait(1000)
-  getProtocolNumber().clear().fill(ProtocolNumber)
-  getNCTPurpose().clear().fill(protocolPurpose)
-  getTrialInformationStatus().click()
-  getDefaultTrialEditorDropDown().contains(status).click()
+  getProtocolNumber().fill(ProtocolNumber)
+  getNCTPurpose().fill(protocolPurpose)
+  getTrialInformationStatus().click({force: true} )
+  getDefaultTrialEditorDropDown().contains(status).click({force: true} )
 });
 
 Cypress.Commands.add('priorTreatmentRequirement',(priorRequirement: string) => {
@@ -202,18 +204,18 @@ Cypress.Commands.add('priorTreatmentRequirementRepeatingGroup',(priorRequirement
 Cypress.Commands.add('age',(ageGroup: string) => {
   trialEditorLeftPanelList().eq(2).should('contain','Age').click()
    //getAgeGroup().fill(ageGroup);
-  getAgeGroup().click()
-  getDefaultTrialEditorDropDown().contains(ageGroup).click()
+  getAgeGroup().click({force: true} )
+  getDefaultTrialEditorDropDown().contains(ageGroup).click({force: true} )
 })
 
 Cypress.Commands.add('drugList',(drugName: string) => {
-  trialEditorLeftPanelList().eq(3).should('contain','Drug List').click()
+  trialEditorLeftPanelList().eq(3).should('contain','Drug List').click({force: true} )
   getDrugName().fill(drugName)
 })
 
 Cypress.Commands.add('clickMultiple',(selector, times) => {
   for (let i = 0; i < times; i++) {
-    cy.get(selector).click();
+    cy.get(selector).click({force: true});
   }
 })
 Cypress.Commands.add('clickMultipleFunction',(selector, times) => {
@@ -229,16 +231,16 @@ Cypress.Commands.add('clickMultipleArm',(selector, times) => {
 
 Cypress.Commands.add('clickMultipleDose', (armIndex, doses) => {
   for (let i = 1; i <= doses; i++) {
-    cy.get("div[id$='dose_level']>div>i:nth-child(1)").eq(armIndex).click()
+    cy.get("div[id$='dose_level']>div>i:nth-child(1)").eq(armIndex).click({force: true})
   }
 });
 
 Cypress.Commands.add('managementGroupList',(managementGroupName: string, isPrimary: string) => {
   trialEditorLeftPanelList().eq(4).should('contain','Management Group List').click()
   getManagementGroupName().click()
-  getDefaultTrialEditorDropDown().contains(managementGroupName).click()
+  getDefaultTrialEditorDropDown().contains(managementGroupName).click({force: true})
     //.fill(managementGroupName)
-  getPrimaryManagementGroup().contains(isPrimary).click()
+  getPrimaryManagementGroup().contains(isPrimary).click({force: true})
   getPrimaryManagementGroup().should('contain',isPrimary)
 })
 
@@ -246,16 +248,16 @@ Cypress.Commands.add('siteList',(siteName,
                                  siteStatus,
                                  coordinatingCenter,
                                  cancerCenterIRB) => {
-  trialEditorLeftPanelList().eq(5).should('contain', 'Site List').click()
-  getSiteName().click()
-  getDefaultTrialEditorDropDown().contains(siteName).click()
+  trialEditorLeftPanelList().eq(5).should('contain', 'Site List').click({force: true})
+  getSiteName().click({force: true})
+  getDefaultTrialEditorDropDown().contains(siteName).click({force: true})
     //.fill(siteName)
-  getSiteStatus().click()
-  getDefaultTrialEditorDropDown().contains(siteStatus).click()
+  getSiteStatus().click({force: true})
+  getDefaultTrialEditorDropDown().contains(siteStatus).click({force: true})
     //.fill(siteStatus)
-  getCoordinatingCenter().contains(coordinatingCenter).click()
+  getCoordinatingCenter().contains(coordinatingCenter).click({force: true})
   getCoordinatingCenter().should('contain',coordinatingCenter)
-  getCancerCenterIRB().contains(cancerCenterIRB).click()
+  getCancerCenterIRB().contains(cancerCenterIRB).click({force: true})
   getCancerCenterIRB().should('contain',cancerCenterIRB)
 })
 Cypress.Commands.add('fillPriorTreatmentRequirement',(input,priorTreatmentRequirement) => {
@@ -265,33 +267,33 @@ Cypress.Commands.add('fillDrugList',(input,drugName) => {
   cy.wrap(input).fill(drugName);
 })
 Cypress.Commands.add('fillSiteDetails',(input,site) => {
-  cy.wrap(input).find('.p-dropdown').eq(0).click().contains(site.site_name).click();
-  cy.wrap(input).find('.p-dropdown').eq(1).click().contains(site.site_status).click();
-  cy.wrap(input).find('.p-selectbutton').eq(0).click().contains(site.coordinating_center).click();
-  cy.wrap(input).find('.p-selectbutton').eq(1).click().contains(site.uses_cancer_center_irb).click();
+  cy.wrap(input).find('.p-dropdown').eq(0).click({force: true}).contains(site.site_name).click({force: true} );
+  cy.wrap(input).find('.p-dropdown').eq(1).click({force: true}).contains(site.site_status).click({force: true} );
+  cy.wrap(input).find('.p-selectbutton').eq(0).click({force: true}).contains(site.coordinating_center).click({force: true} );
+  cy.wrap(input).find('.p-selectbutton').eq(1).click({force: true}).contains(site.uses_cancer_center_irb).click({force: true} );
 })
 Cypress.Commands.add('fillSponsorDetails',(input,sponsorName,isPrincipalSponsor) => {
   cy.wrap(input).find('.p-inputtext').fill(sponsorName)
-  cy.wrap(input).find('.p-selectbutton').contains(isPrincipalSponsor).click();
+  cy.wrap(input).find('.p-selectbutton').contains(isPrincipalSponsor).click({force: true} );
 })
 Cypress.Commands.add('fillManagementGroup',(input,managementGroupNameAttribute,managementGroupNameIsPrimaryAttribute) => {
-  cy.wrap(input).find('.p-dropdown').click().contains(managementGroupNameAttribute).click();
-  cy.wrap(input).find('.p-selectbutton').contains(managementGroupNameIsPrimaryAttribute).click();
+  cy.wrap(input).find('.p-dropdown').click({force: true}).contains(managementGroupNameAttribute).click({force: true} );
+  cy.wrap(input).find('.p-selectbutton').contains(managementGroupNameIsPrimaryAttribute).click({force: true} );
 })
 
 Cypress.Commands.add('sponsorList',(sponsorName: string,principalSponsor: string) => {
   trialEditorLeftPanelList().eq(6).should('contain', 'Sponsor List').click()
   getSponsorName().fill(sponsorName)
-  getPrincipalSponsor().contains(principalSponsor).click()
+  getPrincipalSponsor().contains(principalSponsor).click({force: true})
   getPrincipalSponsor().should('contain',principalSponsor)
 })
 Cypress.Commands.add('fillProtocolStaffDetails',(input, staff) => {
-  trialEditorLeftPanelList().eq(7).should('contain','Staff List').click()
+  trialEditorLeftPanelList().eq(7).should('contain','Staff List').click({force: true} )
   cy.wrap(input).find('.p-inputtext').eq(0).fill(staff.first_name);
   cy.wrap(input).find('.p-inputtext').eq(1).fill(staff.last_name);
   cy.wrap(input).find('.p-inputtext').eq(2).fill(staff.email_address);
-  cy.wrap(input).find('.p-dropdown').eq(0).click().contains(staff.institution_name).click();
-  cy.wrap(input).find('.p-dropdown').eq(1).click().contains(staff.staff_role).click();
+  cy.wrap(input).find('.p-dropdown').eq(0).click({force: true}).contains(staff.institution_name).click({force: true} );
+  cy.wrap(input).find('.p-dropdown').eq(1).click({force: true}).contains(staff.staff_role).click({force: true} );
 
 })
 
@@ -300,22 +302,22 @@ Cypress.Commands.add('staffList',(firstName,
                                   email,
                                   institutionName,
                                   staffRole) => {
-  trialEditorLeftPanelList().eq(7).should('contain','Staff List').click()
+  trialEditorLeftPanelList().eq(7).should('contain','Staff List').click({force: true} )
   getProtocolStaffFirstName().fill(firstName)
   getProtocolStaffLastName().fill(lastName)
   getProtocolStaffEmail().fill(email)
-  getProtocolStaffInstitutionalName().click()
-  getDefaultTrialEditorDropDown().contains(institutionName).click()
-  getProtocolStaffRole().click()
-  getDefaultTrialEditorDropDown().contains(staffRole).click()
+  getProtocolStaffInstitutionalName().click({force: true} )
+  getDefaultTrialEditorDropDown().contains(institutionName).click({force: true} )
+  getProtocolStaffRole().click({force: true} )
+  getDefaultTrialEditorDropDown().contains(staffRole).click({force: true} )
    })
 
 Cypress.Commands.add('arm',(armCode,armDescription,armInternalID,armSuspended) => {
-  trialEditorLeftPanelList().eq(8).should('contain','Treatment List').click()
+  trialEditorLeftPanelList().eq(8).should('contain','Treatment List').click({force: true} )
   getArmCode().fill(String(armCode))
   getArmDescription().fill(armDescription)
   getArmInternalId().fill(String(armInternalID))
-  getArmSuspended().contains(armSuspended).click()
+  getArmSuspended().contains(armSuspended).click({force: true} )
   getArmSuspended().should('contain',armSuspended)
 })
 
@@ -323,7 +325,7 @@ Cypress.Commands.add('doseLevel',(levelCode,levelDescription,levelInternalId,lev
   getLevelCode().fill(levelCode)
   getLevelDescription().fill(levelDescription)
   getLevelInternalId().fill(String(levelInternalId))
-  getLevelSuspended().contains(levelSuspended).click()
+  getLevelSuspended().contains(levelSuspended).click({force: true} )
   getLevelSuspended().should('contain',levelSuspended)
 })
 
@@ -697,15 +699,15 @@ Cypress.Commands.add('inputArmDoseLevel', (ctmlTestData,$input, index) => {
   cy.wrap($input).find('.p-inputtext').eq(0).fill(arm.arm_code);
   cy.wrap($input).find('.p-inputtext').eq(1).fill(arm.arm_description);
   cy.wrap($input).find('.p-inputtext').eq(2).fill(arm.arm_internal_id.toString());
-  cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click();
+  cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click({force: true});
   //Expand Dose level
-  cy.get(`#array-item-list-root_treatment_list_step_0_arm_${index}_dose_level`).contains('Add Dose Level').click()
+  cy.get(`#array-item-list-root_treatment_list_step_0_arm_${index}_dose_level`).contains('Add Dose Level').click({force: true})
   cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]`).each(($input, doseIndex) => {
     const dose = doseLevels[doseIndex];
     cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).fill(dose.level_code);
     cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).fill(dose.level_description);
     cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).fill(dose.level_internal_id.toString());
-    cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
+    cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click({force: true});
   });
 });
 Cypress.Commands.add('inputArmDoseLevelMultiple', (ctmlTestData,$input, index) => {
@@ -718,7 +720,7 @@ Cypress.Commands.add('inputArmDoseLevelMultiple', (ctmlTestData,$input, index) =
   cy.wrap($input).find('.p-inputtext').eq(0).fill(arm.arm_code);
   cy.wrap($input).find('.p-inputtext').eq(1).fill(arm.arm_description);
   cy.wrap($input).find('.p-inputtext').eq(2).fill(arm.arm_internal_id.toString());
-  cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click();
+  cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click({force: true});
   cy.clickMultiple(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]>div>.pi-plus-circle`, doseLevels.length)
   cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]>div>div>div>div>#panel-children`).each(($input, doseIndex) => {
     const dose = doseLevels[doseIndex];
@@ -727,14 +729,14 @@ Cypress.Commands.add('inputArmDoseLevelMultiple', (ctmlTestData,$input, index) =
       cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).fill(dose.level_code);
       cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).fill(dose.level_description);
       cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).fill(dose.level_internal_id.toString());
-      cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
+      cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click({force: true});
     }
     if (doseIndex === 1) {
       cy.log(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`);
       cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_code`).fill(dose.level_code);
       cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_description`).fill(dose.level_description);
       cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_internal_id`).fill(dose.level_internal_id.toString());
-      cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click();
+      cy.get(`#root_treatment_list_step_0_arm_${index}_dose_level_${doseIndex}_level_suspended`).contains(dose.level_suspended).click({force: true});
     }
   })
 });
@@ -744,11 +746,10 @@ Cypress.Commands.add( 'enterGenomicConditions', (orConditions) => {
   cy.clickMultipleFunction(getAddCriteriaToSameList(), orConditions.length - 1);
 
   getSubGroup()
-    .find('.p-treenode-children>li')
-    .each((childElement, index) => {
+    .find('.p-treenode-children>li').each((childElement, index) => {
       if (Cypress.$(childElement).length > 0) {
         cy.wrap(childElement).click(); // click on each child element
-        let condition = orConditions[index % orConditions.length]; // get the corresponding and condition
+        const condition = orConditions[index % orConditions.length]; // get the corresponding and condition
         cy.log(orConditions.length.toString());
         Object.entries(condition.genomic).map(([key, value]) => {
           switch (key) {
@@ -1171,6 +1172,11 @@ Cypress.Commands.add('clickMatchAllGenomic', () => {
   cy.clickParentNode(0)
   cy.clickGenomic();
   cy.get('.p-checkbox-box').click()
+})
+Cypress.Commands.add('logout', () => {
+  cy.get('.TopBar_userContainer__Dcaw3>i').click()
+  cy.get('.p-menuitem>a').click()
+  cy.url().should('include', 'https://ctims-web.qa02.technainstitute.net/');
 })
 //});
 

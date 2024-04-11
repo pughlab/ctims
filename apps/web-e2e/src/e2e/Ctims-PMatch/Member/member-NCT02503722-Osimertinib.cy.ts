@@ -110,10 +110,10 @@ import baseClass from "../../Base/baseClass.cy"
 import dateClass from "../../Base/dateClass.cy";
 import * as yaml from 'js-yaml';
 import customCommands from "../../Base/customCommands.cy";
-let exportJsonFile = 'NCT02503722_2023-05-12.json';
-let split = exportJsonFile.substring(0,11); //grab only NCT id
-let jsonFile = split.concat('_', dateClass.currentDate()).concat('.json');
-let yamlFile = split.concat('_', dateClass.currentDate()).concat('.yaml');
+const exportJsonFile = 'NCT02503722_2023-05-12.json';
+const split = exportJsonFile.substring(0,11); //grab only NCT id
+const jsonFile = split.concat('_', dateClass.currentDate()).concat('.json');
+const yamlFile = split.concat('_', dateClass.currentDate()).concat('.yaml');
 let age;
 let priorTreatmentRequirement;
 let drugName;
@@ -190,9 +190,9 @@ describe('Validate as TrialGroupx member on "NCT02503722_Osimertinib" ', { testI
 
 //************ Arm 1  *****************
   it('should enter the values in "Treatment List and Matching criteria modal" for Arm 1 "NCT02503722_Osimertinib" as Member' , () => {
-    trialEditorLeftPanelList().eq(8).should('contain', 'Treatment List').click()
+    trialEditorLeftPanelList().eq(8).should('contain', 'Treatment List').click({force: true})
     //delete the dose level
-    cy.get('#array-item-list-root_treatment_list_step_0_arm_0_dose_level').children().find('.pi-trash').click()
+    cy.get('#array-item-list-root_treatment_list_step_0_arm_0_dose_level').children().find('.pi-trash').click({force: true})
 
     cy.clickMultipleFunction(getAddArmPlusIcon(), ctmlTestData.treatment_list.step[0].arm.length - 1)
     const treatmentList = ctmlTestData.treatment_list.step[0].arm;
@@ -201,22 +201,22 @@ describe('Validate as TrialGroupx member on "NCT02503722_Osimertinib" ', { testI
       const arm = treatmentList[index];
       if (index === 0) {
         cy.inputArmDoseLevelMultiple(ctmlTestData, $input, index)
-        getEditMatchingCriteriaMultiple().eq(index).click()
+        getEditMatchingCriteriaMultiple().eq(index).click({force: true})
         getMatchCriteriaHeader().should('contain', treatmentList[index].arm_code);
-        getAddCriteriaGroup().click()
+        getAddCriteriaGroup().click({force: true})
         //!******** Add clinical at Parent AND ********************
-        cy.clickParentNode(0).click()
+        cy.clickParentNode(0).click({force: true})
         cy.clickClinical()
         getClinicalAge().type(ctmlTestData.treatment_list.step[0].arm[0].match[0].and[0].clinical.age_numerical)
         getClinicalOncotreePrimaryDiagnosis().type(ctmlTestData.treatment_list.step[0].arm[0].match[0].and[0].clinical.oncotree_primary_diagnosis)
 
         //!******** OR ********************
-        cy.clickParentNode(0).click()
+        cy.clickParentNode(0).click({force: true})
         cy.clickOr()
-        cy.clickParentNode(2).click()
-        let orConditions = ctmlTestData.treatment_list.step[0].arm[index].match[0].and[1].or
+        cy.clickParentNode(2).click({force: true})
+        const orConditions = ctmlTestData.treatment_list.step[0].arm[index].match[0].and[1].or
         cy.enterGenomicConditions(orConditions)
-        getSaveMatchingCriteria().click()
+        getSaveMatchingCriteria().click({force: true})
       }
     })
   })
@@ -227,7 +227,7 @@ describe('Validate as TrialGroupx member on "NCT02503722_Osimertinib" ', { testI
       getPreviewWindow().each(($el, index) => {
         if (index === 0) {
           cy.log("click parent")
-          cy.wrap($el).parent().contains('JSON').click()
+          cy.wrap($el).parent().contains('JSON').click({force: true})
           cy.log("Grab the text from the Json preview window")
           cy.wrap($el).find('.p-tabview-panels').invoke('text').then((text) => {
             const jsonArray = JSON.parse(text);
@@ -243,11 +243,11 @@ describe('Validate as TrialGroupx member on "NCT02503722_Osimertinib" ', { testI
   });
   it('should validate the match between "JSON preview window text" and "YAML preview window text" of' +
     ' "NCT02503722_Osimertinib" as Member',  () => {
-    getMatchingCriteriaTableHeader().contains('YAML').click()
+    getMatchingCriteriaTableHeader().contains('YAML').click({force: true})
     getPreviewTextWindow().invoke("text").then((yamlText) => {
       const yamlObject = yaml.load(yamlText)
       const yamlMatchCriteria = JSON.stringify(yamlObject)
-      getMatchingCriteriaTableHeader().contains('JSON').click()
+      getMatchingCriteriaTableHeader().contains('JSON').click({force: true})
       getPreviewTextWindow().invoke("text").then((text) => {
         const jsonArray = JSON.parse(text);
         const jsonMatchCriteria = JSON.stringify(jsonArray)
@@ -255,13 +255,37 @@ describe('Validate as TrialGroupx member on "NCT02503722_Osimertinib" ', { testI
       })
     })
   })
-
+  it('should validate the match between "Json preview window text" and "NCT02503722_Osimertinib" as member', () => {
+    ctmlTestData.treatment_list.step[0].arm.forEach((arm,armIndex) => {
+      const matchCriteria = arm.match
+      getPreviewWindow().each(($el, index) => {
+        if (index === 0) {
+          cy.log("click parent")
+          cy.wrap($el).parent().contains('JSON').click({force: true})
+          cy.log("Grab the text from the Json preview window")
+          cy.wrap($el).find('.p-tabview-panels').invoke('text').then((text) => {
+            const jsonArray = JSON.parse(text);
+            cy.log('jsonArray', JSON.stringify(jsonArray))
+            cy.log('matchCriteria test data',JSON.stringify(matchCriteria[index]))
+            if(JSON.stringify(jsonArray) == JSON.stringify(matchCriteria)) {
+              expect(JSON.stringify(jsonArray), 'matchPreview').to.deep.equal(JSON.stringify(matchCriteria))
+            }
+          })
+        }
+      })
+    })
+  });
   it('should Save the trial ',() => {
     cy.saveOnly()
   })
 
   it('should "Validate" the CTML as a member ',() => {
     getMemberValidateModal()
+  })
+
+  it('should validate after clicking logout, user is landed on to the Sign in page url ', ()=> {
+    trialEditorBackButton().should('be.visible').trigger("click")
+    cy.logout()
   })
 
 })

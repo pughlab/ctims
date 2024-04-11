@@ -69,5 +69,6 @@ declare namespace Cypress {
     clickMatchAllGenomic()
     deleteTrialMemberTapestry(trialName: string)
     saveEditButtonForAll(trialGroupName: any, nickNameVal: any)
+    logout()
   }
 }

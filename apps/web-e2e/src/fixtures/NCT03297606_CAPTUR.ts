@@ -194,7 +194,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High_level_amplification",
                           "hugo_symbol": "FLT1",
-                          "variant_category": "CNV"
+                          "variant_category": "Copy Number Variation"
                         }
                       },
                       {
@@ -207,7 +207,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High_level_amplification",
                           "hugo_symbol": "KDR",
-                          "variant_category": "CNV"
+                          "variant_category": "Copy Number Variation"
                         }
                       },
                       {
@@ -220,7 +220,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High_level_amplification",
                           "hugo_symbol": "FLT4",
-                          "variant_category": "CNV"
+                          "variant_category": "Copy Number Variation"
                         }
                       },
                       {
@@ -264,7 +264,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                           "fusion_partner_hugo_symbol": "ABL1",
                           "hugo_symbol": "BCR",
                           "molecular_function": "Activating",
-                          "variant_category": "SV"
+                          "variant_category": "Structural Variation"
                         }
                       },
                       {
@@ -307,7 +307,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                       {
                         "genomic": {
                           "hugo_symbol": "ALK",
-                          "variant_category": "SV"
+                          "variant_category": "Structural Variation"
                         }
                       },
                       {
@@ -321,7 +321,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "MET",
-                          "variant_category": "CNV"
+                          "variant_category": "Copy Number Variation"
                         }
                       },
                       {
@@ -625,27 +625,27 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "Heterozygous deletion",
                           "hugo_symbol": "CDKN2A",
-                          "variant_category": "CNV"
+                          "variant_category": "Copy Number Variation"
                         }
                       },
                       {
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "CDK4",
-                          "variant_category": "CNV"
+                          "variant_category": "Copy Number Variation"
                         }
                       },
                       {
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "CCND1",
-                          "variant_category": "CNV"
+                          "variant_category": "Copy Number Variation"
                         }
                       },
                       {
                         "genomic": {
                           "hugo_symbol": "SMARCA4",
-                          "variant_category": "CNV",
+                          "variant_category": "Copy Number Variation",
                           "cnv_call": "Heterozygous deletion"
                         }
                       }
@@ -690,7 +690,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "CSF1R",
-                          "variant_category": "CNV"
+                          "variant_category": "Copy Number Variation"
                         }
                       },
                       {
@@ -703,7 +703,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "PDGFRA",
-                          "variant_category": "CNV"
+                          "variant_category": "Copy Number Variation"
                         }
                       },
                       {
@@ -716,7 +716,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "PDGFRB",
-                          "variant_category": "CNV"
+                          "variant_category": "Copy Number Variation"
                         }
                       },
                       {
@@ -729,7 +729,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "FLT1",
-                          "variant_category": "CNV"
+                          "variant_category": "Copy Number Variation"
                         }
                       },
                       {
@@ -742,7 +742,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "KDR",
-                          "variant_category": "CNV"
+                          "variant_category": "Copy Number Variation"
                         }
                       },
                       {
@@ -755,7 +755,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "FLT4",
-                          "variant_category": "CNV"
+                          "variant_category": "Copy Number Variation"
                         }
                       },
                       {
@@ -768,7 +768,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "KIT",
-                          "variant_category": "CNV"
+                          "variant_category": "Copy Number Variation"
                         }
                       },
                       {
@@ -781,7 +781,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "RET",
-                          "variant_category": "CNV"
+                          "variant_category": "Copy Number Variation"
                         }
                       },
                       {
@@ -794,7 +794,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "FGFR1",
-                          "variant_category": "CNV"
+                          "variant_category": "Copy Number Variation"
                         }
                       },
                       {
@@ -807,7 +807,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "FGFR2",
-                          "variant_category": "CNV"
+                          "variant_category": "Copy Number Variation"
                         }
                       },
                       {
@@ -820,7 +820,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "FGFR3",
-                          "variant_category": "CNV"
+                          "variant_category": "Copy Number Variation"
                         }
                       },
                       {
@@ -833,14 +833,14 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "FLT3",
-                          "variant_category": "CNV"
+                          "variant_category": "Copy Number Variation"
                         }
                       },
                       {
                         "genomic": {
                           "cnv_call": "Heterozygous deletion",
                           "hugo_symbol": "VHL",
-                          "variant_category": "CNV"
+                          "variant_category": "Copy Number Variation"
                         }
                       },
                       {
@@ -1284,7 +1284,7 @@ export const NCT03297606_CAPTUR: Ctml3 =
                         "genomic": {
                           "cnv_call": "High level amplification",
                           "hugo_symbol": "ERBB2",
-                          "variant_category": "CNV"
+                          "variant_category": "Copy Number Variation"
                         }
                       },
                       {
