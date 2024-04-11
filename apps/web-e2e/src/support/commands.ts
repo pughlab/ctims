@@ -761,8 +761,8 @@ Cypress.Commands.add( 'enterGenomicConditions', (orConditions) => {
 
             case 'variant_category':
               if (typeof value === "string") {
-                getVariantCategory().click();
-                getGenomicDropDown().contains(value).click();
+                getVariantCategory().click({force: true});
+                getGenomicDropDown().contains(value).click({force: true});
               }
               break;
 
