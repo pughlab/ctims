@@ -25,22 +25,29 @@ export class MatchminerService implements OnModuleInit {
     async getTrialMatchResults(user: user) {
         try {
           const trials = await this.prismaService.trial.findMany({
-            where: {trial_status: TrialStatusEnum.PENDING}
+            where: {trial_status: TrialStatusEnum.MATCHED}
           });
-
-          const trial_internal_id = trials[0].trial_internal_id;
-          const url = `${process.env.MM_API_URL}/prioritizer_trial_match?where={"trial_internal_id":"${trial_internal_id}"}`
-          const matchResults = await axios.request(
-            {
-              method: 'get',
-              url: url,
-              headers: {
-                'Authorization': `Bearer ${this.MM_API_TOKEN}`
-              }
+          if (trials != null) {
+            const trial_internal_ids = [];
+            for (const trial of trials) {
+              trial_internal_ids.push(trial.trial_internal_id);
             }
-          );
-    
-          return matchResults.data._items;
+            const trial_internal_id_list_str = '[' + trial_internal_ids.map(s => `"${s}"`).join(',') + ']';
+            const url = `${process.env.MM_API_URL}/prioritizer_trial_match?where={"trial_internal_id":{"$in": ${trial_internal_id_list_str}}}`
+            const matchResults = await axios.request(
+              {
+                method: 'get',
+                url: url,
+                headers: {
+                  'Authorization': `Bearer ${this.MM_API_TOKEN}`
+                }
+              }
+            );
+      
+            return matchResults.data._items;
+          } else {
+            return;
+          }
         } catch (error) {
           console.log(error);
           throw new Error(error);
