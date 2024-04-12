@@ -85,7 +85,7 @@ const Main = () => {
     <>
       <div className={styles.container}>
         <BlockUI blocked={isLongOperationFromState}>
-        { isLongOperationFromState && (<ProgressSpinner></ProgressSpinner>)}
+        { isLongOperationFromState && (<div className={styles.centerLoading}><ProgressSpinner></ProgressSpinner></div>)}
         <IdleComponent />
         <Toast ref={retrieveTrialsErrorToast}></Toast>
         {sessionStatus === 'loading' && <div>Loading...</div>}
