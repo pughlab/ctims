@@ -10,6 +10,8 @@ import FooterComponent from "apps/web/components/FooterComponent";
 import TrialGroupsDropdown from "../../components/trials/TrialGroupsDropdown";
 import useGetTrialsForUsersInGroup from "../../hooks/useGetTrialsForUsersInGroup";
 import {Toast} from "primereact/toast";
+import {BlockUI} from "primereact/blockui";
+import {ProgressSpinner} from "primereact/progressspinner";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState, store} from "../../store/store";
 import MatchMinerConsole from "../../components/matchminer/MatchMinerConsole";
@@ -32,8 +34,8 @@ const Main = () => {
 
   const selectedTrialGroupFromState = useSelector((state: RootState) => state.context.seletedTrialGroupId);
   const selectedTrialGroupIsAdminFromState = useSelector((state: RootState) => state.context.isTrialGroupAdmin);
+  const isLongOperationFromState = useSelector((state: RootState) => state.context.isLongOperation);
   const isLoggedInFromState = useSelector((state: RootState) => state.context.isAccessTokenSet);
-
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -93,6 +95,8 @@ const Main = () => {
   return (
     <>
       <div className={styles.container}>
+        <BlockUI blocked={isLongOperationFromState}>
+        { isLongOperationFromState && (<div className={styles.centerLoading}><ProgressSpinner></ProgressSpinner></div>)}
         <IdleComponent />
         <Toast ref={retrieveTrialsErrorToast}></Toast>
         {sessionStatus === 'loading' && <div>Loading...</div>}
@@ -117,6 +121,7 @@ const Main = () => {
           <FooterComponent/>
         </>}
         { sessionStatus === 'unauthenticated' && <div>Please log in to view this page.</div>}
+        </BlockUI>
       </div>
     </>
   );
