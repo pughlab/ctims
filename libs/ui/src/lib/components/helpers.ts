@@ -17,15 +17,7 @@ export const wildcard_protein_change_validation_func = (str: string) => {
 }
 
 export const protein_change_validation_func = (str: string) => {
-  const regex = /^p\..*$/;
-  if (!str) {
-    return true;
-  }
-  return regex.test(str);
-}
-
-export const all_protein_change_validation_func = (str: string) => {
-  const regex = /^p\.(?:[A-Z]?\d+_[A-Z]?\d+ins)[a-zA-Z]+$|^p\.(?:(?!ins).)*(?:(?!ins)[a-zA-Z])+((\d*\*)|(\*\d*))?$|^p\.(?:.*delins[a-zA-Z]*)/;
+  const regex = /^p\.(([A-Z]\d+_[A-Z]\d+)(del$|dup$)|([A-Z]\d+_[A-Z]\d+)(ins[A-Z]+|ins\*+\d*|delins[A-Z]+\*?|delins\*\d*|fs\*?\d*)|([A-Z]\d+[A-Z])$|([A-Z]\d+[A-Z])(fs\*?\d*)$|([A-Z]\d+)(\*)$|([A-Z]\d+)(del$|dup$)|([A-Z]\d+)(delins[A-Z]+\*?$|fs\*?(\d*))$)$/;
   if (!str) {
     return true;
   }
