@@ -5,7 +5,6 @@ import matchViewModelActionsReducer, {IMatchViewModelState} from "./slices/match
 import ctmlModelReducer, {ICtmlModelSliceState} from "./slices/ctmlModelSlice";
 import {setupListeners} from "@reduxjs/toolkit/query";
 import contextReducer, {ContextSliceState} from "./slices/contextSlice";
-import appContextReducer, {AppContextState} from "./slices/appContextSlice";
 
 
 export interface RootState {
@@ -13,8 +12,7 @@ export interface RootState {
   modalActions: TreeActionsState,
   matchViewModelActions: IMatchViewModelState,
   finalModelAndErrors: ICtmlModelSliceState,
-  context: ContextSliceState,
-  appContext: AppContextState
+  context: ContextSliceState
 }
 
 export const store = configureStore<RootState>({
@@ -24,7 +22,6 @@ export const store = configureStore<RootState>({
     matchViewModelActions: matchViewModelActionsReducer,
     finalModelAndErrors: ctmlModelReducer,
     context: contextReducer,
-    appContext: appContextReducer
   }
 })
 
