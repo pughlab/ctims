@@ -31,7 +31,7 @@ const Main = () => {
 
   const selectedTrialGroupFromState = useSelector((state: RootState) => state.context.seletedTrialGroupId);
   const selectedTrialGroupIsAdminFromState = useSelector((state: RootState) => state.context.isTrialGroupAdmin);
-  const isLongOperationFromState = useSelector((state: RootState) => state.appContext.isLongOperation);
+  const isLongOperationFromState = useSelector((state: RootState) => state.context.isLongOperation);
   
   const dispatch = useDispatch();
 

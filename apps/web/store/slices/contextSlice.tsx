@@ -10,6 +10,7 @@ export interface ContextSliceState {
   isFormDisabled: boolean;
   isFormChanged: boolean;
   isAccessTokenSet: boolean;
+  isLongOperation: boolean;
 }
 
 const initialState: ContextSliceState = {
@@ -21,6 +22,7 @@ const initialState: ContextSliceState = {
   isFormDisabled: false,
   isFormChanged: false,
   isAccessTokenSet: false,
+  isLongOperation: false,
 }
 
 export const contextSlice = createSlice({
@@ -50,6 +52,9 @@ export const contextSlice = createSlice({
     },
     setIsAccessTokenSet: (state, action: PayloadAction<boolean>) => {
       state.isAccessTokenSet = action.payload
+    },
+    setIsLongOperation: (state, action: PayloadAction<boolean>) => {
+      state.isLongOperation = action.payload;
     }
   },
   // use extraReducers to listen to other action types
@@ -69,5 +74,6 @@ export const {
   setIsTrialGroupAdmin,
   setIsFormDisabled,
   setIsFormChanged,
-  setIsAccessTokenSet} = contextSlice.actions;
+  setIsAccessTokenSet,
+  setIsLongOperation } = contextSlice.actions;
 export default contextSlice.reducer;

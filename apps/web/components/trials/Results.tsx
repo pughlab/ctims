@@ -8,7 +8,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { CSVLink } from "react-csv";
 import {TrialStatusEnum} from "../../../../libs/types/src/trial-status.enum";
-import { setIsLongOperation } from 'apps/web/store/slices/appContextSlice';
+import { setIsLongOperation } from 'apps/web/store/slices/contextSlice';
 import { useDispatch } from 'react-redux';
 
 const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) => {
