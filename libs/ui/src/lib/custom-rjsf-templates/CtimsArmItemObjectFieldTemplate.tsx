@@ -60,7 +60,6 @@ const CtimsArmItemObjectFieldTemplate = (props: ObjectFieldTemplateProps) => {
   // This magic line allows two-way communication between the main form and the dialog
   if (!isObjectEmpty(formData)){
     registry.formContext = formData
-    console.log('registry.formContext', registry.formContext)
   }
   // registry.formContext = formData
   // console.group('CtimsArmItemObjectFieldTemplate', props)

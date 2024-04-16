@@ -541,6 +541,8 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           textAlign: 'end',
           verticalAlign: 'bottom'
         }
+
+        node.data.nodeLabel = label;
         return <i style={style}>{label}</i>;
       }
 

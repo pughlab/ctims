@@ -50,7 +50,6 @@ export const TrialGroupsDropdown = (props: {
     }, [props.roles]);
 
     const onTrialGroupSelected = (selectedTrialGroup: {role: string, code: string}) => {
-      console.log('selectedTrialGroup', selectedTrialGroup);
       const plainRole = selectedTrialGroup.code.replace('-admin', '');
       dispatch(selectedTrialGroupId(plainRole))
       setSelectedTrialGroup(selectedTrialGroup);

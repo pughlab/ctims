@@ -111,7 +111,6 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
     if (!data) {
       return;
     }
-    localStorage.setItem('ctims-accessToken', data['accessToken'] as string);
     sessionStorage.removeItem('imported_ctml');
     // console.log('data', data)
   }, [data])

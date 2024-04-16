@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {useSession} from "next-auth/react";
+import {signOut, useSession} from "next-auth/react";
 import {TabPanel, TabView} from "primereact/tabview";
 import IdleComponent from "../../components/IdleComponent";
 import TopBar from "../../components/trials/TopBar";
@@ -13,9 +13,12 @@ import {Toast} from "primereact/toast";
 import {BlockUI} from "primereact/blockui";
 import {ProgressSpinner} from "primereact/progressspinner";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../store/store";
+import {RootState, store} from "../../store/store";
 import MatchMinerConsole from "../../components/matchminer/MatchMinerConsole";
 import {setIsAccessTokenSet} from "../../store/slices/contextSlice";
+import {logout} from "../api/auth/[...nextauth]";
+import process from "process";
+import {useRouter} from "next/router";
 
 const Main = () => {
 
@@ -32,17 +35,26 @@ const Main = () => {
   const selectedTrialGroupFromState = useSelector((state: RootState) => state.context.seletedTrialGroupId);
   const selectedTrialGroupIsAdminFromState = useSelector((state: RootState) => state.context.isTrialGroupAdmin);
   const isLongOperationFromState = useSelector((state: RootState) => state.context.isLongOperation);
-  
+  const isLoggedInFromState = useSelector((state: RootState) => state.context.isAccessTokenSet);
   const dispatch = useDispatch();
+  const router = useRouter();
 
   // TODO: abstract the refreshTokenOperation set and clear interval to a hook
   useEffect(() => {
-    if (!sessionData) {
-      return;
+    // sessionData gets callback twice, 1st time is server side rendering (denoted by loading status)
+    // 2nd time is client side which will be either authenticated or unauthenticated
+    if (!sessionData && sessionStatus !== 'loading') {
+      // if there's no session, should also log out
+      signOut({redirect: false}).then(() => {
+        store.dispatch(logout());
+        router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+      });
     }
-    localStorage.setItem('ctims-accessToken', sessionData['accessToken'] as string);
-    dispatch(setIsAccessTokenSet(true));
-    console.log('data', sessionData)
+    // only set the access token first time from login
+    if (sessionData && !isLoggedInFromState) {
+      localStorage.setItem('ctims-accessToken', sessionData['accessToken'] as string);
+      dispatch(setIsAccessTokenSet(true));
+    }
 
     setActiveTab(0);
   }, [sessionData])
@@ -73,7 +85,6 @@ const Main = () => {
   useEffect(() => {
     if (getTrialsForUsersInGroupResponse) {
       setTrials(getTrialsForUsersInGroupResponse);
-      console.log('response', getTrialsForUsersInGroupResponse);
     }
   }, [getTrialsForUsersInGroupResponse]);
 

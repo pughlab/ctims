@@ -88,7 +88,6 @@ const Login = () => {
       return;
     }
     const result = await signIn('credentials', {username, password, redirect: false})
-    console.log('result', result);
     if (result.ok) {
       router.push('/main');
     } else {

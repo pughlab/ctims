@@ -19,9 +19,6 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
     if (!data) {
       return;
     }
-    localStorage.setItem('ctims-accessToken', data['accessToken'] as string);
-
-    console.log('results page loaded')
   }, [data])
 
   useEffect(() => {
