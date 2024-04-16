@@ -22,10 +22,7 @@ function CustomApp({ Component, pageProps: { session, ...pageProps }, }: AppProp
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
-        setTimeout(() => {
-          refreshTokenOperation();
-        }, 1);
-        //refreshTokenOperation();
+        refreshTokenOperation();
       }
     };
 
