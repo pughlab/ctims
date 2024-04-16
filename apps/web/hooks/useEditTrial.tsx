@@ -31,7 +31,6 @@ const useEditTrial = () => {
 
   const editTrialOperation = async (trialId: string) => {
     setLoading(true);
-    console.log('editTrialOperation trialId', trialId)
     const accessToken = localStorage.getItem('ctims-accessToken');
     const headers = {
       'Authorization': 'Bearer ' + accessToken,

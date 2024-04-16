@@ -69,20 +69,28 @@ const IdleComponent = () => {
         clearInterval(interval); // Clear the interval
       }
 
-      // Auto save before timeout and logout
+      // Auto save before timeout and logout if there's trial to save
       const currentState = store.getState();
-      const {trialModel, ctmlJson} = saveToServer(currentState)
-      saveTrialOperation(trialModel, ctmlJson).then(() => {
-        //localStorage.removeItem('ctims-accessToken') // Remove the access token from local storage
-        //router.push('/'); // Redirect to the home page
-        if (!error) {
-          // check if there is error, if there's error from useAxios then no need to router.push a 2nd time
-          signOut({redirect: false}).then(() => {
-            store.dispatch(logout());
-            router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-          });
-        }
-      });
+      if (currentState.finalModelAndErrors.ctmlModel) {
+        const {trialModel, ctmlJson} = saveToServer(currentState)
+        saveTrialOperation(trialModel, ctmlJson).then(() => {
+          //localStorage.removeItem('ctims-accessToken') // Remove the access token from local storage
+          //router.push('/'); // Redirect to the home page
+          if (!error) {
+            // check if there is error, if there's error from useAxios then no need to router.push a 2nd time
+            signOut({redirect: false}).then(() => {
+              store.dispatch(logout());
+              router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+            });
+          }
+        });
+      } else {
+        // no trial to save, just logout
+        signOut({redirect: false}).then(() => {
+          store.dispatch(logout());
+          router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+        });
+      }
     }
 
     return () => {
@@ -128,13 +136,10 @@ const IdleComponent = () => {
       }
     }
 
-
-
     const trialModel = getTrialModelOnly();
     const ctmlJson = getCtmlJsonOnly();
 
     return { trialModel, ctmlJson };
-
   }
 
   return (
