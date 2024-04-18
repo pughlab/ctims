@@ -717,3 +717,7 @@ summary svg {
   line-height: 20px !important;
   color: rgba(0, 0, 0, 0.87) !important;
 }
+
+.p-progress-spinner-circle {
+  stroke: #2E72D2 !important;
+}
