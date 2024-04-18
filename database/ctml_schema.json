@@ -430,6 +430,11 @@
                           "title": "Matching Criteria Widget"
                         }
                       }
+                    },
+                    "uuid": {
+                      "description": "hidden uuid field",
+                      "title": "uuid",
+                      "type": "string"
                     }
                   }
                 }
