@@ -53,9 +53,14 @@ const formContainerStyle: CSSProperties = {
 export const GenomicForm = (props: IFormProps) => {
   const {node, rootNodes} = props
   const nk = node.key as string;
+  const autoCompleteKey = `autocomplete_${nk}`;
+
   // console.log('GenomicForm node: ', node)
 
   const {setSaveBtnState} = useContext(CtimsDialogContext) as CtimsDialogContextType;
+
+   //console.log("node.data inside Genomic form", node.data);
+
 
   const genomicFormRef = useRef<any>(null);
 
@@ -370,6 +375,10 @@ export const GenomicForm = (props: IFormProps) => {
     },
     "hugo_symbol": {
       "ui:widget": AutocompleteField,
+      "ui:options": {
+        autoCompleteKey: autoCompleteKey, // Pass the unique key as an option
+      },
+      
     }
   }
 
@@ -383,12 +392,14 @@ export const GenomicForm = (props: IFormProps) => {
       errorDetails = form?.validate(form.state.formData);
     }
     // console.log('onFormChange errorDetails: ', errorDetails);
-    if (errorDetails?.errors.length > 0) {
+    console.log(" Data**",(data.formData.hugo_symbol),"@@");
+    if (errorDetails?.errors.length > 0   || data.formData.hugo_symbol =="") {
       errorsInFormDispatch();
-    }
-    if (errorDetails?.errors.length === 0) {
+    }else if(errorDetails?.errors.length === 0)
+    {
       noErrorsInFormDispatch();
     }
+
   }
 
   const noErrorsInFormDispatch = () => {
