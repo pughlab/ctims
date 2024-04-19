@@ -74,7 +74,7 @@ export const GenomicForm = (props: IFormProps) => {
         "enumNames": [
           " ",
           "Mutation",
-          "Not Mutated",
+          "Not Mutated (Surrogate for Wildtype)",
           "Copy Number Variation",
           "Structural Variation",
           "Wildtype",
