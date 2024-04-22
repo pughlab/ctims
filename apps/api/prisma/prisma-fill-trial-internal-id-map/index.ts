@@ -42,7 +42,7 @@ async function fillTrialInternalId() {
 
 fillTrialInternalId()
   .then(idProtocolMap => {
-    console.log('Trial internal ID map:', idProtocolMap);
+    console.log(JSON.stringify(idProtocolMap, null, 2));
   })
   .catch(e => {
     throw e;
