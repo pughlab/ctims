@@ -1,4 +1,4 @@
-import { Controller, Post, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import {Body, Controller, Post, Res, UploadedFile, UseGuards, UseInterceptors} from '@nestjs/common';
 import { MatchminerService } from './matchminer.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import axios, {AxiosResponse} from 'axios';
@@ -45,4 +45,23 @@ export class MatchminerController {
     return response.data;
   }
 
+  @Post('add_id_to_trials')
+  @UseGuards(KeycloakPasswordGuard)
+  @ApiOperation({ summary: "Add trial internal id to matchminer trial collection" })
+  async addIdToTrials(@Body() updateMapping: any) {
+    const response = await axios.post(`${process.env.MM_API_URL}/add_id_to_trials`,
+      updateMapping,
+      {headers: {'Authorization': `Bearer ${this.MM_API_TOKEN}`}});
+    return response.data;
+  }
+
+  @Post('add_id_match_results')
+  @UseGuards(KeycloakPasswordGuard)
+  @ApiOperation({ summary: "Add trial internal id to matchminer trial_match collection" })
+  async addIdMatchResults(@Body() updateMapping: any) {
+    const response = await axios.post(`${process.env.MM_API_URL}/add_id_to_match_results`,
+      updateMapping,
+      {headers: {'Authorization': `Bearer ${this.MM_API_TOKEN}`}});
+    return response.data;
+  }
 }
