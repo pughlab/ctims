@@ -91,7 +91,8 @@ export class TrialService implements OnModuleInit {
       nickname,
       ctml_schema_version,
       nct_id,
-      protocol_no
+      protocol_no,
+      trial_internal_id
     } = updateTrialDto;
     const existing_trial = await this.prismaService.trial.findUnique({
       where: {
@@ -151,6 +152,7 @@ export class TrialService implements OnModuleInit {
         status,
         user: { connect: { id: user.id } },
         modifiedBy: { connect: { id: user.id } },
+        trial_internal_id,
         ctml_schemas: {
           connect: {
             version: ctml_schema_version
@@ -166,7 +168,7 @@ export class TrialService implements OnModuleInit {
             }
           }
         },
-        protocol_no: (typeof protocol_no === 'string') ? protocol_no : protocol_no?.toString()
+        protocol_no: (typeof protocol_no === 'string') ? protocol_no : protocol_no?.toString(),
       },
     });
 
