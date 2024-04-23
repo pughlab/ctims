@@ -26,7 +26,3 @@ export type trialWithResultsMiner = {
   _updated: Date
   count: number
 }
-
-export type fetchTrialResultsDto = {
-  trial_internal_ids: string
-}
