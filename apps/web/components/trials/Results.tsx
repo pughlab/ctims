@@ -14,7 +14,7 @@ import { useDispatch } from 'react-redux';
 const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) => {
   const {data, status: sessionStatus} = useSession()
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     if (!data) {
       return;
@@ -24,6 +24,8 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
   useEffect(() => {
     if (props.trials && props.trials.length > 0) {
       getMatchResultsOperation(props.trials);
+    } else {
+      setResults([])
     }
   }, [props.trials]);
 
