@@ -46,8 +46,9 @@ const useGetMatchResults = () => {
         .join(',');
 
       const trialsWithResults = await operation({
-        method: 'get',
-        url: `/trial-result/?trial_internal_ids=${trial_internal_ids}`,
+        method: 'post',
+        url: `/trial-result/fetch`,
+        data: {trial_internal_ids: trial_internal_ids},
         headers
       })
 

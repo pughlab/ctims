@@ -49,7 +49,7 @@ export class TrialResultService implements OnModuleInit {
         const url = `${process.env.MM_API_URL}/ctims_trial_summary`;
         matchResults = await axios.request(
           {
-            method: 'get',
+            method: 'post',
             url: url,
             headers: {
               'Authorization': `Bearer ${this.MM_API_TOKEN}`
@@ -84,7 +84,7 @@ export class TrialResultService implements OnModuleInit {
         const url = `${process.env.MM_API_URL}/ctims_trial_summary`;
         matchResults = await axios.request(
           {
-            method: 'get',
+            method: 'post',
             url: url,
             headers: {
               'Authorization': `Bearer ${this.MM_API_TOKEN}`

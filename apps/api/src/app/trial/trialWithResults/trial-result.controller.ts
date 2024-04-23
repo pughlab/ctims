@@ -23,6 +23,7 @@ import {CurrentUser} from "../../auth/CurrentUser";
 import { EventService } from "../../event/event.service";
 import { ModuleRef } from "@nestjs/core";
 import {TrialResultService} from "./trial-result.service";
+import {fetchTrialResultsDto} from "./trialWithResults";
 
 @Controller('trial-result')
 @ApiTags("Trial Result")
@@ -55,20 +56,20 @@ export class TrialResultController implements OnModuleInit{
     return trials;
   }
 
-  @Get()
+  @Post('fetch')
   @UseGuards(KeycloakPasswordGuard)
   @ApiBearerAuth("KeycloakPasswordGuard")
   @ApiOperation({ summary: "Get trials results for given protocol numbers" })
   @ApiOkResponse({ description: "List of trials results found for given protocol numbers." })
   async findResultsForTrialInternalIds(@CurrentUser() user: user,
-                                      @Query('trial_internal_ids') trial_internal_ids: string) {
+                                      @Body() fetchTrialResultsDto: fetchTrialResultsDto) {
     this.eventService.createEvent({
       type: event_type.TrialReadMany,
       description: "Trials with results read for matching trial internal ids",
       user
     });
 
-    const trials = await this.trialResultService.findResultsForTrialInternalIds(trial_internal_ids);
+    const trials = await this.trialResultService.findResultsForTrialInternalIds(fetchTrialResultsDto.trial_internal_ids);
     return trials;
   }
 
