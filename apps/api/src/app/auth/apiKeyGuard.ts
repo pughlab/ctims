@@ -18,8 +18,6 @@ import {
   
       // call your env. var the name you want
       if (apiKey !== process.env.CTIMS_API_KEY) {
-        console.log(apiKey);
-        console.log(process.env.CTIMS_API_KEY);
         throw new UnauthorizedException('Invalid API key.');
       }
   
