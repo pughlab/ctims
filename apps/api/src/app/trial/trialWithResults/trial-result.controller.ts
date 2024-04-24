@@ -59,8 +59,8 @@ export class TrialResultController implements OnModuleInit{
   @Post('fetch')
   @UseGuards(KeycloakPasswordGuard)
   @ApiBearerAuth("KeycloakPasswordGuard")
-  @ApiOperation({ summary: "Get trials results for given protocol numbers" })
-  @ApiOkResponse({ description: "List of trials results found for given protocol numbers." })
+  @ApiOperation({ summary: "Get trials results for given trial internal ids" })
+  @ApiOkResponse({ description: "List of trials results found for given trial internal ids." })
   async findResultsForTrialInternalIds(@CurrentUser() user: user,
                                       @Body() fetchTrialResultsDto: fetchTrialResultsDto) {
     this.eventService.createEvent({

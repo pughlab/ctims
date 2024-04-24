@@ -54,7 +54,7 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
 
   useEffect(() => {
     if (getDownloadResultsResponse) {
-      setResultFileName(trialSelected.protocol_no + '_result.csv');
+      setResultFileName(trialSelected.trialId + '_result.csv');
       const processedData = postProcessCSVData(getDownloadResultsResponse);
       setDownloadResults(processedData);
       dispatch(setIsLongOperation(false));
@@ -126,7 +126,7 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
   const downloadClicked = (e: any) => {
     setTrialSelected(e);
     dispatch(setIsLongOperation(true));
-    getDownloadResultsOperation(e.id, e.protocol_no);
+    getDownloadResultsOperation(e.id);
   }
 
   // if trial is pending state (send to CTML but hasn't been matched), then don't display

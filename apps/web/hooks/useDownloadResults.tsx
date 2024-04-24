@@ -29,7 +29,7 @@ const useDownloadResults = () => {
   //   }
   // }, [status])
 
-  const getDownloadResultsOperation = async (trialId, nct_id) => {
+  const getDownloadResultsOperation = async (trialId) => {
     setLoading(true);
     const accessToken = localStorage.getItem('ctims-accessToken');
     const headers = {

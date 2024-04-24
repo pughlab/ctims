@@ -67,8 +67,8 @@ export class TrialResultService implements OnModuleInit {
   }
 
   async findResultsForTrialInternalIds(trial_internal_ids: string): Promise<trialWithResults[]> {
-    // protocol_nos is a comma separated list of protocol numbers
-    // find trials with protocol_no matching the protocol_nos, and with trial_status of PENDING or MATCHED
+    // trial_internal_ids is a comma separated list of trial internal ids
+    // find trials with trial_internal_id matching the trial_internal_ids, and with trial_status of PENDING or MATCHED
     const trials = await this.prismaService.trial.findMany({
       where: {
         trial_internal_id: {in: trial_internal_ids.split(',')},
