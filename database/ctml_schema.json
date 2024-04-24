@@ -33,7 +33,7 @@
           "type": "string",
           "title": "Internal Id",
           "readOnly": "true",
-          "description": "A short title for the trial"
+          "description": "An internal id used for matching"
         },
         "nickname": {
           "type": "string",
