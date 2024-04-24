@@ -5,6 +5,7 @@ import { PrismaService } from '../prisma.service';
 import { TrialStatusEnum } from 'libs/types/src/trial-status.enum';
 import axios from "axios";
 import {event_type, trial, user} from "@prisma/client";
+import { CtmlStatusEnum } from 'libs/types/src/ctml-status.enum';
 
 @Injectable()
 export class MatchminerService implements OnModuleInit {
@@ -25,7 +26,7 @@ export class MatchminerService implements OnModuleInit {
     async getTrialMatchResults(user: user) {
         try {
           const trials = await this.prismaService.trial.findMany({
-            where: {trial_status: TrialStatusEnum.MATCHED}
+            where: {status: CtmlStatusEnum.COMPLETED, trial_status: TrialStatusEnum.MATCHED}
           });
           if (trials != null) {
             const trial_internal_ids = [];
