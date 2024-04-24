@@ -341,3 +341,43 @@ export const sortTreeNode = (treeNode: TreeNode): TreeNode => {
   return treeNode;
 }
 
+// sort matching criteria node, same as sortTreeNode but for matching criteria in a different format
+export const sortMatchingCriteria = (ctmlMatchCriteria: any):any => {
+  let criteriaCopy = structuredClone(ctmlMatchCriteria);
+  if (Array.isArray(criteriaCopy)) {
+    return criteriaCopy.map(sortMatchingCriteria).sort((a: any, b: any) => {
+      const keyA = Object.keys(a)[0];
+      const keyB = Object.keys(b)[0];
+
+      if (keyA === keyB) {
+        const criteriaObjA = a[keyA];
+        const criteriaObjB = b[keyB];
+        if (keyA === 'clinical' || keyA === 'genomic') {
+          // sort by value of inner object {"hugo_symbol":"A1BG"}
+          const criteriaKeyA = Object.keys(criteriaObjA)[0];
+          const criteriaKeyB = Object.keys(criteriaObjB)[0];
+          return criteriaObjA[criteriaKeyA].localeCompare(criteriaObjB[criteriaKeyB]);
+        } else {
+          return 0;
+        }
+      } else if (keyA === 'clinical') {
+        return -1;
+      } else if (keyA === 'genomic') {
+        if (keyB === 'clinical') {
+          return 1;
+        } else {
+          return -1;
+        }
+      } else if (keyA === 'and' || keyA === 'or') {
+        return 1;
+      }
+    });
+  } else if (typeof criteriaCopy === 'object') {
+    if (criteriaCopy.hasOwnProperty('and')) {
+      criteriaCopy.and = sortMatchingCriteria(criteriaCopy.and);
+    } else if (criteriaCopy.hasOwnProperty('or')) {
+      criteriaCopy.or = sortMatchingCriteria(criteriaCopy.or);
+    }
+  }
+  return criteriaCopy;
+}
