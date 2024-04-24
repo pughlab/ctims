@@ -23,7 +23,7 @@ import {CurrentUser} from "../../auth/CurrentUser";
 import { EventService } from "../../event/event.service";
 import { ModuleRef } from "@nestjs/core";
 import {TrialResultService} from "./trial-result.service";
-import {fetchTrialResultsDto} from "./fetchTrialResultDto";
+import {fetchTrialResultsDto} from "../dto/fetch-trial-result.dto";
 
 @Controller('trial-result')
 @ApiTags("Trial Result")
