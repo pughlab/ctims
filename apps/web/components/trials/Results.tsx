@@ -64,8 +64,11 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
   const [downloadResults, setDownloadResults] = useState<any>([]);
   useEffect(() => {
     if (downloadResults.length > 0) {
-      // @ts-ignore
-      csvLink.current.link.click();
+      // sometimes csvLink.current is null when switching between groups
+      if (csvLink.current) {
+        // @ts-ignore
+        csvLink.current.link.click();
+      }
     }
   }, [downloadResults])
 
