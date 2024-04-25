@@ -1,18 +1,19 @@
-import {Body, Controller, Post, Res, UploadedFile, UseGuards, UseInterceptors} from '@nestjs/common';
+import {Body, Controller, Get, Post, Res, UploadedFile, UseGuards, UseInterceptors} from '@nestjs/common';
 import { MatchminerService } from './matchminer.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import axios, {AxiosResponse} from 'axios';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import * as FormData from 'form-data';
 import { KeycloakPasswordGuard } from '../auth/KeycloakPasswordGuard';
-
+import { CurrentUser } from '../auth/CurrentUser';
+import {user} from "@prisma/client";
+import { ApiKeyGuard } from '../auth/apiKeyGuard';
 
 @Controller('matchminer')
 @ApiTags('matchminer')
 export class MatchminerController {
 
   private MM_API_TOKEN = process.env.MM_API_TOKEN;
-
 
   constructor(private matchMinerService: MatchminerService) {
 
@@ -29,7 +30,6 @@ export class MatchminerController {
       headers: {...formData.getHeaders(), 'Authorization': `Bearer ${this.MM_API_TOKEN}`},
     });
     return res.status(200).json({ message: 'File uploaded successfully' });
-
   }
 
   @Post('load_genomic')
@@ -43,6 +43,15 @@ export class MatchminerController {
       headers: {...formData.getHeaders(), 'Authorization': `Bearer ${this.MM_API_TOKEN}`},
     });
     return response.data;
+  }
+
+  @Get('prioritizer_trial_matches')
+  @UseGuards(ApiKeyGuard)
+  @ApiBearerAuth("ApiKeyGuard")
+  @ApiOperation({ summary: "Get all trial matches for prioritizer" })
+  @ApiOkResponse({ description: "List of trial matches found." })
+  async findAll(@CurrentUser() user: user) {
+    return this.matchMinerService.getTrialMatchResults(user);
   }
 
   @Post('add_id_to_trials')
