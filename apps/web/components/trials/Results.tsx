@@ -8,22 +8,24 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { CSVLink } from "react-csv";
 import {TrialStatusEnum} from "../../../../libs/types/src/trial-status.enum";
+import { setIsLongOperation } from 'apps/web/store/slices/contextSlice';
+import { useDispatch } from 'react-redux';
 
 const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) => {
   const {data, status: sessionStatus} = useSession()
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!data) {
       return;
     }
-    localStorage.setItem('ctims-accessToken', data['accessToken'] as string);
-
-    console.log('results page loaded')
   }, [data])
 
   useEffect(() => {
     if (props.trials && props.trials.length > 0) {
       getMatchResultsOperation(props.trials);
+    } else {
+      setResults([])
     }
   }, [props.trials]);
 
@@ -52,17 +54,21 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
 
   useEffect(() => {
     if (getDownloadResultsResponse) {
-      setResultFileName(trialSelected.protocol_no + '_result.csv');
+      setResultFileName(trialSelected.trialId + '_result.csv');
       const processedData = postProcessCSVData(getDownloadResultsResponse);
       setDownloadResults(processedData);
+      dispatch(setIsLongOperation(false));
     }
   }, [getDownloadResultsResponse])
 
   const [downloadResults, setDownloadResults] = useState<any>([]);
   useEffect(() => {
     if (downloadResults.length > 0) {
-      // @ts-ignore
-      csvLink.current.link.click();
+      // sometimes csvLink.current is null when switching between groups
+      if (csvLink.current) {
+        // @ts-ignore
+        csvLink.current.link.click();
+      }
     }
   }, [downloadResults])
 
@@ -122,7 +128,8 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
 
   const downloadClicked = (e: any) => {
     setTrialSelected(e);
-    getDownloadResultsOperation(e.id, e.protocol_no);
+    dispatch(setIsLongOperation(true));
+    getDownloadResultsOperation(e.id);
   }
 
   // if trial is pending state (send to CTML but hasn't been matched), then don't display

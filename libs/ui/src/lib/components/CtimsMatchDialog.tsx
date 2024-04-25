@@ -6,6 +6,7 @@ import MatchingMenuAndForm from "./MatchingMenuAndForm";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState, store} from "../../../../../apps/web/store/store";
 import {resetMatchDialogErrors} from "../../../../../apps/web/store/slices/modalActionsSlice";
+import {sortMatchingCriteria} from "./helpers";
 
 interface CtimsMatchDialogProps {
   isDialogVisible: boolean;
@@ -84,8 +85,10 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   const saveClickCallback = () => {
     const currentState = store.getState();
     const ctmlModel = currentState.modalActions.ctmlDialogModel;
-    console.log('callback from footer', currentState.modalActions.ctmlDialogModel);
-    formData.match = ctmlModel.match;
+    // sort the ctmlModel.match before saving
+    // formData.match = ctmlModel.match;
+    const sorted = sortMatchingCriteria(ctmlModel.match);
+    formData.match = sorted;
     props.onSaveCTMLHide();
   }
 
@@ -99,7 +102,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
             blockScroll
             footer={() => footer({saveMatchingCriteriaClicked: saveClickCallback, discardClicked: onDialogHide})}
             visible={isDialogVisible}
-            style={{width: '960px', height: '710px'}}
+            style={{width: '1160px', height: '710px'}}
             onHide={onDialogHide}>
       <div className={styles.mainContainer}>
         <CtimsDialogContext.Provider value={{setSaveBtnState}}>

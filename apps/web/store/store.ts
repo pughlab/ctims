@@ -6,6 +6,7 @@ import ctmlModelReducer, {ICtmlModelSliceState} from "./slices/ctmlModelSlice";
 import {setupListeners} from "@reduxjs/toolkit/query";
 import contextReducer, {ContextSliceState} from "./slices/contextSlice";
 
+
 export interface RootState {
   counter: CounterState,
   modalActions: TreeActionsState,
@@ -20,7 +21,7 @@ export const store = configureStore<RootState>({
     modalActions: modalActionsReducer,
     matchViewModelActions: matchViewModelActionsReducer,
     finalModelAndErrors: ctmlModelReducer,
-    context: contextReducer
+    context: contextReducer,
   }
 })
 

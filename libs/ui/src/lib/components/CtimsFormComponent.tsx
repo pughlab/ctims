@@ -16,11 +16,11 @@ import CtimsMatchingCriteriaWidget from "../custom-rjsf-templates/CtimsMatchingC
 import CtimsFieldTemplate from "../custom-rjsf-templates/CtimsFieldTemplate";
 import CtimsErrorListTemplate from "../custom-rjsf-templates/CtimsErrorListTemplate";
 import DoseLevelObjectFieldTemplate from "../custom-rjsf-templates/DoseLevelObjectFieldTemplate";
-import CtimsArrayFieldSingleTemplate from "../custom-rjsf-templates/CtimsArrayFieldSingleTemplate";
 import CtimsArmItemObjectFieldTemplate from "../custom-rjsf-templates/CtimsArmItemObjectFieldTemplate";
 import CtimsSelectButton from "../custom-rjsf-templates/CtimsSelectButton";
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../../apps/web/store/store';
+import CtimsUUIDComponent from "../custom-rjsf-templates/CtimsUUIDComponent";
 
 const Form = withTheme(PrimeTheme)
 
@@ -93,6 +93,11 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
       "ui:layout": [
         {
           "trial_id": {
+            "span": 24
+          }
+        },
+        {
+          "trial_internal_id": {
             "span": 24
           }
         },
@@ -391,6 +396,9 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
               },
               "arm_internal_id": {
                 "ui:widget": CtimsInput,
+              },
+              "uuid": {
+                "ui:widget": CtimsUUIDComponent
               },
               "match": {
                 matchingCriteriaWidget: {

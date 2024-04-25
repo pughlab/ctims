@@ -64,7 +64,6 @@ const CtimsDropdown = (props: WidgetProps) => {
 
   useEffect(() => {
     if (name === 'phase') {
-      console.log('phase uischema', uiSchema)
       setIsMultiple(uiSchema!.multiple)
     } else {
       setIsMultiple(false)

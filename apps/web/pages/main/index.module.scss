@@ -12,3 +12,10 @@
   flex-direction: column;
   min-height: 100vh;
 }
+
+.centerLoading {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+}

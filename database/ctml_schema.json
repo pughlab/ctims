@@ -19,7 +19,8 @@
   "properties": {
     "trialInformation": {
       "required": [
-        "trial_id"
+        "trial_id",
+        "trial_internal_id"
       ],
       "type": "object",
       "properties": {
@@ -27,6 +28,12 @@
           "type": "string",
           "title": "Trial ID",
           "description": "The unique identifier for the study"
+        },
+        "trial_internal_id": {
+          "type": "string",
+          "title": "Internal Id",
+          "readOnly": "true",
+          "description": "An internal id used for matching"
         },
         "nickname": {
           "type": "string",
@@ -430,6 +437,11 @@
                           "title": "Matching Criteria Widget"
                         }
                       }
+                    },
+                    "uuid": {
+                      "description": "hidden uuid field",
+                      "title": "uuid",
+                      "type": "string"
                     }
                   }
                 }

@@ -93,7 +93,6 @@ export class KeycloakPasswordStrategy extends PassportStrategy(KeycloakBearerStr
   }
 
   async refreshToken(access_token: Token): Promise<any> {
-
     const decoded: any = jwt_decode(access_token as unknown as string);
 
     const user = await this.userService.findUserBySub(decoded.sub)
@@ -101,7 +100,13 @@ export class KeycloakPasswordStrategy extends PassportStrategy(KeycloakBearerStr
       throw new NotFoundException('User not found')
     }
 
-    const grantFromRefreshToken: Grant = await this.keycloak.grantManager.createGrant({access_token, refresh_token: user.refresh_token as unknown as Token})
+    let grantFromRefreshToken: Grant = await this.keycloak.grantManager.createGrant({access_token, refresh_token: user.refresh_token as unknown as Token})
+    // check if the access token is still valid, if not, force it to expire to get a new access token as long as refresh token is valid
+    if (!grantFromRefreshToken.isExpired()) {
+      decoded.exp = 0;
+      grantFromRefreshToken = await this.keycloak.grantManager.createGrant({access_token: decoded, refresh_token: user.refresh_token as unknown as Token})
+    }
+
     const freshGrant: Grant = await this.keycloak.grantManager.ensureFreshness(grantFromRefreshToken);
     await this.userService.updateRefreshToken(decoded.sub, freshGrant.refresh_token['token'])
     const keycloakToken: KeycloakConnect.Token = freshGrant.access_token;

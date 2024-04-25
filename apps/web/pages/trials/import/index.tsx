@@ -32,7 +32,8 @@ const EditorImportTrialPage = () => {
       const trial = JSON.parse(formData);
       let editTrialObject = {
         trialInformation: {
-          trial_id: trial.nct_id,
+          trial_id: trial.trial_id,
+          trial_internal_id: trial.trial_internal_id,
           nickname: trial.nickname,
           principal_investigator: trial.principal_investigator,
           ctml_status: 'DRAFT',

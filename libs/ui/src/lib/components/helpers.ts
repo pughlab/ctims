@@ -239,7 +239,6 @@ export const isObjectEmpty = (obj: any) => {
 }
 
 export const extractErrors = (errors: RJSFValidationError[]): string[] => {
-  console.log('extractErrors: ', errors);
   const keyToStringDict: any = {
     trialInformation: 'Trial information',
     prior_treatment_requirements: 'Prior treatment requirements',
@@ -313,7 +312,11 @@ export const sortTreeNode = (treeNode: TreeNode): TreeNode => {
     treeNode.children.sort((a, b) => {
       let ret = 0;
       if (a.data.type === b.data.type) {
-        ret = a.data.originalIndex - b.data.originalIndex;
+        if (a.data.nodeLabel && b.data.nodeLabel) {
+          ret = a.data.nodeLabel.localeCompare(b.data.nodeLabel);
+        } else {
+          ret = a.data.originalIndex - b.data.originalIndex;
+        }
       } else if (a.data.type === EComponentType.ClinicalForm) {
         ret = -1;
       } else if (a.data.type === EComponentType.GenomicForm) {
@@ -325,7 +328,11 @@ export const sortTreeNode = (treeNode: TreeNode): TreeNode => {
       } else if (!a.data.hasOwnProperty('type') || b.data.type === EComponentType.AndOROperator) {
         ret =  1;
       } else {
-        ret = 0;
+        if (a.data.nodeLabel && b.data.nodeLabel) {
+          ret = a.data.nodeLabel.localeCompare(b.data.nodeLabel);
+        } else {
+          ret = 0;
+        }
       }
       return ret;
     });
@@ -334,3 +341,43 @@ export const sortTreeNode = (treeNode: TreeNode): TreeNode => {
   return treeNode;
 }
 
+// sort matching criteria node, same as sortTreeNode but for matching criteria in a different format
+export const sortMatchingCriteria = (ctmlMatchCriteria: any):any => {
+  let criteriaCopy = structuredClone(ctmlMatchCriteria);
+  if (Array.isArray(criteriaCopy)) {
+    return criteriaCopy.map(sortMatchingCriteria).sort((a: any, b: any) => {
+      const keyA = Object.keys(a)[0];
+      const keyB = Object.keys(b)[0];
+
+      if (keyA === keyB) {
+        const criteriaObjA = a[keyA];
+        const criteriaObjB = b[keyB];
+        if (keyA === 'clinical' || keyA === 'genomic') {
+          // sort by value of inner object {"hugo_symbol":"A1BG"}
+          const criteriaKeyA = Object.keys(criteriaObjA)[0];
+          const criteriaKeyB = Object.keys(criteriaObjB)[0];
+          return criteriaObjA[criteriaKeyA].localeCompare(criteriaObjB[criteriaKeyB]);
+        } else {
+          return 0;
+        }
+      } else if (keyA === 'clinical') {
+        return -1;
+      } else if (keyA === 'genomic') {
+        if (keyB === 'clinical') {
+          return 1;
+        } else {
+          return -1;
+        }
+      } else if (keyA === 'and' || keyA === 'or') {
+        return 1;
+      }
+    });
+  } else if (typeof criteriaCopy === 'object') {
+    if (criteriaCopy.hasOwnProperty('and')) {
+      criteriaCopy.and = sortMatchingCriteria(criteriaCopy.and);
+    } else if (criteriaCopy.hasOwnProperty('or')) {
+      criteriaCopy.or = sortMatchingCriteria(criteriaCopy.or);
+    }
+  }
+  return criteriaCopy;
+}
