@@ -28,7 +28,7 @@ export class MatchminerService implements OnModuleInit {
           const trials = await this.prismaService.trial.findMany({
             where: {status: CtmlStatusEnum.COMPLETED, trial_status: TrialStatusEnum.MATCHED}
           });
-          if (trials != null) {
+          if (trials != null && trials.length > 0) {
             const trial_internal_ids = [];
             for (const trial of trials) {
               trial_internal_ids.push(trial.trial_internal_id);
