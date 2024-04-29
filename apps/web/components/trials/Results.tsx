@@ -65,10 +65,8 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
   useEffect(() => {
     if (downloadResults.length > 0) {
       // sometimes csvLink.current is null when switching between groups
-      if (csvLink.current) {
-        // @ts-ignore
-        csvLink.current.link.click();
-      }
+      // using solution from https://github.com/react-csv/react-csv/issues/237
+      csvLink?.current?.link.click();
     }
   }, [downloadResults])
 
@@ -106,7 +104,7 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
     {label: "Match Type", key: "match_type"},
   ];
   // csv download link ref
-  const csvLink = useRef()
+  const csvLink = React.useRef<CSVLink & HTMLAnchorElement & { link: HTMLAnchorElement }>();
 
   const downloadBodyTemplate = (rowData) => {
     return <>
