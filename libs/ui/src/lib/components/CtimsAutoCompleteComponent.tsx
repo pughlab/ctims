@@ -7,7 +7,6 @@ import useGetGenes from '../../../../../apps/web/hooks/useGetGenes';
 const AutocompleteField = ({ onChange, ...props }) => {
   const { filteredHugoSymbols, loading, searchSymbols } = useGetGenes();
   const [selectedHugoSymbol, setSelectedHugoSymbol] = useState([props.value]);
- console.log("Props",props.value);
 
  useEffect(() => {
   setSelectedHugoSymbol([props.value]);

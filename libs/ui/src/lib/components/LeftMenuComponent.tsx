@@ -532,43 +532,78 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
             label = hugo_symbol;
           }
         }
+        const isGroup = node.label === 'And' || node.label === 'Or';
         const style: React.CSSProperties = {
-          width: '200px',
+          width: isGroup? '5px': '300px',
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           display: 'inline-block',
           textAlign: 'end',
-          verticalAlign: 'bottom'
+          verticalAlign: 'bottom',
+          flexGrow: isGroup? 0: 3,
         }
 
         node.data.nodeLabel = label;
-        return <i style={style}>{label}</i>;
+        return <i style={style} onClick={onNodeClick}>{label}</i>;
       }
 
       return (
         <>
           <div ref={divRef} className={styles.treeNodeContainer}>
-              <span className="p-treenode-label" style={style}>
-                {label}
-              </span>
-              <div>{nodeLabel()}</div>
-              {btnToShow()}
-              <TieredMenu model={tieredMenuModel} popup ref={tieredMenu}/>
+            <span className="p-treenode-label" style={style}>
+              {label}
+            </span>
           </div>
+          {btnToShow()}
+          {nodeLabel()}
+          <TieredMenu model={tieredMenuModel} popup ref={tieredMenu}/>
         </>
       );
     }
     return null;
   }
 
+
   const togglerTemplate = (node: TreeNode, defaultContentOptions: TreeTogglerTemplateOptions) => {
     const expanded = defaultContentOptions.expanded;
-    const iconClassName = classNames('p-tree-toggler-icon pi pi-fw', { 'caret-right-filled': !expanded, 'caret-down-filled': expanded });
+    const iconClassName = classNames(
+      'p-tree-toggler-icon pi pi-fw', { 'caret-right-filled': !expanded, 'caret-down-filled': expanded });
+
+    const buttonRef = React.useRef<HTMLButtonElement>()
+    React.useEffect(() => {
+      if (buttonRef.current) {
+        // check if button is hidden, this template is always present, but on node children
+        // it has visibility: hidden
+        if (window.getComputedStyle(buttonRef.current).visibility === 'hidden') {
+    //       setTimeout(
+    // () => {
+    //           divRef.current.style.setProperty('width', '25px', 'important');
+          buttonRef.current.style.setProperty('border', '1px solid green', 'important');
+    //         }, 0
+    //       )
+          console.log('hidden')
+    //     } else {
+          console.log('has arrow')
+    //       setTimeout(
+    //         () => {
+    //           divRef.current.style.setProperty('width', '100%', 'important');
+          buttonRef.current.style.setProperty('border', '1px solid blue', 'important');
+    //         }, 0
+    //       )
+        }
+      }
+    }, []);
+
     return (
-      <button type="button" className="p-tree-toggler p-link" tabIndex={-1} onClick={defaultContentOptions.onClick}>
+      <>
+      <button ref={buttonRef} type="button" className="p-tree-toggler p-link" tabIndex={-1} onClick={defaultContentOptions.onClick}
+        // style={{border: '1px solid red'}}
+        style={{order: 1}}
+      >
         <span className={iconClassName} aria-hidden="true"></span>
       </button>
+      </>
     )
   }
 
