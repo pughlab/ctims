@@ -6,7 +6,7 @@ import MatchingMenuAndForm from "./MatchingMenuAndForm";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState, store} from "../../../../../apps/web/store/store";
 import {resetMatchDialogErrors} from "../../../../../apps/web/store/slices/modalActionsSlice";
-import {sortMatchingCriteria} from "./helpers";
+import {sortCTMLModelMatchCriteria} from "./helpers";
 
 interface CtimsMatchDialogProps {
   isDialogVisible: boolean;
@@ -87,8 +87,8 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     const ctmlModel = currentState.modalActions.ctmlDialogModel;
     // sort the ctmlModel.match before saving
     // formData.match = ctmlModel.match;
-    const sorted = sortMatchingCriteria(ctmlModel.match);
-    formData.match = sorted;
+    const sorted = sortCTMLModelMatchCriteria(ctmlModel);
+    formData.match = sorted.match;
     props.onSaveCTMLHide();
   }
 

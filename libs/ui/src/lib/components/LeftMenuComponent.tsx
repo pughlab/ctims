@@ -16,7 +16,7 @@ import {
   convertTreeNodeArrayToCtimsFormat,
   deleteNodeFromChildrenArrayByKey,
   findArrayContainingKeyInsideATree,
-  findObjectByKeyInTree,
+  findObjectByKeyInTree, getNodeLabel,
   isObjectEmpty, traverseNode
 } from "./helpers";
 import * as jsonpath from "jsonpath";
@@ -508,30 +508,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
       // return a label according to the hierarchy defined by CTM-448
       const nodeLabel = (): any => {
-        let label;
-        if (node.label === 'Clinical' && node.data.formData) {
-          const { tmb, oncotree_primary_diagnosis, er_status, pr_status, her2_status, age_expression } = node.data.formData;
-          if (tmb) {
-            label = 'TMB';
-          } else if (oncotree_primary_diagnosis) {
-            label = oncotree_primary_diagnosis;
-          } else if (er_status || pr_status || her2_status) {
-            const statusLabels = [];
-            if (er_status) statusLabels.push('ER');
-            if (pr_status) statusLabels.push('PR');
-            if (her2_status) statusLabels.push('HER2');
-            label = statusLabels.join(', ');
-          } else if (age_expression) {
-            label = age_expression;
-          }
-        } else if (node.label === 'Genomic' && node.data.formData) {
-          const { ms_status, hugo_symbol } = node.data.formData;
-          if (ms_status) {
-            label = ms_status;
-          } else if (hugo_symbol) {
-            label = hugo_symbol;
-          }
-        }
+
         const style: React.CSSProperties = {
           width: '200px',
           whiteSpace: 'nowrap',
@@ -542,8 +519,8 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           verticalAlign: 'bottom'
         }
 
-        node.data.nodeLabel = label;
-        return <i style={style}>{label}</i>;
+        node.data.nodeLabel = getNodeLabel(node);
+        return <i style={style}>{node.data.nodeLabel}</i>;
       }
 
       return (

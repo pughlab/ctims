@@ -341,43 +341,62 @@ export const sortTreeNode = (treeNode: TreeNode): TreeNode => {
   return treeNode;
 }
 
-// sort matching criteria node, same as sortTreeNode but for matching criteria in a different format
-export const sortMatchingCriteria = (ctmlMatchCriteria: any):any => {
-  let criteriaCopy = structuredClone(ctmlMatchCriteria);
-  if (Array.isArray(criteriaCopy)) {
-    return criteriaCopy.map(sortMatchingCriteria).sort((a: any, b: any) => {
-      const keyA = Object.keys(a)[0];
-      const keyB = Object.keys(b)[0];
+export const sortCTMLModelMatchCriteria = (ctmlMatchCriteria: any): { match: [] } => {
+  let criteriaCopy = structuredClone(ctmlMatchCriteria.match);
 
-      if (keyA === keyB) {
-        const criteriaObjA = a[keyA];
-        const criteriaObjB = b[keyB];
-        if (keyA === 'clinical' || keyA === 'genomic') {
-          // sort by value of inner object {"hugo_symbol":"A1BG"}
-          const criteriaKeyA = Object.keys(criteriaObjA)[0];
-          const criteriaKeyB = Object.keys(criteriaObjB)[0];
-          return criteriaObjA[criteriaKeyA].localeCompare(criteriaObjB[criteriaKeyB]);
-        } else {
-          return 0;
-        }
-      } else if (keyA === 'clinical') {
-        return -1;
-      } else if (keyA === 'genomic') {
-        if (keyB === 'clinical') {
-          return 1;
-        } else {
-          return -1;
-        }
-      } else if (keyA === 'and' || keyA === 'or') {
-        return 1;
-      }
-    });
-  } else if (typeof criteriaCopy === 'object') {
-    if (criteriaCopy.hasOwnProperty('and')) {
-      criteriaCopy.and = sortMatchingCriteria(criteriaCopy.and);
-    } else if (criteriaCopy.hasOwnProperty('or')) {
-      criteriaCopy.or = sortMatchingCriteria(criteriaCopy.or);
+  // convert the criteria to tree node format
+  let treeNode = convertCtimsFormatToTreeNodeArray({match: criteriaCopy});
+  // add the node label to each node so it can be sorted
+  traverseAndAddNodeLabel(treeNode[0]);
+
+  let sorted = sortTreeNode(treeNode[0]);
+
+  // convert the sorted tree node back to ctml format
+  const sortedCtimsFormat = convertTreeNodeArrayToCtimsFormat([sorted]);
+  return sortedCtimsFormat;
+}
+
+// traverse the tree and add the node label to each node
+const traverseAndAddNodeLabel = (treeNode: TreeNode): TreeNode => {
+  if (typeof treeNode !== "undefined" && treeNode.children) {
+    treeNode.children = treeNode.children.map(traverseAndAddNodeLabel);
+    if (treeNode.label === 'Clinical' || treeNode.label === 'Genomic') {
+      treeNode.data.nodeLabel = getNodeLabel(treeNode);
+    }
+  } else {
+    if (treeNode.label === 'Clinical' || treeNode.label === 'Genomic') {
+      treeNode.data.nodeLabel = getNodeLabel(treeNode);
     }
   }
-  return criteriaCopy;
+  return treeNode;
 }
+
+// figure out a label for criteria node according to CTM-394
+export const getNodeLabel = (node: TreeNode): string => {
+  let label;
+  if (node.label === 'Clinical' && node.data.formData) {
+    const { tmb, oncotree_primary_diagnosis, er_status, pr_status, her2_status, age_expression } = node.data.formData;
+    if (tmb) {
+      label = 'TMB';
+    } else if (oncotree_primary_diagnosis) {
+      label = oncotree_primary_diagnosis;
+    } else if (er_status || pr_status || her2_status) {
+      const statusLabels = [];
+      if (er_status) statusLabels.push('ER');
+      if (pr_status) statusLabels.push('PR');
+      if (her2_status) statusLabels.push('HER2');
+      label = statusLabels.join(', ');
+    } else if (age_expression) {
+      label = age_expression;
+    }
+  } else if (node.label === 'Genomic' && node.data.formData) {
+    const { ms_status, hugo_symbol } = node.data.formData;
+    if (ms_status) {
+      label = ms_status;
+    } else if (hugo_symbol) {
+      label = hugo_symbol;
+    }
+  }
+  return label;
+}
+
