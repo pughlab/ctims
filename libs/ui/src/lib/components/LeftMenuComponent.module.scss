@@ -45,11 +45,10 @@
 
 .treeNodeContainer {
   display: flex;
-  //width: 25px;
-  width: 60%;
+  width: 25px;
+  //width: 60%;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid red;
 }
 
 .treeMenuBtn {
@@ -61,7 +60,7 @@
   box-shadow: none;
   outline: none !important;
   vertical-align: baseline !important;
-  margin-left: auto;
+  //margin-left: auto;
 }
 
 .treeMenuBtn:hover {

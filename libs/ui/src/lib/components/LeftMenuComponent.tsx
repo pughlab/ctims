@@ -408,78 +408,10 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
   const nodeTemplate = (node: TreeNode) => {
 
-    const tieredMenuModel = [
-      {
-        label: 'Add criteria to same group',
-        icon: 'pi pi-plus-circle',
-        items: [
-          {
-            label: 'Clinical',
-            command: () => {
-              addCriteriaToSameList(selectedNode.key as string, 'Clinical');
-            },
-            icon: 'clinical-icon in-menu'
-          },
-          {
-            label: 'Genomic',
-            command: () => {
-              addCriteriaToSameList(selectedNode.key as string, 'Genomic');
-            },
-            icon: 'genomic-icon in-menu',
-          },
-        ],
-      },
-      {
-        label: 'Switch group operator',
-        icon: 'pi pi-arrow-right-arrow-left',
-        command: () => {
-          if (selectedNode.label === 'And') {
-            dispatch(operatorChange({nodeKey: selectedNode.key, operator: 'Or', location: 'tree'}));
-          } else {
-            dispatch(operatorChange({nodeKey: selectedNode.key, operator: 'And', location: 'tree'}));
-          }
-        }
-      },
-      {
-        label: 'Delete',
-        icon: 'pi pi-trash',
-        command: () => { deleteNodeClicked(selectedNode.key) }
-      },
-      {
-        separator:true
-      },
-      {
-        label: 'Add criteria subgroup',
-        icon: 'pi pi-clone',
-        items: [
-          {
-            label: 'And (if all criteria are met)',
-            icon: 'and-icon',
-            command: () => { addSubGroup(selectedNode.key, 'And') }
-          },
-          {
-            label: 'Or (if any criteria is met)',
-            icon: 'or-icon',
-            command: () => { addSubGroup(selectedNode.key, 'Or') }
-          }
-        ],
-      }
-    ]
-
     const divRef = useRef<any>(null)
 
     if (selectedNode) {
-      const btnToShow = () => {
-        let show = false;
-        // we only display the three dots menu over the node if the node is selected and the mouse is over the node and the node is not a leaf
-        if ((selectedNode as TreeNode).key === node.key && (node.label === 'And' || node.label === 'Or')) {
-          show = true;
-        }
-        return show ?
-          <Button icon="pi pi-ellipsis-h"
-                  className={styles.treeMenuBtn}
-                  iconPos="right" onClick={tieredMenuClick} ></Button> : null
-      }
+
 
       let label = <b>{node.label}</b>;
 
@@ -555,9 +487,8 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
               {label}
             </span>
           </div>
-          {btnToShow()}
           {nodeLabel()}
-          <TieredMenu model={tieredMenuModel} popup ref={tieredMenu}/>
+
         </>
       );
     }
@@ -595,14 +526,109 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       }
     }, []);
 
+    const tieredMenuModel = [
+      {
+        label: 'Add criteria to same group',
+        icon: 'pi pi-plus-circle',
+        items: [
+          {
+            label: 'Clinical',
+            command: () => {
+              addCriteriaToSameList(selectedNode.key as string, 'Clinical');
+            },
+            icon: 'clinical-icon in-menu'
+          },
+          {
+            label: 'Genomic',
+            command: () => {
+              addCriteriaToSameList(selectedNode.key as string, 'Genomic');
+            },
+            icon: 'genomic-icon in-menu',
+          },
+        ],
+      },
+      {
+        label: 'Switch group operator',
+        icon: 'pi pi-arrow-right-arrow-left',
+        command: () => {
+          if (selectedNode.label === 'And') {
+            dispatch(operatorChange({nodeKey: selectedNode.key, operator: 'Or', location: 'tree'}));
+          } else {
+            dispatch(operatorChange({nodeKey: selectedNode.key, operator: 'And', location: 'tree'}));
+          }
+        }
+      },
+      {
+        label: 'Delete',
+        icon: 'pi pi-trash',
+        command: () => { deleteNodeClicked(selectedNode.key) }
+      },
+      {
+        separator:true
+      },
+      {
+        label: 'Add criteria subgroup',
+        icon: 'pi pi-clone',
+        items: [
+          {
+            label: 'And (if all criteria are met)',
+            icon: 'and-icon',
+            command: () => { addSubGroup(selectedNode.key, 'And') }
+          },
+          {
+            label: 'Or (if any criteria is met)',
+            icon: 'or-icon',
+            command: () => { addSubGroup(selectedNode.key, 'Or') }
+          }
+        ],
+      }
+    ]
+
+    const onNodeClick = (e: any) => {
+      console.log('node: ', node)
+      // const nodeKey = node.key;
+      // const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
+      // console.log('parentNode: ', parentNode)
+      setSelectedNode(node);
+      setSelectedKeys(node.key as string)
+      onTreeNodeClick(node.data.type, node);
+    }
+
+      const btnToShow = () => {
+        let show = false;
+        let isGroup = false;
+        // we only display the three dots menu over the node if the node is selected and the mouse is over the node and the node is not a leaf
+        if ((selectedNode as TreeNode).key === node.key && (node.label === 'And' || node.label === 'Or')) {
+          show = true;
+        }
+
+        if (node.label === 'And' || node.label === 'Or') {
+          isGroup = true;
+        }
+        return (
+            <>
+              <div onClick={onNodeClick} style={{order: 2, width: isGroup? '70%': '0%', height: '100%'}}></div>
+              {show ?
+                <Button icon="pi pi-ellipsis-h"
+                  className={styles.treeMenuBtn}
+                  style={{order: 2}}
+                  iconPos="right" onClick={tieredMenuClick} ></Button> : null
+              }
+            </>
+        )
+      }
+
+
     return (
       <>
-      <button ref={buttonRef} type="button" className="p-tree-toggler p-link" tabIndex={-1} onClick={defaultContentOptions.onClick}
-        // style={{border: '1px solid red'}}
+        {btnToShow()}
+        <button ref={buttonRef} type="button" className="p-tree-toggler p-link" tabIndex={-1} onClick={defaultContentOptions.onClick}
         style={{order: 1}}
-      >
-        <span className={iconClassName} aria-hidden="true"></span>
-      </button>
+          // style={{order: 1}}
+        >
+          <span className={iconClassName} aria-hidden="true"></span>
+        </button>
+        <TieredMenu model={tieredMenuModel} popup ref={tieredMenu}/>
       </>
     )
   }
