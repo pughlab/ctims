@@ -54,7 +54,7 @@ useEffect(() => {
     <div className={styles.container}>
       {props.schema.title && (
         <label style={labelStyle}>
-          Hugo Symbol
+          {props.schema.title}
           <Tooltip>
             <i
               className={questionMarkStyle}

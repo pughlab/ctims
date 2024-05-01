@@ -147,6 +147,9 @@ export const GenomicForm = (props: IFormProps) => {
           "High level amplification",
         ]
       },
+      "fusion_partner_hugo_symbol": {
+        type: 'string',
+      },
       'wildtype': {
         "enumNames": [
           " ",
@@ -365,7 +368,7 @@ export const GenomicForm = (props: IFormProps) => {
         'title': 'MS Status',
         '$ref': '#/definitions/ms_status',
         "description": "Curate a specific microsatellite stability status",
-      }
+      },
     }
   };
   const genomicUiSchema = {
@@ -378,8 +381,13 @@ export const GenomicForm = (props: IFormProps) => {
       "ui:options": {
         autoCompleteKey: autoCompleteKey, // Pass the unique key as an option
       },
-      
-    }
+    },
+    "fusion_partner_hugo_symbol": {
+      "ui:widget": AutocompleteField,
+      "ui:options": {
+        autoCompleteKey: autoCompleteKey, // Pass the unique key as an option
+      },
+  },
   }
 
   const validateFormFromRef = (data?: any) => {
