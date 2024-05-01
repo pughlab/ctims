@@ -3,15 +3,32 @@ import { AutoComplete } from 'primereact/autocomplete';
 import { Tooltip } from 'antd';
 import styles from "./CtimsAutoCompleteComponent.module.css";
 import useGetGenes from '../../../../../apps/web/hooks/useGetGenes';
-
 const AutocompleteField = ({ onChange, ...props }) => {
   const { filteredHugoSymbols, loading, searchSymbols } = useGetGenes();
   const [selectedHugoSymbol, setSelectedHugoSymbol] = useState([props.value]);
- console.log("Props",props.value);
+  console.log("Props",props.value);
 
- useEffect(() => {
+useEffect(() => {
   setSelectedHugoSymbol([props.value]);
-}, [props.value]);
+}, [props.options.
+  autoCompleteKey]);
+
+
+  const handleInputChange = (e:  {value: string}) => {
+
+    console.log("Check1");
+    const trimmedValue = e.value.replace(/^\s+/, '');
+    if (trimmedValue !== "") {
+      setSelectedHugoSymbol(trimmedValue);
+      onChange(trimmedValue);
+    }
+    else {
+      setSelectedHugoSymbol("");
+      onChange("");
+    }
+
+  };
+
 
   const arrayContainer = {
     // width: '640px',
@@ -49,13 +66,25 @@ const AutocompleteField = ({ onChange, ...props }) => {
       )}
       <AutoComplete
         inputStyle={arrayContainer}
-        value={selectedHugoSymbol}
+        value={props.value}
         suggestions={filteredHugoSymbols}
-        completeMethod={(e) => searchSymbols(e.query)}
-        onChange={(e) => {
-          setSelectedHugoSymbol(e.value);
-          onChange(e.value);
+        completeMethod={(e) => {
+          console.log(" selectedHugoSymbol inside completeMethod ", e);
+          const trimmedValue = e.query.replace(/^\s+/, '');
+          if (trimmedValue === "") {
+            
+            return [];
+          } else {
+            setSelectedHugoSymbol(trimmedValue);
+            onChange(trimmedValue);
+            return searchSymbols(trimmedValue);
+          }
         }}
+        onChange={(e) => {
+         handleInputChange(e)
+        }}
+        id={props.options.
+          autoCompleteKey}
       />
     </div>
   );
