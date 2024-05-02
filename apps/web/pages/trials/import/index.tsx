@@ -7,7 +7,7 @@ import useGetCtmlSchema from "../../../hooks/useGetCtmlSchema";
 import {setCtmlModel} from "../../../store/slices/ctmlModelSlice";
 import {useDispatch} from "react-redux";
 import FooterComponent from "apps/web/components/FooterComponent";
-
+import { resetContextState } from "../../../store/slices/contextSlice";
 
 const containerStyle: React.CSSProperties = {
   display: 'flex',
@@ -26,6 +26,7 @@ const EditorImportTrialPage = () => {
   const [formData, setFormData] = useState(null);
 
   useEffect(() => {
+    dispatch(resetContextState());
     getCtmlSchemaOperation();
     const formData = sessionStorage.getItem('imported_ctml');
     if (formData) {

@@ -45,6 +45,9 @@ export const contextSlice = createSlice({
     },
     setIsFormChanged: (state, action: PayloadAction<boolean>) => {
       state.isFormChanged = action.payload
+    },
+    resetContextState: (state) => { // Define the resetContextState action
+      state.trialId = 0;  // Reset state to its initial state
     }
   },
   // use extraReducers to listen to other action types
@@ -63,5 +66,7 @@ export const {
   selectedTrialGroupId,
   setIsTrialGroupAdmin,
   setIsFormDisabled,
-  setIsFormChanged} = contextSlice.actions;
+  setIsFormChanged,
+  resetContextState
+} = contextSlice.actions;
 export default contextSlice.reducer;
