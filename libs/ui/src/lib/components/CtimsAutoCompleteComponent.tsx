@@ -3,32 +3,15 @@ import { AutoComplete } from 'primereact/autocomplete';
 import { Tooltip } from 'antd';
 import styles from "./CtimsAutoCompleteComponent.module.css";
 import useGetGenes from '../../../../../apps/web/hooks/useGetGenes';
+
 const AutocompleteField = ({ onChange, ...props }) => {
   const { filteredHugoSymbols, loading, searchSymbols } = useGetGenes();
   const [selectedHugoSymbol, setSelectedHugoSymbol] = useState([props.value]);
-  console.log("Props",props.value);
+ console.log("Props",props.value);
 
-useEffect(() => {
+ useEffect(() => {
   setSelectedHugoSymbol([props.value]);
-}, [props.options.
-  autoCompleteKey]);
-
-
-  const handleInputChange = (e:  {value: string}) => {
-
-    console.log("Check1");
-    const trimmedValue = e.value.replace(/^\s+/, '');
-    if (trimmedValue !== "") {
-      setSelectedHugoSymbol(trimmedValue);
-      onChange(trimmedValue);
-    }
-    else {
-      setSelectedHugoSymbol("");
-      onChange("");
-    }
-
-  };
-
+}, [props.value]);
 
   const arrayContainer = {
     // width: '640px',
@@ -66,25 +49,13 @@ useEffect(() => {
       )}
       <AutoComplete
         inputStyle={arrayContainer}
-        value={props.value}
+        value={selectedHugoSymbol}
         suggestions={filteredHugoSymbols}
-        completeMethod={(e) => {
-          console.log(" selectedHugoSymbol inside completeMethod ", e);
-          const trimmedValue = e.query.replace(/^\s+/, '');
-          if (trimmedValue === "") {
-            
-            return [];
-          } else {
-            setSelectedHugoSymbol(trimmedValue);
-            onChange(trimmedValue);
-            return searchSymbols(trimmedValue);
-          }
-        }}
+        completeMethod={(e) => searchSymbols(e.query)}
         onChange={(e) => {
-         handleInputChange(e)
+          setSelectedHugoSymbol(e.value);
+          onChange(e.value);
         }}
-        id={props.options.
-          autoCompleteKey}
       />
     </div>
   );
