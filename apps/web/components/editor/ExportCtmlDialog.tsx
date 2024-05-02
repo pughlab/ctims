@@ -125,6 +125,7 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
       delete ctmlModelCopy.trialInformation;
       delete ctmlModelCopy.ctml_status;
       delete ctmlModelCopy.nickname;
+      delete ctmlModelCopy.trial_internal_id;
       return ctmlModelCopy;
     }
 

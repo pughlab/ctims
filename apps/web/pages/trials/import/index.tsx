@@ -3,6 +3,7 @@ import IdleComponent from "../../../components/IdleComponent";
 import LeftMenuEditorComponent from "../../../components/editor/LeftMenuEditorComponent";
 import {Ui} from "@ctims-mono-repo/ui";
 import React, {useEffect, useState} from "react";
+import { v4 as uuidv4 } from 'uuid';
 import useGetCtmlSchema from "../../../hooks/useGetCtmlSchema";
 import {setCtmlModel} from "../../../store/slices/ctmlModelSlice";
 import {useDispatch} from "react-redux";
@@ -33,7 +34,7 @@ const EditorImportTrialPage = () => {
       let editTrialObject = {
         trialInformation: {
           trial_id: trial.trial_id,
-          trial_internal_id: trial.trial_internal_id,
+          trial_internal_id: uuidv4(),
           nickname: trial.nickname,
           principal_investigator: trial.principal_investigator,
           ctml_status: 'DRAFT',
