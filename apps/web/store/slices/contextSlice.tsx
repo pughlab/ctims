@@ -56,7 +56,7 @@ export const contextSlice = createSlice({
     setIsLongOperation: (state, action: PayloadAction<boolean>) => {
       state.isLongOperation = action.payload;
     },
-    resetContextState: (state) => { 
+    resetTrialId: (state) => { 
       state.trialId = 0; 
     }
   },
@@ -79,5 +79,5 @@ export const {
   setIsFormChanged,
   setIsAccessTokenSet,
   setIsLongOperation,
-  resetContextState } = contextSlice.actions;
+  resetTrialId } = contextSlice.actions;
 export default contextSlice.reducer;
