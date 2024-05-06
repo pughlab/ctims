@@ -13,6 +13,19 @@ const AutocompleteField = ({ onChange, ...props }) => {
   setSelectedHugoSymbol([props.value]);
 }, [props.value]);
 
+  const handleInputChange = (e:  {value: string}) => {
+    console.log("Entered handleInputChange");
+    const trimmedValue = trimData(e.value);
+    trimmedValue !== "" ? 
+    (setSelectedHugoSymbol([trimmedValue]), onChange(trimmedValue)): 
+    (setSelectedHugoSymbol([]), onChange(undefined));
+  };
+
+  const trimData = (input: string) => {
+    const trimmedData = input.replace(/^\s+/, '');
+    return trimmedData;
+  }
+
   const arrayContainer = {
     // width: '640px',
     flexGrow: 1,
@@ -51,10 +64,14 @@ const AutocompleteField = ({ onChange, ...props }) => {
         inputStyle={arrayContainer}
         value={selectedHugoSymbol}
         suggestions={filteredHugoSymbols}
-        completeMethod={(e) => searchSymbols(e.query)}
+        completeMethod={(e) => {
+          const trimmedValue = trimData(e.query);
+          trimmedValue === "" 
+          ? []
+          : (setSelectedHugoSymbol([trimmedValue]), onChange(trimmedValue), searchSymbols(trimmedValue));
+        }}
         onChange={(e) => {
-          setSelectedHugoSymbol(e.value);
-          onChange(e.value);
+          handleInputChange(e)
         }}
       />
     </div>
