@@ -451,6 +451,9 @@ export const GenomicForm = (props: IFormProps) => {
     if (!protein_change_validation_func(formData.protein_change)) {
       errors.protein_change.addError('Must start with p.');
     }
+    if (formData.protein_change && formData.wildcard_protein_change) {
+      errors.protein_change.addError('Cannot have both protein change and wildcard protein change filled.');
+    }
     // console.log('custom validate errors: ', errors)
     return errors;
   }
