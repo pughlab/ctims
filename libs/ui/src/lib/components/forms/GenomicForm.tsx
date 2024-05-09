@@ -453,6 +453,7 @@ export const GenomicForm = (props: IFormProps) => {
     }
     if (formData.protein_change && formData.wildcard_protein_change) {
       errors.protein_change.addError('Cannot have both protein change and wildcard protein change filled.');
+      errors.wildcard_protein_change.addError('Cannot have both protein change and wildcard protein change filled.');
     }
     // console.log('custom validate errors: ', errors)
     return errors;
