@@ -15,7 +15,7 @@ const AutocompleteField = ({ onChange, ...props }) => {
 
   const handleInputChange = (e:  {value: string}) => {
 
-    const trimmedValue = e.value.trimStart();
+    const trimmedValue = e.value.trim();
     trimmedValue !== "" ? 
     (setSelectedHugoSymbol([trimmedValue]), onChange(trimmedValue)): 
     (setSelectedHugoSymbol([]), onChange(undefined));
@@ -61,7 +61,7 @@ const AutocompleteField = ({ onChange, ...props }) => {
         value={selectedHugoSymbol}
         suggestions={filteredHugoSymbols}
         completeMethod={(e) => {
-          const trimmedValue = e.query.trimStart();
+          const trimmedValue = e.query.trim();
           trimmedValue === "" 
           ? []
           : (setSelectedHugoSymbol([trimmedValue]), onChange(trimmedValue), searchSymbols(trimmedValue));
