@@ -34,7 +34,7 @@ export class MatchminerService implements OnModuleInit {
               trial_internal_ids.push(trial.trial_internal_id);
             }
             const trial_internal_id_list_str = '[' + trial_internal_ids.map(s => `"${s}"`).join(',') + ']';
-            const url = `${process.env.MM_API_URL}/prioritizer_trial_match?where={"trial_internal_id":{"$in": ${trial_internal_id_list_str}}}`
+            const url = `${process.env.MM_API_URL}/prioritizer_trial_match?where={"trial_internal_id":{"$in": ${trial_internal_id_list_str}},"is_disabled":false}`
             const matchResults = await axios.request(
               {
                 method: 'get',
