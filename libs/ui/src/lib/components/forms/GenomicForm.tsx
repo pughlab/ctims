@@ -463,7 +463,8 @@ export const GenomicForm = (props: IFormProps) => {
               },
             ]
           }
-        }
+        },
+        "required": ['variant_category']
       },
       // 'wildtype': {
       //   'title': 'Wildtype',

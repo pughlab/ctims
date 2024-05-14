@@ -220,7 +220,7 @@ export const convertCtimsFormatToTreeNodeArray = (output: any, isParent = true):
         current = { key: uuidv4(), label: "Clinical", data: { type: EComponentType.ClinicalForm, formData: item.clinical }, icon: 'clinical-icon in-tree' };
         break;
       case "genomic":
-        current = { key: uuidv4(), label: "Genomic", data: { type: EComponentType.GenomicForm, formData: item.genomic.variantCategoryContainerObject }, icon: 'genomic-icon in-tree' };
+        current = { key: uuidv4(), label: "Genomic", data: { type: EComponentType.GenomicForm, formData: item.genomic }, icon: 'genomic-icon in-tree' };
         break;
     }
     if (item[Object.keys(item)[0]].length > 0) {

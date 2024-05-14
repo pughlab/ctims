@@ -79,11 +79,12 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     }
   }
 
+  // this gets call onChange to trigger the dispatch
   const updateReduxViewModelAndCtmlModel = (newRootNodes: TreeNode[], state: RootState) => {
     const activeArmId: string = state.matchViewModelActions.activeArmId;
     const viewModel: IKeyToViewModel = {};
-    // const flattenedNewRootNodes = expandVariantCategoryContainerObject(newRootNodes);
-    const flattenedNewRootNodes = newRootNodes;
+    const flattenedNewRootNodes = flattenVariantCategoryContainerObject(newRootNodes);
+    // const flattenedNewRootNodes = newRootNodes;
     viewModel[activeArmId] = structuredClone(flattenedNewRootNodes);
     dispatch(setMatchViewModel(viewModel))
     // convert view model (rootNodes) to ctims format
@@ -94,6 +95,24 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     if (flattenedNewRootNodes.length > 0 && flattenedNewRootNodes[0].children && flattenedNewRootNodes[0].children.length === 0) {
         setSaveBtnState(true);
     }
+  }
+
+  /*
+  recursively go through node of a tree, if the json has 'children', for each element in the children array, if
+  data.formData has the key 'variantCategoryContainerObject', expand the value of the key to be the value of formData
+  so that data.formData = data.formData.variantCategoryContainerObject value
+   */
+  const flattenVariantCategoryContainerObject = (nodes: TreeNode[]) => {
+    return nodes.map((node: TreeNode) => {
+      const newNode = {...node};
+      if (newNode.data && newNode.data.formData && newNode.data.formData.variantCategoryContainerObject) {
+        newNode.data.formData = newNode.data.formData.variantCategoryContainerObject;
+      }
+      if (newNode.children) {
+        newNode.children = flattenVariantCategoryContainerObject(newNode.children);
+      }
+      return newNode;
+    });
   }
 
   /*
