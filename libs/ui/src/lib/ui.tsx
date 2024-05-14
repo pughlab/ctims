@@ -100,11 +100,49 @@ export const Ui = (props: UiProps) => {
     console.log('handleSpecialClick formData: ', formD.formData);
     console.log('handleSpecialClick armCode: ', formData.arm_code);
     console.log('handleSpecialClick id: ', id);
+    // if formData.match is an array
+    if (Array.isArray(formData.match)) {
+      console.log('before: ', formData.match)
+      const formDataWithVariantCategoryContainerObject = addVariantCategoryContainerObject(formData.match);
+      formData.match = formDataWithVariantCategoryContainerObject;
+      console.log('after: ', formData.match)
+    }
     setArmCode(formData.arm_code)
     setFormData(formData)
     dispatch(setCtmlMatchModel(structuredClone(formData)))
     dispatch(setActiveArmId(id))
     setIsOpen(true);
+  }
+
+  /*
+  Given this format: [{"and":[{"genomic":{"variant_category":"Mutation","hugo_symbol":"ab"}}]}]
+  recursively traverse through the array, if the node has a genomic property, create a new object with "variantCategoryContainerObject"
+  as the key and the original value as the value.
+  If the node has "and" or "or" property, recursively traverse through the children and do the same.
+  the return should be:
+    [{"and":[{"genomic":"variantCategoryContainerObject":{"variant_category":"Mutation","hugo_symbol":"ab"}}}]}]
+   */
+  const addVariantCategoryContainerObject = (matchCriteria: any[]) => {
+    return matchCriteria.map((criteria) => {
+      if (criteria.and || criteria.or) {
+        const operator = criteria.and ? 'and' : 'or';
+        const children = criteria[operator];
+        const ret = {};
+        // @ts-ignore
+        ret[operator] = addVariantCategoryContainerObject(children);
+        return ret;
+      } else if (criteria.genomic) {
+        if (!criteria.genomic.variantCategoryContainerObject) {
+          const c: any = {
+            genomic: {
+              variantCategoryContainerObject: criteria.genomic
+            }
+          }
+          return c;
+        }
+        return criteria;
+      }
+    })
   }
 
   const onFormChange = (data: any) => {

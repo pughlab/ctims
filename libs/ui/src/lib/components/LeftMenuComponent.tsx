@@ -82,18 +82,39 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   const updateReduxViewModelAndCtmlModel = (newRootNodes: TreeNode[], state: RootState) => {
     const activeArmId: string = state.matchViewModelActions.activeArmId;
     const viewModel: IKeyToViewModel = {};
-    viewModel[activeArmId] = structuredClone(newRootNodes);
+    // const flattenedNewRootNodes = expandVariantCategoryContainerObject(newRootNodes);
+    const flattenedNewRootNodes = newRootNodes;
+    viewModel[activeArmId] = structuredClone(flattenedNewRootNodes);
     dispatch(setMatchViewModel(viewModel))
     // convert view model (rootNodes) to ctims format
-    const ctimsFormat = convertTreeNodeArrayToCtimsFormat(newRootNodes);
+    const ctimsFormat = convertTreeNodeArrayToCtimsFormat(flattenedNewRootNodes);
     dispatch(setCtmlDialogModel(ctimsFormat));
     // console.log('ctimsFormat: ', ctimsFormat)
     // console.log('newRootNodes: ', newRootNodes)
-    if (newRootNodes.length > 0 && newRootNodes[0].children && newRootNodes[0].children.length === 0) {
+    if (flattenedNewRootNodes.length > 0 && flattenedNewRootNodes[0].children && flattenedNewRootNodes[0].children.length === 0) {
         setSaveBtnState(true);
     }
   }
 
+  /*
+  recursively go through each node of a tree, if the json has property 'formData' and the value has the key
+  'variantCategoryContainerObject', then expand the variantCategoryContainerObject's value to be the
+  formData's value
+   */
+  const expandVariantCategoryContainerObject = (nodes: TreeNode[]) => {
+    const newNodes = nodes.map((node: TreeNode) => {
+      if (node.data.formData && node.data.formData.variantCategoryContainerObject) {
+        // const variantCategoryContainerObject = node.data.formData.variantCategoryContainerObject;
+        const expandedVariantCategoryContainerObject = jsonpath.value(node.data.formData, 'variantCategoryContainerObject');
+        node.data.formData = expandedVariantCategoryContainerObject;
+      }
+      if (node.children && node.children.length > 0) {
+        node.children = expandVariantCategoryContainerObject(node.children);
+      }
+      return node;
+    });
+    return newNodes;
+  }
 
   /**
    * Expands all nodes in the tree.
@@ -169,7 +190,6 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           setSelectedKeys(lastVerticalNode.key);
           setSelectedNode(lastVerticalNode);
           onTreeNodeClick(lastVerticalNode.data.type, lastVerticalNode);
-
         }
       } else {
         setSaveBtnState(true);
