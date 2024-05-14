@@ -7,11 +7,20 @@ import useGetGenes from '../../../../../apps/web/hooks/useGetGenes';
 const AutocompleteField = ({ onChange, ...props }) => {
   const { filteredHugoSymbols, loading, searchSymbols } = useGetGenes();
   const [selectedHugoSymbol, setSelectedHugoSymbol] = useState([props.value]);
- console.log("Props",props.value);
+
 
  useEffect(() => {
   setSelectedHugoSymbol([props.value]);
 }, [props.value]);
+
+  const handleInputChange = (e:  {value: string}) => {
+
+    const trimmedValue = e.value.trim();
+    trimmedValue !== "" ? 
+    (setSelectedHugoSymbol([trimmedValue]), onChange(trimmedValue)): 
+    (setSelectedHugoSymbol([]), onChange(undefined));
+  };
+
 
   const arrayContainer = {
     // width: '640px',
@@ -51,10 +60,14 @@ const AutocompleteField = ({ onChange, ...props }) => {
         inputStyle={arrayContainer}
         value={selectedHugoSymbol}
         suggestions={filteredHugoSymbols}
-        completeMethod={(e) => searchSymbols(e.query)}
+        completeMethod={(e) => {
+          const trimmedValue = e.query.trim();
+          trimmedValue === "" 
+          ? []
+          : (setSelectedHugoSymbol([trimmedValue]), onChange(trimmedValue), searchSymbols(trimmedValue));
+        }}
         onChange={(e) => {
-          setSelectedHugoSymbol(e.value);
-          onChange(e.value);
+          handleInputChange(e)
         }}
       />
     </div>
