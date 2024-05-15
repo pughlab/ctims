@@ -541,8 +541,6 @@ export const GenomicForm = (props: IFormProps) => {
   }
 
   const customValidate = (formData: any, errors: any, uiSchema: any) => {
-    console.log('form data:', formData)
-    console.log('errors:', errors)
     let myFormData = formData;
     let myErrors = errors;
     if (formData.variantCategoryContainerObject) {

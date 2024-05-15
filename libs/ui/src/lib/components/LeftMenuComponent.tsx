@@ -84,7 +84,6 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     const activeArmId: string = state.matchViewModelActions.activeArmId;
     const viewModel: IKeyToViewModel = {};
     const flattenedNewRootNodes = flattenVariantCategoryContainerObject(newRootNodes);
-    // const flattenedNewRootNodes = newRootNodes;
     viewModel[activeArmId] = structuredClone(flattenedNewRootNodes);
     dispatch(setMatchViewModel(viewModel))
     // convert view model (rootNodes) to ctims format
@@ -98,9 +97,8 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   }
 
   /*
-  recursively go through node of a tree, if the json has 'children', for each element in the children array, if
-  data.formData has the key 'variantCategoryContainerObject', expand the value of the key to be the value of formData
-  so that data.formData = data.formData.variantCategoryContainerObject value
+  recursively go through tree nodes, if it has the key 'variantCategoryContainerObject',
+  flatten the object so it matches the format of the CTML
    */
   const flattenVariantCategoryContainerObject = (nodes: TreeNode[]) => {
     return nodes.map((node: TreeNode) => {
@@ -116,14 +114,12 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   }
 
   /*
-  recursively go through each node of a tree, if the json has property 'formData' and the value has the key
-  'variantCategoryContainerObject', then expand the variantCategoryContainerObject's value to be the
-  formData's value
+  recursively go through each node of a tree, if it has the key 'variantCategoryContainerObject',
+  expands the object so it matches the schema of the form
    */
   const expandVariantCategoryContainerObject = (nodes: TreeNode[]) => {
     const newNodes = nodes.map((node: TreeNode) => {
       if (node.data.formData && node.data.formData.variantCategoryContainerObject) {
-        // const variantCategoryContainerObject = node.data.formData.variantCategoryContainerObject;
         const expandedVariantCategoryContainerObject = jsonpath.value(node.data.formData, 'variantCategoryContainerObject');
         node.data.formData = expandedVariantCategoryContainerObject;
       }
