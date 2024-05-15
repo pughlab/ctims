@@ -536,9 +536,18 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         // const nodeKey = node.key;
         // const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
         // console.log('parentNode: ', parentNode)
-        setSelectedNode(node);
-        setSelectedKeys(node.key as string)
-        onTreeNodeClick(node.data.type, node);
+
+        // if it's a genomic node, add variantCategoryContainerObject to it
+        let newNode = {...node};
+        if (newNode.label === 'Genomic') {
+          if (newNode.data.formData && !newNode.data.formData.variantCategoryContainerObject) {
+            const c = {variantCategoryContainerObject: newNode.data.formData};
+            newNode.data.formData = c;
+          }
+        }
+        setSelectedNode(newNode);
+        setSelectedKeys(newNode.key as string)
+        onTreeNodeClick(newNode.data.type, newNode);
       }
 
       useEffect(() => {

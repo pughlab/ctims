@@ -390,7 +390,11 @@ export const getNodeLabel = (node: TreeNode): string => {
       label = age_expression;
     }
   } else if (node.label === 'Genomic' && node.data.formData) {
-    const { ms_status, hugo_symbol } = node.data.formData;
+    let genomicObj = node.data.formData;
+    if (node.data.formData.variantCategoryContainerObject) {
+      genomicObj = node.data.formData.variantCategoryContainerObject;
+    }
+    const { ms_status, hugo_symbol} = genomicObj;
     if (ms_status) {
       label = ms_status;
     } else if (hugo_symbol) {
