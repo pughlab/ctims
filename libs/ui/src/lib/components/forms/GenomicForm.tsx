@@ -478,8 +478,10 @@ export const GenomicForm = (props: IFormProps) => {
     "ui:submitButtonOptions": {
       "norender": true,
     },
-    "hugo_symbol": {
-      "ui:widget": AutocompleteField,
+    "variantCategoryContainerObject": {
+      "hugo_symbol": {
+        "ui:widget": AutocompleteField,
+      }
     }
   }
 
