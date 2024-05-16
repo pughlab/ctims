@@ -441,6 +441,9 @@ export const addVariantCategoryContainerObject = (matchCriteria: any[]) => {
         return c;
       }
       return criteria;
+    } else {
+      // clinical node, no need to modify
+      return criteria;
     }
   })
 }
