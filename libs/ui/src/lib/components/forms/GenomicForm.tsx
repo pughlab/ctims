@@ -1,6 +1,6 @@
 import React, {CSSProperties, useContext, useEffect, useRef, useState} from "react";
 import Form, {withTheme} from "@rjsf/core";
-import {RegistryWidgetsType, ValidationData} from "@rjsf/utils";
+import {RegistryWidgetsType, RJSFValidationError, ValidationData} from "@rjsf/utils";
 import {useDispatch} from "react-redux";
 import CtimsMatchDialogObjectFieldTemplate from "../../custom-rjsf-templates/CtimsMatchDialogObjectFieldTemplate";
 import {
@@ -459,6 +459,27 @@ export const GenomicForm = (props: IFormProps) => {
     return errors;
   }
 
+  // capture individual field errors and handle them
+  const onFieldError = (errors: RJSFValidationError[]) => {
+    if (errors.length > 0) {
+      const proteinChangeError = errors.find(error => error.property === '.protein_change');
+      const wildcardProteinChangeError = errors.find(error => error.property === '.wildcard_protein_change');
+      if (proteinChangeError && wildcardProteinChangeError && proteinChangeError.message === wildcardProteinChangeError.message) {
+        const proteinChangeInput = document.getElementById('root_protein_change');
+        const wildcardProteinChangeInput = document.getElementById('root_wildcard_protein_change');
+        setTimeout(() => {
+          // add 'p-invalid' if it doesn't have that class name already
+          if (proteinChangeInput && !proteinChangeInput.classList.contains('p-invalid')) {
+            proteinChangeInput.classList.add('p-invalid');
+          }
+          if (wildcardProteinChangeInput && !wildcardProteinChangeInput.classList.contains('p-invalid')) {
+            wildcardProteinChangeInput.classList.add('p-invalid');
+          }
+        });
+      }
+    }
+  }
+
   return (
     <div style={formContainerStyle}>
       <OperatorDropdown
@@ -480,7 +501,7 @@ export const GenomicForm = (props: IFormProps) => {
                   uiSchema={genomicUiSchema}
                   widgets={widgets}
                   onChange={onFormChange}
-                  onError={() => {console.log('onError')}}
+                  onError={(error) => onFieldError(error)}
                   customValidate={customValidate}
                   validator={localValidator}/>
       </div>
