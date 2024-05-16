@@ -102,10 +102,8 @@ export const Ui = (props: UiProps) => {
     console.log('handleSpecialClick armCode: ', formData.arm_code);
     console.log('handleSpecialClick id: ', id);
     if (Array.isArray(formData.match)) {
-      console.log('before: ', formData.match)
       const formDataWithVariantCategoryContainerObject = addVariantCategoryContainerObject(formData.match);
       formData.match = formDataWithVariantCategoryContainerObject;
-      console.log('after: ', formData.match)
     }
     setArmCode(formData.arm_code)
     setFormData(formData)

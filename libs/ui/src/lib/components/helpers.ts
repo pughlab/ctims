@@ -209,6 +209,7 @@ export const convertCtimsFormatToTreeNodeArray = (output: any, isParent = true):
   let result: TreeNode[] = [];
   output.match.forEach((item: any) => {
     let current: any = {};
+    const c = Object.keys(item)[0];
     switch (Object.keys(item)[0]) {
       case "and":
         current = { key: uuidv4(), label: "And", data: { and: [] }, children: [], icon: 'and-icon' };

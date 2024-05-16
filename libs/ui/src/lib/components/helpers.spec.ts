@@ -1,7 +1,7 @@
 import {flattenVariantCategoryContainerObject, addVariantCategoryContainerObject} from './helpers';
 
 describe('test adding variantCategoryContainerObject to genomic criteria node for CTML and tree node ', () => {
-  test('flattenVariantCategoryContainerObject', () => {
+  it('should flatten VariantCategoryContainerObject to CTML format', () => {
     const nodes = [
       {
         "key": "1",
@@ -61,7 +61,7 @@ describe('test adding variantCategoryContainerObject to genomic criteria node fo
     );
   });
 
-  test('flattenVariantCategoryContainerObject with subgroup nested object', () => {
+  it('should flatten VariantCategoryContainerObject with subgroup nested object to CTML format', () => {
     const nodes = [
       {
         "key": "1",
@@ -176,7 +176,7 @@ describe('test adding variantCategoryContainerObject to genomic criteria node fo
     );
   });
 
-  test('addVariantCategoryContainerObject', () => {
+  it('should add VariantCategoryContainerObject', () => {
     const matchCriteria = [
       {
         "and": [
@@ -209,7 +209,7 @@ describe('test adding variantCategoryContainerObject to genomic criteria node fo
   });
 
 
-  test('addVariantCategoryContainerObject with sub group nested object', () => {
+  it('should add VariantCategoryContainerObject with sub group nested object', () => {
     const matchCriteria = [
       {
         "and": [
