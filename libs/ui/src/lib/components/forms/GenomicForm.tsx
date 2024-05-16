@@ -567,13 +567,13 @@ export const GenomicForm = (props: IFormProps) => {
         typeof myFormData.ms_status === 'undefined') {
       myErrors.variant_category.addError('Must have at least one field filled.');
     }
-    if (!wildcard_protein_change_validation_func(formData.wildcard_protein_change)) {
+    if (!wildcard_protein_change_validation_func(myFormData.wildcard_protein_change)) {
       myErrors.wildcard_protein_change.addError('Must be in the form of p.A1');
     }
-    if (!protein_change_validation_func(formData.protein_change)) {
+    if (!protein_change_validation_func(myFormData.protein_change)) {
       myErrors.protein_change.addError('Must start with p.');
     }
-    if (formData.protein_change && formData.wildcard_protein_change) {
+    if (myFormData.protein_change && myFormData.wildcard_protein_change) {
       myErrors.protein_change.addError('Cannot have both protein change and wildcard protein change filled.');
       myErrors.wildcard_protein_change.addError('Cannot have both protein change and wildcard protein change filled.');
     }
@@ -590,8 +590,8 @@ export const GenomicForm = (props: IFormProps) => {
       const proteinChangeError = errors.find(error => error.property === '.protein_change');
       const wildcardProteinChangeError = errors.find(error => error.property === '.wildcard_protein_change');
       if (proteinChangeError && wildcardProteinChangeError && proteinChangeError.message === wildcardProteinChangeError.message) {
-        const proteinChangeInput = document.getElementById('root_protein_change');
-        const wildcardProteinChangeInput = document.getElementById('root_wildcard_protein_change');
+        const proteinChangeInput = document.getElementById('root_variantCategoryContainerObject_protein_change');
+        const wildcardProteinChangeInput = document.getElementById('root_variantCategoryContainerObject_wildcard_protein_change');
         setTimeout(() => {
           // add 'p-invalid' if it doesn't have that class name already
           if (proteinChangeInput && !proteinChangeInput.classList.contains('p-invalid')) {
