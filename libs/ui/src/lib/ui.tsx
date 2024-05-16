@@ -21,6 +21,7 @@ import useSaveTrial from "../../../../apps/web/hooks/useSaveTrial";
 import {useRouter} from "next/router";
 import { Toast } from 'primereact/toast';
 import {logout} from "../../../../apps/web/pages/api/auth/[...nextauth]";
+import {addVariantCategoryContainerObject} from "./components/helpers";
 
 
 
@@ -111,31 +112,6 @@ export const Ui = (props: UiProps) => {
     dispatch(setCtmlMatchModel(structuredClone(formData)))
     dispatch(setActiveArmId(id))
     setIsOpen(true);
-  }
-
-  /*
-  Recursively traverse through the match criteria and add the variantCategoryContainerObject key to the genomic object
-   */
-  const addVariantCategoryContainerObject = (matchCriteria: any[]) => {
-    return matchCriteria.map((criteria) => {
-      if (criteria.and || criteria.or) {
-        const operator = criteria.and ? 'and' : 'or';
-        const children = criteria[operator];
-        const ret: { [key in 'and' | 'or']?: any[] } = {};
-        ret[operator] = addVariantCategoryContainerObject(children);
-        return ret;
-      } else if (criteria.genomic) {
-        if (!criteria.genomic.variantCategoryContainerObject) {
-          const c: any = {
-            genomic: {
-              variantCategoryContainerObject: criteria.genomic
-            }
-          }
-          return c;
-        }
-        return criteria;
-      }
-    })
   }
 
   const onFormChange = (data: any) => {

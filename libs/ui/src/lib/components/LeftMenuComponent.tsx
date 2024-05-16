@@ -16,7 +16,7 @@ import {
   convertTreeNodeArrayToCtimsFormat,
   deleteNodeFromChildrenArrayByKey,
   findArrayContainingKeyInsideATree,
-  findObjectByKeyInTree, getNodeLabel,
+  findObjectByKeyInTree, flattenVariantCategoryContainerObject, getNodeLabel,
   isObjectEmpty, traverseNode
 } from "./helpers";
 import * as jsonpath from "jsonpath";
@@ -94,41 +94,6 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     if (flattenedNewRootNodes.length > 0 && flattenedNewRootNodes[0].children && flattenedNewRootNodes[0].children.length === 0) {
         setSaveBtnState(true);
     }
-  }
-
-  /*
-  recursively go through tree nodes, if it has the key 'variantCategoryContainerObject',
-  flatten the object so it matches the format of the CTML
-   */
-  const flattenVariantCategoryContainerObject = (nodes: TreeNode[]) => {
-    return nodes.map((node: TreeNode) => {
-      const newNode = {...node};
-      if (newNode.data && newNode.data.formData && newNode.data.formData.variantCategoryContainerObject) {
-        newNode.data.formData = newNode.data.formData.variantCategoryContainerObject;
-      }
-      if (newNode.children) {
-        newNode.children = flattenVariantCategoryContainerObject(newNode.children);
-      }
-      return newNode;
-    });
-  }
-
-  /*
-  recursively go through each node of a tree, if it has the key 'variantCategoryContainerObject',
-  expands the object so it matches the schema of the form
-   */
-  const expandVariantCategoryContainerObject = (nodes: TreeNode[]) => {
-    const newNodes = nodes.map((node: TreeNode) => {
-      if (node.data.formData && node.data.formData.variantCategoryContainerObject) {
-        const expandedVariantCategoryContainerObject = jsonpath.value(node.data.formData, 'variantCategoryContainerObject');
-        node.data.formData = expandedVariantCategoryContainerObject;
-      }
-      if (node.children && node.children.length > 0) {
-        node.children = expandVariantCategoryContainerObject(node.children);
-      }
-      return node;
-    });
-    return newNodes;
   }
 
   /**
