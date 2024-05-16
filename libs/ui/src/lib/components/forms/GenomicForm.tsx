@@ -459,7 +459,9 @@ export const GenomicForm = (props: IFormProps) => {
     return errors;
   }
 
-  // capture individual field errors and handle them
+  // Captures all errors within the RjsfForm, from normal fields to custom widgets
+  // This is a workaround for unable to raise errors from custom widgets
+  // https://github.com/rjsf-team/react-jsonschema-form/pull/4188 is the PR that help with raising errors
   const onFieldError = (errors: RJSFValidationError[]) => {
     if (errors.length > 0) {
       const proteinChangeError = errors.find(error => error.property === '.protein_change');
