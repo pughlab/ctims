@@ -16,7 +16,7 @@ import {
   convertTreeNodeArrayToCtimsFormat,
   deleteNodeFromChildrenArrayByKey,
   findArrayContainingKeyInsideATree,
-  findObjectByKeyInTree, getNodeLabel,
+  findObjectByKeyInTree, flattenVariantCategoryContainerObject, getNodeLabel,
   isObjectEmpty, traverseNode
 } from "./helpers";
 import * as jsonpath from "jsonpath";
@@ -79,21 +79,22 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     }
   }
 
+  // this gets call onChange to trigger the dispatch
   const updateReduxViewModelAndCtmlModel = (newRootNodes: TreeNode[], state: RootState) => {
     const activeArmId: string = state.matchViewModelActions.activeArmId;
     const viewModel: IKeyToViewModel = {};
-    viewModel[activeArmId] = structuredClone(newRootNodes);
+    const flattenedNewRootNodes = flattenVariantCategoryContainerObject(newRootNodes);
+    viewModel[activeArmId] = structuredClone(flattenedNewRootNodes);
     dispatch(setMatchViewModel(viewModel))
     // convert view model (rootNodes) to ctims format
-    const ctimsFormat = convertTreeNodeArrayToCtimsFormat(newRootNodes);
+    const ctimsFormat = convertTreeNodeArrayToCtimsFormat(flattenedNewRootNodes);
     dispatch(setCtmlDialogModel(ctimsFormat));
     // console.log('ctimsFormat: ', ctimsFormat)
     // console.log('newRootNodes: ', newRootNodes)
-    if (newRootNodes.length > 0 && newRootNodes[0].children && newRootNodes[0].children.length === 0) {
+    if (flattenedNewRootNodes.length > 0 && flattenedNewRootNodes[0].children && flattenedNewRootNodes[0].children.length === 0) {
         setSaveBtnState(true);
     }
   }
-
 
   /**
    * Expands all nodes in the tree.
@@ -169,7 +170,6 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           setSelectedKeys(lastVerticalNode.key);
           setSelectedNode(lastVerticalNode);
           onTreeNodeClick(lastVerticalNode.data.type, lastVerticalNode);
-
         }
       } else {
         setSaveBtnState(true);
@@ -497,9 +497,18 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         // const nodeKey = node.key;
         // const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
         // console.log('parentNode: ', parentNode)
-        setSelectedNode(node);
-        setSelectedKeys(node.key as string)
-        onTreeNodeClick(node.data.type, node);
+
+        // if it's a genomic node, add variantCategoryContainerObject to it
+        let newNode = {...node};
+        if (newNode.label === 'Genomic') {
+          if (newNode.data.formData && !newNode.data.formData.variantCategoryContainerObject) {
+            const c = {variantCategoryContainerObject: newNode.data.formData};
+            newNode.data.formData = c;
+          }
+        }
+        setSelectedNode(newNode);
+        setSelectedKeys(newNode.key as string)
+        onTreeNodeClick(newNode.data.type, newNode);
       }
 
       useEffect(() => {

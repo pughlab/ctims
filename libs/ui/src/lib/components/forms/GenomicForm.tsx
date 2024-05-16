@@ -77,7 +77,7 @@ export const GenomicForm = (props: IFormProps) => {
           "Not Mutated (Surrogate for Wildtype)",
           "Copy Number Variation",
           "Structural Variation",
-          "Wildtype",
+          // "Wildtype",
           "Signature"
         ],
         "enum": [
@@ -86,7 +86,7 @@ export const GenomicForm = (props: IFormProps) => {
           "!Mutation",
           "CNV",
           "Structural Variation",
-          "WT",
+          // "WT",
           "Signature"
         ]
       },
@@ -278,91 +278,199 @@ export const GenomicForm = (props: IFormProps) => {
     'type': 'object',
     'required': [],
     'properties': {
-      'hugo_symbol': {
-        "$ref": "#/definitions/hugo_symbol",
-        'title': 'Hugo Symbol',
-        "description": "Gene symbol as determined by https://www.genenames.org/",
+      "variantCategoryContainerObject": {
+        'title': '',
+        'type': 'object',
+        'properties': {
+          "variant_category": {
+            "$ref": "#/definitions/variant_category",
+            'title': 'Variant Category',
+            "description": "Type of alteration",
+          },
+        },
+        "dependencies": {
+          "variant_category": {
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "variant_category": {
+                      "const": "Mutation"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    'hugo_symbol': {
+                      "$ref": "#/definitions/hugo_symbol",
+                      'title': 'Hugo Symbol',
+                      "description": "Gene symbol as determined by https://www.genenames.org/",
+                    },
+                    'protein_change': {
+                      'type': 'string',
+                      'title': 'Protein Change',
+                      "description": "Curate a specific protein change (must be in the correct format ex. p.V600E, p.E684_E686del, p.G29_T35delinsA, p.X893_splice, p.L281_H282insAAR, p.L28Ifs*30, p.P162_D166dup)",
+                    },
+                    'wildcard_protein_change': {
+                      'type': 'string',
+                      'title': 'Wildcard Protein Change',
+                      "description": "Curate variations of a protein change (must be in the correct format ex. p.T70). This allows matching of any mutation at this site. ",
+                    },
+                    'true_transcript_exon': {
+                      'type': 'string',
+                      'title': 'True Transcript Exon',
+                      "description": "Curate mutations in a specific exon",
+                    },
+                    'variant_classification': {
+                      "$ref": "#/definitions/variant_classification",
+                      'title': 'Variant Classification',
+                      "description": "Curate a particular type of mutation",
+                    },
+                    "molecular_function": {
+                      "$ref": "#/definitions/molecular_function",
+                      'title': 'Molecular Function',
+                      "description": "Refers to tasks or activities characteristic of gene",
+                    }
+                  },
+                  "required": []
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "variant_category": {
+                      "const": "!Mutation"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    'hugo_symbol': {
+                      "$ref": "#/definitions/hugo_symbol",
+                      'title': 'Hugo Symbol',
+                      "description": "Gene symbol as determined by https://www.genenames.org/",
+                    }
+                  },
+                  "required": []
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "variant_category": {
+                      "const": "CNV"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    'hugo_symbol': {
+                      "$ref": "#/definitions/hugo_symbol",
+                      'title': 'Hugo Symbol',
+                      "description": "Gene symbol as determined by https://www.genenames.org/",
+                    },
+                    'cnv_call': {
+                      'title': 'CNV Call',
+                      '$ref': '#/definitions/cnv_call',
+                      "description": "Specify the type of copy number variation",
+                    },
+                    "molecular_function": {
+                      "$ref": "#/definitions/molecular_function",
+                      'title': 'Molecular Function',
+                      "description": "Refers to tasks or activities characteristic of gene",
+                    }
+                  },
+                  "required": []
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "variant_category": {
+                      "const": "Structural Variation"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    'hugo_symbol': {
+                      "$ref": "#/definitions/hugo_symbol",
+                      'title': 'Hugo Symbol',
+                      "description": "Gene symbol as determined by https://www.genenames.org/",
+                    },
+                    'fusion_partner_hugo_symbol': {
+                      'type': 'string',
+                      'title': 'Fusion Partner Hugo Symbol',
+                      "description": "Curate the partner gene in a fusion",
+                    },
+                    "molecular_function": {
+                      "$ref": "#/definitions/molecular_function",
+                      'title': 'Molecular Function',
+                      "description": "Refers to tasks or activities characteristic of gene",
+                    }
+                  },
+                  "required": []
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "variant_category": {
+                      "const": "Signature"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    // 'mmr_status': {
+                    //   'title': 'MMR Status',
+                    //   '$ref': '#/definitions/mmr_status',
+                    //   "description": "Curate a specific mismatch repair status",
+                    // },
+                    'ms_status': {
+                      'title': 'MS Status',
+                      '$ref': '#/definitions/ms_status',
+                      "description": "Curate a specific microsatellite stability status",
+                    },
+                    'pole_status': {
+                      'title': 'POLE Status',
+                      '$ref': '#/definitions/pole_status',
+                      "description": "Curate for trials requiring a specific POLE signature status",
+                    },
+                    'uva_status': {
+                      'title': 'UVA Status',
+                      '$ref': '#/definitions/uva_status',
+                      "description": "Curate for trials requiring a specific UVA signature status",
+                    },
+                    'tobacco_status': {
+                      'title': 'Tobacco Status',
+                      '$ref': '#/definitions/tobacco_status',
+                      "description": "Curate for trials requiring a specific tobacco signature status",
+                    },
+                    'apobec_status': {
+                      'title': 'APOBEC Status',
+                      '$ref': '#/definitions/apobec_status',
+                      "description": "Curate for trials requiring a specific APOBEC signature status",
+                    },
+                    'temozolomide_status': {
+                      'title': 'Temozolomide Status',
+                      '$ref': '#/definitions/temozolomide_status',
+                      "description": "Curate for trials requiring a specific temozolomide signature status",
+                    },
+                  },
+                  "required": []
+                }
+              },
+            ]
+          }
+        },
+        "required": ['variant_category']
       },
-      "variant_category": {
-        "$ref": "#/definitions/variant_category",
-        'title': 'Variant Category',
-        "description": "Type of alteration",
-      },
-      'protein_change': {
-        'type': 'string',
-        'title': 'Protein Change',
-        "description": "Curate a specific protein change (must be in the correct format ex. p.V600E, p.E684_E686del, p.G29_T35delinsA, p.X893_splice, p.L281_H282insAAR, p.L28Ifs*30, p.P162_D166dup)",
-      },
-      'wildcard_protein_change': {
-        'type': 'string',
-        'title': 'Wildcard Protein Change',
-        "description": "Curate variations of a protein change (must be in the correct format ex. p.T70). This allows matching of any mutation at this site. ",
-      },
-      "molecular_function": {
-        "$ref": "#/definitions/molecular_function",
-        'title': 'Molecular Function',
-        "description": "Refers to tasks or activities characteristic of gene",
-      },
-      'variant_classification': {
-        "$ref": "#/definitions/variant_classification",
-        'title': 'Variant Classification',
-        "description": "Curate a particular type of mutation",
-      },
-      'cnv_call': {
-        'title': 'CNV Call',
-        '$ref': '#/definitions/cnv_call',
-        "description": "Specify the type of copy number variation",
-      },
-      'fusion_partner_hugo_symbol': {
-        'type': 'string',
-        'title': 'Fusion Partner Hugo Symbol',
-        "description": "Curate the partner gene in a fusion",
-      },
-      'true_transcript_exon': {
-        'type': 'string',
-        'title': 'True Transcript Exon',
-        "description": "Curate mutations in a specific exon",
-      },
-      'wildtype': {
-        'title': 'Wildtype',
-        '$ref': '#/definitions/wildtype',
-        "description": "An indication of whether an eligibility criteria requires a gene to be wildtype.",
-      },
-      'pole_status': {
-        'title': 'POLE Status',
-        '$ref': '#/definitions/pole_status',
-        "description": "Curate for trials requiring a specific POLE signature status",
-      },
-      'uva_status': {
-        'title': 'UVA Status',
-        '$ref': '#/definitions/uva_status',
-        "description": "Curate for trials requiring a specific UVA signature status",
-      },
-      'tobacco_status': {
-        'title': 'Tobacco Status',
-        '$ref': '#/definitions/tobacco_status',
-        "description": "Curate for trials requiring a specific tobacco signature status",
-      },
-      'apobec_status': {
-        'title': 'APOBEC Status',
-        '$ref': '#/definitions/apobec_status',
-        "description": "Curate for trials requiring a specific APOBEC signature status",
-      },
-      'temozolomide_status': {
-        'title': 'Temozolomide Status',
-        '$ref': '#/definitions/temozolomide_status',
-        "description": "Curate for trials requiring a specific temozolomide signature status",
-      },
-      'mmr_status': {
-        'title': 'MMR Status',
-        '$ref': '#/definitions/mmr_status',
-        "description": "Curate a specific mismatch repair status",
-      },
-      'ms_status': {
-        'title': 'MS Status',
-        '$ref': '#/definitions/ms_status',
-        "description": "Curate a specific microsatellite stability status",
-      }
+      // 'wildtype': {
+      //   'title': 'Wildtype',
+      //   '$ref': '#/definitions/wildtype',
+      //   "description": "An indication of whether an eligibility criteria requires a gene to be wildtype.",
+      // },
     }
   };
   const genomicUiSchema = {
@@ -370,8 +478,10 @@ export const GenomicForm = (props: IFormProps) => {
     "ui:submitButtonOptions": {
       "norender": true,
     },
-    "hugo_symbol": {
-      "ui:widget": AutocompleteField,
+    "variantCategoryContainerObject": {
+      "hugo_symbol": {
+        "ui:widget": AutocompleteField,
+      }
     }
   }
 
@@ -406,9 +516,14 @@ export const GenomicForm = (props: IFormProps) => {
   }
 
   const onFormChange = (data: any) => {
-    validateFormFromRef(data);
+    const flattenedFormData = {
+      ...data,
+      // formData: data.formData.variantCategoryContainerObject, /*can't change this, otherwise form won't render*/
+      errorSchema: data.errorSchema.variantCategoryContainerObject,
+    }
+    validateFormFromRef(flattenedFormData);
 
-    node.data.formData = data.formData;
+    node.data.formData = flattenedFormData.formData;
     dispatch(formChange());
     console.log('onFormChange node: ', node)
   }
@@ -426,37 +541,45 @@ export const GenomicForm = (props: IFormProps) => {
   }
 
   const customValidate = (formData: any, errors: any, uiSchema: any) => {
-    if (typeof formData.hugo_symbol === 'undefined' &&
-        typeof formData.variant_category === 'undefined' &&
-        typeof formData.protein_change === 'undefined' &&
-        typeof formData.wildcard_protein_change === 'undefined' &&
-        typeof formData.molecular_function === 'undefined' &&
-        typeof formData.variant_classification === 'undefined' &&
-        typeof formData.cnv_call === 'undefined' &&
-        typeof formData.fusion_partner_hugo_symbol === 'undefined' &&
-        typeof formData.true_transcript_exon === 'undefined' &&
-        typeof formData.wildtype === 'undefined' &&
-        typeof formData.pole_status === 'undefined' &&
-        typeof formData.uva_status === 'undefined' &&
-        typeof formData.tobacco_status === 'undefined' &&
-        typeof formData.apobec_status === 'undefined' &&
-        typeof formData.temozolomide_status === 'undefined' &&
-        typeof formData.mmr_status === 'undefined' &&
-        typeof formData.ms_status === 'undefined') {
-      errors.hugo_symbol.addError('Must have at least one field filled.');
+    let myFormData = formData;
+    let myErrors = errors;
+    if (formData.variantCategoryContainerObject) {
+      myFormData = formData.variantCategoryContainerObject;
+      myErrors = errors.variantCategoryContainerObject;
+    }
+
+    if (typeof myFormData.hugo_symbol === 'undefined' &&
+        typeof myFormData.variant_category === 'undefined' &&
+        typeof myFormData.protein_change === 'undefined' &&
+        typeof myFormData.wildcard_protein_change === 'undefined' &&
+        typeof myFormData.molecular_function === 'undefined' &&
+        typeof myFormData.variant_classification === 'undefined' &&
+        typeof myFormData.cnv_call === 'undefined' &&
+        typeof myFormData.fusion_partner_hugo_symbol === 'undefined' &&
+        typeof myFormData.true_transcript_exon === 'undefined' &&
+        // typeof myFormData.wildtype === 'undefined' &&
+        typeof myFormData.pole_status === 'undefined' &&
+        typeof myFormData.uva_status === 'undefined' &&
+        typeof myFormData.tobacco_status === 'undefined' &&
+        typeof myFormData.apobec_status === 'undefined' &&
+        typeof myFormData.temozolomide_status === 'undefined' &&
+        // typeof myFormData.mmr_status === 'undefined' &&
+        typeof myFormData.ms_status === 'undefined') {
+      myErrors.variant_category.addError('Must have at least one field filled.');
     }
     if (!wildcard_protein_change_validation_func(formData.wildcard_protein_change)) {
-      errors.wildcard_protein_change.addError('Must be in the form of p.A1');
+      myErrors.wildcard_protein_change.addError('Must be in the form of p.A1');
     }
     if (!protein_change_validation_func(formData.protein_change)) {
-      errors.protein_change.addError('Must start with p.');
+      myErrors.protein_change.addError('Must start with p.');
     }
     if (formData.protein_change && formData.wildcard_protein_change) {
-      errors.protein_change.addError('Cannot have both protein change and wildcard protein change filled.');
-      errors.wildcard_protein_change.addError('Cannot have both protein change and wildcard protein change filled.');
+      myErrors.protein_change.addError('Cannot have both protein change and wildcard protein change filled.');
+      myErrors.wildcard_protein_change.addError('Cannot have both protein change and wildcard protein change filled.');
     }
     // console.log('custom validate errors: ', errors)
-    return errors;
+
+    return myErrors;
   }
 
   return (

@@ -390,7 +390,11 @@ export const getNodeLabel = (node: TreeNode): string => {
       label = age_expression;
     }
   } else if (node.label === 'Genomic' && node.data.formData) {
-    const { ms_status, hugo_symbol } = node.data.formData;
+    let genomicObj = node.data.formData;
+    if (node.data.formData.variantCategoryContainerObject) {
+      genomicObj = node.data.formData.variantCategoryContainerObject;
+    }
+    const { ms_status, hugo_symbol} = genomicObj;
     if (ms_status) {
       label = ms_status;
     } else if (hugo_symbol) {
@@ -400,3 +404,45 @@ export const getNodeLabel = (node: TreeNode): string => {
   return label;
 }
 
+/*
+  recursively go through tree nodes, if it has the key 'variantCategoryContainerObject',
+  flatten the object so it matches the format of the CTML
+   */
+export const flattenVariantCategoryContainerObject = (nodes: TreeNode[]) => {
+  return nodes.map((node: TreeNode) => {
+    const newNode = {...node};
+    if (newNode.data && newNode.data.formData && newNode.data.formData.variantCategoryContainerObject) {
+      newNode.data.formData = newNode.data.formData.variantCategoryContainerObject;
+    }
+    if (newNode.children) {
+      newNode.children = flattenVariantCategoryContainerObject(newNode.children);
+    }
+    return newNode;
+  });
+}
+
+ // Recursively traverse through the match criteria and add the variantCategoryContainerObject key to the genomic object
+export const addVariantCategoryContainerObject = (matchCriteria: any[]) => {
+  return matchCriteria.map((criteria) => {
+    if (criteria.and || criteria.or) {
+      const operator = criteria.and ? 'and' : 'or';
+      const children = criteria[operator];
+      const ret: { [key in 'and' | 'or']?: any[] } = {};
+      ret[operator] = addVariantCategoryContainerObject(children);
+      return ret;
+    } else if (criteria.genomic) {
+      if (!criteria.genomic.variantCategoryContainerObject) {
+        const c: any = {
+          genomic: {
+            variantCategoryContainerObject: criteria.genomic
+          }
+        }
+        return c;
+      }
+      return criteria;
+    } else {
+      // clinical node, no need to modify
+      return criteria;
+    }
+  })
+}

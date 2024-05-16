@@ -21,6 +21,7 @@ import useSaveTrial from "../../../../apps/web/hooks/useSaveTrial";
 import {useRouter} from "next/router";
 import { Toast } from 'primereact/toast';
 import {logout} from "../../../../apps/web/pages/api/auth/[...nextauth]";
+import {addVariantCategoryContainerObject} from "./components/helpers";
 
 
 
@@ -100,6 +101,10 @@ export const Ui = (props: UiProps) => {
     console.log('handleSpecialClick formData: ', formD.formData);
     console.log('handleSpecialClick armCode: ', formData.arm_code);
     console.log('handleSpecialClick id: ', id);
+    if (Array.isArray(formData.match)) {
+      const formDataWithVariantCategoryContainerObject = addVariantCategoryContainerObject(formData.match);
+      formData.match = formDataWithVariantCategoryContainerObject;
+    }
     setArmCode(formData.arm_code)
     setFormData(formData)
     dispatch(setCtmlMatchModel(structuredClone(formData)))
