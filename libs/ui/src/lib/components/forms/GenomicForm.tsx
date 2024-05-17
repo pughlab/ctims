@@ -605,6 +605,10 @@ export const GenomicForm = (props: IFormProps) => {
     }
   }
 
+  /*
+  If you see problem "Types of property allOf are incompatible...". This is due to using custom widgets with AJV generic schema
+  https://github.com/rjsf-team/react-jsonschema-form/issues/3611
+   */
   return (
     <div style={formContainerStyle}>
       <OperatorDropdown
