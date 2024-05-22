@@ -85,7 +85,7 @@ const EditorImportTrialPage = () => {
       <IdleComponent />
       <div style={containerStyle}>
         <LeftMenuEditorComponent />
-        {(getCtmlSchemaResponse && formData) && <Ui ctml_schema={getCtmlSchemaResponse} formData={formData}></Ui>}
+        {(getCtmlSchemaResponse && formData) && <Ui ctml_schema={getCtmlSchemaResponse} formData={formData} setLastSaved={setLastSaved}></Ui>}
       </div>
       <FooterComponent/>
     </>
