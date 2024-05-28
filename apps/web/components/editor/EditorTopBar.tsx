@@ -7,6 +7,7 @@ import {useEffect, useRef, useState} from "react";
 import ExportCtmlDialog from "./ExportCtmlDialog";
 import {signOut} from "next-auth/react";
 import {Toast} from "primereact/toast";
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import useSaveTrial from "../../hooks/useSaveTrial";
 import { useDispatch, useSelector } from 'react-redux';
 import SendCtmlToMatchminerDialog from "./SendCTMLtoMatchminerDialog";
@@ -103,7 +104,28 @@ const EditorTopBar = (props: EditorTopBarProps) => {
 
   const backClick = (e) => {
     e.preventDefault();
-    router.push('/main');
+    const currentState = store.getState();
+    const isFormChanged = currentState.context.isFormChanged;
+    if (isFormChanged) {
+      confirmDialog({
+        message: 'You have unsaved data, do you want to discard?',
+        header: 'Confirmation',
+        acceptLabel: 'Discard',
+        rejectLabel: 'Cancel',
+        accept: () => {
+          // console.log('accept', rowClicked);
+          dispatch(setIsFormChanged(false));
+          router.push('/main');
+        },
+        reject: () => {
+          // console.log('reject', rowClicked);
+        }
+      });
+
+    } else {
+      router.push('/main');
+    }
+    
   }
 
   const onExportClick = () => {
