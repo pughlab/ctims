@@ -20,6 +20,7 @@ import process from "process";
 import useSaveTrial from "../../../../apps/web/hooks/useSaveTrial";
 import {useRouter} from "next/router";
 import { Toast } from 'primereact/toast';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import {logout} from "../../../../apps/web/pages/api/auth/[...nextauth]";
 import {addVariantCategoryContainerObject} from "./components/helpers";
 
@@ -126,8 +127,27 @@ export const Ui = (props: UiProps) => {
   }
 
   const onDialogHideCallback = () => {
-    setIsOpen(false);
-    dispatch(resetFormChangeCounter())
+    const currentState = store.getState();
+    const formChangeCounter = currentState.modalActions.formChangeCounter;
+    if (formChangeCounter > 0) {
+      confirmDialog({
+        message: 'You have unsaved data, do you want to discard?',
+        header: 'Confirmation',
+        acceptLabel: 'Discard',
+        rejectLabel: 'Cancel',
+        accept: () => {
+          // console.log('accept', rowClicked);
+          setIsOpen(false);
+          dispatch(resetFormChangeCounter());
+        },
+        reject: () => {
+          // console.log('reject', rowClicked);
+        }
+      });
+    } else {
+      setIsOpen(false);
+      dispatch(resetFormChangeCounter());
+    }
   }
 
   const onSaveCTMLHideCallback = () => {
