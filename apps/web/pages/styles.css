@@ -33,15 +33,15 @@
 }
 
 .caret-down-filled {
-  background-image: url("/assets/caret-down-filled.svg");
-  width: 16px;
-  height: 16px;
+  background-image: url("/assets/caret-down-filled.svg") !important;
+  width: 16px !important;
+  height: 16px !important;
 }
 
 .caret-right-filled {
-  background-image: url("/assets/caret-right-filled.svg");
-  width: 16px;
-  height: 16px;
+  background-image: url("/assets/caret-right-filled.svg") !important;
+  width: 16px !important;
+  height: 16px !important;
 }
 
 .clinical-icon {
