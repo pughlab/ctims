@@ -451,7 +451,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         const isGroup = node.label === 'And' || node.label === 'Or';
 
         // scale the width to the depth of the tree, otherwise icon will be covered
-        const width = 400 - ((node.data.depth - 1) * 16);
+        const width = 390 - ((node.data.depth - 1) * 16);
 
         const style: React.CSSProperties = {
           width: isGroup? '1px': `${width}px`,
