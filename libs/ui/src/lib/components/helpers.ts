@@ -298,11 +298,14 @@ export const getCurrentOperator = (rootNodes: TreeNode[], currentNode: TreeNode)
 }
 
 // sort the children of the root nodes by node.data's type property, clinical first, genomic second, and and/or last
-export const sortTreeNode = (treeNode: TreeNode): TreeNode => {
+// add a depth property to each node that's used at rendering time
+export const sortTreeNode = (treeNode: TreeNode, currentDepth: number = 0): TreeNode => {
   // recursively calls itself and use map to sort the current level of node
   if (typeof treeNode !== "undefined" && treeNode.children) {
+    treeNode.data.depth = currentDepth;
+
     // recursively calls the next level to sort the next level children
-    treeNode.children = treeNode.children.map(sortTreeNode);
+    treeNode.children = treeNode.children.map(child => sortTreeNode(child, currentDepth + 1));
 
     // add an index to track original order
     treeNode.children.forEach((child, index) => {
@@ -327,7 +330,7 @@ export const sortTreeNode = (treeNode: TreeNode): TreeNode => {
           ret = -1;
         }
       } else if (!a.data.hasOwnProperty('type') || b.data.type === EComponentType.AndOROperator) {
-        ret =  1;
+        ret = 1;
       } else {
         if (a.data.nodeLabel && b.data.nodeLabel) {
           ret = a.data.nodeLabel.localeCompare(b.data.nodeLabel);
@@ -337,6 +340,8 @@ export const sortTreeNode = (treeNode: TreeNode): TreeNode => {
       }
       return ret;
     });
+  } else if (typeof treeNode !== "undefined") {
+    treeNode.data.depth = currentDepth;
   }
 
   return treeNode;

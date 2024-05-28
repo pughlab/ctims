@@ -406,8 +406,86 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     }
   }
 
+  const onNodeClick = (node: TreeNode) => {
+    // console.log('node: ', node)
+    // const nodeKey = node.key;
+    // const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
+    // console.log('parentNode: ', parentNode)
+
+    // if it's a genomic node, add variantCategoryContainerObject to it
+    let newNode = {...node};
+    if (newNode.label === 'Genomic') {
+      if (newNode.data.formData && !newNode.data.formData.variantCategoryContainerObject) {
+        const c = {variantCategoryContainerObject: newNode.data.formData};
+        newNode.data.formData = c;
+      }
+    }
+    setSelectedNode(newNode);
+    setSelectedKeys(newNode.key as string)
+    onTreeNodeClick(newNode.data.type, newNode);
+  }
+
   const nodeTemplate = (node: TreeNode) => {
 
+    const divRef = useRef<any>(null)
+
+    if (selectedNode) {
+
+      let label = <b>{node.label}</b>;
+
+      const style: React.CSSProperties = {
+        width: '50%',
+        flexGrow: 0
+      }
+
+      if (matchDialogErrors[node.key as string]) {
+        style['color'] = 'red';
+      }
+
+      // useEffect(() => {
+      //   divRef.current.addEventListener('click', onNodeClick);
+      // }, [divRef.current])
+
+      // return a label according to the hierarchy defined by CTM-448
+      const nodeLabel = (): any => {
+        const isGroup = node.label === 'And' || node.label === 'Or';
+
+        // scale the width to the depth of the tree, otherwise icon will be covered
+        const width = 400 - ((node.data.depth - 1) * 16);
+
+        const style: React.CSSProperties = {
+          width: isGroup? '1px': `${width}px`,
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          display: 'inline-block',
+          textAlign: 'end',
+          verticalAlign: 'bottom',
+          height: '24px',
+        }
+
+        node.data.nodeLabel = getNodeLabel(node);
+        return <i style={style} onClick={() => onNodeClick(node)}>{node.data.nodeLabel}</i>;
+      }
+
+      return (
+        <>
+          <div ref={divRef} className={styles.treeNodeContainer}>
+              <span className="p-treenode-label" style={style}>
+                {label}
+              </span>
+
+            {/*{btnToShow()}*/}
+            {/*<TieredMenu model={tieredMenuModel} popup ref={tieredMenu}/>*/}
+          </div>
+          <div>{nodeLabel()}</div>
+        </>
+      );
+    }
+    return null;
+  }
+
+  const togglerTemplate = (node: TreeNode, defaultContentOptions: TreeTogglerTemplateOptions) => {
     const tieredMenuModel = [
       {
         label: 'Add criteria to same group',
@@ -466,95 +544,42 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       }
     ]
 
-    const divRef = useRef<any>(null)
-
-    if (selectedNode) {
-      const btnToShow = () => {
-        let show = false;
-        // we only display the three dots menu over the node if the node is selected and the mouse is over the node and the node is not a leaf
-        if ((selectedNode as TreeNode).key === node.key && (node.label === 'And' || node.label === 'Or')) {
-          show = true;
-        }
-        return show ?
-          <Button icon="pi pi-ellipsis-h"
-                  className={styles.treeMenuBtn}
-                  iconPos="right" onClick={tieredMenuClick} ></Button> : null
-      }
-
-      let label = <b>{node.label}</b>;
-
-      const style: React.CSSProperties = {
-        width: '50%',
-        flexGrow: 0
-      }
-
-      if (matchDialogErrors[node.key as string]) {
-        style['color'] = 'red';
-      }
-
-      const onNodeClick = (e: any) => {
-        // console.log('node: ', node)
-        // const nodeKey = node.key;
-        // const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], nodeKey as string);
-        // console.log('parentNode: ', parentNode)
-
-        // if it's a genomic node, add variantCategoryContainerObject to it
-        let newNode = {...node};
-        if (newNode.label === 'Genomic') {
-          if (newNode.data.formData && !newNode.data.formData.variantCategoryContainerObject) {
-            const c = {variantCategoryContainerObject: newNode.data.formData};
-            newNode.data.formData = c;
-          }
-        }
-        setSelectedNode(newNode);
-        setSelectedKeys(newNode.key as string)
-        onTreeNodeClick(newNode.data.type, newNode);
-      }
-
-      useEffect(() => {
-        divRef.current.addEventListener('click', onNodeClick);
-      }, [divRef.current])
-
-      // return a label according to the hierarchy defined by CTM-448
-      const nodeLabel = (): any => {
-
-        const style: React.CSSProperties = {
-          width: '200px',
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          display: 'inline-block',
-          textAlign: 'end',
-          verticalAlign: 'bottom'
-        }
-
-        node.data.nodeLabel = getNodeLabel(node);
-        return <i style={style}>{node.data.nodeLabel}</i>;
-      }
-
-      return (
-        <>
-          <div ref={divRef} className={styles.treeNodeContainer}>
-              <span className="p-treenode-label" style={style}>
-                {label}
-              </span>
-              <div>{nodeLabel()}</div>
-              {btnToShow()}
-              <TieredMenu model={tieredMenuModel} popup ref={tieredMenu}/>
-          </div>
-        </>
-      );
-    }
-    return null;
-  }
-
-  const togglerTemplate = (node: TreeNode, defaultContentOptions: TreeTogglerTemplateOptions) => {
     const expanded = defaultContentOptions.expanded;
     const iconClassName = classNames('p-tree-toggler-icon pi pi-fw', { 'caret-right-filled': !expanded, 'caret-down-filled': expanded });
+
+    const btnToShow = () => {
+      let show = false;
+      let isGroup = false;
+      // we only display the three dots menu over the node if the node is selected and the mouse is over the node and the node is not a leaf
+      if ((selectedNode as TreeNode).key === node.key && (node.label === 'And' || node.label === 'Or')) {
+        show = true;
+      }
+      if (node.label === 'And' || node.label === 'Or') {
+        isGroup = true;
+      }
+      return (
+        <>
+          <div onClick={() => onNodeClick(node)} style={{order: 2, width: isGroup ? '70%' : '0%', height: '24px'}}></div>
+          {show ?
+            <Button icon="pi pi-ellipsis-h"
+                    className={styles.treeMenuBtn}
+                    style={{order: 2}}
+                    iconPos="right" onClick={tieredMenuClick}></Button> : null
+          }
+        </>
+      )
+    }
+
     return (
-      <button type="button" className="p-tree-toggler p-link" tabIndex={-1} onClick={defaultContentOptions.onClick}>
-        <span className={iconClassName} aria-hidden="true"></span>
-      </button>
+      <>
+        {btnToShow()}
+        <button type="button" className="p-tree-toggler p-link" tabIndex={-1}
+                style={{order: 1}}
+                onClick={defaultContentOptions.onClick}>
+          <span className={iconClassName} aria-hidden="true"></span>
+        </button>
+        <TieredMenu model={tieredMenuModel} popup ref={tieredMenu}/>
+      </>
     )
   }
 
