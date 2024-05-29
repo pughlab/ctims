@@ -26,6 +26,7 @@ interface EditorTopBarProps {
 const EditorTopBar = (props: EditorTopBarProps) => {
 
   const [isDialogVisible, setIsDialogVisible] = useState<boolean>(false);
+  const [isConfirmationDialogVisible, setIsConfirmationDialogVisible] = useState(false);
   const [isSendDialogVisible, setIsSendDialogVisible] = useState<boolean>(false);
   const [isOKClicked, setIsOKClicked] = useState<boolean>(false);
   const {
@@ -107,25 +108,20 @@ const EditorTopBar = (props: EditorTopBarProps) => {
     const currentState = store.getState();
     const isFormChanged = currentState.context.isFormChanged;
     if (isFormChanged) {
-      confirmDialog({
-        message: 'You have unsaved data, do you want to discard?',
-        header: 'Confirmation',
-        acceptLabel: 'Discard',
-        rejectLabel: 'Cancel',
-        accept: () => {
-          // console.log('accept', rowClicked);
-          dispatch(setIsFormChanged(false));
-          router.push('/main');
-        },
-        reject: () => {
-          // console.log('reject', rowClicked);
-        }
-      });
-
+      setIsConfirmationDialogVisible(true);
     } else {
       router.push('/main');
     }
-    
+  }
+
+  const accept = () => {
+    // console.log('accept', rowClicked);
+    dispatch(setIsFormChanged(false));
+    router.push('/main');
+  }
+
+  const reject = () => {
+    // console.log('reject', rowClicked);
   }
 
   const onExportClick = () => {
@@ -192,6 +188,9 @@ const EditorTopBar = (props: EditorTopBarProps) => {
   return (
     <>
       <Toast ref={toast} position="top-center" />
+      <ConfirmDialog visible={isConfirmationDialogVisible} onHide={() => setIsConfirmationDialogVisible(false)} message="Are you sure you want to leave this page? Unsaved inputs will be lost." 
+          header="Confirmation" acceptLabel="discard" rejectLabel="cancel" accept={accept} reject={reject} 
+      />
       <ExportCtmlDialog
         isDialogVisible={isDialogVisible}
         exportCtmlClicked={onExportClick}
