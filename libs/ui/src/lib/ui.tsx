@@ -43,6 +43,7 @@ export interface UiProps {
 export const Ui = (props: UiProps) => {
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isConfirmationDialogVisible, setIsConfirmationDialogVisible] = useState(false);
   const [armCode, setArmCode] = useState('');
   const [formData, setFormData] = useState({});
   const router = useRouter();
@@ -126,24 +127,21 @@ export const Ui = (props: UiProps) => {
     dispatch(setCtmlModel(formDataClone))
   }
 
+  const accept = () => {
+    // console.log('accept', rowClicked);
+    setIsOpen(false);
+    dispatch(resetFormChangeCounter());
+  }
+
+  const reject = () => {
+    // console.log('reject', rowClicked);
+  }
+
   const onDialogHideCallback = () => {
     const currentState = store.getState();
     const formChangeCounter = currentState.modalActions.formChangeCounter;
     if (formChangeCounter > 0) {
-      confirmDialog({
-        message: 'You have unsaved data, do you want to discard?',
-        header: 'Confirmation',
-        acceptLabel: 'Discard',
-        rejectLabel: 'Cancel',
-        accept: () => {
-          // console.log('accept', rowClicked);
-          setIsOpen(false);
-          dispatch(resetFormChangeCounter());
-        },
-        reject: () => {
-          // console.log('reject', rowClicked);
-        }
-      });
+      setIsConfirmationDialogVisible(true);
     } else {
       setIsOpen(false);
       dispatch(resetFormChangeCounter());
@@ -219,6 +217,9 @@ export const Ui = (props: UiProps) => {
                       isDialogVisible={isOpen}
                       armCode={armCode}
                       formData={formData}
+      />
+      <ConfirmDialog visible={isConfirmationDialogVisible} onHide={() => setIsConfirmationDialogVisible(false)} message="Are you sure you want to discard match criteria? You will not be able to recover this after it has been deleted." 
+          header="Confirmation" acceptLabel="discard" rejectLabel="cancel" accept={accept} reject={reject} 
       />
     </div>
   );
