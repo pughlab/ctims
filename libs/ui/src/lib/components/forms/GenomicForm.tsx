@@ -567,17 +567,32 @@ export const GenomicForm = (props: IFormProps) => {
         typeof myFormData.ms_status === 'undefined') {
       myErrors.variant_category.addError('Must have at least one field filled.');
     }
-    if (!wildcard_protein_change_validation_func(myFormData.wildcard_protein_change)) {
+    // reset protein change and wildcard protein change error first
+    let proteinChangeHasError = false;
+    let wildCardProteinChangeHasError = false;
+
+    if (!wildcard_protein_change_validation_func(myFormData.wildcard_protein_change)
+      && !myFormData.protein_change) {
       myErrors.wildcard_protein_change.addError('Must be in the form of p.A1');
+      wildCardProteinChangeHasError = true;
     }
-    if (!protein_change_validation_func(myFormData.protein_change)) {
+    if (!protein_change_validation_func(myFormData.protein_change) && !myFormData.wildcard_protein_change) {
       myErrors.protein_change.addError('Must start with p.');
+      proteinChangeHasError = true;
     }
     if (myFormData.protein_change && myFormData.wildcard_protein_change) {
       myErrors.protein_change.addError('Cannot have both protein change and wildcard protein change filled.');
       myErrors.wildcard_protein_change.addError('Cannot have both protein change and wildcard protein change filled.');
+      wildCardProteinChangeHasError = true;
+      proteinChangeHasError = true;
     }
-    // console.log('custom validate errors: ', errors)
+    // since we manually add error class to these 2 fields, we need to manual clear them if there's no errors
+    if (!wildCardProteinChangeHasError) {
+      removeInvalidClassFromElement('root_variantCategoryContainerObject_wildcard_protein_change');
+    }
+    if (!proteinChangeHasError) {
+      removeInvalidClassFromElement('root_variantCategoryContainerObject_protein_change');
+    }
 
     return myErrors;
   }
@@ -590,19 +605,31 @@ export const GenomicForm = (props: IFormProps) => {
       const proteinChangeError = errors.find(error => error.property === '.protein_change');
       const wildcardProteinChangeError = errors.find(error => error.property === '.wildcard_protein_change');
       if (proteinChangeError && wildcardProteinChangeError && proteinChangeError.message === wildcardProteinChangeError.message) {
-        const proteinChangeInput = document.getElementById('root_variantCategoryContainerObject_protein_change');
-        const wildcardProteinChangeInput = document.getElementById('root_variantCategoryContainerObject_wildcard_protein_change');
-        setTimeout(() => {
-          // add 'p-invalid' if it doesn't have that class name already
-          if (proteinChangeInput && !proteinChangeInput.classList.contains('p-invalid')) {
-            proteinChangeInput.classList.add('p-invalid');
-          }
-          if (wildcardProteinChangeInput && !wildcardProteinChangeInput.classList.contains('p-invalid')) {
-            wildcardProteinChangeInput.classList.add('p-invalid');
-          }
-        });
+        addInvalidClassToElement('root_variantCategoryContainerObject_protein_change');
+        addInvalidClassToElement('root_variantCategoryContainerObject_wildcard_protein_change');
       }
     }
+  }
+
+  // helper methods to manually add the field invalid css class for validation that's outside of the field itself
+  const addInvalidClassToElement = (elementId: string) => {
+    const inputElement: HTMLElement | null = document.getElementById(elementId);
+    setTimeout(() => {
+      // add 'p-invalid' if it doesn't have that class name already
+      if (inputElement && !inputElement.classList.contains('p-invalid')) {
+        inputElement.classList.add('p-invalid');
+      }
+    });
+  }
+
+  const removeInvalidClassFromElement = (elementId: string) => {
+    const inputElement: HTMLElement | null = document.getElementById(elementId);
+    setTimeout(() => {
+      // remove 'p-invalid' if it has that class name already
+      if (inputElement && inputElement.classList.contains('p-invalid')) {
+        inputElement.classList.remove('p-invalid');
+      }
+    });
   }
 
   /*
