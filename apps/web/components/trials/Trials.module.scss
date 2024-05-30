@@ -61,3 +61,17 @@
   outline: none;
   boxshadow: none;
 }
+
+.dropdownComponent{
+  display: flex;
+  align-items: center;
+}
+
+.question-mark {
+  margin-left: 8px;
+  margin-top: 8px;
+  margin-bottom: 7px;
+  cursor: pointer;
+  color: rgba(17, 2, 2, 0.6);
+}
+
