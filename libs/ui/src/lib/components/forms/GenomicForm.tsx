@@ -59,8 +59,12 @@ export const GenomicForm = (props: IFormProps) => {
 
   const genomicFormRef = useRef<any>(null);
 
+  // tie the form data to the component, so we can manually reset the values, see onFormChange
+  const [myFormData, setMyFormData] = useState(node.data.formData);
+
   useEffect(() => {
     node.data.formValid = false;
+    setMyFormData(node.data.formData);
   }, [node]);
 
   const dispatch = useDispatch()
@@ -516,14 +520,28 @@ export const GenomicForm = (props: IFormProps) => {
   }
 
   const onFormChange = (data: any) => {
+    // reset form if variant category changed
+    const oldVariantCategory = myFormData?.variantCategoryContainerObject?.variant_category;
+    const newVariantCategory = data.formData.variantCategoryContainerObject?.variant_category;
+    if (oldVariantCategory && newVariantCategory && (oldVariantCategory !== newVariantCategory)) {
+      const myFormData = {
+        variantCategoryContainerObject: {
+          variant_category: newVariantCategory
+        }
+      }
+      setMyFormData(myFormData);
+      node.data.formData = myFormData;
+      data.formData = myFormData;
+    }
+
     const flattenedFormData = {
       ...data,
       // formData: data.formData.variantCategoryContainerObject, /*can't change this, otherwise form won't render*/
       errorSchema: data.errorSchema.variantCategoryContainerObject,
     }
     validateFormFromRef(flattenedFormData);
-
     node.data.formData = flattenedFormData.formData;
+    setMyFormData(flattenedFormData.formData);
     dispatch(formChange());
     console.log('onFormChange node: ', node)
   }
@@ -653,7 +671,7 @@ export const GenomicForm = (props: IFormProps) => {
         <RjsfForm ref={genomicFormRef}
                   schema={genomicFormSchema as JSONSchema7}
                   templates={formTemplates}
-                  formData={node.data.formData}
+                  formData={myFormData}
                   uiSchema={genomicUiSchema}
                   widgets={widgets}
                   onChange={onFormChange}
