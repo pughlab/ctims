@@ -114,13 +114,19 @@ export const Ui = (props: UiProps) => {
     setIsOpen(true);
   }
 
-  const onFormChange = (data: any) => {
+  const onFormChange = (data: any, id: any) => {
     if (formRef && formRef.current) {
       const form: Form = formRef.current;
       form.validateForm();
       const errorDetails: ValidationData<any> = form.validate(data.formData);
       dispatch(setErrorSchema(errorDetails));
-      dispatch(setIsFormChanged(true));
+      // Check if the form change event is from the hidden uuid field
+      // if so, then we dont need to mark the formChanged flag for CTM-491 
+      if (id.includes('uuid')) {
+        // do nothing here
+      } else {
+        dispatch(setIsFormChanged(true));
+      }
     }
 
     const formDataClone = structuredClone(data.formData)
@@ -219,7 +225,7 @@ export const Ui = (props: UiProps) => {
                       formData={formData}
       />
       <ConfirmDialog visible={isConfirmationDialogVisible} onHide={() => setIsConfirmationDialogVisible(false)} message="Are you sure you want to discard match criteria? You will not be able to recover this after it has been deleted." 
-          header="Confirmation" acceptLabel="discard" rejectLabel="cancel" accept={accept} reject={reject} 
+          header="Confirmation" acceptLabel="Discard" rejectLabel="Cancel" accept={accept} reject={reject} 
       />
     </div>
   );

@@ -498,9 +498,9 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             }}
             disabled={isFormDisabled}
             // liveValidate
-            onChange={(data) => {
+            onChange={(data, id) => {
               // onChangeTest(data)
-              props.onRjsfFormChange(data)
+              props.onRjsfFormChange(data, id)
             }} // @ts-ignore
             onError={(data) => {onError(data)}}
             // formData={props.formData ? props.formData : initialFormData}

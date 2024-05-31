@@ -189,7 +189,7 @@ const EditorTopBar = (props: EditorTopBarProps) => {
     <>
       <Toast ref={toast} position="top-center" />
       <ConfirmDialog visible={isConfirmationDialogVisible} onHide={() => setIsConfirmationDialogVisible(false)} message="Are you sure you want to leave this page? Unsaved inputs will be lost." 
-          header="Confirmation" acceptLabel="discard" rejectLabel="cancel" accept={accept} reject={reject} 
+          header="Confirmation" acceptLabel="Discard" rejectLabel="Cancel" accept={accept} reject={reject} 
       />
       <ExportCtmlDialog
         isDialogVisible={isDialogVisible}
