@@ -71,7 +71,9 @@ const IdleComponent = () => {
 
       // Auto save before timeout and logout if there's trial to save
       const currentState = store.getState();
-      if (currentState.finalModelAndErrors.ctmlModel) {
+      // Check to see if the ctml form has been changed or if matching criteria modal form has been changed
+      // If so, then we need to save the change before logout
+      if (currentState.context.isFormChanged || currentState.modalActions.formChangeCounter > 0) {
         const {trialModel, ctmlJson} = saveToServer(currentState)
         saveTrialOperation(trialModel, ctmlJson).then(() => {
           //localStorage.removeItem('ctims-accessToken') // Remove the access token from local storage
