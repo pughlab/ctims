@@ -3,7 +3,7 @@ import {CSSProperties, useEffect, useRef, useState} from "react";
 import CtimsFormComponentMemo from './components/CtimsFormComponent';
 import CtimsMatchDialog from './components/CtimsMatchDialog';
 import {useDispatch} from "react-redux";
-import {resetFormChangeCounter} from "../../../../apps/web/store/slices/modalActionsSlice";
+import {resetFormChangeCounter, resetMatchDialogErrors} from "../../../../apps/web/store/slices/modalActionsSlice";
 import {
   resetActiveArmId,
   setActiveArmId,
@@ -136,6 +136,7 @@ export const Ui = (props: UiProps) => {
   const accept = () => {
     // console.log('accept', rowClicked);
     setIsOpen(false);
+    dispatch(resetMatchDialogErrors());
     dispatch(resetFormChangeCounter());
   }
 
@@ -150,6 +151,7 @@ export const Ui = (props: UiProps) => {
       setIsConfirmationDialogVisible(true);
     } else {
       setIsOpen(false);
+      dispatch(resetMatchDialogErrors());
       dispatch(resetFormChangeCounter());
     }
   }

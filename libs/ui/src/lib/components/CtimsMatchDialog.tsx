@@ -78,7 +78,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   }
 
   const onDialogHide = () => {
-    dispatch(resetMatchDialogErrors());
+    //dispatch(resetMatchDialogErrors());
     props.onDialogHide();
   }
 
