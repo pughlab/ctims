@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { DataTable, DataTableRowMouseEventParams } from 'primereact/datatable';
 import { useRouter } from 'next/router';
-import { setIsFormDisabled, setTrialNctId} from '../../store/slices/contextSlice';
+import { setIsFormChanged, setIsFormDisabled, setTrialNctId} from '../../store/slices/contextSlice';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import styles from './Trials.module.scss';
 import { Button } from 'primereact/button';
@@ -138,6 +138,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
     if (val) {
       dispatch(setIsFormDisabled(false));
       dispatch(setTrialNctId(val));
+      dispatch(setIsFormChanged(true));
       router.push(`/trials/create/${props.selectedTrialGroup.plainRole}`);
     }
   }
@@ -165,6 +166,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
             ctmlModel = JSON.stringify(ctmlModel, null, 2);
           }
           sessionStorage.setItem('imported_ctml', ctmlModel);
+          dispatch(setIsFormChanged(true));
           router.push(`/trials/import`);
         };
 
