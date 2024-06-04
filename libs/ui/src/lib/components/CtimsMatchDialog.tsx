@@ -29,6 +29,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   const dispatch = useDispatch();
 
   const matchDialogErrors = useSelector((state: RootState) => state.modalActions.matchDialogErrors);
+  const isSortEnabled = useSelector((state: RootState) => state.context.isSortEnabled);
 
   let {formData} = props;
 
@@ -85,10 +86,14 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   const saveClickCallback = () => {
     const currentState = store.getState();
     const ctmlModel = currentState.modalActions.ctmlDialogModel;
-    // sort the ctmlModel.match before saving
-    // formData.match = ctmlModel.match;
-    const sorted = sortCTMLModelMatchCriteria(ctmlModel);
-    formData.match = sorted.match;
+    if (isSortEnabled) {
+      // sort the ctmlModel.match before saving
+      const sorted = sortCTMLModelMatchCriteria(ctmlModel, false);
+      formData.match = sorted.match;
+    } else {
+      formData.match = ctmlModel.match;
+    }
+
     props.onSaveCTMLHide();
   }
 

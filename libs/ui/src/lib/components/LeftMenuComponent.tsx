@@ -38,6 +38,8 @@ import {IKeyToViewModel, setMatchViewModel} from "../../../../../apps/web/store/
 import {RootState, store} from "../../../../../apps/web/store/store";
 import {classNames} from "primereact/utils";
 import {CtimsDialogContext, CtimsDialogContextType} from "./CtimsMatchDialog";
+import {ToggleButton} from "primereact/togglebutton";
+import {setIsSortEnabled} from "../../../../../apps/web/store/slices/contextSlice";
 
 
 interface ILeftMenuComponentProps {
@@ -64,6 +66,8 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   const operatorChanged: IOperatorChange = useSelector((state: RootState) => state.modalActions.operatorChange);
   const formChangedCounter: number = useSelector((state: RootState) => state.modalActions.formChangeCounter);
   const matchDialogErrors = useSelector((state: RootState) => state.modalActions.matchDialogErrors);
+
+  const [isSortedChecked, setIsSortedChecked] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -595,25 +599,48 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       return;
     }
     // check cannot move root node
-    if (rootNodes[0].key === dragNode.key) {
+    if ((rootNodes[0].key === dragNode.key) && isSortedChecked) {
       return;
     }
-    // check if dropping into a group
-    if (dropNode.data.type === EComponentType.AndOROperator || dropNode.data.type === undefined) {
-      moveCriteriaToAnyGroup(dragNode.key as string, dropNode.key as string)
-    } else {
-      // if the drop node is a leaf, move to the parent group
-      const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], dropNode.key as string);
-      if (parentNode) {
-        moveCriteriaToAnyGroup(dragNode.key as string, parentNode.key as string)
-      }
+    // cannot drop into another leaf node
+    if (!isSortedChecked && (dropNode.label === 'Clinical' || dropNode.label === 'Genomic')) {
+      return;
     }
+    if (isSortedChecked) {
+      // check if dropping into a group
+      if (dropNode.data.type === EComponentType.AndOROperator || dropNode.data.type === undefined) {
+        moveCriteriaToAnyGroup(dragNode.key as string, dropNode.key as string)
+      } else {
+        // if the drop node is a leaf, move to the parent group
+        const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], dropNode.key as string);
+        if (parentNode) {
+          moveCriteriaToAnyGroup(dragNode.key as string, parentNode.key as string)
+        }
+      }
+    } else {
+      setRootNodes(e.value)
+      const state = store.getState();
+      updateReduxViewModelAndCtmlModel(e.value, state);
+      dispatch(moveNodeDnD({draggedNodeKey: dragNode.key as string, destinationNodeKey: dropNode.key as string}));
+    }
+  }
+
+  const handleIsSortedChecked = (value: boolean) => {
+    setIsSortedChecked(value);
+    dispatch(setIsSortEnabled(value));
   }
 
   return (
     <div className={styles.matchingCriteriaMenuContainer}>
       <div className={styles.matchingCriteriaTextContainer}>
         <div className={styles.matchingCriteriaText}>Matching Criteria</div>
+        <div className={styles.matchingCriteriaSortContainer}>
+          Sort
+          <ToggleButton onLabel="On" offLabel="Off"
+                        checked={isSortedChecked} onChange={(e) => handleIsSortedChecked(e.value)}
+                        className={styles.matchingCriteriaToggle}/>
+        </div>
+
       </div>
       <Tree
         value={rootNodes}
