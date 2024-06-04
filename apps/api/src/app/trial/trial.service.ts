@@ -50,6 +50,7 @@ export class TrialService implements OnModuleInit {
         where: { id: id },
         include: {
           ctml_jsons: true,
+          trial_group: true
         }
       }
     );
