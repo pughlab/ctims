@@ -299,53 +299,55 @@ export const getCurrentOperator = (rootNodes: TreeNode[], currentNode: TreeNode)
 
 // sort the children of the root nodes by node.data's type property, clinical first, genomic second, and and/or last
 // add a depth property to each node that's used at rendering time
-export const sortTreeNode = (treeNode: TreeNode, currentDepth: number = 0): TreeNode => {
+export const sortTreeNode = (treeNode: TreeNode, currentDepth: number = 0, doSort: boolean = true): TreeNode => {
   // recursively calls itself and use map to sort the current level of node
   if (typeof treeNode !== "undefined" && treeNode.children) {
     treeNode.data.depth = currentDepth;
 
     // recursively calls the next level to sort the next level children
-    treeNode.children = treeNode.children.map(child => sortTreeNode(child, currentDepth + 1));
+    treeNode.children = treeNode.children.map(child => sortTreeNode(child, currentDepth + 1, doSort));
 
     // add an index to track original order
     treeNode.children.forEach((child, index) => {
       child.data.originalIndex = index;
     });
 
-    // sort the current level
-    treeNode.children.sort((a, b) => {
-      let ret = 0;
-      if (a.data.type === b.data.type) {
-        if (a.data.nodeLabel && b.data.nodeLabel) {
-          ret = a.data.nodeLabel.localeCompare(b.data.nodeLabel);
-        } else {
-          ret = a.data.originalIndex - b.data.originalIndex;
-        }
-      } else if (a.data.type === EComponentType.ClinicalForm) {
-        ret = -1;
-      } else if (a.data.type === EComponentType.GenomicForm) {
-        if (b.data.hasOwnProperty('type') && b.data.type === EComponentType.ClinicalForm) {
-          ret = 1;
-        } else if (!b.data.hasOwnProperty('type') || b.data.type === EComponentType.AndOROperator) {
+    if (doSort) {
+      // sort the current level
+      treeNode.children.sort((a, b) => {
+        let ret = 0;
+        if (a.data.type === b.data.type) {
+          if (a.data.nodeLabel && b.data.nodeLabel) {
+            ret = a.data.nodeLabel.localeCompare(b.data.nodeLabel);
+          } else {
+            ret = a.data.originalIndex - b.data.originalIndex;
+          }
+        } else if (a.data.type === EComponentType.ClinicalForm) {
           ret = -1;
-        }
-      } else if (!a.data.hasOwnProperty('type') || b.data.type === EComponentType.AndOROperator) {
-        ret = 1;
-      } else if ((a.label === 'And' && b.label === 'And') || (a.label === 'Or' && b.label === 'Or')) {
-        ret = 0;
-      } else if (a.label === 'And' && b.label === 'Or') {
-        ret = -1;
-      } else if (a.label === 'Or' && b.label === 'And') {
-        ret = 1;
-      } else {
-        if (a.data.nodeLabel && b.data.nodeLabel) {
-          ret = a.data.nodeLabel.localeCompare(b.data.nodeLabel);
-        } else {
+        } else if (a.data.type === EComponentType.GenomicForm) {
+          if (b.data.hasOwnProperty('type') && b.data.type === EComponentType.ClinicalForm) {
+            ret = 1;
+          } else if (!b.data.hasOwnProperty('type') || b.data.type === EComponentType.AndOROperator) {
+            ret = -1;
+          }
+        } else if (!a.data.hasOwnProperty('type') || b.data.type === EComponentType.AndOROperator) {
+          ret = 1;
+        } else if ((a.label === 'And' && b.label === 'And') || (a.label === 'Or' && b.label === 'Or')) {
           ret = 0;
+        } else if (a.label === 'And' && b.label === 'Or') {
+          ret = -1;
+        } else if (a.label === 'Or' && b.label === 'And') {
+          ret = 1;
+        } else {
+          if (a.data.nodeLabel && b.data.nodeLabel) {
+            ret = a.data.nodeLabel.localeCompare(b.data.nodeLabel);
+          } else {
+            ret = 0;
+          }
         }
-      }
-      return ret;
-    });
+        return ret;
+      });
+    }
   } else if (typeof treeNode !== "undefined") {
     treeNode.data.depth = currentDepth;
   }
@@ -353,7 +355,10 @@ export const sortTreeNode = (treeNode: TreeNode, currentDepth: number = 0): Tree
   return treeNode;
 }
 
-export const sortCTMLModelMatchCriteria = (ctmlMatchCriteria: any): { match: [] } => {
+export const sortCTMLModelMatchCriteria = (ctmlMatchCriteria: any, doSort: boolean = true): { match: [] } => {
+  if (!doSort) {
+    return ctmlMatchCriteria;
+  }
   let criteriaCopy = structuredClone(ctmlMatchCriteria.match);
 
   // convert the criteria to tree node format
@@ -361,7 +366,7 @@ export const sortCTMLModelMatchCriteria = (ctmlMatchCriteria: any): { match: [] 
   // add the node label to each node so it can be sorted
   traverseAndAddNodeLabel(treeNode[0]);
 
-  let sorted = sortTreeNode(treeNode[0]);
+  let sorted = sortTreeNode(treeNode[0], 0, doSort);
 
   // convert the sorted tree node back to ctml format
   const sortedCtimsFormat = convertTreeNodeArrayToCtimsFormat([sorted]);

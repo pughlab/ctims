@@ -12,6 +12,7 @@ export interface ContextSliceState {
   isFormChanged: boolean;
   isAccessTokenSet: boolean;
   isLongOperation: boolean;
+  isSortEnabled: boolean;
 }
 
 const initialState: ContextSliceState = {
@@ -24,6 +25,7 @@ const initialState: ContextSliceState = {
   isFormChanged: false,
   isAccessTokenSet: false,
   isLongOperation: false,
+  isSortEnabled: false
 }
 
 export const contextSlice = createSlice({
@@ -57,8 +59,11 @@ export const contextSlice = createSlice({
     setIsLongOperation: (state, action: PayloadAction<boolean>) => {
       state.isLongOperation = action.payload;
     },
-    resetTrialId: (state) => { 
-      state.trialId = 0; 
+    resetTrialId: (state) => {
+      state.trialId = 0;
+    },
+    setIsSortEnabled: (state, action: PayloadAction<boolean>) => {
+      state.isSortEnabled = action.payload;
     }
   },
   // use extraReducers to listen to other action types
@@ -82,5 +87,7 @@ export const {
   setIsFormChanged,
   setIsAccessTokenSet,
   setIsLongOperation,
-  resetTrialId } = contextSlice.actions;
+  setIsSortEnabled,
+  resetTrialId
+  } = contextSlice.actions;
 export default contextSlice.reducer;

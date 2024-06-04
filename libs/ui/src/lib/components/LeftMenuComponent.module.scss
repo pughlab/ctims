@@ -22,6 +22,9 @@
   margin-bottom: 20px;
   margin-left: 20px;
   height: 16px;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
 
   i {
     margin-left: 10px;
@@ -40,7 +43,29 @@
   font-family: 'Inter', sans-serif;
   font-weight: 600;
   line-height: 16px;
-  min-width: 244px;
+  //min-width: 244px;
+  flex: 0 0 70%
+}
+
+.matchingCriteriaSortContainer {
+  display: flex;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  line-height: 16px;
+  flex: 1;
+}
+ .matchingCriteriaToggle {
+  display: inline-block;
+  text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  line-height: 1px;
+  color: #2E72D2;
+  cursor: pointer;
+  margin-left: 15px;
+   font-size: 12px;
 }
 
 .treeNodeContainer {
