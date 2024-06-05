@@ -6,7 +6,7 @@ import React, {useEffect, useState} from "react";
 import useGetCtmlSchema from "../../../hooks/useGetCtmlSchema";
 import useEditTrial from "../../../hooks/useEditTrial";
 import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
-import {setTrialId} from "../../../store/slices/contextSlice";
+import {selectedTrialGroupId, setTrialId} from "../../../store/slices/contextSlice";
 import {useDispatch} from "react-redux";
 import IdleComponent from "../../../components/IdleComponent";
 import { setCtmlModel } from '../../../store/slices/ctmlModelSlice';
@@ -82,6 +82,10 @@ const EditorEditTrialPage = () => {
       delete trial.nickname
       delete trial.principal_investigator
       delete trial.ctml_status
+
+      // re-establish the selected trial group id when editing a trial, after browser refresh it will re-established this as well
+      const trialGroupName = editTrialResponse.trial_group.name;
+      dispatch(selectedTrialGroupId(trialGroupName));
 
       editTrialObject = {...editTrialObject, ...ctml_json}
       setFormData(editTrialObject)

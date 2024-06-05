@@ -8,7 +8,8 @@ import useGetCtmlSchema from "../../../hooks/useGetCtmlSchema";
 import {setCtmlModel} from "../../../store/slices/ctmlModelSlice";
 import {useDispatch} from "react-redux";
 import FooterComponent from "apps/web/components/FooterComponent";
-import { resetTrialId } from "../../../store/slices/contextSlice";
+import {resetTrialId, selectedTrialGroupId} from "../../../store/slices/contextSlice";
+import {store} from "../../../store/store";
 
 
 const containerStyle: React.CSSProperties = {
@@ -70,6 +71,13 @@ const EditorImportTrialPage = () => {
       editTrialObject = {...editTrialObject, ...trial}
 
       setFormData(editTrialObject);
+
+      const state = store.getState();
+      let group_id = state.context.seletedTrialGroupId;
+      if (!group_id) {
+        group_id = sessionStorage.getItem('selected_trial_group')
+        dispatch(selectedTrialGroupId(group_id));
+      }
       dispatch(setCtmlModel(editTrialObject))
     }
   }, []);

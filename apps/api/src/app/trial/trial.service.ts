@@ -50,6 +50,7 @@ export class TrialService implements OnModuleInit {
         where: { id: id },
         include: {
           ctml_jsons: true,
+          trial_group: true
         }
       }
     );
@@ -94,6 +95,11 @@ export class TrialService implements OnModuleInit {
       protocol_no,
       trial_internal_id
     } = updateTrialDto;
+
+    if (updateTrialDto.group_id === undefined || updateTrialDto.group_id === '') {
+      throw new NotFoundException(`Trial Group ${id} not found.`);
+    }
+
     const existing_trial = await this.prismaService.trial.findUnique({
       where: {
         id
