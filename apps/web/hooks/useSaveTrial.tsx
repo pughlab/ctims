@@ -29,7 +29,7 @@ const useSaveTrial = () => {
 
   const {data, status} = useSession()
 
-  const { operation } = useAxios();
+  const { operation, error: axiosError } = useAxios();
 
   // useEffect(() => {
   //   if(status === 'unauthenticated') {
@@ -40,12 +40,15 @@ const useSaveTrial = () => {
   //   }
   // }, [status])
 
+  useEffect(() => {
+    if (axiosError) {
+      setError(axiosError)
+    }
+  }, [axiosError]);
+
   const saveTrialOperation = async (trialModel: any, ctmlJson: any) => {
     const state = store.getState();
     let group_id = state.context.seletedTrialGroupId;
-    if (!group_id) {
-      group_id = sessionStorage.getItem('selected_trial_group')
-    }
     const accessToken = localStorage.getItem('ctims-accessToken');
     const headers = {
       'Authorization': 'Bearer ' + accessToken,
@@ -60,8 +63,9 @@ const useSaveTrial = () => {
       });
 
      console.log('useSaveTrial trialResponse', trialResponse)
+      if (trialResponse) {
         let updatedAtDate = new Date(trialResponse.data.updatedAt)
-      console.log('useSaveTrial trialResponse2', trialResponse)
+        console.log('useSaveTrial trialResponse2', trialResponse)
         let updatedAtFormatted = updatedAtDate.toLocaleString(undefined, {
           month: 'short',
           day: 'numeric',
@@ -75,20 +79,21 @@ const useSaveTrial = () => {
         }
 
 
-      dispatch(setTrialId(trialResponse.data.id));
+        dispatch(setTrialId(trialResponse.data.id));
 
-      const updateCtmlResponse = await axios.request({
-        method: 'patch',
-        url: `/ctml-jsons`,
-        headers,
-        data: {
-          version: schemaVersion,
-          data: ctmlJson,
-          trialId: trialId === 0 ? trialResponse.data.id : trialId
-        }
-      });
+        const updateCtmlResponse = await axios.request({
+          method: 'patch',
+          url: `/ctml-jsons`,
+          headers,
+          data: {
+            version: schemaVersion,
+            data: ctmlJson,
+            trialId: trialId === 0 ? trialResponse.data.id : trialId
+          }
+        });
 
-      setResponse(mappedTrialResponse)
+        setResponse(mappedTrialResponse)
+      }
     } catch (error) {
       console.log('err response', error)
       if(error.response) {

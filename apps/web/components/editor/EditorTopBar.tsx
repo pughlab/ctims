@@ -71,6 +71,14 @@ const EditorTopBar = (props: EditorTopBarProps) => {
           store.dispatch(logout());
           router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
         });
+      } else {
+        toast.current.show({
+          severity:
+            'error',
+          summary: 'Error Saving',
+          detail: saveTrialError.message,
+        });
+
       }
     }
   }, [saveTrialError, saveTrialResponse]);
