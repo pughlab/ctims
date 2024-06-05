@@ -42,7 +42,10 @@ const useSaveTrial = () => {
 
   const saveTrialOperation = async (trialModel: any, ctmlJson: any) => {
     const state = store.getState();
-    const group_id = state.context.seletedTrialGroupId;
+    let group_id = state.context.seletedTrialGroupId;
+    if (!group_id) {
+      group_id = sessionStorage.getItem('selected_trial_group')
+    }
     const accessToken = localStorage.getItem('ctims-accessToken');
     const headers = {
       'Authorization': 'Bearer ' + accessToken,

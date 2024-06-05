@@ -8,10 +8,11 @@ import LeftMenuEditorComponent from '../../../components/editor/LeftMenuEditorCo
 import { Ui } from '@ctims-mono-repo/ui';
 import IdleComponent from "../../../components/IdleComponent";
 import FooterComponent from 'apps/web/components/FooterComponent';
-import { useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {RootState, store} from 'apps/web/store/store';
 import process from "process";
 import {logout} from "../../api/auth/[...nextauth]";
+import {selectedTrialGroupId} from "../../../store/slices/contextSlice";
 
 const EditorCreateCtmlForGroup = () => {
   const router = useRouter()
@@ -21,7 +22,14 @@ const EditorCreateCtmlForGroup = () => {
   const trialId = useSelector((state: RootState) => state.context.trialNctId);
   const [formData, setFormData] = useState(null);
 
+  const dispatch = useDispatch();
+
   const {data} = useSession()
+
+  if (trialGroupId) {
+    // re-establish selected trial group in case of a browser refresh
+    dispatch(selectedTrialGroupId(trialGroupId as string));
+  }
 
   useEffect(() => {
     operation();
@@ -75,11 +83,12 @@ const EditorCreateCtmlForGroup = () => {
 
   useEffect(() => {
     if(!data) {
+      // no need to sign out, as server side rendering will have data = null, but client side render will have user data
       // router.push('/');
-      signOut({redirect: false}).then(() => {
-        store.dispatch(logout());
-        router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-      });
+      // signOut({redirect: false}).then(() => {
+      //   store.dispatch(logout());
+      //   router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+      // });
     }
   }, [data])
 

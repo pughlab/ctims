@@ -112,6 +112,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
       return;
     }
     sessionStorage.removeItem('imported_ctml');
+    sessionStorage.removeItem('selected_trial_group');
     // console.log('data', data)
   }, [data])
 
@@ -166,6 +167,8 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
             ctmlModel = JSON.stringify(ctmlModel, null, 2);
           }
           sessionStorage.setItem('imported_ctml', ctmlModel);
+          // also write the selected trial group into local storage so it won't be lost on browser refresh
+          sessionStorage.setItem('selected_trial_group', props.selectedTrialGroup.plainRole);
           dispatch(setIsFormChanged(true));
           router.push(`/trials/import`);
         };
@@ -176,6 +179,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
             summary: reader.error
           });
           sessionStorage.removeItem('imported_ctml')
+          sessionStorage.removeItem('selected_trial_group')
         };
       } else {
         trialsErrorToast.current.show({
