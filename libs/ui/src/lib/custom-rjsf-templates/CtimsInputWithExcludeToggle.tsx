@@ -50,8 +50,12 @@ const CtimsInputWithExcludeToggle = (props: WidgetProps) => {
     // return onChange(value === "" ? options.emptyValue : value)
     return onChange(value === "" ? options.emptyValue : value)
   };
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
+  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) => {
+    value = value.trim();
+    onChange(value === "" ? options.emptyValue : value);
     onBlur(id, value);
+  }
+
   const _onFocus = ({
                       target: { value },
                     }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);

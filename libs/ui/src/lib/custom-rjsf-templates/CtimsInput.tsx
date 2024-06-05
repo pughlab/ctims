@@ -61,8 +61,12 @@ const CtimsInput = (props: WidgetProps) => {
       console.log('registry', props.registry)
       return onChange(value === "" ? options.emptyValue : value)
     };
-    const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
-        onBlur(id, value);
+    const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) => {
+      value = value.trim();
+      onChange(value === "" ? options.emptyValue : value);
+      onBlur(id, value);
+    }
+
     const _onFocus = ({
                           target: { value },
                       }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
