@@ -15,10 +15,11 @@ import {ProgressSpinner} from "primereact/progressspinner";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState, store} from "../../store/store";
 import MatchMinerConsole from "../../components/matchminer/MatchMinerConsole";
-import {setIsAccessTokenSet} from "../../store/slices/contextSlice";
+import {selectedTrialGroupId, setIsAccessTokenSet, setIsTrialGroupAdmin} from "../../store/slices/contextSlice";
 import {logout} from "../api/auth/[...nextauth]";
 import process from "process";
 import {useRouter} from "next/router";
+import {SELECTED_TRIAL_GROUP_ID, SELECTED_TRIAL_GROUP_IS_ADMIN} from "../../constants/appConstants";
 
 const Main = () => {
 
@@ -39,7 +40,6 @@ const Main = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  // TODO: abstract the refreshTokenOperation set and clear interval to a hook
   useEffect(() => {
     // sessionData gets callback twice, 1st time is server side rendering (denoted by loading status)
     // 2nd time is client side which will be either authenticated or unauthenticated
@@ -58,6 +58,16 @@ const Main = () => {
 
     setActiveTab(0);
   }, [sessionData])
+
+  useEffect(() => {
+    if (!selectedTrialGroupFromState) {
+      // trial group info is lost on browser refresh, re-establish it from session storage
+      const trialGroupId = sessionStorage.getItem(SELECTED_TRIAL_GROUP_ID);
+      const isAdmin = sessionStorage.getItem(SELECTED_TRIAL_GROUP_IS_ADMIN) === 'TRUE';
+      dispatch(selectedTrialGroupId(trialGroupId));
+      dispatch(setIsTrialGroupAdmin(isAdmin));
+    }
+  }, []);
 
   useEffect(() => {
     if (selectedTrialGroupFromState) {

@@ -6,6 +6,7 @@ import {RootState} from "../../store/store";
 import {json} from "express";
 import { Tooltip } from 'primereact/tooltip';
 import styles from './Trials.module.scss';
+import {SELECTED_TRIAL_GROUP_ID, SELECTED_TRIAL_GROUP_IS_ADMIN} from "../../constants/appConstants";
 
 export const TrialGroupsDropdown = (props: {
   roles?: string[],
@@ -62,7 +63,10 @@ export const TrialGroupsDropdown = (props: {
       const plainRole = selectedTrialGroup.code.replace('-admin', '');
       dispatch(selectedTrialGroupId(plainRole))
       setSelectedTrialGroup(selectedTrialGroup);
-      dispatch(setIsTrialGroupAdmin(selectedTrialGroup.code.includes('admin')));
+      const isAdmin = selectedTrialGroup.code.includes('admin');
+      dispatch(setIsTrialGroupAdmin(isAdmin));
+      sessionStorage.setItem(SELECTED_TRIAL_GROUP_ID, plainRole);
+      sessionStorage.setItem(SELECTED_TRIAL_GROUP_IS_ADMIN, isAdmin.toString().toUpperCase());
       props.onTrialGroupSelected(selectedTrialGroup);
     }
 

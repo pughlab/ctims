@@ -1,5 +1,6 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {logout} from "../../pages/api/auth/[...nextauth]";
+import {SELECTED_TRIAL_GROUP_ID, SELECTED_TRIAL_GROUP_IS_ADMIN} from "../../constants/appConstants";
 
 export interface ContextSliceState {
   schema_version: number;
@@ -64,6 +65,8 @@ export const contextSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(logout, () => {
       localStorage.removeItem('ctims-accessToken');
+      sessionStorage.removeItem(SELECTED_TRIAL_GROUP_ID);
+      sessionStorage.removeItem(SELECTED_TRIAL_GROUP_IS_ADMIN);
       return initialState
     })
   }

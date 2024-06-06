@@ -12,9 +12,10 @@ import useSaveTrial from "../../hooks/useSaveTrial";
 import { useDispatch, useSelector } from 'react-redux';
 import SendCtmlToMatchminerDialog from "./SendCTMLtoMatchminerDialog";
 import useSendCTML from "../../hooks/useSendCTML";
-import { setIsFormChanged } from '../../store/slices/contextSlice';
+import {setIsFormChanged, setIsTrialGroupAdmin} from '../../store/slices/contextSlice';
 import process from "process";
 import {logout} from "../../pages/api/auth/[...nextauth]";
+import {SELECTED_TRIAL_GROUP_IS_ADMIN} from "../../constants/appConstants";
 
 interface EditorTopBarProps {
     isEditMode?: boolean;
@@ -45,13 +46,22 @@ const EditorTopBar = (props: EditorTopBarProps) => {
 
   const isGroupAdmin = useSelector((state: RootState) => state.context.isTrialGroupAdmin);
   const isFormDisabled = useSelector((state: RootState) => state.context.isFormDisabled);
-  const trialId = useSelector((state: RootState) => state.context.trialId);
 
   const dispatch = useDispatch();
 
   const router = useRouter();
 
   const toast = useRef(null);
+
+  useEffect(() => {
+    const state = store.getState();
+    let group_id = state.context.seletedTrialGroupId;
+    if (!group_id) {
+      // trial group info is lost if page is refreshed, re-establish if user is admin
+      const isGroupAdminFromStorage = sessionStorage.getItem(SELECTED_TRIAL_GROUP_IS_ADMIN) === 'TRUE';
+      dispatch(setIsTrialGroupAdmin(isGroupAdminFromStorage));
+    }
+  }, []);
 
   useEffect(() => {
     if (saveTrialResponse) {

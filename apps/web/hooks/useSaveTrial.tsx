@@ -4,11 +4,12 @@ import {signOut, useSession} from "next-auth/react";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store/store";
 import {useRouter} from "next/router";
-import {setTrialId} from "../store/slices/contextSlice";
+import {selectedTrialGroupId, setTrialId} from "../store/slices/contextSlice";
 import getConfig from 'next/config';
 import {store} from "../store/store";
 import process from "process";
 import useAxios from "./useAxios";
+import {SELECTED_TRIAL_GROUP_ID} from "../constants/appConstants";
 
 
 const useSaveTrial = () => {
@@ -48,7 +49,11 @@ const useSaveTrial = () => {
 
   const saveTrialOperation = async (trialModel: any, ctmlJson: any) => {
     const state = store.getState();
-    const group_id = state.context.seletedTrialGroupId;
+    let group_id = state.context.seletedTrialGroupId;
+    if (!group_id) {
+      group_id = sessionStorage.getItem(SELECTED_TRIAL_GROUP_ID)
+      dispatch(selectedTrialGroupId(group_id));
+    }
     const accessToken = localStorage.getItem('ctims-accessToken');
     const headers = {
       'Authorization': 'Bearer ' + accessToken,

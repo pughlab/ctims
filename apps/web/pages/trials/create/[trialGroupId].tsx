@@ -12,7 +12,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState, store} from 'apps/web/store/store';
 import process from "process";
 import {logout} from "../../api/auth/[...nextauth]";
-import {selectedTrialGroupId} from "../../../store/slices/contextSlice";
 
 const EditorCreateCtmlForGroup = () => {
   const router = useRouter()
@@ -25,11 +24,6 @@ const EditorCreateCtmlForGroup = () => {
   const dispatch = useDispatch();
 
   const {data} = useSession()
-
-  if (trialGroupId) {
-    // re-establish selected trial group in case of a browser refresh
-    dispatch(selectedTrialGroupId(trialGroupId as string));
-  }
 
   useEffect(() => {
     operation();
