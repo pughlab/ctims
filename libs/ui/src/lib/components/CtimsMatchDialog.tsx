@@ -87,8 +87,10 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     const ctmlModel = currentState.modalActions.ctmlDialogModel;
     // sort the ctmlModel.match before saving
     // formData.match = ctmlModel.match;
-    const sorted = sortCTMLModelMatchCriteria(ctmlModel);
-    formData.match = sorted.match;
+    if (ctmlModel) {
+      const sorted = sortCTMLModelMatchCriteria(ctmlModel);
+      formData.match = sorted.match;
+    }
     props.onSaveCTMLHide();
   }
 

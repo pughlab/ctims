@@ -13,6 +13,7 @@ import { Toast } from "primereact/toast";
 import { Dialog } from "primereact/dialog";
 import strings from "../data/strings.json";
 import useGetApiInfo from '../hooks/useGetApiInfo';
+import {SELECTED_TRIAL_GROUP_ID, SELECTED_TRIAL_GROUP_IS_ADMIN} from "../constants/appConstants";
 
 const Login = () => {
   const hasMounted = useHasMounted();
@@ -33,6 +34,8 @@ const Login = () => {
 
   useEffect(() => {
     operation();
+    sessionStorage.removeItem(SELECTED_TRIAL_GROUP_ID);
+    sessionStorage.removeItem(SELECTED_TRIAL_GROUP_IS_ADMIN);
   }, [])
 
 
