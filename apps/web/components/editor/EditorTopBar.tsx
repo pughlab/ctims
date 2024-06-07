@@ -12,7 +12,7 @@ import useSaveTrial from "../../hooks/useSaveTrial";
 import { useDispatch, useSelector } from 'react-redux';
 import SendCtmlToMatchminerDialog from "./SendCTMLtoMatchminerDialog";
 import useSendCTML from "../../hooks/useSendCTML";
-import {setIsFormChanged, setIsTrialGroupAdmin} from '../../store/slices/contextSlice';
+import {setIsFormChanged, setIsFormDisabled, setIsTrialGroupAdmin} from '../../store/slices/contextSlice';
 import process from "process";
 import {logout} from "../../pages/api/auth/[...nextauth]";
 import {SELECTED_TRIAL_GROUP_IS_ADMIN} from "../../constants/appConstants";
@@ -60,6 +60,7 @@ const EditorTopBar = (props: EditorTopBarProps) => {
       // trial group info is lost if page is refreshed, re-establish if user is admin
       const isGroupAdminFromStorage = sessionStorage.getItem(SELECTED_TRIAL_GROUP_IS_ADMIN) === 'TRUE';
       dispatch(setIsTrialGroupAdmin(isGroupAdminFromStorage));
+      dispatch(setIsFormDisabled(!isGroupAdminFromStorage));
     }
   }, []);
 
@@ -206,8 +207,8 @@ const EditorTopBar = (props: EditorTopBarProps) => {
   return (
     <>
       <Toast ref={toast} position="top-center" />
-      <ConfirmDialog visible={isConfirmationDialogVisible} onHide={() => setIsConfirmationDialogVisible(false)} message="Are you sure you want to leave this page? Unsaved inputs will be lost." 
-          header="Confirmation" acceptLabel="Discard" rejectLabel="Cancel" accept={accept} reject={reject} 
+      <ConfirmDialog visible={isConfirmationDialogVisible} onHide={() => setIsConfirmationDialogVisible(false)} message="Are you sure you want to leave this page? Unsaved inputs will be lost."
+          header="Confirmation" acceptLabel="Discard" rejectLabel="Cancel" accept={accept} reject={reject}
       />
       <ExportCtmlDialog
         isDialogVisible={isDialogVisible}
