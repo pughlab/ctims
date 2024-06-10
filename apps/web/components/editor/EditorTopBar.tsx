@@ -15,7 +15,7 @@ import useSendCTML from "../../hooks/useSendCTML";
 import {setIsFormChanged, setIsFormDisabled, setIsTrialGroupAdmin} from '../../store/slices/contextSlice';
 import process from "process";
 import {logout} from "../../pages/api/auth/[...nextauth]";
-import {SELECTED_TRIAL_GROUP_IS_ADMIN} from "../../constants/appConstants";
+import {IS_FORM_DISABLED, SELECTED_TRIAL_GROUP_IS_ADMIN} from "../../constants/appConstants";
 
 interface EditorTopBarProps {
     isEditMode?: boolean;
@@ -60,7 +60,8 @@ const EditorTopBar = (props: EditorTopBarProps) => {
       // trial group info is lost if page is refreshed, re-establish if user is admin
       const isGroupAdminFromStorage = sessionStorage.getItem(SELECTED_TRIAL_GROUP_IS_ADMIN) === 'TRUE';
       dispatch(setIsTrialGroupAdmin(isGroupAdminFromStorage));
-      dispatch(setIsFormDisabled(!isGroupAdminFromStorage));
+      const isFormDisabledFromStorage = sessionStorage.getItem(IS_FORM_DISABLED) === 'TRUE';
+      dispatch(setIsFormDisabled(isFormDisabledFromStorage));
     }
   }, []);
 

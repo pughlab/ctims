@@ -16,6 +16,7 @@ import { Column } from 'primereact/column';
 import {Toast} from "primereact/toast";
 import {parse} from "yaml";
 import NewTrialIdDialog from './NewTrialIdDialog';
+import {IS_FORM_DISABLED} from "../../constants/appConstants";
 
 // property selectedTrialGroup from parent component when dropdown changed
 // trials is the list of trials for the selected trial group
@@ -47,7 +48,9 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
       label: 'Edit',
       icon: 'pi pi-pencil',
       command: () => {
-        dispatch(setIsFormDisabled((rowClicked?.user.email !== data.user.email) && !isTrialGroupAdmin));
+        const isFormDisabled = (rowClicked?.user.email !== data.user.email) && !isTrialGroupAdmin;
+        dispatch(setIsFormDisabled(isFormDisabled));
+        sessionStorage.setItem(IS_FORM_DISABLED, isFormDisabled.toString().toUpperCase());
         router.push(`/trials/edit/${rowClicked.id}`);
       }
     },
@@ -137,6 +140,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
   const handleCreateCTMLClicked = (val: string) => {
     if (val) {
       dispatch(setIsFormDisabled(false));
+      sessionStorage.setItem(IS_FORM_DISABLED, 'FALSE');
       dispatch(setTrialNctId(val));
       dispatch(setIsFormChanged(true));
       router.push(`/trials/create/${props.selectedTrialGroup.plainRole}`);
