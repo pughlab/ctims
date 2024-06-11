@@ -1,9 +1,9 @@
 import {ArrayFieldTemplateItemType, ArrayFieldTemplateProps, getTemplate, getUiOptions} from "@rjsf/utils";
-import React, {CSSProperties} from 'react'
+import React, {CSSProperties, useEffect} from 'react'
 import {stringContains} from "../components/helpers";
 
 const CtimsArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
-    const {
+    let {
         canAdd,
         className,
         disabled,
@@ -76,6 +76,12 @@ const CtimsArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
         color: "#2E72D2",
         marginLeft: '20px',
     }
+
+  useEffect(() => {
+      if (title === 'Dose Level') {
+        onAddClick();
+      }
+  }, [title]);
 
     const getArrayItemName = (item: ArrayFieldTemplateItemType, index: number) => {
         const {children} = item

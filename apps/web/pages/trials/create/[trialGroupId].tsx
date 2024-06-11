@@ -62,9 +62,9 @@ const EditorCreateCtmlForGroup = () => {
             {
                 arm: [
                     {
-                        dose_level: [
-                            {}
-                        ],
+                        // dose_level: [
+                        //     {}
+                        // ],
                         match: {}
                     }
                 ]
