@@ -452,3 +452,17 @@ export const addVariantCategoryContainerObject = (matchCriteria: any[]) => {
     }
   })
 }
+
+// function to recursively trim all CtimsInput fields, and remove the key if value is empty after trim
+export const trimFields = (obj: any) => {
+  for (let key in obj) {
+    if (typeof obj[key] === 'object' && obj[key] !== null) {
+      trimFields(obj[key]);
+    } else if (typeof obj[key] === 'string') {
+      obj[key] = obj[key].trim();
+      if (obj[key] === '') {
+        delete obj[key];
+      }
+    }
+  }
+}

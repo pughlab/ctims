@@ -62,8 +62,6 @@ const CtimsInput = (props: WidgetProps) => {
       return onChange(value === "" ? options.emptyValue : value)
     };
     const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) => {
-      value = value.trim();
-      onChange(value === "" ? options.emptyValue : value);
       onBlur(id, value);
     }
 

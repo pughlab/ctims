@@ -17,7 +17,7 @@ import {
   deleteNodeFromChildrenArrayByKey,
   findArrayContainingKeyInsideATree,
   findObjectByKeyInTree, flattenVariantCategoryContainerObject, getNodeLabel,
-  isObjectEmpty, traverseNode
+  isObjectEmpty, traverseNode, trimFields
 } from "./helpers";
 import * as jsonpath from "jsonpath";
 import {EComponentType} from "./EComponentType";
@@ -88,12 +88,40 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     dispatch(setMatchViewModel(viewModel))
     // convert view model (rootNodes) to ctims format
     const ctimsFormat = convertTreeNodeArrayToCtimsFormat(flattenedNewRootNodes);
-    dispatch(setCtmlDialogModel(ctimsFormat));
+    const trimmedCtimsFormat = JSON.parse(JSON.stringify(ctimsFormat));
+    trimFields(trimmedCtimsFormat);
+    dispatch(setCtmlDialogModel(trimmedCtimsFormat));
     // console.log('ctimsFormat: ', ctimsFormat)
     // console.log('newRootNodes: ', newRootNodes)
     if (flattenedNewRootNodes.length > 0 && flattenedNewRootNodes[0].children && flattenedNewRootNodes[0].children.length === 0) {
         setSaveBtnState(true);
     }
+    if (checkHasEmptyNode(trimmedCtimsFormat.match)) {
+      setSaveBtnState(true);
+    }
+  }
+
+  // check if there are empty clinical node object, clinical can be empty after trim, such as empty age field
+  // whereas genomic node will require variant category so it won't be empty after trim
+  function checkHasEmptyNode(obj: any) {
+    if (Array.isArray(obj)) {
+      for (let element of obj) {
+        if (checkHasEmptyNode(element)) {
+          return true;
+        }
+      }
+    } else if (typeof obj === 'object' && obj !== null) {
+      for (let key in obj) {
+        if ((key === 'clinical') && Object.keys(obj[key]).length === 0) {
+          return true;
+        }
+        // If the key is 'and' or 'or', recursively check the nested objects
+        else if ((key === 'and' || key === 'or') && checkHasEmptyNode(obj[key])) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   /**
