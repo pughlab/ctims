@@ -585,13 +585,20 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       if (node.label === 'And' || node.label === 'Or') {
         isGroup = true;
       }
+      let nodeClickDivWidth = '0%';
+      if (isGroup) {
+        nodeClickDivWidth = '70%';
+        if (!show) {
+          nodeClickDivWidth = '100%';
+        }
+      }
       return (
         <>
-          <div onClick={() => onNodeClick(node)} style={{order: 2, width: isGroup ? '70%' : '0%', height: '24px'}}></div>
+          <div onClick={() => onNodeClick(node)} style={{order: 2, width: nodeClickDivWidth, height: '24px'}}></div>
           {show ?
             <Button icon="pi pi-ellipsis-h"
                     className={styles.treeMenuBtn}
-                    style={{order: 2}}
+                    style={{order: 2, height: 'auto'}}
                     iconPos="right" onClick={tieredMenuClick}></Button> : null
           }
         </>
