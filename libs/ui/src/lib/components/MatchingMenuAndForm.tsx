@@ -1,6 +1,6 @@
 import styles from './MatchingMenuAndForm.module.scss';
 import {EComponentType} from "./EComponentType";
-import React, {FunctionComponent, useState} from "react";
+import React, {FunctionComponent, useEffect, useState} from "react";
 import LeftMenuComponent from "./LeftMenuComponent";
 import {withTheme} from "@rjsf/core";
 import {Theme as PrimeTheme} from "../primereact";
@@ -37,6 +37,12 @@ const MatchingMenuAndForm = (props: any) => {
   const [rootNodes, setRootNodes] = useState<TreeNode[]>([]);
 
   const isSortEnabled = useSelector((state: RootState) => state.context.isSortEnabled);
+
+  useEffect(() => {
+    if (rootNodes.length > 0) {
+      setSortedRootNodes(rootNodes);
+    }
+  }, [isSortEnabled]);
 
   const AddCriteriaButton = (props: {addCriteriaGroupClicked: () => void}) => {
     const {addCriteriaGroupClicked} = props;

@@ -67,7 +67,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   const formChangedCounter: number = useSelector((state: RootState) => state.modalActions.formChangeCounter);
   const matchDialogErrors = useSelector((state: RootState) => state.modalActions.matchDialogErrors);
 
-  const [isSortedChecked, setIsSortedChecked] = useState(false);
+  const isSortedChecked = useSelector((state: RootState) => state.context.isSortEnabled);
 
   const dispatch = useDispatch();
 
@@ -661,8 +661,8 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   }
 
   const handleIsSortedChecked = (value: boolean) => {
-    setIsSortedChecked(value);
     dispatch(setIsSortEnabled(value));
+    setRootNodes([...rootNodes]);
   }
 
   return (
