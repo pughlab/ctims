@@ -424,15 +424,15 @@ export const GenomicForm = (props: IFormProps) => {
                 },
                 "then": {
                   "properties": {
-                    // 'mmr_status': {
-                    //   'title': 'MMR Status',
-                    //   '$ref': '#/definitions/mmr_status',
-                    //   "description": "Curate a specific mismatch repair status",
-                    // },
                     'ms_status': {
                       'title': 'MS Status',
                       '$ref': '#/definitions/ms_status',
                       "description": "Curate a specific microsatellite stability status",
+                    },
+                    'mmr_status': {
+                      'title': 'MMR Status',
+                      '$ref': '#/definitions/mmr_status',
+                      "description": "Curate a specific mismatch repair status",
                     },
                     'pole_status': {
                       'title': 'POLE Status',
@@ -579,7 +579,7 @@ export const GenomicForm = (props: IFormProps) => {
         typeof myFormData.tobacco_status === 'undefined' &&
         typeof myFormData.apobec_status === 'undefined' &&
         typeof myFormData.temozolomide_status === 'undefined' &&
-        // typeof myFormData.mmr_status === 'undefined' &&
+        typeof myFormData.mmr_status === 'undefined' &&
         typeof myFormData.ms_status === 'undefined') {
       myErrors.variant_category.addError('Must have at least one field filled.');
     }
