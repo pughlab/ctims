@@ -331,6 +331,12 @@ export const sortTreeNode = (treeNode: TreeNode, currentDepth: number = 0): Tree
         }
       } else if (!a.data.hasOwnProperty('type') || b.data.type === EComponentType.AndOROperator) {
         ret = 1;
+      } else if ((a.label === 'And' && b.label === 'And') || (a.label === 'Or' && b.label === 'Or')) {
+        ret = 0;
+      } else if (a.label === 'And' && b.label === 'Or') {
+        ret = -1;
+      } else if (a.label === 'Or' && b.label === 'And') {
+        ret = 1;
       } else {
         if (a.data.nodeLabel && b.data.nodeLabel) {
           ret = a.data.nodeLabel.localeCompare(b.data.nodeLabel);
