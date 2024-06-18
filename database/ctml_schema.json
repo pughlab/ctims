@@ -133,7 +133,6 @@
           "type": "string",
           "title": "Age Group",
           "enum": [
-            " ",
             "Adult",
             "Older Adult",
             "Children"
