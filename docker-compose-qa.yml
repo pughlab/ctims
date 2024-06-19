@@ -88,6 +88,16 @@ services:
     volumes:
       - mm-mongo-db-qa:/data/db
 
+  rabbitmq_qa:
+    container_name: rabbitmq_qa
+    image: rabbitmq:3-management
+    restart: on-failure
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - qa-network
+
 volumes:
   mm-mongo-db-qa:
 

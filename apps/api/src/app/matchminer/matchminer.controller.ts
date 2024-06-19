@@ -55,13 +55,13 @@ export class MatchminerController {
   }
 
   @Post('trial_match_jobs')
-  @UseGuards(ApiKeyGuard)
-  @ApiBearerAuth("ApiKeyGuard")
+  @UseGuards(KeycloakPasswordGuard)
+  @ApiBearerAuth("KeycloakPasswordGuard")
   @ApiOperation({ summary: "Create trial match jobs" })
   @ApiOkResponse({ description: "List trial match jobs" })
-  async createMatchJobs(@CurrentUser() user: user, @Body() trialInternalIds: any) {
-    const msgBody = JSON.stringify(trialInternalIds);
-    return this.matchMinerService.createTrialMatchJobs(user, msgBody);
+  async createMatchJobs(@CurrentUser() user: user, @Body() trialInternalIds: string[]) {
+    //const msgBody = JSON.stringify(trialInternalIds);
+    return this.matchMinerService.createTrialMatchJobs(user, trialInternalIds);
   }
 
   @Post('add_id_to_trials')
