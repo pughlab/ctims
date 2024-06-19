@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import {Injectable, OnModuleDestroy, OnModuleInit} from '@nestjs/common';
 import { EventService } from '../event/event.service';
 import { ModuleRef } from '@nestjs/core';
 import { PrismaService } from '../prisma.service';
@@ -6,16 +6,18 @@ import { TrialStatusEnum } from 'libs/types/src/trial-status.enum';
 import axios from "axios";
 import {event_type, trial, user} from "@prisma/client";
 import { CtmlStatusEnum } from 'libs/types/src/ctml-status.enum';
-const amqplib = require('amqplib');
+import * as amqplib from 'amqplib';
 
 @Injectable()
-export class MatchminerService implements OnModuleInit {
+export class MatchminerService implements OnModuleInit, OnModuleDestroy {
 
     private eventService: EventService;
 
     private MM_API_TOKEN = process.env.MM_API_TOKEN;
+    private queue = process.env.MATCHMINER_QUEUE || 'run_match';
+    private rabbitmqUrl = process.env.RABBITMQ_URL || 'localhost';
+    private rabbitmqPort = process.env.RABBITMQ_PORT || '5672';
 
-    private queue = 'run_match';
     private conn = null;
     private chReceive = null;
     private chSend = null;
@@ -24,20 +26,27 @@ export class MatchminerService implements OnModuleInit {
       private readonly prismaService: PrismaService,
       private readonly moduleRef: ModuleRef
     ) { }
-  
+
     onModuleInit(): any {
       this.eventService = this.moduleRef.get(EventService, { strict: false });
       this.initRabbitMQ();
     }
 
-    async initRabbitMQ() {
-      this.conn = await amqplib.connect('amqp://localhost');
-    
+    onModuleDestroy(): any {
+      if (this.conn) {
+        this.conn.close();
+      }
+    }
+
+  async initRabbitMQ() {
+      // this.conn = await amqplib.connect('amqp://localhost');
+    this.conn = await amqplib.connect(`amqp://${this.rabbitmqUrl}:${this.rabbitmqPort}`);
+
       this.chReceive = await this.conn.createChannel();
       await this.chReceive.assertQueue(this.queue);
 
       this.chSend = await this.conn.createChannel();
-    
+
       // Listener
       // ch1.consume(queue, (msg) => {
       //   if (msg !== null) {
@@ -49,8 +58,12 @@ export class MatchminerService implements OnModuleInit {
       // });
     }
 
-    async createTrialMatchJobs(user: user, trialInternalIds: any) {
-      await this.chSend.sendToQueue(this.queue, Buffer.from(trialInternalIds.toString()));
+    async createTrialMatchJobs(user: user, trialInternalIds: string[]) {
+      const message = {
+        user_id: user.id,
+        trial_internal_ids: trialInternalIds
+      }
+      await this.chSend.sendToQueue(this.queue, Buffer.from(JSON.stringify(message)));
     }
 
     async getTrialMatchResults(user: user) {
@@ -74,7 +87,7 @@ export class MatchminerService implements OnModuleInit {
                 }
               }
             );
-      
+
             return matchResults.data._items;
           } else {
             return;

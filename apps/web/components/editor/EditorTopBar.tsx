@@ -16,6 +16,7 @@ import {setIsFormChanged, setIsFormDisabled, setIsTrialGroupAdmin} from '../../s
 import process from "process";
 import {logout} from "../../pages/api/auth/[...nextauth]";
 import {IS_FORM_DISABLED, SELECTED_TRIAL_GROUP_IS_ADMIN} from "../../constants/appConstants";
+import useSendMatchminerJob from "../../hooks/useSendMatchminerJob";
 
 interface EditorTopBarProps {
     isEditMode?: boolean;
@@ -44,8 +45,16 @@ const EditorTopBar = (props: EditorTopBarProps) => {
     sendCTMLOperation
   } = useSendCTML();
 
+  const {
+    response: sendMatchJobResponse,
+    error: sendMatchJobError,
+    loading: sendMatchJobLoading,
+    sendMatchJobOperation
+  } = useSendMatchminerJob();
+
   const isGroupAdmin = useSelector((state: RootState) => state.context.isTrialGroupAdmin);
   const isFormDisabled = useSelector((state: RootState) => state.context.isFormDisabled);
+  const selectedTrialInternalId = useSelector((state: RootState) => state.finalModelAndErrors.ctmlModel?.trialInformation.trial_internal_id);
 
   const dispatch = useDispatch();
 
@@ -104,6 +113,7 @@ const EditorTopBar = (props: EditorTopBarProps) => {
             'info',
           summary: 'CTML sent to Matcher successfully',
         });
+        sendMatchJobOperation([selectedTrialInternalId])
       }
     }
     if(sendCTMLError) {
@@ -116,6 +126,28 @@ const EditorTopBar = (props: EditorTopBarProps) => {
       }
     }
   }, [sendCTMLError, sendCTMLResponse]);
+
+  useEffect(() => {
+    if (sendMatchJobResponse) {
+      console.log('response', sendMatchJobResponse);
+      if (sendMatchJobResponse.status === 201) {
+        toast.current.show({
+          severity:
+            'info',
+          summary: 'CTML sent to Matcherminer for matching successfully',
+        });
+      }
+    }
+    if(sendMatchJobError) {
+      console.log('error', sendMatchJobError);
+      if (sendMatchJobError.statusCode === 401) {
+        signOut({callbackUrl: '/#/login', redirect: false}).then(() => {
+          store.dispatch(logout());
+          router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+        });
+      }
+    }
+  }, [sendMatchJobError, sendMatchJobResponse]);
 
   useEffect(() => {
     if (isOKClicked) {
