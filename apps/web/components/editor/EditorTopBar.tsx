@@ -134,7 +134,7 @@ const EditorTopBar = (props: EditorTopBarProps) => {
         toast.current.show({
           severity:
             'info',
-          summary: 'CTML sent to Matcherminer for matching successfully',
+          summary: 'CTML queued to Matcherminer for matching',
         });
       }
     }
