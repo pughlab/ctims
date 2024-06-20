@@ -56,6 +56,18 @@ services:
     networks:
         - my-network
 
+  # https://github.com/prisma/prisma/releases/tag/2.17.0
+  database_shadow:
+    container_name: ctims-db-shadow
+    build:
+      context: ./database
+      dockerfile: Dockerfile-shadow
+    ports:
+      - "3307:3306"
+    restart: on-failure
+    networks:
+      - my-network
+
 networks:
     my-network:
 

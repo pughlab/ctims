@@ -4,8 +4,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model ctml_schema {
@@ -38,7 +39,7 @@ model ctml_json {
 
 model trial {
   id                     Int           @id @default(autoincrement())
-  trial_internal_id      String?  
+  trial_internal_id      String?
   nct_id                 String
   nickname               String?
   principal_investigator String?
@@ -108,8 +109,8 @@ model event {
 }
 
 model gene {
-  id           Int    @id @default(autoincrement())
-  hugoSymbol   String
+  id         Int    @id @default(autoincrement())
+  hugoSymbol String
 }
 
 enum status {
@@ -148,4 +149,6 @@ enum event_type {
   CtmlSchemaDeleted
   CtmlSchemaDoesNotExist
   ResultDownloaded
+  MatchJobCreated
+  MatchMessageRecevied
 }
