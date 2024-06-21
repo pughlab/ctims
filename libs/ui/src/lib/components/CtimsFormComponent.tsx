@@ -198,7 +198,10 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
             "span": 24
           }
         }
-      ]
+      ],
+      "age": {
+        multiple: true
+      }
     },
     "drug_list": {
       "ui:ObjectFieldTemplate": CtimsObjectFieldTemplate,

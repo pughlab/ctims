@@ -44,6 +44,8 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
       return errorObj.message !== 'must be object';
     }).filter((err_two: RJSFValidationError) => {
       return err_two.property !== '.trialInformation.phase';
+    }).filter((err_two: RJSFValidationError) => {
+      return err_two.property !== '.age_group.age';
     });
     if (!isObjectEmpty(errorSchema)) {
       const viewModelErrors = extractErrors(filteredErrorObjList);

@@ -63,12 +63,12 @@ const CtimsDropdown = (props: WidgetProps) => {
  const [isMultiple, setIsMultiple] = useState(false);
 
   useEffect(() => {
-    if (name === 'phase') {
+    if (uiSchema!.multiple) {
       setIsMultiple(uiSchema!.multiple)
     } else {
       setIsMultiple(false)
     }
-  }, [name]);
+  }, [uiSchema]);
 
   const { enumOptions, enumDisabled } = options;
   // console.log('CtimsDropdown options', options);
