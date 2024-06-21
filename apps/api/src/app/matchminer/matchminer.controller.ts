@@ -60,7 +60,6 @@ export class MatchminerController {
   @ApiOperation({ summary: "Create trial match jobs" })
   @ApiOkResponse({ description: "List trial match jobs" })
   async createMatchJobs(@CurrentUser() user: user, @Body() trialInternalIds: string[]) {
-    //const msgBody = JSON.stringify(trialInternalIds);
     return this.matchMinerService.createTrialMatchJobs(user, trialInternalIds);
   }
 

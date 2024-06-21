@@ -19,7 +19,7 @@ export class MatchminerService implements OnModuleInit, OnModuleDestroy {
     private rabbitmqPort = process.env.RABBITMQ_PORT || '5672';
 
     private conn = null;
-    private chReceive = null;
+    // private chReceive = null;
     private chSend = null;
 
     constructor(
@@ -39,13 +39,12 @@ export class MatchminerService implements OnModuleInit, OnModuleDestroy {
     }
 
   async initRabbitMQ() {
-      // this.conn = await amqplib.connect('amqp://localhost');
     this.conn = await amqplib.connect(`amqp://${this.rabbitmqUrl}:${this.rabbitmqPort}`);
 
-      this.chReceive = await this.conn.createChannel();
-      await this.chReceive.assertQueue(this.queue);
+      // this.chReceive = await this.conn.createChannel();
 
       this.chSend = await this.conn.createChannel();
+      await this.chSend.assertQueue(this.queue);
 
       // Listener
       // ch1.consume(queue, (msg) => {
@@ -64,6 +63,17 @@ export class MatchminerService implements OnModuleInit, OnModuleDestroy {
         trial_internal_ids: trialInternalIds
       }
       await this.chSend.sendToQueue(this.queue, Buffer.from(JSON.stringify(message)));
+
+      this.eventService.createEvent({
+        type: event_type.MatchJobCreated,
+        description: "Match job created to message server",
+        user,
+        metadata: {
+          input: {
+            trial_internal_ids: trialInternalIds
+          },
+        }
+      });
     }
 
     async getTrialMatchResults(user: user) {
