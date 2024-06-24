@@ -662,7 +662,9 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
   const handleIsSortedChecked = (value: boolean) => {
     dispatch(setIsSortEnabled(value));
-    setRootNodes([...rootNodes]);
+    if (rootNodes.length > 0) {
+      setRootNodes([...rootNodes]);
+    }
   }
 
   return (

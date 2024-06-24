@@ -88,7 +88,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
     const ctmlModel = currentState.modalActions.ctmlDialogModel;
     if (ctmlModel && isSortEnabled) {
       // sort the ctmlModel.match before saving
-      const sorted = sortCTMLModelMatchCriteria(ctmlModel, false);
+      const sorted = sortCTMLModelMatchCriteria(ctmlModel, isSortEnabled);
       formData.match = sorted.match;
     } else {
       formData.match = ctmlModel.match;

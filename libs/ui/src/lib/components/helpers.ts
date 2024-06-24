@@ -316,7 +316,7 @@ export const sortTreeNode = (treeNode: TreeNode, currentDepth: number = 0, doSor
       // sort the current level
       treeNode.children.sort((a, b) => {
         let ret = 0;
-        if (a.data.type === b.data.type) {
+        if (a.data.type && (a.data.type === b.data.type)) {
           if (a.data.nodeLabel && b.data.nodeLabel) {
             ret = a.data.nodeLabel.localeCompare(b.data.nodeLabel);
           } else {
@@ -330,8 +330,6 @@ export const sortTreeNode = (treeNode: TreeNode, currentDepth: number = 0, doSor
           } else if (!b.data.hasOwnProperty('type') || b.data.type === EComponentType.AndOROperator) {
             ret = -1;
           }
-        } else if (!a.data.hasOwnProperty('type') || b.data.type === EComponentType.AndOROperator) {
-          ret = 1;
         } else if ((a.label === 'And' && b.label === 'And') || (a.label === 'Or' && b.label === 'Or')) {
           ret = 0;
         } else if (a.label === 'And' && b.label === 'Or') {
