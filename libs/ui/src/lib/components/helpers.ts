@@ -316,7 +316,7 @@ export const sortTreeNode = (treeNode: TreeNode, currentDepth: number = 0, doSor
       // sort the current level
       treeNode.children.sort((a, b) => {
         let ret = 0;
-        if (a.data.type && (a.data.type === b.data.type)) {
+        if (a.data.type && a.data.type != EComponentType.AndOROperator && (a.data.type === b.data.type)) {
           if (a.data.nodeLabel && b.data.nodeLabel) {
             ret = a.data.nodeLabel.localeCompare(b.data.nodeLabel);
           } else {
