@@ -63,10 +63,8 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
 
   const [downloadResults, setDownloadResults] = useState<any>([]);
   useEffect(() => {
-    if (downloadResults.length > 0) {
-      // sometimes csvLink.current is null when switching between groups
-      // using solution from https://github.com/react-csv/react-csv/issues/237
-      csvLink?.current?.link.click();
+    if (downloadResults.length > 0 && csvLink.current) {
+      csvLink.current.link.click();
     }
   }, [downloadResults])
 
@@ -104,9 +102,14 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
     {label: "Match Type", key: "match_type"},
   ];
   // csv download link ref
-  const csvLink = React.useRef<CSVLink & HTMLAnchorElement & { link: HTMLAnchorElement }>();
+
+  // don't have global const state for csvLink as it can be null as component is mounted/unmounted when datatable is changed
+  let csvLink: React.MutableRefObject<any> = useRef(null);
 
   const downloadBodyTemplate = (rowData) => {
+    // set the ref in body template so we know it's mounted
+    csvLink = React.useRef<CSVLink & HTMLAnchorElement & { link: HTMLAnchorElement }>();
+
     return <>
       <i className={classNames('pi', { 'true-icon pi-download': rowData.trialRetCount > 0, '': rowData.trialRetCount == 0 })}
          onClick={() => {
