@@ -40,6 +40,11 @@ services:
         MM_API_TOKEN: ${MM_API_TOKEN}
         CTIMS_API_VERSION: ${CTIMS_API_VERSION}
         CTIMS_API_KEY: ${CTIMS_API_KEY}
+        MATCHMINER_SEND_QUEUE: ${MATCHMINER_SEND_QUEUE}
+        MATCHMINER_RECEIVE_QUEUE: ${MATCHMINER_RECEIVE_QUEUE}
+        RABBITMQ_URL: ${RABBITMQ_URL}
+        RABBITMQ_PORT: ${RABBITMQ_PORT}
+
     environment:
       DATABASE_URL: mysql://ctims:ctims@database_qa:3306/ctims
     ports:
