@@ -1,6 +1,6 @@
 import styles from './MatchingMenuAndForm.module.scss';
 import {EComponentType} from "./EComponentType";
-import React, {FunctionComponent, useState} from "react";
+import React, {FunctionComponent, useEffect, useState} from "react";
 import LeftMenuComponent from "./LeftMenuComponent";
 import {withTheme} from "@rjsf/core";
 import {Theme as PrimeTheme} from "../primereact";
@@ -9,6 +9,8 @@ import {ClinicalForm} from "./forms/ClinicalForm";
 import {GenomicForm} from "./forms/GenomicForm";
 import {EmptyHelper} from "./forms/EmptyHelper";
 import {sortTreeNode} from "./helpers";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../../../apps/web/store/store";
 
 const RjsfForm = withTheme(PrimeTheme)
 
@@ -33,6 +35,14 @@ const MatchingMenuAndForm = (props: any) => {
   const [isEmpty, setIsEmpty] = useState(true);
   const [buildRootNodeParams, setBuildRootNodeParams] = useState<IRootNode>({rootLabel: '', firstChildLabel: ''});
   const [rootNodes, setRootNodes] = useState<TreeNode[]>([]);
+
+  const isSortEnabled = useSelector((state: RootState) => state.context.isSortEnabled);
+
+  useEffect(() => {
+    if (rootNodes.length > 0) {
+      setSortedRootNodes(rootNodes);
+    }
+  }, [isSortEnabled]);
 
   const AddCriteriaButton = (props: {addCriteriaGroupClicked: () => void}) => {
     const {addCriteriaGroupClicked} = props;
@@ -84,7 +94,7 @@ const MatchingMenuAndForm = (props: any) => {
   const setSortedRootNodes = (newRootNodes: TreeNode[]) => {
     // structuredClone wasn't working here, causing UI to not sync after modifying the tree
     // so pass the rootnode directly
-    const sortedNodes = sortTreeNode(newRootNodes[0]);
+    const sortedNodes = sortTreeNode(newRootNodes[0], 0, isSortEnabled);
     setRootNodes([sortedNodes]);
   }
 
