@@ -89,7 +89,7 @@ services:
       - mm-mongo-db-qa:/data/db
 
   rabbitmq_qa:
-    container_name: rabbitmq_qa
+    container_name: ctims-rabbitmq-qa
     image: rabbitmq:3-management
     restart: on-failure
     ports:
