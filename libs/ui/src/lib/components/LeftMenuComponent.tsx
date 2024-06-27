@@ -182,6 +182,13 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     return lastNode;
   }
 
+  useEffect(() => {
+    // on initial load, update the ctmlDialogModel so that it's current and up-to-date
+    const state = store.getState();
+    const currentCtmlMatchModel: any = state.matchViewModelActions.ctmlMatchModel;
+    const curMatch = currentCtmlMatchModel.match;
+    dispatch(setCtmlDialogModel({match: curMatch}));
+  }, []);
 
   useEffect(() => {
     const state = store.getState();
