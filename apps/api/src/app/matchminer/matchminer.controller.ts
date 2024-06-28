@@ -54,6 +54,15 @@ export class MatchminerController {
     return this.matchMinerService.getTrialMatchResults(user);
   }
 
+  @Post('trial_match_jobs')
+  @UseGuards(KeycloakPasswordGuard)
+  @ApiBearerAuth("KeycloakPasswordGuard")
+  @ApiOperation({ summary: "Create trial match jobs" })
+  @ApiOkResponse({ description: "List trial match jobs" })
+  async createMatchJobs(@CurrentUser() user: user, @Body() trialInternalIds: string[]) {
+    return this.matchMinerService.createTrialMatchJobs(user, trialInternalIds);
+  }
+
   @Post('add_id_to_trials')
   @UseGuards(KeycloakPasswordGuard)
   @ApiOperation({ summary: "Add trial internal id to matchminer trial collection" })
