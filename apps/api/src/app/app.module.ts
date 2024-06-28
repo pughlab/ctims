@@ -12,6 +12,7 @@ import { EventModule } from "./event/event.module";
 import { MatchminerModule } from './matchminer/matchminer.module';
 import { GeneModule } from './gene/gene.module';
 import { InfoModule } from './info/info.module';
+import {MessageQueueModule} from "./message-queue/message-queue.module";
 
 @Global()
 @Module({
@@ -25,6 +26,7 @@ import { InfoModule } from './info/info.module';
     EventModule,
     GeneModule,
     InfoModule,
+    MessageQueueModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

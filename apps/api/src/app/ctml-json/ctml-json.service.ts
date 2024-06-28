@@ -132,7 +132,7 @@ export class CtmlJsonService {
           }
         }
       );
-      console.log(results);
+      // console.log(results);
 
       // update the trial's status to pending
       const trial = await this.prismaService.trial.findUnique({
