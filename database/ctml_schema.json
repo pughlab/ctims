@@ -2,13 +2,11 @@
   "definitions": {
     "ctml_status": {
       "enumNames": [
-        " ",
         "Draft",
         "In Review",
         "Complete"
       ],
       "enum": [
-        " ",
         "DRAFT",
         "IN_REVIEW",
         "COMPLETED"
