@@ -5,6 +5,10 @@ import {Dialog} from "primereact/dialog";
 import styles from "./SendCTMLtoMatchminerDialog.module.scss";
 import {Button} from "primereact/button";
 import { Message } from 'primereact/message';
+import {
+  isTrialHaveOneMatch,
+  isTrialStatusEligible
+} from "../../../../libs/ui/src/lib/components/helpers";
 
 interface SendCtmlDialogProps {
   isCTMLDialogVisible: boolean;
@@ -16,11 +20,35 @@ interface SendCtmlDialogProps {
 const SendCtmlToMatchminerDialog = (props: SendCtmlDialogProps) => {
   const [isDialogVisible, setIsDialogVisible] = useState<boolean>(props.isCTMLDialogVisible);
   const [sendButtonDisabled, setSendButtonDisabled] = useState<boolean>(true);
+  const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
   const isFormChanged = useSelector((state: RootState) => state.context.isFormChanged);
+  const trialModel = useSelector((state: RootState) => state.finalModelAndErrors.ctmlModel);
 
   useEffect(() => {
     setIsDialogVisible(props.isCTMLDialogVisible);
+
+    let newErrorMessages = [];
+    if (isFormChanged) {
+      newErrorMessages.push(["You must save the CTML before sending to the Matcher."]);
+    }
+
+    if (trialModel) {
+      const trialStatusObj = () => {
+        return {
+          status: trialModel.trialInformation?.ctml_status,
+        }
+      }
+      if (!isTrialStatusEligible(trialStatusObj())) {
+        newErrorMessages.push(["CTML Status must be In Review or Complete to send CTML to matcher. Update the CTML Status (in Trial Information section) and try again."]);
+      }
+
+      if (!isTrialHaveOneMatch(trialModel)) {
+        newErrorMessages.push(["You must input at least one type of match criteria before sending CTML to Matcher."]);
+      }
+    }
+
+    setErrorMessages([...newErrorMessages]);
   }, [props.isCTMLDialogVisible])
 
   useEffect(() => {
@@ -43,7 +71,9 @@ const SendCtmlToMatchminerDialog = (props: SendCtmlDialogProps) => {
   const errorContent = () => {
     return (
       <>
-        <div>You must save the CTML before sending to the Matcher.</div>
+        {errorMessages.map((msg, index) => {
+          return <div style={{marginBottom: '1rem'}}>{msg}</div>
+        })}
       </>
     )
   }
@@ -72,7 +102,7 @@ const SendCtmlToMatchminerDialog = (props: SendCtmlDialogProps) => {
             style={{width: '700px', minHeight: '200px'}}
             onHide={onDialogHide}>
       <div>
-      {isFormChanged && <Message severity="error"
+      {(errorMessages.length > 0) && <Message severity="error"
                style={{
                  marginLeft: '18px',
                  marginBottom: '10px'

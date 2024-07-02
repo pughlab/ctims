@@ -4,6 +4,7 @@ import {v4 as uuidv4} from 'uuid';
 import {RJSFValidationError} from "@rjsf/utils";
 import {OperatorOptions} from "./forms/OperatorDropdown";
 import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
+import {CtmlStatusEnum} from "../../../../types/src/ctml-status.enum";
 
 
 // Must be in the following format: 'p.A1'
@@ -474,4 +475,24 @@ export const trimFields = (obj: any) => {
       }
     }
   }
+}
+
+export const isTrialStatusEligible = (trialModel: any) => {
+  return trialModel.status != CtmlStatusEnum.DRAFT;
+}
+
+export const isTrialHaveOneMatch = (ctmlJson: any) => {
+  if (ctmlJson.treatment_list) {
+    for (let step of ctmlJson.treatment_list.step) {
+      if (step.arm) {
+        for (let arm of step.arm) {
+          if (arm.match && arm.match.length > 0) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+  return false;
 }
