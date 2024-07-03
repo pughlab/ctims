@@ -52,12 +52,12 @@ const SendCtmlToMatchminerDialog = (props: SendCtmlDialogProps) => {
   }, [props.isCTMLDialogVisible])
 
   useEffect(() => {
-    if (isFormChanged) {
+    if (errorMessages.length > 0) {
       setSendButtonDisabled(true);
     } else {
       setSendButtonDisabled(false);
     }
-  }, [isFormChanged])
+  }, [errorMessages])
 
   const onDialogHide = () => {
     props.onCTMLDialogHide();
