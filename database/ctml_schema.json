@@ -44,7 +44,7 @@
           "description": "Enter details of the overall principal investigator"
         },
         "ctml_status": {
-          "title": "Ctml Status",
+          "title": "CTML Status",
           "description": "Categorize the status of your CTML",
           "default": "DRAFT",
           "$ref": "#/definitions/ctml_status"
