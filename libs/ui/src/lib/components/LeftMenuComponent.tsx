@@ -16,8 +16,13 @@ import {
   convertTreeNodeArrayToCtimsFormat,
   deleteNodeFromChildrenArrayByKey,
   findArrayContainingKeyInsideATree,
-  findObjectByKeyInTree, flattenVariantCategoryContainerObject, getNodeLabel,
-  isObjectEmpty, traverseNode, trimFields
+  findObjectByKeyInTree,
+  flattenVariantCategoryContainerObject,
+  flattenVariantCategoryContainerObjectInCtmlMatchModel,
+  getNodeLabel,
+  isObjectEmpty,
+  traverseNode,
+  trimFields
 } from "./helpers";
 import * as jsonpath from "jsonpath";
 import {EComponentType} from "./EComponentType";
@@ -187,7 +192,8 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     const state = store.getState();
     const currentCtmlMatchModel: any = state.matchViewModelActions.ctmlMatchModel;
     const curMatch = currentCtmlMatchModel.match;
-    dispatch(setCtmlDialogModel({match: curMatch}));
+    const flattenedMatch = flattenVariantCategoryContainerObjectInCtmlMatchModel(curMatch[0]);
+    dispatch(setCtmlDialogModel({match: [flattenedMatch]}));
   }, []);
 
   useEffect(() => {

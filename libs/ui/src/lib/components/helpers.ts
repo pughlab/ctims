@@ -437,6 +437,27 @@ export const flattenVariantCategoryContainerObject = (nodes: TreeNode[]) => {
   });
 }
 
+// same as above, but less restrictive on the input object
+export const flattenVariantCategoryContainerObjectInCtmlMatchModel = (ctmlMatchModel: any) => {
+  const cloned = structuredClone(ctmlMatchModel);
+  const flattenGenomicObject = (obj: any) => {
+    const newObj = {...obj};
+    if (newObj.genomic && newObj.genomic.variantCategoryContainerObject) {
+      newObj.genomic = { ...newObj.genomic.variantCategoryContainerObject };
+    }
+    // Recursively flatten 'and' or 'or' arrays if they exist
+    ['and', 'or'].forEach(key => {
+      if (newObj[key]) {
+        newObj[key] = newObj[key].map(flattenGenomicObject);
+      }
+    });
+    return newObj;
+  };
+
+  // Start the flattening process from the root of the CTML match model
+  return flattenGenomicObject(cloned);
+};
+
  // Recursively traverse through the match criteria and add the variantCategoryContainerObject key to the genomic object
 export const addVariantCategoryContainerObject = (matchCriteria: any[]) => {
   return matchCriteria.map((criteria) => {
