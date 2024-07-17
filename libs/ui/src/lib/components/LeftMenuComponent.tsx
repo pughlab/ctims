@@ -313,7 +313,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         }
         const payload = {[key]: true};
         dispatch(setMatchDialogErrors(payload))
-        parentNode.children!.push(newNode);
+        parentNode.children!.unshift(newNode);
 
         setSelectedNode(newNode);
         setSelectedKeys(newNode.key as string)
@@ -337,7 +337,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         }
         const payload = {[key]: true};
         dispatch(setMatchDialogErrors(payload))
-        parentNode.children!.push(newNode);
+        parentNode.children!.unshift(newNode);
         // Ensure the parent node of this new leaf is expanded
         expandedKeys[parentNode.key] = true;
         setExpandedKeys(expandedKeys);
@@ -362,7 +362,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           data: {type: EComponentType.AndOROperator},
           children: []
         };
-        parentNode.children!.push(newNode);
+        parentNode.children!.unshift(newNode);
         expandedKeys[parentNode.key] = true;
         setExpandedKeys(expandedKeys);
       }
@@ -422,7 +422,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
               children: foundNode.children
             };
 
-            targetNode.children!.push(newNode);
+            targetNode.children!.unshift(newNode);
             setRootNodes([...newRootNodes]);
 
             // setSelectedNode(newNode);
