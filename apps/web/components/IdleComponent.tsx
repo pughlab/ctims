@@ -9,6 +9,7 @@ import {Toast} from "primereact/toast";
 import {signOut} from "next-auth/react";
 import process from "process";
 import {logout} from "../pages/api/auth/[...nextauth]";
+import React from 'react';
 
 const IdleComponent = () => {
   const { state: idleState, remaining, count } = useIdle(); // Get the idle state, remaining time, and count from the useIdle hook
