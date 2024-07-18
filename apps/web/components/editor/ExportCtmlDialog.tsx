@@ -46,6 +46,8 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
       return err_two.property !== '.trialInformation.phase';
     }).filter((err_two: RJSFValidationError) => {
       return err_two.property !== '.age_group.age';
+    }).filter((err_two: RJSFValidationError) => {
+      return err_two.property !== '.trialInformation.protocol_version_date';
     });
     if (!isObjectEmpty(errorSchema)) {
       const viewModelErrors = extractErrors(filteredErrorObjList);
