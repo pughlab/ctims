@@ -75,10 +75,13 @@ export class CtmlJsonService {
       }
     })
 
+    const hasMatch = this.isTrialHaveOneMatch(data);
+
     if (existingJsons.length > 0) {
       const r = await this.prismaService.ctml_json.updateMany({
         data: {
           data,
+          has_match: hasMatch
         },
         where: {
           AND: [
@@ -109,10 +112,28 @@ export class CtmlJsonService {
       data: {
         data,
         versionId: ctml_schema_version.id,
-        trialId: trialId
+        trialId: trialId,
+        has_match: hasMatch
       }
     });
     return [newCtmlJson];
+  }
+
+  isTrialHaveOneMatch(data: string) {
+    const dataObj = JSON.parse(data);
+    if (dataObj.treatment_list) {
+      for (let step of dataObj.treatment_list.step) {
+        if (step.arm) {
+          for (let arm of step.arm) {
+            if (arm.match && arm.match.length > 0) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    }
+    return false;
   }
 
   remove(id: number) {

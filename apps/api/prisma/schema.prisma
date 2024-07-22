@@ -35,6 +35,7 @@ model ctml_json {
   trial     trial?       @relation(fields: [trialId], references: [id])
   trialId   Int?
   event     event[]
+  has_match Boolean?     @default(false)
 }
 
 model trial {
