@@ -71,6 +71,19 @@ export class TrialService implements OnModuleInit {
     return entities;
   }
 
+  findTrialsByIds(trialIds: string[]): Promise<trial[]> {
+    return this.prismaService.trial.findMany({
+      where: {
+        id: {
+          in: trialIds.map(id => parseInt(id))
+        }
+      },
+      include: {
+        ctml_jsons: true,
+      }
+    });
+  }
+
   async findSchemasByTrial(trialId: number): Promise<ctml_schema[]> {
     const foundTrial = await this.prismaService.trial.findUnique({
       include: { ctml_schemas: true },

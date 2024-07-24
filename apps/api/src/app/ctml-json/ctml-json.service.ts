@@ -178,6 +178,47 @@ export class CtmlJsonService {
     }
   }
 
+  async send_multiples_to_matchminer(ctml_jsons: any[]) {
+    try {
+      const url = `${process.env.MM_API_URL}/load_trial`;
+      const results = await axios.request(
+        {
+          method: 'post',
+          url: url,
+          data: ctml_jsons,
+          headers: {
+            'Authorization': `Bearer ${this.MM_API_TOKEN}`
+          }
+        }
+      );
+      console.log(results);
+
+      for (let ctml of ctml_jsons) {
+        const internalId = ctml.trial_internal_id;
+        // update the trial's status to pending
+        const trial = await this.prismaService.trial.findFirst({
+          where: {
+            trial_internal_id: internalId
+          }
+        });
+        if (trial) {
+          await this.prismaService.trial.updateMany({
+            where: {
+              trial_internal_id: internalId
+            },
+            data: {
+              trial_status: TrialStatusEnum.PENDING
+            }
+          });
+        }
+      }
+
+    } catch (error) {
+      console.log(error);
+      throw new Error(error);
+    }
+  }
+
   async run_match(trial_internal_id_str: string) {
     let trial_internal_id_array = undefined;
     if (trial_internal_id_str !== undefined && trial_internal_id_str === '') {
