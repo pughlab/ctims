@@ -32,7 +32,7 @@ const useGetMatchResults = () => {
   //   }
   // }, [status])
 
-  const getMatchResultsOperation = async (trials: []) => {
+  const getMatchResultsOperation = async (trials: any[]) => {
     setLoading(true);
     try {
       const accessToken = localStorage.getItem('ctims-accessToken');

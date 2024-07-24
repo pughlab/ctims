@@ -4,6 +4,7 @@ import styles from "./SendCTMLDialog.module.scss";
 import {Button} from "primereact/button";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
+import useGetMatchResults from "../../hooks/useGetMatchResults";
 
 interface SendCTMLDialogProps {
   trials: any[];
@@ -15,6 +16,29 @@ interface SendCTMLDialogProps {
 const SendCTMLDialog = (props: SendCTMLDialogProps) => {
   const [isDialogVisible, setIsDialogVisible] = useState<boolean>(props.isCTMLDialogVisible);
   const [selectedTrials, setSelectedTrials] = useState<any>(null);
+  const [results, setResults] = useState<any>([]);
+
+  // retrieve trial match results
+  const {
+    response: getMatchResultsResponse,
+    error: getMatchResultsError,
+    loading: getMatchResultsLoading,
+    getMatchResultsOperation
+  } = useGetMatchResults();
+
+  useEffect(() => {
+    if (props.trials && props.trials.length > 0) {
+      getMatchResultsOperation(props.trials);
+    } else {
+      setResults([])
+    }
+  }, [props.trials]);
+
+  useEffect(() => {
+    if (getMatchResultsResponse) {
+      setResults(getMatchResultsResponse);
+    }
+  }, [getMatchResultsResponse])
 
   useEffect(() => {
     setIsDialogVisible(props.isCTMLDialogVisible);
@@ -52,7 +76,7 @@ const SendCTMLDialog = (props: SendCTMLDialogProps) => {
             visible={isDialogVisible}
             onHide={onDialogHide}>
       <div className={styles.tableContainer}>
-        <DataTable value={props.trials}
+        <DataTable value={results}
                    sortField="nct_id" sortOrder={-1}
                    selectionMode="checkbox"
                    selection={selectedTrials}
