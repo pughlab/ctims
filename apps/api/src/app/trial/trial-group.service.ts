@@ -153,6 +153,11 @@ export class TrialGroupService {
               last_name: true,
               email: true,
             }
+          },
+          ctml_jsons: {
+            select: {
+              has_match: true
+            }
           }
         }
       });

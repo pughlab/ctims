@@ -116,6 +116,20 @@ export class TrialController implements OnModuleInit{
     return this.trialService.findAll();
   }
 
+  @Post('trialsByIds')
+  @UseGuards(KeycloakPasswordGuard)
+  @ApiBearerAuth("KeycloakPasswordGuard")
+  @ApiOperation({ summary: "Get trials by IDs" })
+  @ApiOkResponse({ description: "List of trials found." })
+  async findByIDs(@CurrentUser() user: user, @Body() body: { trialIDList: string[] }) {
+    this.eventService.createEvent({
+      type: event_type.TrialReadMany,
+      description: "Trials read via Get to /trials/trialsByIds",
+      user
+    });
+    return this.trialService.findTrialsByIds(body.trialIDList);
+  }
+
   @Get(':id')
   @UseGuards(KeycloakPasswordGuard)
   @ApiBearerAuth("KeycloakPasswordGuard")
@@ -243,7 +257,7 @@ export class TrialController implements OnModuleInit{
     const foundTrial = await this.trialService.findOne(+id);
 
     const p1 = this.trialService.delete(+id);
-    const p2 = axios.delete(`${process.env.MM_API_URL}/delete_trial_by_internal_id`, 
+    const p2 = axios.delete(`${process.env.MM_API_URL}/delete_trial_by_internal_id`,
     {
       headers: {'Authorization': `Bearer ${this.MM_API_TOKEN}`},
       params: {

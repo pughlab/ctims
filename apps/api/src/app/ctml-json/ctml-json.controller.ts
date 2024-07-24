@@ -197,6 +197,28 @@ export class CtmlJsonController implements OnModuleInit {
     });
   }
 
+  @Post('send_multiples_to_matchminer')
+  @UseGuards(KeycloakPasswordGuard)
+  @ApiBearerAuth("KeycloakPasswordGuard")
+  @ApiOperation({ summary: "Send multiple CTMLscto matchminer" })
+  @ApiCreatedResponse({ description: "CTMLs sent to matchminer." })
+  async send_multiples_to_matchminer(
+    @CurrentUser() user: user,
+    @Body() ctmlJsons: any
+  ) {
+    await this.ctmlJsonService.send_multiples_to_matchminer(ctmlJsons);
+
+    // Add event
+    this.eventService.createEvent({
+      type: event_type.CtmlJsonSentToMatchminer,
+      description: "CTML JSONs sent to Matchminer via Post to /ctml-jsons/send_multiples_to_matchminer",
+      user,
+      metadata: {
+        input: { ctmlJsons }
+      }
+    });
+  }
+
   @Get('mm/run_match')
   @UseGuards(KeycloakPasswordGuard)
   @ApiBearerAuth("KeycloakPasswordGuard")

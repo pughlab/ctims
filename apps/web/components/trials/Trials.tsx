@@ -1,8 +1,7 @@
 import useDeleteTrial from '../../hooks/useDeleteTrial';
-import useGetTrialsForUsersInGroup from '../../hooks/useGetTrialsForUsersInGroup';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
-import { useSession } from 'next-auth/react';
+import {RootState, store} from '../../store/store';
+import {signOut, useSession} from 'next-auth/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { DataTable, DataTableRowMouseEventParams } from 'primereact/datatable';
 import { useRouter } from 'next/router';
@@ -10,13 +9,18 @@ import { setIsFormChanged, setIsFormDisabled, setTrialNctId} from '../../store/s
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import styles from './Trials.module.scss';
 import { Button } from 'primereact/button';
-import TrialGroupsDropdown from './TrialGroupsDropdown';
 import { Menu } from 'primereact/menu';
 import { Column } from 'primereact/column';
 import {Toast} from "primereact/toast";
 import {parse} from "yaml";
 import NewTrialIdDialog from './NewTrialIdDialog';
 import {IS_FORM_DISABLED} from "../../constants/appConstants";
+import useSendMatchminerJob from "../../hooks/useSendMatchminerJob";
+import {logout} from "../../pages/api/auth/[...nextauth]";
+import SendCTMLDialog from "./SendCTMLDialog";
+import useSendMultipleCTMLs from "../../hooks/useSendMultipleCTMLs";
+import {CtmlStatusEnum} from "../../../../libs/types/src/ctml-status.enum";
+import useGetTrialsByIDs from "../../hooks/useGetTrialsByIDs";
 
 // property selectedTrialGroup from parent component when dropdown changed
 // trials is the list of trials for the selected trial group
@@ -32,12 +36,58 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
   const dispatch = useDispatch();
   const menu = useRef(null);
 
-  const [isDialogVisible, setIsDialogVisible] = useState<boolean>(false);
   const [isTrialIdDialogVisible, setIsTrialIdDialogVisible] = useState<boolean>(false);
-  const [isOKClicked, setIsOKClicked] = useState<boolean>(false);
-
+  const [isSendDialogVisible, setIsSendDialogVisible] = useState<boolean>(false);
+  const [selectedTrialsToMatch, setSelectedTrialsToMatch] = useState([]);
 
   const trialsErrorToast = useRef(null);
+
+  const eligibleTrials: any[] = props.trials.filter((trial: any) => {
+    return trial.status != CtmlStatusEnum.DRAFT && trial.ctml_jsons[0].has_match;
+  });
+
+  const {
+    response: sendMultipleCTMLsResponse,
+    error: sendMultipleCTMLsError,
+    loading: sendMultipleCTMLsLoading,
+    sendMultipleCTMLsOperation
+  } = useSendMultipleCTMLs();
+
+  const {
+    response: sendMatchJobResponse,
+    error: sendMatchJobError,
+    loading: sendMatchJobLoading,
+    sendMatchJobOperation
+  } = useSendMatchminerJob();
+
+  const {
+    response: getTrialsByIDsResponse,
+    error: getTrialsByIDsError,
+    loading: getTrialsByIDsLoading,
+    getTrialsByIDsOperation
+  } = useGetTrialsByIDs();
+
+  useEffect(() => {
+    if (getTrialsByIDsResponse) {
+      const ctmlJsonsData: any[] = getTrialsByIDsResponse.data;
+      const selectedJsons = ctmlJsonsData.map((ctmlJsonData) => ctmlJsonData.ctml_jsons[0].data);
+      sendMultipleCTMLsOperation(selectedJsons)
+    }
+  }, [getTrialsByIDsResponse]);
+
+  useEffect(() => {
+    if (sendMultipleCTMLsResponse) {
+      // send CTML successful, initiate the run matches
+      if (sendMultipleCTMLsResponse.status === 201) {
+        trialsErrorToast.current.show({
+          severity:
+            'info',
+          summary: 'CTML sent to Matcher successfully',
+        });
+        sendMatchJobOperation(selectedTrialsToMatch)
+      }
+    }
+  }, [sendMultipleCTMLsResponse]);
 
   const createCtmlClick = (e) => {
     setIsTrialIdDialogVisible(true);
@@ -110,6 +160,15 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
     setRowEntered(null);
   }
 
+  const onSendClick = (trials) => {
+    console.log('send clicked', trials);
+    if (trials) {
+      const selectedTrials = trials.map((trial) => trial.trial_internal_id);
+      setSelectedTrialsToMatch(selectedTrials);
+      getTrialsByIDsOperation(selectedTrials);
+    }
+  }
+
   useEffect(() => {
     if (!data) {
       return;
@@ -132,6 +191,51 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
       props.onTrialDeleted();
     }
   }, [deleteTrialResponse]);
+
+  useEffect(() => {
+    if (sendMultipleCTMLsResponse) {
+      console.log('response', sendMultipleCTMLsResponse);
+      if (sendMultipleCTMLsResponse.status === 201) {
+        trialsErrorToast.current.show({
+          severity:
+            'info',
+          summary: 'CTML sent to Matcher successfully',
+        });
+        // sendMatchJobOperation([selectedTrialInternalId])
+      }
+    }
+    if(sendMultipleCTMLsError) {
+      console.log('error', sendMultipleCTMLsError);
+      if (sendMultipleCTMLsError.statusCode === 401) {
+        signOut({callbackUrl: '/#/login', redirect: false}).then(() => {
+          store.dispatch(logout());
+          router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+        });
+      }
+    }
+  }, [sendMultipleCTMLsError, sendMultipleCTMLsResponse]);
+
+  useEffect(() => {
+    if (sendMatchJobResponse) {
+      console.log('response', sendMatchJobResponse);
+      if (sendMatchJobResponse.status === 201) {
+        trialsErrorToast.current.show({
+          severity:
+            'info',
+          summary: 'CTML(s) queued to Matcherminer for matching',
+        });
+      }
+    }
+    if(sendMatchJobError) {
+      console.log('error', sendMatchJobError);
+      if (sendMatchJobError.statusCode === 401) {
+        signOut({callbackUrl: '/#/login', redirect: false}).then(() => {
+          store.dispatch(logout());
+          router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
+        });
+      }
+    }
+  }, [sendMatchJobError, sendMatchJobResponse]);
 
   const onCreateCTMLClick = () => {
     setIsTrialIdDialogVisible(true);
@@ -199,6 +303,10 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
     fileInput.click();
   }
 
+  const sendCtmlClick = (e) => {
+    setIsSendDialogVisible(true);
+  }
+
   return (
     <>
       <Toast ref={trialsErrorToast}></Toast>
@@ -208,12 +316,18 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
         createCTMLClicked={onCreateCTMLClick}
         onTrialIdDialogHide={() => setIsTrialIdDialogVisible(false)}
         onIsOKClicked={handleCreateCTMLClicked}/>
+      <SendCTMLDialog
+        trials={eligibleTrials}
+        isCTMLDialogVisible={isSendDialogVisible}
+        sendCtmlClicked={(selectedTrials) => onSendClick(selectedTrials)}
+        onCTMLDialogHide={() => setIsSendDialogVisible(false)}/>
       <div >
         <div className={styles.titleAndButtonsContainer}>
           <span className={styles.trialsText}>Trials</span>
           <div className={styles.buttonsContainer}>
             <Button disabled={!props.selectedTrialGroup} label="Import CTML" className="p-button-text p-button-plain" onClick={onImportClicked} />
             <Button disabled={!props.selectedTrialGroup} label="Create CTML" className={styles.createCtmlButton} onClick={createCtmlClick} />
+            <Button disabled={(!props.selectedTrialGroup || !isTrialGroupAdmin)} label="Send CTML(s) to Matcher" className={styles.createCtmlButton} onClick={sendCtmlClick} />
           </div>
         </div>
 

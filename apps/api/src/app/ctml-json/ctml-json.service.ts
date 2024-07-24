@@ -75,10 +75,13 @@ export class CtmlJsonService {
       }
     })
 
+    const hasMatch = this.isTrialHaveOneMatch(data);
+
     if (existingJsons.length > 0) {
       const r = await this.prismaService.ctml_json.updateMany({
         data: {
           data,
+          has_match: hasMatch
         },
         where: {
           AND: [
@@ -109,10 +112,28 @@ export class CtmlJsonService {
       data: {
         data,
         versionId: ctml_schema_version.id,
-        trialId: trialId
+        trialId: trialId,
+        has_match: hasMatch
       }
     });
     return [newCtmlJson];
+  }
+
+  isTrialHaveOneMatch(data: string) {
+    const dataObj = JSON.parse(data);
+    if (dataObj.treatment_list) {
+      for (let step of dataObj.treatment_list.step) {
+        if (step.arm) {
+          for (let arm of step.arm) {
+            if (arm.match && arm.match.length > 0) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    }
+    return false;
   }
 
   remove(id: number) {
@@ -151,6 +172,47 @@ export class CtmlJsonService {
           }
         });
       }
+    } catch (error) {
+      console.log(error);
+      throw new Error(error);
+    }
+  }
+
+  async send_multiples_to_matchminer(ctml_jsons: any[]) {
+    try {
+      const url = `${process.env.MM_API_URL}/load_trial`;
+      const results = await axios.request(
+        {
+          method: 'post',
+          url: url,
+          data: {trial_list: ctml_jsons},
+          headers: {
+            'Authorization': `Bearer ${this.MM_API_TOKEN}`
+          }
+        }
+      );
+      console.log(results);
+
+      for (let ctml of ctml_jsons) {
+        const internalId = ctml.trial_internal_id;
+        // update the trial's status to pending
+        const trial = await this.prismaService.trial.findFirst({
+          where: {
+            trial_internal_id: internalId
+          }
+        });
+        if (trial) {
+          await this.prismaService.trial.updateMany({
+            where: {
+              trial_internal_id: internalId
+            },
+            data: {
+              trial_status: TrialStatusEnum.PENDING
+            }
+          });
+        }
+      }
+
     } catch (error) {
       console.log(error);
       throw new Error(error);
