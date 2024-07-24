@@ -15,7 +15,6 @@ import {Toast} from "primereact/toast";
 import {parse} from "yaml";
 import NewTrialIdDialog from './NewTrialIdDialog';
 import {IS_FORM_DISABLED} from "../../constants/appConstants";
-import useSendCTML from "../../hooks/useSendCTML";
 import useSendMatchminerJob from "../../hooks/useSendMatchminerJob";
 import {logout} from "../../pages/api/auth/[...nextauth]";
 import SendCTMLDialog from "./SendCTMLDialog";
@@ -39,6 +38,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
 
   const [isTrialIdDialogVisible, setIsTrialIdDialogVisible] = useState<boolean>(false);
   const [isSendDialogVisible, setIsSendDialogVisible] = useState<boolean>(false);
+  const [selectedTrialsToMatch, setSelectedTrialsToMatch] = useState([]);
 
   const trialsErrorToast = useRef(null);
 
@@ -69,10 +69,25 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
 
   useEffect(() => {
     if (getTrialsByIDsResponse) {
-      // sendMultipleCTMLsOperation(getTrialsByIDsResponse)
-      console.log(getTrialsByIDsResponse);
+      const ctmlJsonsData: any[] = getTrialsByIDsResponse.data;
+      const selectedJsons = ctmlJsonsData.map((ctmlJsonData) => ctmlJsonData.ctml_jsons[0].data);
+      sendMultipleCTMLsOperation(selectedJsons)
     }
   }, [getTrialsByIDsResponse]);
+
+  useEffect(() => {
+    if (sendMultipleCTMLsResponse) {
+      // send CTML successful, initiate the run matches
+      if (sendMultipleCTMLsResponse.status === 201) {
+        trialsErrorToast.current.show({
+          severity:
+            'info',
+          summary: 'CTML sent to Matcher successfully',
+        });
+        sendMatchJobOperation(selectedTrialsToMatch)
+      }
+    }
+  }, [sendMultipleCTMLsResponse]);
 
   const createCtmlClick = (e) => {
     setIsTrialIdDialogVisible(true);
@@ -148,15 +163,10 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
   const onSendClick = (trials) => {
     console.log('send clicked', trials);
     if (trials) {
-      getTrialsByIDsOperation(trials);
+      const selectedTrials = trials.map((trial) => trial.trial_internal_id);
+      setSelectedTrialsToMatch(selectedTrials);
+      getTrialsByIDsOperation(selectedTrials);
     }
-  }
-
-  const handleSendCTMLOKClicked = () => {
-    console.log('send OK clicked')
-    // if (selectedTrials) {
-    //   sendCTMLOperation(selectedTrials);
-    // }
   }
 
   useEffect(() => {
@@ -212,7 +222,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
         trialsErrorToast.current.show({
           severity:
             'info',
-          summary: 'CTML queued to Matcherminer for matching',
+          summary: 'CTML(s) queued to Matcherminer for matching',
         });
       }
     }
@@ -295,7 +305,6 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
 
   const sendCtmlClick = (e) => {
     setIsSendDialogVisible(true);
-    console.log('send ctml clicked');
   }
 
   return (
@@ -311,8 +320,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
         trials={eligibleTrials}
         isCTMLDialogVisible={isSendDialogVisible}
         sendCtmlClicked={(selectedTrials) => onSendClick(selectedTrials)}
-        onCTMLDialogHide={() => setIsSendDialogVisible(false)}
-        onIsOKClicked={handleSendCTMLOKClicked}/>
+        onCTMLDialogHide={() => setIsSendDialogVisible(false)}/>
       <div >
         <div className={styles.titleAndButtonsContainer}>
           <span className={styles.trialsText}>Trials</span>

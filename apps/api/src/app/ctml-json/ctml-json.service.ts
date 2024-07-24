@@ -185,7 +185,7 @@ export class CtmlJsonService {
         {
           method: 'post',
           url: url,
-          data: ctml_jsons,
+          data: {trial_list: ctml_jsons},
           headers: {
             'Authorization': `Bearer ${this.MM_API_TOKEN}`
           }

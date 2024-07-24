@@ -116,7 +116,7 @@ export class TrialController implements OnModuleInit{
     return this.trialService.findAll();
   }
 
-  @Get('trialsByIds')
+  @Post('trialsByIds')
   @UseGuards(KeycloakPasswordGuard)
   @ApiBearerAuth("KeycloakPasswordGuard")
   @ApiOperation({ summary: "Get trials by IDs" })
