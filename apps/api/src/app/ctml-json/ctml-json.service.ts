@@ -191,7 +191,6 @@ export class CtmlJsonService {
           }
         }
       );
-      console.log(results);
 
       for (let ctml of ctml_jsons) {
         const internalId = ctml.trial_internal_id;
