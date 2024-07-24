@@ -86,7 +86,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     // need prevent default, otherwise the page will be reloaded
     e.preventDefault();
-    if (username.length === 0 || password.length === 0) {
+    if (!username || !password || username.length === 0 || password.length === 0) {
       showInvalidLoginToast("Please enter your credentials to sign in.");
       return;
     }
