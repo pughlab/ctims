@@ -192,8 +192,11 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     const state = store.getState();
     const currentCtmlMatchModel: any = state.matchViewModelActions.ctmlMatchModel;
     const curMatch = currentCtmlMatchModel.match;
-    const flattenedMatch = flattenVariantCategoryContainerObjectInCtmlMatchModel(curMatch[0]);
-    dispatch(setCtmlDialogModel({match: [flattenedMatch]}));
+    if (curMatch && curMatch.length > 0) {
+      const flattenedMatch = flattenVariantCategoryContainerObjectInCtmlMatchModel(curMatch[0]);
+      dispatch(setCtmlDialogModel({match: [flattenedMatch]}));
+    }
+
   }, []);
 
   useEffect(() => {
