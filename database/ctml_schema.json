@@ -75,6 +75,22 @@
           "title": "Protocol Number",
           "description": "Protocol number associated with the trial; Unique identifier for the study other than the NCT_ID"
         },
+        "protocol_version_no": {
+          "type": "string",
+          "title": "Protocol Version Number",
+          "description": "Version number for the trial protocol. This protocol version number will get updated as the trial criteria gets updated"
+        },
+        "protocol_version_date": {
+          "type": "string",
+          "format": "date",
+          "title": "Protocol Version Date",
+          "description": "Date of the current version of the trial protocol"
+        },
+        "reb_no": {
+          "type": "string",
+          "title": "REB Number",
+          "description": "Research Ethics Board Number for the trial"
+        },
         "nct_purpose": {
           "type": "string",
           "title": "NCT Purpose",

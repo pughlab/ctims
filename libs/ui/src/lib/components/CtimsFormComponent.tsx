@@ -11,6 +11,7 @@ import {withTheme} from "@rjsf/core";
 import {Theme as PrimeTheme} from "../primereact";
 import {RegistryWidgetsType, RJSFValidationError} from "@rjsf/utils";
 import CtimsInput from "../custom-rjsf-templates/CtimsInput";
+import CtimsCalendar from "../custom-rjsf-templates/CtimsCalendar";
 import CtimsDropdown from "../custom-rjsf-templates/CtimsDropdown";
 import CtimsMatchingCriteriaWidget from "../custom-rjsf-templates/CtimsMatchingCriteriaWidget";
 import CtimsFieldTemplate from "../custom-rjsf-templates/CtimsFieldTemplate";
@@ -26,7 +27,8 @@ const Form = withTheme(PrimeTheme)
 
 const widgets: RegistryWidgetsType = {
   TextWidget: CtimsInput,
-  SelectWidget: CtimsDropdown
+  SelectWidget: CtimsDropdown,
+  DateWidget: CtimsCalendar
 }
 
 const containerStyle: CSSProperties = {
@@ -138,6 +140,22 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
         // },
         {
           "protocol_no": {
+            "span": 24
+          }
+        },
+        {
+          "protocol_version_no": {
+            "span": 24
+          }
+        },
+        {
+          "protocol_version_date": {
+            "span": 24,
+            "ui:widget": "DateWidget"
+          }
+        },
+        {
+          "reb_no": {
             "span": 24
           }
         },
