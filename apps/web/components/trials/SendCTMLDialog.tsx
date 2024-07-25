@@ -32,11 +32,16 @@ const SendCTMLDialog = (props: SendCTMLDialogProps) => {
     } else {
       setResults([])
     }
-  }, [props.trials]);
+  }, [isDialogVisible]);
 
   useEffect(() => {
     if (getMatchResultsResponse) {
-      setResults(getMatchResultsResponse);
+      // get all the trials that are not in getMatchResultsResponse with matching trial_internal_id
+      const trialsWithoutResults = props.trials.filter(trial => {
+        return !getMatchResultsResponse.find(matchedTrial => matchedTrial.trial_internal_id === trial.trial_internal_id)
+      });
+
+      setResults(getMatchResultsResponse.concat(trialsWithoutResults));
     }
   }, [getMatchResultsResponse])
 
