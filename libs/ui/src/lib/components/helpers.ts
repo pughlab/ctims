@@ -458,6 +458,30 @@ export const flattenVariantCategoryContainerObjectInCtmlMatchModel = (ctmlMatchM
   return flattenGenomicObject(cloned);
 };
 
+// Third attempt at a generic flattening function
+export const flattenGenericObject = (ctmlMatchModel: any) => {
+  const cloned = structuredClone(ctmlMatchModel);
+
+  const processArray = (arr: any[]) => {
+    return arr.map(item => {
+      Object.keys(item).forEach(key => {
+        if (key === 'match') {
+          item[key] = item[key].map(flattenVariantCategoryContainerObjectInCtmlMatchModel);
+        } else if (Array.isArray(item[key])) {
+          item[key] = processArray(item[key]);
+        }
+      });
+      return item;
+    });
+  };
+
+  if (cloned.step) {
+    cloned.step = processArray(cloned.step);
+  }
+
+  return cloned;
+}
+
  // Recursively traverse through the match criteria and add the variantCategoryContainerObject key to the genomic object
 export const addVariantCategoryContainerObject = (matchCriteria: any[]) => {
   return matchCriteria.map((criteria) => {

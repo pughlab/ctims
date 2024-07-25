@@ -6,7 +6,10 @@ import {Message} from "primereact/message";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import {RJSFValidationError, ValidationData} from "@rjsf/utils";
-import {extractErrors, isObjectEmpty} from "../../../../libs/ui/src/lib/components/helpers";
+import {
+  extractErrors, flattenGenericObject,
+  isObjectEmpty
+} from "../../../../libs/ui/src/lib/components/helpers";
 import {stringify} from 'yaml'
 import axios from "axios";
 import { RadioButton } from 'primereact/radiobutton';
@@ -124,12 +127,14 @@ const ExportCtmlDialog = (props: ExportCtmlDialogProps) => {
       let ctmlModelCopy;
       const age_group = ctmlModel.age_group;
       const trialInformation = ctmlModel.trialInformation;
-      ctmlModelCopy = {...ctmlModel, ...trialInformation, ...age_group};
+      const treatmentListFlatted = flattenGenericObject(ctmlModel.treatment_list);
+      ctmlModelCopy = {...ctmlModel, ...trialInformation, ...age_group, treatment_list: treatmentListFlatted};
       delete ctmlModelCopy.age_group;
       delete ctmlModelCopy.trialInformation;
       delete ctmlModelCopy.ctml_status;
       delete ctmlModelCopy.nickname;
       delete ctmlModelCopy.trial_internal_id;
+
       return ctmlModelCopy;
     }
 
