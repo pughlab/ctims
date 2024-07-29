@@ -1,9 +1,7 @@
 #	BUILD STEP
 FROM node:20-alpine3.17 AS base
 
-RUN apk add --update python3 make g++ && rm -rf /var/cache/apk/*
-
-ARG NODE_ENV
+RUN apk add --no-cache python3 make g++
 
 ## base
 WORKDIR /app
@@ -14,7 +12,7 @@ ENV PORT=3000
 EXPOSE ${PORT}
 
 ## build
-FROM base as build
+FROM base AS build
 COPY . .
 
 ARG NEXTAUTH_SECRET
@@ -30,13 +28,13 @@ ENV NEXTAUTH_URL=$NEXTAUTH_URL
 ENV NEXTAUTH_API_URL=$NEXTAUTH_API_URL
 ENV NEXT_PUBLIC_SIGNOUT_REDIRECT_URL=$NEXT_PUBLIC_SIGNOUT_REDIRECT_URL
 
-#RUN npx nx run-many --target=build --all
 RUN npx nx build web
 
-## deploy
-FROM build as deploy
+## 2nd build deploy
+FROM node:20-alpine3.17 AS deploy
 WORKDIR /var/www/html
 COPY --from=build /app/dist/apps/web .
+
 RUN sh -c 'echo "[]" > /var/www/html/.next/server/next-font-manifest.json'
 
 ENV NEXTAUTH_SECRET=dAbxJF2DRzqwGYn+BWKdj8o9ieMri4FWsmIRn77r2F8=

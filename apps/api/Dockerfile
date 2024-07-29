@@ -1,28 +1,23 @@
-FROM node:16.14-slim
+FROM node:16.14-slim AS base
 
-#RUN apk add --update python3 make g++ && rm -rf /var/cache/apk/*
-RUN apt-get update && \
-    apt-get install -y \
-    python3 \
-    make \
-    g++ && \
-    rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache python3 make g++
 
-WORKDIR /usr/src
-RUN mkdir -p /usr/src/app
-COPY package.json /usr/src/
-COPY yarn.lock /usr/src/
-
-COPY ./ /usr/src/app/
-RUN mkdir -p /usr/src/app/dist
 WORKDIR /usr/src/app
-RUN yarn install --loglevel=error
 
-#CMD ["yarn", "schema:generate-client"]
-#RUN npx nx build api
-#ARG RESTSERVER_PORT=3000
-#ENV RESTSERVER_PORT=$RESTSERVER_PORT
-#EXPOSE ${RESTSERVER_PORT}
+COPY package.json yarn.lock /usr/src/
+
+RUN yarn install --loglevel=error --pure-lockfile
+
+COPY . .
+RUN yarn generate:build
+
+FROM node:20-alpine3.17 AS production
+
+WORKDIR /usr/src/app
+# Copy built files from the build stage
+COPY --from=base /usr/src/app/dist ./dist
+COPY --from=base /usr/src/app/node_modules ./node_modules
+
 
 ARG KEYCLOAK_REALM
 ARG KEYCLOAK_URL
@@ -62,8 +57,4 @@ ENV MATCHMINER_RECEIVE_QUEUE=$MATCHMINER_RECEIVE_QUEUE
 ENV RABBITMQ_URL=$RABBITMQ_URL
 ENV RABBITMQ_PORT=$RABBITMQ_PORT
 
-RUN yarn generate:build
-#RUN yarn start:prod
 CMD ["yarn", "start:prod"]
-#CMD ["tail", "-f", "/dev/null"]
-
