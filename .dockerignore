@@ -5,3 +5,6 @@ dist
 apps/api/.env
 app/web/.env
 apps/web/.env.locald
+.git
+Dockerfile
+docker-compose-*.yml

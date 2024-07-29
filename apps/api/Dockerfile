@@ -1,28 +1,34 @@
-FROM node:16.14-slim
+FROM node:16.14-slim AS base
 
-#RUN apk add --update python3 make g++ && rm -rf /var/cache/apk/*
 RUN apt-get update && \
     apt-get install -y \
     python3 \
     make \
+    openssl libssl-dev \
     g++ && \
     rm -rf /var/lib/apt/lists/*
 
-WORKDIR /usr/src
-RUN mkdir -p /usr/src/app
-COPY package.json /usr/src/
-COPY yarn.lock /usr/src/
+RUN yarn global add nx
+
+WORKDIR /usr/src/app
+
+COPY package.json yarn.lock ./
 
 COPY ./ /usr/src/app/
-RUN mkdir -p /usr/src/app/dist
-WORKDIR /usr/src/app
+
 RUN yarn install --loglevel=error
 
-#CMD ["yarn", "schema:generate-client"]
-#RUN npx nx build api
-#ARG RESTSERVER_PORT=3000
-#ENV RESTSERVER_PORT=$RESTSERVER_PORT
-#EXPOSE ${RESTSERVER_PORT}
+RUN yarn generate:build
+
+# using node:18 here due to prisma issue of missing openssl lib: https://github.com/prisma/prisma/issues/15598
+FROM node:18.14-slim AS production
+
+## Copy built files from the build stage
+WORKDIR /usr/src/app
+COPY --from=base /usr/src/app/dist ./dist
+COPY --from=base /usr/src/app/apps/api/prisma ./apps/api/prisma
+COPY --from=base /usr/src/app/node_modules ./node_modules
+COPY --from=base /usr/src/app/package.json ./package.json
 
 ARG KEYCLOAK_REALM
 ARG KEYCLOAK_URL
@@ -62,8 +68,5 @@ ENV MATCHMINER_RECEIVE_QUEUE=$MATCHMINER_RECEIVE_QUEUE
 ENV RABBITMQ_URL=$RABBITMQ_URL
 ENV RABBITMQ_PORT=$RABBITMQ_PORT
 
-RUN yarn generate:build
-#RUN yarn start:prod
-CMD ["yarn", "start:prod"]
-#CMD ["tail", "-f", "/dev/null"]
 
+CMD ["yarn", "start:prod"]
