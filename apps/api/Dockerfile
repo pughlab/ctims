@@ -1,4 +1,4 @@
-FROM node:16.14-slim AS base
+FROM node:20-alpine3.17 AS base
 
 RUN apk add --no-cache python3 make g++
 
