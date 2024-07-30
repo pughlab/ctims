@@ -26,6 +26,7 @@ FROM node:18.14-slim AS production
 ## Copy built files from the build stage
 WORKDIR /usr/src/app
 COPY --from=base /usr/src/app/dist ./dist
+COPY --from=base /usr/src/app/apps/api/prisma ./apps/api/prisma
 COPY --from=base /usr/src/app/node_modules ./node_modules
 COPY --from=base /usr/src/app/package.json ./package.json
 
