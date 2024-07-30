@@ -1,23 +1,29 @@
-FROM node:20-alpine3.17 AS base
+FROM node:16.14-slim AS base
 
-RUN apk add --no-cache python3 make g++
+RUN apt-get update && \
+    apt-get install -y \
+    python3 \
+    make \
+    openssl libssl-dev \
+    g++ && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN yarn global add nx
 
 WORKDIR /usr/src/app
 
-COPY package.json yarn.lock /usr/src/
+COPY package.json yarn.lock ./
 
-RUN yarn install --loglevel=error --pure-lockfile
+COPY ./ /usr/src/app/
 
-COPY . .
+RUN yarn install --loglevel=error
+
+#CMD ["tail", "-f", "/dev/null"]
+
 RUN yarn generate:build
 
-FROM node:20-alpine3.17 AS production
-
-WORKDIR /usr/src/app
-# Copy built files from the build stage
-COPY --from=base /usr/src/app/dist ./dist
-COPY --from=base /usr/src/app/node_modules ./node_modules
-
+#CMD ["tail", "-f", "/dev/null"]
+FROM node:16.14-slim AS production
 
 ARG KEYCLOAK_REALM
 ARG KEYCLOAK_URL
@@ -57,4 +63,11 @@ ENV MATCHMINER_RECEIVE_QUEUE=$MATCHMINER_RECEIVE_QUEUE
 ENV RABBITMQ_URL=$RABBITMQ_URL
 ENV RABBITMQ_PORT=$RABBITMQ_PORT
 
+## Copy built files from the build stage
+WORKDIR /usr/src/app
+COPY --from=base /usr/src/app/dist ./dist
+COPY --from=base /usr/src/app/node_modules ./node_modules
+COPY --from=base /usr/src/app/package.json ./package.json
+#
+#CMD ["tail", "-f", "/dev/null"]
 CMD ["yarn", "start:prod"]
