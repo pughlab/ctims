@@ -20,11 +20,6 @@ RUN yarn install --loglevel=error
 
 #CMD ["tail", "-f", "/dev/null"]
 
-RUN yarn generate:build
-
-#CMD ["tail", "-f", "/dev/null"]
-FROM node:16.14-slim AS production
-
 ARG KEYCLOAK_REALM
 ARG KEYCLOAK_URL
 ARG KEYCLOAK_CLIENT_ID
@@ -63,6 +58,9 @@ ENV MATCHMINER_RECEIVE_QUEUE=$MATCHMINER_RECEIVE_QUEUE
 ENV RABBITMQ_URL=$RABBITMQ_URL
 ENV RABBITMQ_PORT=$RABBITMQ_PORT
 
+RUN yarn generate:build
+
+FROM node:16.14-slim AS production
 ## Copy built files from the build stage
 WORKDIR /usr/src/app
 COPY --from=base /usr/src/app/dist ./dist
