@@ -60,8 +60,7 @@ ENV RABBITMQ_PORT=$RABBITMQ_PORT
 
 RUN yarn generate:build
 
-FROM node:16.14-slim AS production
-RUN apt-get update && apt-get install -y openssl libssl-dev
+FROM node:18.14-slim AS production
 
 ## Copy built files from the build stage
 WORKDIR /usr/src/app
