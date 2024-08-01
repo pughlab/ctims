@@ -69,6 +69,7 @@ const AutocompleteField = ({ onChange, ...props }) => {
         onChange={(e) => {
           handleInputChange(e)
         }}
+        appendTo='self'
       />
     </div>
   );
