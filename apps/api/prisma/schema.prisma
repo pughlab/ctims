@@ -62,6 +62,7 @@ model trial {
   protocol_no            String?
   // This is trial matching status
   trial_status           trial_status?
+  trial_lock             trial_lock[]
 }
 
 model trial_group {
@@ -75,20 +76,21 @@ model trial_group {
 }
 
 model user {
-  id              Int      @id @default(autoincrement())
-  email           String   @unique
+  id              Int          @id @default(autoincrement())
+  email           String       @unique
   name            String?
   username        String?
   first_name      String?
-  email_verified  Boolean  @default(false)
+  email_verified  Boolean      @default(false)
   last_name       String?
-  refresh_token   String?  @db.LongText
-  keycloak_id     String?  @unique
-  trials          trial[]  @relation("UserTrials")
-  modified_trials trial[]  @relation("ModifiedBy")
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  refresh_token   String?      @db.LongText
+  keycloak_id     String?      @unique
+  trials          trial[]      @relation("UserTrials")
+  modified_trials trial[]      @relation("ModifiedBy")
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
   events          event[]
+  trial_lock      trial_lock[]
 
   @@index(fields: [keycloak_id])
 }
@@ -114,6 +116,16 @@ model gene {
   hugoSymbol String
 }
 
+model trial_lock {
+  id          Int      @id @default(autoincrement())
+  trial       trial    @relation(fields: [trialId], references: [id])
+  trialId     Int
+  user        user     @relation(fields: [locked_by], references: [id])
+  locked_by   Int
+  locked_at   DateTime @default(now())
+  lock_expiry DateTime
+}
+
 enum status {
   DRAFT
   IN_REVIEW
@@ -135,6 +147,8 @@ enum event_type {
   TrialDeleted
   TrialDoesNotExist
   TrialExported
+  TrialLocked
+  TrialUnlocked
   CtmlJsonCreated
   CtmlJsonRead
   CtmlJsonReadMany

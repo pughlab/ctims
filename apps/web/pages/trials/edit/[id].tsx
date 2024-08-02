@@ -11,6 +11,7 @@ import {useDispatch} from "react-redux";
 import IdleComponent from "../../../components/IdleComponent";
 import { setCtmlModel } from '../../../store/slices/ctmlModelSlice';
 import FooterComponent from "apps/web/components/FooterComponent";
+import useGetTrialLock from "../../../hooks/useGetTrialLock";
 
 const containerStyle: React.CSSProperties = {
   display: 'flex',
@@ -30,6 +31,7 @@ const EditorEditTrialPage = () => {
 
   const [formData, setFormData] = useState(null);
   const [lastSaved, setLastSaved] = useState<string>("Unsaved");
+  const [isEditMode, setIsEditMode] = useState(true);
 
   const {
     error: getCtmlSchemaError,
@@ -45,8 +47,16 @@ const EditorEditTrialPage = () => {
       editTrialOperation
   } = useEditTrial();
 
+  const {
+    error: getTrialLockError,
+    response: getTrialLockResponse,
+    loading: getTrialLockLoading,
+    getTrialLockOperation
+  } = useGetTrialLock()
+
   useEffect(() => {
     if (id) {
+      getTrialLockOperation(id as string)
       getCtmlSchemaOperation();
       editTrialOperation(id as string)
     }
@@ -94,18 +104,29 @@ const EditorEditTrialPage = () => {
       setFormData(editTrialObject)
       dispatch(setCtmlModel(editTrialObject))
     }
-
-
   }, [editTrialResponse])
 
-  // return <div>Editing trial {id}</div>
+  useEffect(() => {
+    if (getTrialLockResponse) {
+      console.log('getTrialLockResponse', getTrialLockResponse)
+      if (getTrialLockResponse.data) {
+        setIsEditMode(false);
+      } else {
+        setIsEditMode(true);
+      }
+    }
+  }, [getTrialLockResponse])
+
   return (
     <>
-      <EditorTopBar isEditMode={true} title={"Edit CTML"} lastSaved={lastSaved} setLastSaved={setLastSaved}/>
-      <IdleComponent />
+
+      <EditorTopBar isEditMode={isEditMode} title={"Edit CTML"} lastSaved={lastSaved} setLastSaved={setLastSaved}/>
+      <IdleComponent/>
+
       <div style={containerStyle}>
-        <LeftMenuEditorComponent />
-        {(getCtmlSchemaResponse && formData) && <Ui ctml_schema={getCtmlSchemaResponse} formData={formData} setLastSaved={setLastSaved}></Ui>}
+        <LeftMenuEditorComponent/>
+        {(getCtmlSchemaResponse && formData) &&
+          <Ui ctml_schema={getCtmlSchemaResponse} formData={formData} setLastSaved={setLastSaved}></Ui>}
       </div>
       <FooterComponent/>
     </>
