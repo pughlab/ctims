@@ -63,8 +63,16 @@ const EditorEditTrialPage = () => {
     };
   };
 
+  const {
+    error: getTrialLockError,
+    response: getTrialLockResponse,
+    loading: getTrialLockLoading,
+    getTrialLockOperation
+  } = useGetTrialLock()
+
   useEffect(() => {
     if (id) {
+      getTrialLockOperation(id as string)
       getCtmlSchemaOperation();
       editTrialOperation(id as string)
     }
