@@ -275,6 +275,7 @@ const EditorTopBar = (props: EditorTopBarProps) => {
           <div className={styles.title}>{props.title ? props.title : "New CTML"}</div>
         </div>
         <div className={styles.lastsaved}>Last saved: {props.lastSaved}</div>
+        <div style={{marginLeft: '5px'}}> Is Editable? {props.isEditMode ? 'yes' : 'no'} </div>
         <div className={styles.menuBtnGroup}>
           {/*<Button label="Discard" className="p-button-text p-button-plain" />*/}
           <Button label={isGroupAdmin ? 'Export' : 'Validate'}

@@ -13,6 +13,8 @@ import { MatchminerModule } from './matchminer/matchminer.module';
 import { GeneModule } from './gene/gene.module';
 import { InfoModule } from './info/info.module';
 import {MessageQueueModule} from "./message-queue/message-queue.module";
+import {TrialLockModule} from "./trial-lock/trial-lock.module";
+import {ScheduleModule} from "@nestjs/schedule";
 
 @Global()
 @Module({
@@ -21,12 +23,14 @@ import {MessageQueueModule} from "./message-queue/message-queue.module";
     CtmlJsonModule,
     CtmlSchemaModule,
     TrialModule,
+    TrialLockModule,
     UserModule,
     MatchminerModule,
     EventModule,
     GeneModule,
     InfoModule,
-    MessageQueueModule
+    MessageQueueModule,
+    ScheduleModule.forRoot()
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

@@ -139,7 +139,7 @@ export class TrialController implements OnModuleInit{
   @ApiNotFoundResponse({ description: "Trial with the requested ID could not be found." })
   async findOne(@CurrentUser() user: user, @Param('id') id: string) {
 
-    const trial = await this.trialService.findOne(+id);
+    const trial = await this.trialService.findOne(+id, user);
 
     // Add event
     this.eventService.createEvent({
@@ -233,7 +233,7 @@ export class TrialController implements OnModuleInit{
         }
       }
     });
-    return this.trialService.updateTrialSchemaList(+id, updateTrialSchemasDto);
+    return this.trialService.updateTrialSchemaList(+id, updateTrialSchemasDto, user);
   }
 
   @Delete(':id')
@@ -254,9 +254,9 @@ export class TrialController implements OnModuleInit{
       }
     });
 
-    const foundTrial = await this.trialService.findOne(+id);
+    const foundTrial = await this.trialService.findOne(+id, user);
 
-    const p1 = this.trialService.delete(+id);
+    const p1 = this.trialService.delete(+id, user);
     const p2 = axios.delete(`${process.env.MM_API_URL}/delete_trial_by_internal_id`,
     {
       headers: {'Authorization': `Bearer ${this.MM_API_TOKEN}`},

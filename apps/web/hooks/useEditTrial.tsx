@@ -18,7 +18,7 @@ const useEditTrial = () => {
 
   const {data, status} = useSession()
 
-  const { operation } = useAxios();
+  const { operation, error: axiosError } = useAxios();
 
   // useEffect(() => {
   //   if(status === 'unauthenticated') {
@@ -28,6 +28,12 @@ const useEditTrial = () => {
   //     });
   //   }
   // }, [status])
+
+  useEffect(() => {
+    if (axiosError) {
+      setError(axiosError)
+    }
+  }, [axiosError]);
 
   const editTrialOperation = async (trialId: string) => {
     setLoading(true);
