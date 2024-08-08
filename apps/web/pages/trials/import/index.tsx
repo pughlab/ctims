@@ -19,6 +19,14 @@ const containerStyle: React.CSSProperties = {
   paddingTop: '20px',
 }
 
+const transformPriorTreatmentRequirements = (requirements) => {
+  return {
+    prior_treatment_requirement: requirements.map(requirement => ({
+      prior_treatment_requirement_name: requirement
+    }))
+  };
+};
+
 const EditorImportTrialPage = () => {
 
   const dispatch = useDispatch();

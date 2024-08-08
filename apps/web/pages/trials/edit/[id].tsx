@@ -53,6 +53,14 @@ const EditorEditTrialPage = () => {
     }
   }, [id])
 
+  const transformPriorTreatmentRequirements = (requirements) => {
+    return {
+      prior_treatment_requirement: requirements.map(requirement => ({
+        prior_treatment_requirement_name: requirement
+      }))
+    };
+  };
+
   useEffect(() => {
     if (editTrialResponse) {
       setLastSaved(editTrialResponse.updatedAt);
@@ -111,8 +119,6 @@ const EditorEditTrialPage = () => {
       }
       dispatch(setCtmlModel(editTrialObject))
     }
-
-
   }, [editTrialResponse])
 
   // return <div>Editing trial {id}</div>
