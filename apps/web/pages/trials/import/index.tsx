@@ -19,6 +19,14 @@ const containerStyle: React.CSSProperties = {
   paddingTop: '20px',
 }
 
+const transformPriorTreatmentRequirements = (requirements) => {
+  return {
+    prior_treatment_requirement: requirements.map(requirement => ({
+      prior_treatment_requirement_name: requirement
+    }))
+  };
+};
+
 const EditorImportTrialPage = () => {
 
   const dispatch = useDispatch();
@@ -33,6 +41,11 @@ const EditorImportTrialPage = () => {
     const formData = sessionStorage.getItem('imported_ctml');
     if (formData) {
       const trial = JSON.parse(formData);
+
+      const transformedPriorTreatmentRequirements = trial.prior_treatment_requirements && trial.prior_treatment_requirements.length>0
+      ? transformPriorTreatmentRequirements(trial.prior_treatment_requirements)
+      : {};
+
       let editTrialObject = {
         trialInformation: {
           trial_id: trial.trial_id,
@@ -71,7 +84,10 @@ const EditorImportTrialPage = () => {
 
 
       editTrialObject = {...editTrialObject, ...trial}
-
+      let priordata = {
+        prior_treatment_requirements : transformedPriorTreatmentRequirements
+      }
+      editTrialObject = {...editTrialObject, ...priordata}
       setFormData(editTrialObject);
 
       dispatch(setCtmlModel(editTrialObject))

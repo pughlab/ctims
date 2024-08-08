@@ -54,6 +54,14 @@ const EditorEditTrialPage = () => {
     getTrialLockOperation
   } = useGetTrialLock()
 
+  const transformPriorTreatmentRequirements = (requirements) => {
+    return {
+      prior_treatment_requirement: requirements.map(requirement => ({
+        prior_treatment_requirement_name: requirement
+      }))
+    };
+  };
+
   useEffect(() => {
     if (id) {
       getTrialLockOperation(id as string)
@@ -67,6 +75,15 @@ const EditorEditTrialPage = () => {
       setLastSaved(editTrialResponse.updatedAt);
       const trial = structuredClone(editTrialResponse)
       const ctml_json = trial.ctml_jsons[0].data;
+    if(ctml_json.prior_treatment_requirements && ctml_json.prior_treatment_requirements.length>0)
+    {
+      const transformedPriorTreatmentRequirements = ctml_json.prior_treatment_requirements && ctml_json.prior_treatment_requirements?transformPriorTreatmentRequirements(ctml_json.prior_treatment_requirements): {};
+      let priordataNew = {
+        prior_treatment_requirements : transformedPriorTreatmentRequirements
+      }
+      ctml_json.prior_treatment_requirements = transformedPriorTreatmentRequirements
+    }
+      const priorTreatmentRequirementNames = ctml_json.prior_treatment_requirements?.prior_treatment_requirement && ctml_json.prior_treatment_requirements?.prior_treatment_requirement.map(item => item.prior_treatment_requirement_name) || [];
       let editTrialObject = {
         trialInformation: {
           trial_id: trial.nct_id,
@@ -101,9 +118,15 @@ const EditorEditTrialPage = () => {
       dispatch(selectedTrialGroupId(trialGroupName));
 
       editTrialObject = {...editTrialObject, ...ctml_json}
+      let priordata = {
+        prior_treatment_requirements : priorTreatmentRequirementNames
+      }
       setFormData(editTrialObject)
+      editTrialObject = {...editTrialObject, ...priordata}
       dispatch(setCtmlModel(editTrialObject))
     }
+
+
   }, [editTrialResponse])
 
   useEffect(() => {

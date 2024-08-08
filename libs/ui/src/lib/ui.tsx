@@ -129,7 +129,12 @@ export const Ui = (props: UiProps) => {
       }
     }
 
-    const formDataClone = structuredClone(data.formData)
+    let formDataClone = structuredClone(data.formData)
+    const priorTreatmentRequirementNames = formDataClone.prior_treatment_requirements?.prior_treatment_requirement && formDataClone.prior_treatment_requirements?.prior_treatment_requirement.map((item: { prior_treatment_requirement_name: any; }) => item.prior_treatment_requirement_name) || formDataClone.prior_treatment_requirements?.prior_treatment_requirement;
+    let priordata = {
+      prior_treatment_requirements : priorTreatmentRequirementNames
+    }
+    formDataClone = {...formDataClone, ...priordata}
     dispatch(setCtmlModel(formDataClone))
   }
 
