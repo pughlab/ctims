@@ -58,7 +58,6 @@ const CtimsCheckboxWidget = (props: WidgetProps) => {
         onChange={_onChange}
       />
         <label htmlFor={id} style={labelStyle}>{desc}</label>
-        {!required && ( <span style={optionalLabelStyle}>Optional</span> )}
     </div>
   );
 };
