@@ -39,7 +39,6 @@ const CtimsCalendar: React.FC<WidgetProps> = (props: any) => {
         {schema.description && (
           <i className={questionMarkStyle} data-pr-tooltip={schema.description} data-pr-position="top"></i>
         )}
-        {!required && (<span className={styles['optional-label']}>Optional</span>)}
       </div>
       <Calendar
         id={id}
