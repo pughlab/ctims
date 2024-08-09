@@ -9,7 +9,7 @@ import {setCtmlModel} from "../../../store/slices/ctmlModelSlice";
 import {useDispatch} from "react-redux";
 import FooterComponent from "apps/web/components/FooterComponent";
 import {resetTrialId} from "../../../store/slices/contextSlice";
-
+import {transformPriorTreatmentRequirements} from "libs/ui/src/lib/components/helpers"
 
 const containerStyle: React.CSSProperties = {
   display: 'flex',
@@ -18,14 +18,6 @@ const containerStyle: React.CSSProperties = {
   paddingRight: '80px',
   paddingTop: '20px',
 }
-
-const transformPriorTreatmentRequirements = (requirements) => {
-  return {
-    prior_treatment_requirement: requirements.map(requirement => ({
-      prior_treatment_requirement_name: requirement
-    }))
-  };
-};
 
 const EditorImportTrialPage = () => {
 

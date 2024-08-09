@@ -541,3 +541,12 @@ export const isTrialHaveOneMatch = (ctmlJson: any) => {
   }
   return false;
 }
+
+
+export const transformPriorTreatmentRequirements = (requirements: string[]) => {
+  return {
+    prior_treatment_requirement: requirements.map((requirement: string) => ({
+      prior_treatment_requirement_name: requirement
+    }))
+  };
+};
