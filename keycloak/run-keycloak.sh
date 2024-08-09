@@ -1,3 +1,3 @@
 #! /bin/bash
 
-docker-compose -f keycloak-compose.yml up
+docker compose -f keycloak-compose.yml up -d
