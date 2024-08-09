@@ -60,7 +60,7 @@ const EditorEditTrialPage = () => {
       const ctml_json = trial.ctml_jsons[0].data; 
     if(ctml_json.prior_treatment_requirements && ctml_json.prior_treatment_requirements.length>0)
     {
-      const transformedPriorTreatmentRequirements = ctml_json.prior_treatment_requirements && ctml_json.prior_treatment_requirements?transformPriorTreatmentRequirements(ctml_json.prior_treatment_requirements): {};
+      const transformedPriorTreatmentRequirements = transformPriorTreatmentRequirements(ctml_json.prior_treatment_requirements);
       ctml_json.prior_treatment_requirements = transformedPriorTreatmentRequirements
     }
       const priorTreatmentRequirementNames = ctml_json.prior_treatment_requirements?.prior_treatment_requirement && ctml_json.prior_treatment_requirements?.prior_treatment_requirement.map(item => item.prior_treatment_requirement_name) || [];
@@ -98,11 +98,14 @@ const EditorEditTrialPage = () => {
       dispatch(selectedTrialGroupId(trialGroupName));
 
       editTrialObject = {...editTrialObject, ...ctml_json}
-      let priordata = {
-        prior_treatment_requirements : priorTreatmentRequirementNames
-      }
       setFormData(editTrialObject)
-      editTrialObject = {...editTrialObject, ...priordata}
+      if(ctml_json.prior_treatment_requirements?.prior_treatment_requirement)
+      {
+        let priordata = {
+          prior_treatment_requirements : priorTreatmentRequirementNames
+        }
+        editTrialObject = {...editTrialObject, ...priordata}
+      }
       dispatch(setCtmlModel(editTrialObject))
     }
 
