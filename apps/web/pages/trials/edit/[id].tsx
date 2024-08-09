@@ -11,6 +11,7 @@ import {useDispatch} from "react-redux";
 import IdleComponent from "../../../components/IdleComponent";
 import { setCtmlModel } from '../../../store/slices/ctmlModelSlice';
 import FooterComponent from "apps/web/components/FooterComponent";
+import {transformPriorTreatmentRequirements} from "libs/ui/src/lib/components/helpers"
 
 const containerStyle: React.CSSProperties = {
   display: 'flex',
@@ -45,14 +46,6 @@ const EditorEditTrialPage = () => {
       editTrialOperation
   } = useEditTrial();
 
-  const transformPriorTreatmentRequirements = (requirements) => {
-    return {
-      prior_treatment_requirement: requirements.map(requirement => ({
-        prior_treatment_requirement_name: requirement
-      }))
-    };
-  };
-
   useEffect(() => {
     if (id) {
       getCtmlSchemaOperation();
@@ -68,9 +61,6 @@ const EditorEditTrialPage = () => {
     if(ctml_json.prior_treatment_requirements && ctml_json.prior_treatment_requirements.length>0)
     {
       const transformedPriorTreatmentRequirements = ctml_json.prior_treatment_requirements && ctml_json.prior_treatment_requirements?transformPriorTreatmentRequirements(ctml_json.prior_treatment_requirements): {};
-      let priordataNew = {
-        prior_treatment_requirements : transformedPriorTreatmentRequirements
-      }
       ctml_json.prior_treatment_requirements = transformedPriorTreatmentRequirements
     }
       const priorTreatmentRequirementNames = ctml_json.prior_treatment_requirements?.prior_treatment_requirement && ctml_json.prior_treatment_requirements?.prior_treatment_requirement.map(item => item.prior_treatment_requirement_name) || [];
