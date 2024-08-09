@@ -63,7 +63,7 @@ const SendCTMLDialog = (props: SendCTMLDialogProps) => {
     const cancelBtn = `p-button-text ${styles['cancel-btn']}`
     const sendBtn = `${styles['send-btn']}`
     return (
-      <div>
+      <div style={{marginTop: '15px'}}>
         <Button label="Cancel" className={cancelBtn} onClick={onDialogHide} />
         <Button
           label="Send"
