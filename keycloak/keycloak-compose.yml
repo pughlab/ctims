@@ -15,7 +15,7 @@ services:
       - keycloak-and-mysql-volume:/var/lib/mysql
 
   keycloak-w:
-    image: jboss/keycloak:16.1.0
+    image: keycloak/keycloak:18.0
     ports:
       - 8080:8080
     restart: unless-stopped
