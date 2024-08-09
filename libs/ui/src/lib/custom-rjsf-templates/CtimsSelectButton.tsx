@@ -94,7 +94,6 @@ const CtimsSelectButton = (props: WidgetProps) => {
         {schema.description && (
           <i className={questionMarkStyle} data-pr-tooltip={schema.description} data-pr-position="top"></i>
         )}
-        {!required && ( <span className={styles['optional-label']}>Optional</span> )}
       </div>
       <SelectButton id={id}
                     value={typeof value === "undefined" ? emptyValue : value}
