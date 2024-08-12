@@ -99,6 +99,8 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
     {label: "Right Partner Gene", key: "right_partner_gene"},
     {label: "CNV Call", key: "cnv_call"},
     {label: "MS Status", key: "ms_status"},
+    {label: "Step Number", key: "trial_step_number"},
+    {label: "Arm Number", key: "trial_arm_number"},
     {label: "Match Type", key: "match_type"},
   ];
   // csv download link ref
