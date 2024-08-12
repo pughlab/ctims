@@ -115,11 +115,13 @@ export const Ui = (props: UiProps) => {
   }
 
   const removeTrialInternalId = (schema: any) => {
-    if (schema.properties.trialInformation.properties.trial_internal_id) {
+    const hideTrialInternalId = process.env.NEXT_PUBLIC_UI_HIDE_TRIAL_INTERNAL_ID;
+    if (hideTrialInternalId=="TRUE") {
       delete schema.properties.trialInformation.properties.trial_internal_id;
     }
     return schema;
   }
+
 
   const onFormChange = (data: any, id: any) => {
     if (formRef && formRef.current) {
