@@ -9,7 +9,7 @@ import {setCtmlModel} from "../../../store/slices/ctmlModelSlice";
 import {useDispatch} from "react-redux";
 import FooterComponent from "apps/web/components/FooterComponent";
 import {resetTrialId} from "../../../store/slices/contextSlice";
-
+import {transformPriorTreatmentRequirements} from "libs/ui/src/lib/components/helpers"
 
 const containerStyle: React.CSSProperties = {
   display: 'flex',
@@ -33,6 +33,12 @@ const EditorImportTrialPage = () => {
     const formData = sessionStorage.getItem('imported_ctml');
     if (formData) {
       const trial = JSON.parse(formData);
+
+      let transformPriorDataFromArrayToObject;
+      if(trial.prior_treatment_requirements && trial.prior_treatment_requirements.length>0)
+      {
+        transformPriorDataFromArrayToObject = transformPriorTreatmentRequirements(trial.prior_treatment_requirements);
+      }
       let editTrialObject = {
         trialInformation: {
           trial_id: trial.trial_id,
@@ -71,7 +77,10 @@ const EditorImportTrialPage = () => {
 
 
       editTrialObject = {...editTrialObject, ...trial}
-
+      let priordata = {
+        prior_treatment_requirements : transformPriorDataFromArrayToObject
+      }
+      editTrialObject = {...editTrialObject, ...priordata}
       setFormData(editTrialObject);
 
       dispatch(setCtmlModel(editTrialObject))
