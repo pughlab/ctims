@@ -41,6 +41,8 @@ export class MatchminerController {
     formData.append('genomic_file', file.buffer, file.originalname);
     const response = await axios.post(`${process.env.MM_API_URL}/load_genomic`, formData, {
       headers: {...formData.getHeaders(), 'Authorization': `Bearer ${this.MM_API_TOKEN}`},
+      maxBodyLength: 25 * 1024 * 1024,
+      maxContentLength: 25 * 1024 * 1024,
     });
     return response.data;
   }
