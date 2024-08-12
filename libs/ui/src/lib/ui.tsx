@@ -114,6 +114,13 @@ export const Ui = (props: UiProps) => {
     setIsOpen(true);
   }
 
+  const removeTrialInternalId = (schema: any) => {
+    if (schema.properties.trialInformation.properties.trial_internal_id) {
+      delete schema.properties.trialInformation.properties.trial_internal_id;
+    }
+    return schema;
+  }
+
   const onFormChange = (data: any, id: any) => {
     if (formRef && formRef.current) {
       const form: Form = formRef.current;
@@ -214,7 +221,7 @@ export const Ui = (props: UiProps) => {
       <Toast ref={toast} />
       <CtimsFormComponentMemo
         ref={formRef}
-        schema={props.ctml_schema.schema}
+        schema={removeTrialInternalId(props.ctml_schema.schema)}
         onSpecialButtonClick={handleSpecialClick}
         onRjsfFormChange={onFormChange}
         formData={props.formData}
