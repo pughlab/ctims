@@ -34,10 +34,10 @@ const EditorImportTrialPage = () => {
     if (formData) {
       const trial = JSON.parse(formData);
 
-      let transformedPriorTreatmentRequirements;
+      let transformPriorDataFromArrayToObject;
       if(trial.prior_treatment_requirements && trial.prior_treatment_requirements.length>0)
       {
-         transformedPriorTreatmentRequirements = transformPriorTreatmentRequirements(trial.prior_treatment_requirements);
+        transformPriorDataFromArrayToObject = transformPriorTreatmentRequirements(trial.prior_treatment_requirements);
       }
       let editTrialObject = {
         trialInformation: {
@@ -78,7 +78,7 @@ const EditorImportTrialPage = () => {
 
       editTrialObject = {...editTrialObject, ...trial}
       let priordata = {
-        prior_treatment_requirements : transformedPriorTreatmentRequirements
+        prior_treatment_requirements : transformPriorDataFromArrayToObject
       }
       editTrialObject = {...editTrialObject, ...priordata}
       setFormData(editTrialObject);
