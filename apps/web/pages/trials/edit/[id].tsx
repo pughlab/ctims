@@ -57,13 +57,14 @@ const EditorEditTrialPage = () => {
     if (editTrialResponse) {
       setLastSaved(editTrialResponse.updatedAt);
       const trial = structuredClone(editTrialResponse)
-      const ctml_json = trial.ctml_jsons[0].data; 
-    if(ctml_json.prior_treatment_requirements && ctml_json.prior_treatment_requirements.length>0)
-    {
-      const transformedPriorTreatmentRequirements = transformPriorTreatmentRequirements(ctml_json.prior_treatment_requirements);
-      ctml_json.prior_treatment_requirements = transformedPriorTreatmentRequirements
-    }
-      const priorTreatmentRequirementNames = ctml_json.prior_treatment_requirements?.prior_treatment_requirement && ctml_json.prior_treatment_requirements?.prior_treatment_requirement.map(item => item.prior_treatment_requirement_name) || [];
+      const ctml_json = trial.ctml_jsons[0].data;
+
+      //Checking whether the prior_treatment_requirements exist and the data is in array format
+      if (ctml_json.prior_treatment_requirements && Array.isArray(ctml_json.prior_treatment_requirements)) {
+        const transformPriorDataFromArrayToObject = transformPriorTreatmentRequirements(ctml_json.prior_treatment_requirements);
+        ctml_json.prior_treatment_requirements = transformPriorDataFromArrayToObject
+      }
+
       let editTrialObject = {
         trialInformation: {
           trial_id: trial.nct_id,
@@ -99,10 +100,12 @@ const EditorEditTrialPage = () => {
 
       editTrialObject = {...editTrialObject, ...ctml_json}
       setFormData(editTrialObject)
-      if(ctml_json.prior_treatment_requirements?.prior_treatment_requirement)
-      {
+
+      //if prior_treatment_requirements exist in the ctml_json convert the data format from object to an array before storing the data in Store for maore details refers to Tccket CTM-482
+      const transformPriorDataFromObjectToArray = ctml_json.prior_treatment_requirements?.prior_treatment_requirement.map(item => item.prior_treatment_requirement_name);
+      if (ctml_json.prior_treatment_requirements?.prior_treatment_requirement) {
         let priordata = {
-          prior_treatment_requirements : priorTreatmentRequirementNames
+          prior_treatment_requirements: transformPriorDataFromObjectToArray
         }
         editTrialObject = {...editTrialObject, ...priordata}
       }
