@@ -15,7 +15,8 @@ services:
       - keycloak-and-mysql-volume:/var/lib/mysql
 
   keycloak-w:
-    image: keycloak/keycloak:18.0
+    image: quay.io/keycloak/keycloak:18.0
+    command: start
     ports:
       - 8080:8080
     restart: unless-stopped
