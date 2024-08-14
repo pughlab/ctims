@@ -162,8 +162,14 @@ export const Ui = (props: UiProps) => {
     setIsOpen(false);
     dispatch(resetFormChangeCounter())
     dispatch(resetActiveArmId())
-    const formDataClone = structuredClone(formRef.current.state.formData)
+    let formDataClone = structuredClone(formRef.current.state.formData)
     console.log('formRef state', formRef.current.state)
+    if (formDataClone.prior_treatment_requirements) {
+      if (formDataClone.prior_treatment_requirements.prior_treatment_requirement) {
+        const transformPriorDataFromObjectToArray = formDataClone.prior_treatment_requirements.prior_treatment_requirement.map((item: { prior_treatment_requirement_name: any; }) => item.prior_treatment_requirement_name);
+        formDataClone = { ...formDataClone, prior_treatment_requirements: transformPriorDataFromObjectToArray }
+      }
+    }
     dispatch(setCtmlModel(formDataClone))
 
     const currentState = store.getState();
