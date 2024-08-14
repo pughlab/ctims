@@ -1,28 +1,28 @@
 import './ui.module.scss';
-import {CSSProperties, useEffect, useRef, useState} from "react";
+import { CSSProperties, useEffect, useRef, useState } from "react";
 import CtimsFormComponentMemo from './components/CtimsFormComponent';
 import CtimsMatchDialog from './components/CtimsMatchDialog';
-import {useDispatch} from "react-redux";
-import {resetFormChangeCounter, resetMatchDialogErrors} from "../../../../apps/web/store/slices/modalActionsSlice";
+import { useDispatch } from "react-redux";
+import { resetFormChangeCounter, resetMatchDialogErrors } from "../../../../apps/web/store/slices/modalActionsSlice";
 import {
   resetActiveArmId,
   setActiveArmId,
   setCtmlMatchModel
 } from "../../../../apps/web/store/slices/matchViewModelSlice";
-import {setCtmlModel, setErrorSchema} from "../../../../apps/web/store/slices/ctmlModelSlice";
-import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
+import { setCtmlModel, setErrorSchema } from "../../../../apps/web/store/slices/ctmlModelSlice";
+import { structuredClone } from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
 import Form from "@rjsf/core";
-import {ValidationData} from "@rjsf/utils";
+import { ValidationData } from "@rjsf/utils";
 import { setIsFormChanged, setTrialId } from "../../../../apps/web/store/slices/contextSlice";
-import {RootState, store} from "../../../../apps/web/store/store";
-import {signOut} from "next-auth/react";
+import { RootState, store } from "../../../../apps/web/store/store";
+import { signOut } from "next-auth/react";
 import process from "process";
 import useSaveTrial from "../../../../apps/web/hooks/useSaveTrial";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import { Toast } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import {logout} from "../../../../apps/web/pages/api/auth/[...nextauth]";
-import {addVariantCategoryContainerObject} from "./components/helpers";
+import { logout } from "../../../../apps/web/pages/api/auth/[...nextauth]";
+import { addVariantCategoryContainerObject } from "./components/helpers";
 
 
 
@@ -35,7 +35,7 @@ const containerStyle: CSSProperties = {
 
 /* eslint-disable-next-line */
 export interface UiProps {
-  ctml_schema: {schema: any, version: any};
+  ctml_schema: { schema: any, version: any };
   formData?: any;
   setLastSaved?: any;
 }
@@ -65,7 +65,7 @@ export const Ui = (props: UiProps) => {
     if (currentURL.includes('/trials/create')) {
       dispatch(setTrialId(0))
     }
-    if(currentURL.includes('/trials/edit/')) {
+    if (currentURL.includes('/trials/edit/')) {
       const form: Form = formRef.current;
       form.validateForm();
       const errorDetails: ValidationData<any> = form.validate(props.formData);
@@ -86,11 +86,11 @@ export const Ui = (props: UiProps) => {
       props.setLastSaved(saveTrialResponse.updatedAt);
       dispatch(setIsFormChanged(false));
     }
-    if(saveTrialError) {
+    if (saveTrialError) {
       console.log('error', saveTrialError);
       // @ts-ignore
       if (saveTrialError.statusCode === 401) {
-        signOut({redirect: false}).then(() => {
+        signOut({ redirect: false }).then(() => {
           store.dispatch(logout());
           router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
         });
@@ -131,7 +131,7 @@ export const Ui = (props: UiProps) => {
 
     let formDataClone = structuredClone(data.formData)
     const transformPriorDataFromObjectToArray = formDataClone.prior_treatment_requirements?.prior_treatment_requirement && formDataClone.prior_treatment_requirements?.prior_treatment_requirement.map((item: { prior_treatment_requirement_name: any; }) => item.prior_treatment_requirement_name);
-    formDataClone = {...formDataClone, prior_treatment_requirements : transformPriorDataFromObjectToArray}
+    formDataClone = { ...formDataClone, prior_treatment_requirements: transformPriorDataFromObjectToArray }
     dispatch(setCtmlModel(formDataClone))
   }
 
@@ -164,12 +164,10 @@ export const Ui = (props: UiProps) => {
     dispatch(resetActiveArmId())
     let formDataClone = structuredClone(formRef.current.state.formData)
     console.log('formRef state', formRef.current.state)
-    if(formDataClone.prior_treatment_requirements)
-    {
-      if(formDataClone.prior_treatment_requirements.prior_treatment_requirement)
-      {
-        const transformPriorDataFromObjectToArray =formDataClone.prior_treatment_requirements.prior_treatment_requirement.map((item: { prior_treatment_requirement_name: any; }) => item.prior_treatment_requirement_name);
-        formDataClone = {...formDataClone, prior_treatment_requirements : transformPriorDataFromObjectToArray}
+    if (formDataClone.prior_treatment_requirements) {
+      if (formDataClone.prior_treatment_requirements.prior_treatment_requirement) {
+        const transformPriorDataFromObjectToArray = formDataClone.prior_treatment_requirements.prior_treatment_requirement.map((item: { prior_treatment_requirement_name: any; }) => item.prior_treatment_requirement_name);
+        formDataClone = { ...formDataClone, prior_treatment_requirements: transformPriorDataFromObjectToArray }
       }
     }
     dispatch(setCtmlModel(formDataClone))
@@ -195,7 +193,7 @@ export const Ui = (props: UiProps) => {
       let ctmlModelCopy;
       const age_group = ctmlModel.age_group;
       const trialInformation = ctmlModel.trialInformation;
-      ctmlModelCopy = {...ctmlModel, ...trialInformation, ...age_group};
+      ctmlModelCopy = { ...ctmlModel, ...trialInformation, ...age_group };
       delete ctmlModelCopy.age_group;
       delete ctmlModelCopy.trialInformation;
       delete ctmlModelCopy.ctml_status;
@@ -230,14 +228,14 @@ export const Ui = (props: UiProps) => {
         formData={props.formData}
       />
       <CtimsMatchDialog
-                      onDialogHide={onDialogHideCallback}
-                      onSaveCTMLHide={onSaveCTMLHideCallback}
-                      isDialogVisible={isOpen}
-                      armCode={armCode}
-                      formData={formData}
+        onDialogHide={onDialogHideCallback}
+        onSaveCTMLHide={onSaveCTMLHideCallback}
+        isDialogVisible={isOpen}
+        armCode={armCode}
+        formData={formData}
       />
-      <ConfirmDialog visible={isConfirmationDialogVisible} onHide={() => setIsConfirmationDialogVisible(false)} message="Are you sure you want to discard match criteria? You will not be able to recover this after it has been deleted." 
-          header="Confirmation" acceptLabel="Discard" rejectLabel="Cancel" accept={accept} reject={reject} 
+      <ConfirmDialog visible={isConfirmationDialogVisible} onHide={() => setIsConfirmationDialogVisible(false)} message="Are you sure you want to discard match criteria? You will not be able to recover this after it has been deleted."
+        header="Confirmation" acceptLabel="Discard" rejectLabel="Cancel" accept={accept} reject={reject}
       />
     </div>
   );
