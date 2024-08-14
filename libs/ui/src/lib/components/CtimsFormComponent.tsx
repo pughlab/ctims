@@ -172,6 +172,9 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
       ],
       "phase": {
         multiple: true
+      },
+      "trial_internal_id": {
+        "ui:widget": "hidden"
       }
     },
     // "prior_treatment_requirements": {
