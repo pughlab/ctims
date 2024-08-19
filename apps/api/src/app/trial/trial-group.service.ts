@@ -114,8 +114,10 @@ export class TrialGroupService {
       );
 
       const usersInTrialGroup: IKeycloakUser[] = usersInTrialGroupResponse.data.concat(usersInTrialGroupAdminResponse.data);
+      // get only unique users from trial group and trial group admin, removes duplicated trial belonging to same user in normal and admin group
+      const uniqueUsersInTrialGroup: IKeycloakUser[] = Array.from(new Map(usersInTrialGroup.map(user => [user.id, user])).values());
 
-      return usersInTrialGroup.map((user: IKeycloakUser) => {
+      return uniqueUsersInTrialGroup.map((user: IKeycloakUser) => {
         return {
           id: user.id,
         }
