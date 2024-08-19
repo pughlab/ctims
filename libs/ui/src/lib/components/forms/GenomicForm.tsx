@@ -64,7 +64,12 @@ export const GenomicForm = (props: IFormProps) => {
 
   useEffect(() => {
     node.data.formValid = false;
-    setMyFormData(node.data.formData);
+    const formData = node.data.formData;
+    if (formData && !formData.hasOwnProperty('variantCategoryContainerObject')) {
+      setMyFormData({'variantCategoryContainerObject': formData});
+    } else {
+      setMyFormData(formData);
+    }
   }, [node]);
 
   const dispatch = useDispatch()
@@ -521,7 +526,10 @@ export const GenomicForm = (props: IFormProps) => {
     // reset form if variant category changed
     const oldVariantCategory = myFormData?.variantCategoryContainerObject?.variant_category;
     const newVariantCategory = data.formData.variantCategoryContainerObject?.variant_category;
-    if (oldVariantCategory && newVariantCategory && (oldVariantCategory !== newVariantCategory)) {
+    // if oldVariantCategory is defined and category is now different, reset the form in with the variantCategoryContainer format
+    if ((oldVariantCategory && newVariantCategory && (oldVariantCategory !== newVariantCategory))
+      // or the if form is new so oldVariantCategory is undefined, and newVariantCategoryContainer exists
+    || (!oldVariantCategory && data.formData.variantCategoryContainerObject)) {
       const myFormData = {
         variantCategoryContainerObject: {
           variant_category: newVariantCategory
