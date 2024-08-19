@@ -413,49 +413,49 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     }
   }
 
-  const moveCriteriaToAnyGroup = (nodeKey: string, destinationNodeKey: string) => {
-    const newRootNodes = structuredClone(rootNodes);
-    if (nodeKey && destinationNodeKey) {
-      const foundNode = findObjectByKeyInTree(newRootNodes[0], nodeKey as string);
-      if (foundNode) {
-        const parentNode = findArrayContainingKeyInsideATree(newRootNodes[0], nodeKey as string);
-        if (parentNode) {
-          const index = parentNode.children!.findIndex((child: any) => child.key === nodeKey);
-          // console.log('index: ', index)
-          parentNode.children!.splice(index, 1);
-          const targetNode = findObjectByKeyInTree(newRootNodes[0], destinationNodeKey as string);
-          if (targetNode) {
-            const key = uuidv4();
-            const newNode = {
-              key: key,
-              label: foundNode.label,
-              icon: foundNode.icon,
-              data: foundNode.data,
-              children: foundNode.children
-            };
-
-            targetNode.children!.push(newNode);
-            setRootNodes([...newRootNodes]);
-
-            // setSelectedNode(newNode);
-            // setSelectedKeys(newNode.key as string)
-            // onTreeNodeClick(newNode.data.type, newNode);
-
-            expandedKeys[targetNode.key] = true;
-            // if moving a group, also expand the selected group as well so we can see the new alignment
-            if (newNode.label === 'And' || newNode.label === 'Or') {
-              expandedKeys[newNode.key] = true;
-            }
-            setExpandedKeys(expandedKeys);
-
-            const state = store.getState();
-            updateReduxViewModelAndCtmlModel(newRootNodes, state);
-            dispatch(moveNodeDnD({draggedNodeKey: nodeKey, destinationNodeKey: destinationNodeKey}));
-          }
-        }
-      }
-    }
-  }
+  // const moveCriteriaToAnyGroup = (nodeKey: string, destinationNodeKey: string) => {
+  //   const newRootNodes = structuredClone(rootNodes);
+  //   if (nodeKey && destinationNodeKey) {
+  //     const foundNode = findObjectByKeyInTree(newRootNodes[0], nodeKey as string);
+  //     if (foundNode) {
+  //       const parentNode = findArrayContainingKeyInsideATree(newRootNodes[0], nodeKey as string);
+  //       if (parentNode) {
+  //         const index = parentNode.children!.findIndex((child: any) => child.key === nodeKey);
+  //         // console.log('index: ', index)
+  //         parentNode.children!.splice(index, 1);
+  //         const targetNode = findObjectByKeyInTree(newRootNodes[0], destinationNodeKey as string);
+  //         if (targetNode) {
+  //           const key = uuidv4();
+  //           const newNode = {
+  //             key: key,
+  //             label: foundNode.label,
+  //             icon: foundNode.icon,
+  //             data: foundNode.data,
+  //             children: foundNode.children
+  //           };
+  //
+  //           targetNode.children!.push(newNode);
+  //           setRootNodes([...newRootNodes]);
+  //
+  //           // setSelectedNode(newNode);
+  //           // setSelectedKeys(newNode.key as string)
+  //           // onTreeNodeClick(newNode.data.type, newNode);
+  //
+  //           expandedKeys[targetNode.key] = true;
+  //           // if moving a group, also expand the selected group as well so we can see the new alignment
+  //           if (newNode.label === 'And' || newNode.label === 'Or') {
+  //             expandedKeys[newNode.key] = true;
+  //           }
+  //           setExpandedKeys(expandedKeys);
+  //
+  //           const state = store.getState();
+  //           updateReduxViewModelAndCtmlModel(newRootNodes, state);
+  //           dispatch(moveNodeDnD({draggedNodeKey: nodeKey, destinationNodeKey: destinationNodeKey}));
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 
   const onNodeClick = (node: TreeNode) => {
     // console.log('node: ', node)
@@ -660,23 +660,27 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     if (!isSortedChecked && (dropNode.label === 'Clinical' || dropNode.label === 'Genomic')) {
       return;
     }
-    if (isSortedChecked) {
-      // check if dropping into a group
-      if (dropNode.data.type === EComponentType.AndOROperator || dropNode.data.type === undefined) {
-        moveCriteriaToAnyGroup(dragNode.key as string, dropNode.key as string)
-      } else {
-        // if the drop node is a leaf, move to the parent group
-        const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], dropNode.key as string);
-        if (parentNode) {
-          moveCriteriaToAnyGroup(dragNode.key as string, parentNode.key as string)
-        }
-      }
-    } else {
+    // if (isSortedChecked) {
+    //   // check if dropping into a group
+    //   if (dropNode.data.type === EComponentType.AndOROperator || dropNode.data.type === undefined) {
+    //     moveCriteriaToAnyGroup(dragNode.key as string, dropNode.key as string)
+    //   } else {
+    //     // if the drop node is a leaf, move to the parent group
+    //     const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], dropNode.key as string);
+    //     if (parentNode) {
+    //       moveCriteriaToAnyGroup(dragNode.key as string, parentNode.key as string)
+    //     }
+    //   }
+    // } else {
       setRootNodes(e.value)
       const state = store.getState();
       updateReduxViewModelAndCtmlModel(e.value, state);
       dispatch(moveNodeDnD({draggedNodeKey: dragNode.key as string, destinationNodeKey: dropNode.key as string}));
-    }
+    // }
+    // set the node as clicked so the left menu and right form is synced
+    setSelectedNode(dragNode);
+    setSelectedKeys(dragNode.key as string)
+    onTreeNodeClick(dragNode.data.type, dragNode);
   }
 
   const handleIsSortedChecked = (value: boolean) => {
