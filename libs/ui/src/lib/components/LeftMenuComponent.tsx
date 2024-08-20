@@ -652,12 +652,9 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     if (!dropNode) {
       return;
     }
-    // check cannot move root node
-    if ((rootNodes[0].key === dragNode.key) && isSortedChecked) {
-      return;
-    }
+
     // cannot drop into another leaf node
-    if (!isSortedChecked && (dropNode.label === 'Clinical' || dropNode.label === 'Genomic')) {
+    if (dropNode.label === 'Clinical' || dropNode.label === 'Genomic') {
       return;
     }
     // if (isSortedChecked) {
