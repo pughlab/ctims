@@ -79,4 +79,8 @@
 
 .matchingMenuAndFormContainer {
   display: flex;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 }
