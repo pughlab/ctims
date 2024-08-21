@@ -465,7 +465,7 @@ export const flattenGenericObject = (ctmlMatchModel: any) => {
   const processArray = (arr: any[]) => {
     return arr.map(item => {
       Object.keys(item).forEach(key => {
-        if (key === 'match') {
+        if (key === 'match' && Array.isArray(item[key])) {
           item[key] = item[key].map(flattenVariantCategoryContainerObjectInCtmlMatchModel);
         } else if (Array.isArray(item[key])) {
           item[key] = processArray(item[key]);
