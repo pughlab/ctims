@@ -40,7 +40,7 @@ const formContainerStyle: CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   height: '100%',
-  overflowY: 'hidden'
+  overflowY: 'auto'
 }
 
 const hideScrollbarStyle = `
