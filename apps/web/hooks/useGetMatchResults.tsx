@@ -61,6 +61,7 @@ const useGetMatchResults = () => {
         if (trialWithResult) {
           const createdAtDate = new Date(trialWithResult.createdAt);
           const updatedAtDate = new Date(trialWithResult.updatedAt);
+          const matchSentDate = new Date(trialWithResult.matchSentDate);
           const matchedDateFormatted = trialWithResult.matchedDate ? new Date(trialWithResult.matchedDate).toLocaleString(undefined, {
                   month: 'short',
                   day: 'numeric',
@@ -82,6 +83,13 @@ const useGetMatchResults = () => {
                 hour: 'numeric',
                 minute: 'numeric'
               });
+          const matchSentDateFormatted = matchSentDate.toLocaleString(undefined, {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric'
+              });
           const ctml_status_label = trialWithResult.ctml_status;
           const trial_status_label = trialWithResult.status;
           const status_label = filteredTrial.trial_status;
@@ -94,7 +102,8 @@ const useGetMatchResults = () => {
             matchedDate: matchedDateFormatted,
             ctml_status_label,
             trial_status_label,
-            trialRetCount: trial_ret_count
+            trialRetCount: trial_ret_count,
+            matchSentDate: matchSentDateFormatted
           };
         } else {
           const status_label = filteredTrial.trial_status;
