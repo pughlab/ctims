@@ -63,6 +63,7 @@ model trial {
   // This is trial matching status
   trial_status           trial_status?
   trial_lock             trial_lock[]
+  matchSentDate          DateTime?
 }
 
 model trial_group {
@@ -76,19 +77,19 @@ model trial_group {
 }
 
 model user {
-  id              Int          @id @default(autoincrement())
-  email           String       @unique
+  id              Int      @id @default(autoincrement())
+  email           String   @unique
   name            String?
   username        String?
   first_name      String?
-  email_verified  Boolean      @default(false)
+  email_verified  Boolean  @default(false)
   last_name       String?
-  refresh_token   String?      @db.LongText
-  keycloak_id     String?      @unique
-  trials          trial[]      @relation("UserTrials")
-  modified_trials trial[]      @relation("ModifiedBy")
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+  refresh_token   String?  @db.LongText
+  keycloak_id     String?  @unique
+  trials          trial[]  @relation("UserTrials")
+  modified_trials trial[]  @relation("ModifiedBy")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
   events          event[]
   trial_lock      trial_lock[]
 

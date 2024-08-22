@@ -126,6 +126,7 @@ export class TrialResultService implements OnModuleInit {
         matchedDate: mm_info.updated,
         trialStatus: TrialStatusEnum[trial.trial_status],
         short_title: ctmlData['short_title'],
+        matchSentDate: trial.matchSentDate
       }
       trialResults.push(result);
     }

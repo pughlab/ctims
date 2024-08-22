@@ -168,7 +168,8 @@ export class CtmlJsonService {
             id: trialId
           },
           data: {
-            trial_status: TrialStatusEnum.PENDING
+            trial_status: TrialStatusEnum.PENDING,
+            matchSentDate: new Date()
           }
         });
       }
@@ -206,7 +207,8 @@ export class CtmlJsonService {
               trial_internal_id: internalId
             },
             data: {
-              trial_status: TrialStatusEnum.PENDING
+              trial_status: TrialStatusEnum.PENDING,
+              matchSentDate: new Date()
             }
           });
         }
