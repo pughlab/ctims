@@ -44,6 +44,17 @@ const formContainerStyle: CSSProperties = {
   overflowY: 'scroll'
 }
 
+const hideScrollbarStyle = `
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+const rjsfFormStyle: CSSProperties = {
+  height: '100%',
+  overflow: 'hidden'
+};
+
 // const matchAllContainerStyle: CSSProperties = {
 //   marginLeft: '20px',
 //   marginTop: '16px',
@@ -662,6 +673,7 @@ export const GenomicForm = (props: IFormProps) => {
    */
   return (
     <div style={formContainerStyle}>
+      <style>{hideScrollbarStyle}</style>
       <OperatorDropdown
         onOperatorChange={onOperatorChange}
         getCurrentOperator={useCurrentOperator}

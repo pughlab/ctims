@@ -40,8 +40,14 @@ const formContainerStyle: CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   height: '100%',
-  overflowY: 'scroll'
+  overflowY: 'auto'
 }
+
+const hideScrollbarStyle = `
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`;
 
 export const ClinicalForm = (props: IFormProps) => {
   const {node, rootNodes} = props
@@ -188,6 +194,7 @@ export const ClinicalForm = (props: IFormProps) => {
 
   return (
     <div style={formContainerStyle}>
+      <style>{hideScrollbarStyle}</style>
       <OperatorDropdown
         onOperatorChange={onOperatorChange}
         getCurrentOperator={useCurrentOperator}
