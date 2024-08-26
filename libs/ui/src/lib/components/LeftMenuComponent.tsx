@@ -325,8 +325,9 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         }
         const payload = {[key]: true};
         dispatch(setMatchDialogErrors(payload))
-        parentNode.children!.push(newNode);
-
+        // find current index of the selected node
+        const index = parentNode.children!.findIndex((child: any) => child.key === nodeKey);
+        parentNode.children!.splice(index + 1, 0, newNode);
         setSelectedNode(newNode);
         setSelectedKeys(newNode.key as string)
         onTreeNodeClick(newNode.data.type, newNode);
@@ -349,7 +350,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         }
         const payload = {[key]: true};
         dispatch(setMatchDialogErrors(payload))
-        parentNode.children!.push(newNode);
+        parentNode.children!.unshift(newNode);
         // Ensure the parent node of this new leaf is expanded
         expandedKeys[parentNode.key] = true;
         setExpandedKeys(expandedKeys);
@@ -374,7 +375,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
           data: {type: EComponentType.AndOROperator},
           children: []
         };
-        parentNode.children!.push(newNode);
+        parentNode.children!.unshift(newNode);
         expandedKeys[parentNode.key] = true;
         setExpandedKeys(expandedKeys);
       }
