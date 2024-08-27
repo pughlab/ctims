@@ -17,7 +17,7 @@ export type trialWithResults = {
   matchedDate?: Date | null
   trialStatus?: string | null
   short_title?: string | null
-  matchSentDate?: Date
+  matchSentDate?: Date | null
 }
 
 // the matchminer api returns the following format
