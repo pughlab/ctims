@@ -74,8 +74,8 @@ export const ClinicalForm = (props: IFormProps) => {
         ],
         "enum": [
           "",
-          "True",
-          "False"
+          "Positive",
+          "Negative"
         ]
       },
       "er_status": {
@@ -86,8 +86,8 @@ export const ClinicalForm = (props: IFormProps) => {
         ],
         "enum": [
           "",
-          "True",
-          "False"
+          "Positive",
+          "Negative"
         ]
       },
       "pr_status": {
@@ -98,8 +98,8 @@ export const ClinicalForm = (props: IFormProps) => {
         ],
         "enum": [
           "",
-          "True",
-          "False"
+          "Positive",
+          "Negative"
         ]
       }
     },
