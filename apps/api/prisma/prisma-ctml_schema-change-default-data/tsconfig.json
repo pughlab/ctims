@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es6", // This is the output language level.
+    "module": "commonjs", // This is the output module system.
+    "esModuleInterop": true, // This enables interoperation between commonjs and esModules.
+    "allowSyntheticDefaultImports": true // This allows default imports from modules with no default export.
+  },
+  "include": [
+    "src/**/*.ts" // This line includes all TypeScript files in the 'src' directory.
+  ],
+  "exclude": [
+    "node_modules" // This line excludes the 'node_modules' directory.
+  ]
+}
