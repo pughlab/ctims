@@ -2,19 +2,14 @@ import { PrismaClient } from '@prisma/client';
 import { fieldEncryptionMiddleware } from 'prisma-field-encryption';
 
 export async function migrate(client: PrismaClient) {
-
   const ctmlJsons = await prisma.ctml_json.findMany();
-
   for (const ctmlJson of ctmlJsons) {
-
     let dataUpdated = false;
-
     const updatedData = updateTrialStatusValues(ctmlJson.data, (updated) => {
       if (updated) {
         dataUpdated = true;
       }
     });
-
     if (dataUpdated) {
       await prisma.ctml_json.update({
         where: { id: ctmlJson.id },
@@ -27,13 +22,10 @@ export async function migrate(client: PrismaClient) {
 
 //updateTrialStatusValues function is used to update the ctmlJson data if there are true or false value in Er,Pr, Her2 status fields and map them to Positive or Negative.
 function updateTrialStatusValues(data: string, callback: (updated: boolean) => void): string {
-
   const dataObj = JSON.parse(data);
   console.log("Processing trial with ID:", dataObj.trial_id)
   let updated = false;
-
   const statuses = ['her2_status', 'pr_status', 'er_status'];
-
   function updateClinicalObjects(objects: any[]) {
     for (const obj of objects) {
       if (obj.clinical) {
@@ -44,7 +36,6 @@ function updateTrialStatusValues(data: string, callback: (updated: boolean) => v
             updated = true;
           }
         });
-
       } else if (obj.and) {
         updateClinicalObjects(obj.and);
       } else if (obj.or) {
@@ -52,7 +43,6 @@ function updateTrialStatusValues(data: string, callback: (updated: boolean) => v
       }
     }
   }
-
   if (dataObj.treatment_list) {
     for (const step of dataObj.treatment_list.step) {
       if (step.arm) {
@@ -65,7 +55,6 @@ function updateTrialStatusValues(data: string, callback: (updated: boolean) => v
       }
     }
   }
-
   callback(updated);
   return JSON.stringify(dataObj);
 }
