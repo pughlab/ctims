@@ -15,7 +15,7 @@
     "prisma:encrypt": "ts-node apps/api/prisma/prisma-field-encryption-migrations/index.ts",
     "prisma:list": "npx prisma migrate status --schema=./apps/api/prisma/schema.prisma",
     "prisma:fill_trial_internal_id": "ts-node apps/api/prisma/prisma-fill-trial-internal-id-map/index.ts",
-    "prisma:change_match_clinical_data_from_true/false_to_positive/negative": "ts-node apps/api/prisma/prisma-ctml_schema-change-default-data/index.ts",
+    "prisma:change_match_clinical_data_from_true_false_to_positive_negative": "ts-node apps/api/prisma/prisma-ctml_schema-change_match_clinical_data_from_true_false_to_positive_negative/index.ts",
     "prisma:add_has_match_criteria": "ts-node apps/api/prisma/prisma-add-has-match-criteria/index.ts",
     "start:prod": "node dist/apps/api/main.js",
     "build": "nx build",
