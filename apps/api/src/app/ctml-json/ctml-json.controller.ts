@@ -219,6 +219,16 @@ export class CtmlJsonController implements OnModuleInit {
     });
   }
 
+  @Post('send_msg')
+  @UseGuards(KeycloakPasswordGuard)
+  @ApiBearerAuth("KeycloakPasswordGuard")
+  async send_msg(
+    @CurrentUser() user: user,
+    @Body() msg: any
+  ) {
+    console.log('message from frontend: ', msg);
+  }
+
   @Get('mm/run_match')
   @UseGuards(KeycloakPasswordGuard)
   @ApiBearerAuth("KeycloakPasswordGuard")

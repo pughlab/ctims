@@ -20,6 +20,7 @@ import {logout} from "../api/auth/[...nextauth]";
 import process from "process";
 import {useRouter} from "next/router";
 import {SELECTED_TRIAL_GROUP_ID, SELECTED_TRIAL_GROUP_IS_ADMIN} from "../../constants/appConstants";
+import useSendEvent from "../../hooks/useSendEvent";
 
 const Main = () => {
 
@@ -39,6 +40,10 @@ const Main = () => {
   const isLoggedInFromState = useSelector((state: RootState) => state.context.isAccessTokenSet);
   const dispatch = useDispatch();
   const router = useRouter();
+
+  const { error, response, loading, sendEventOperation} = useSendEvent();
+
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     // sessionData gets callback twice, 1st time is server side rendering (denoted by loading status)
@@ -67,7 +72,54 @@ const Main = () => {
       dispatch(selectedTrialGroupId(trialGroupId));
       dispatch(setIsTrialGroupAdmin(isAdmin));
     }
+
+    // -----------------------------check broser close or refresh------------------------------------
+
+
+
+    // -----------------------------check broser close or refresh------------------------------------
   }, []);
+
+  useEffect(() => {
+    let pageHidden = false;
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        pageHidden = true;
+      }
+    };
+
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (!pageHidden) {
+        setIsRefreshing(true);
+      }
+      // Uncomment the following line if you want to show a confirmation dialog
+      // event.preventDefault();
+      // event.returnValue = '';
+    };
+
+    const handleUnload = () => {
+      if (isRefreshing) {
+        console.log('Page is refreshing');
+        // Perform refresh-specific actions here
+        sendEventOperation('Page is refreshing');
+      } else {
+        console.log('Browser is closing');
+        // Perform close-specific actions here
+        sendEventOperation('Browser is closing');
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('unload', handleUnload);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('unload', handleUnload);
+    };
+  }, [isRefreshing]);
 
   useEffect(() => {
     if (selectedTrialGroupFromState) {
