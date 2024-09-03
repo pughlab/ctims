@@ -76,6 +76,28 @@ const Main = () => {
     // -----------------------------check broser close or refresh------------------------------------
     sendEventOperation('test')
 
+    let mounted = true;
+
+    window.addEventListener('beforeunload', (event) => {
+      if (mounted && event.defaultPrevented === false) {
+        // Perform actions specific to browser close
+        console.log('Browser is closing');
+        // event.preventDefault(); // Prevent the default behavior (closing the window) if needed
+        sendEventOperation('beforeUnload Browser is closing');
+      }
+    });
+
+    window.addEventListener('visibilitychange', () => {
+      if (mounted && document.visibilityState === 'hidden') {
+        // Perform actions specific to browser refresh
+        console.log('Browser is refreshing');
+        sendEventOperation('visibilitychange Browser is refreshing');
+      }
+    });
+
+    return () => {
+      mounted = false;
+    };
 
     // -----------------------------check broser close or refresh------------------------------------
   }, []);
