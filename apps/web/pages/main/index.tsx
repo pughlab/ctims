@@ -76,72 +76,96 @@ const Main = () => {
     // -----------------------------check broser close or refresh------------------------------------
     sendEventOperation('test')
 
-    let mounted = true;
+    // let mounted = true;
+    //
+    // window.addEventListener('beforeunload', (event) => {
+    //   if (mounted && event.defaultPrevented === false) {
+    //     // Perform actions specific to browser close
+    //     console.log('Browser is closing');
+    //     // event.preventDefault(); // Prevent the default behavior (closing the window) if needed
+    //     sendEventOperation('beforeUnload Browser is closing');
+    //   }
+    // });
+    //
+    // window.addEventListener('visibilitychange', () => {
+    //   if (mounted && document.visibilityState === 'hidden') {
+    //     // Perform actions specific to browser refresh
+    //     console.log('Browser is refreshing');
+    //     sendEventOperation('visibilitychange Browser is refreshing');
+    //   }
+    // });
+    //
+    // return () => {
+    //   mounted = false;
+    // };
 
-    window.addEventListener('beforeunload', (event) => {
-      if (mounted && event.defaultPrevented === false) {
-        // Perform actions specific to browser close
-        console.log('Browser is closing');
-        // event.preventDefault(); // Prevent the default behavior (closing the window) if needed
-        sendEventOperation('beforeUnload Browser is closing');
-      }
-    });
+    let isRefresh = false;
 
-    window.addEventListener('visibilitychange', () => {
-      if (mounted && document.visibilityState === 'hidden') {
-        // Perform actions specific to browser refresh
-        console.log('Browser is refreshing');
-        sendEventOperation('visibilitychange Browser is refreshing');
+    const handleBeforeUnload = () => {
+      if (!isRefresh) {
+        console.log('Browser close');
+        sendEventOperation('Browser close1');
+      } else {
+        console.log('Page refresh');
+        sendEventOperation('Page refresh1');
       }
-    });
+    };
+
+    const handleUnload = () => {
+      isRefresh = true;
+      window.addEventListener('beforeunload', handleBeforeUnload);
+    };
+
+    window.addEventListener('unload', handleUnload);
 
     return () => {
-      mounted = false;
+      window.removeEventListener('unload', handleUnload);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
     };
 
     // -----------------------------check broser close or refresh------------------------------------
   }, []);
 
-  useEffect(() => {
-    let pageHidden = false;
-
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        pageHidden = true;
-      }
-    };
-
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (!pageHidden) {
-        setIsRefreshing(true);
-      }
-      // Uncomment the following line if you want to show a confirmation dialog
-      // event.preventDefault();
-      // event.returnValue = '';
-    };
-
-    const handleUnload = () => {
-      if (isRefreshing) {
-        console.log('Page is refreshing');
-        // Perform refresh-specific actions here
-        sendEventOperation('Page is refreshing');
-      } else {
-        console.log('Browser is closing');
-        // Perform close-specific actions here
-        sendEventOperation('Browser is closing');
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    window.addEventListener('unload', handleUnload);
-
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-      window.removeEventListener('unload', handleUnload);
-    };
-  }, [isRefreshing]);
+  // useEffect(() => {
+  //   let pageHidden = false;
+  //
+  //   const handleVisibilityChange = () => {
+  //     if (document.hidden) {
+  //       pageHidden = true;
+  //     }
+  //   };
+  //
+  //   const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+  //     if (!pageHidden) {
+  //       setIsRefreshing(true);
+  //     }
+  //     // Uncomment the following line if you want to show a confirmation dialog
+  //     // event.preventDefault();
+  //     // event.returnValue = '';
+  //   };
+  //
+  //   const handleUnload = () => {
+  //     if (isRefreshing) {
+  //       console.log('Page is refreshing');
+  //       // Perform refresh-specific actions here
+  //       sendEventOperation('Page is refreshing');
+  //     } else {
+  //       console.log('Browser is closing');
+  //       // Perform close-specific actions here
+  //       sendEventOperation('Browser is closing');
+  //     }
+  //   };
+  //
+  //   document.addEventListener('visibilitychange', handleVisibilityChange);
+  //   window.addEventListener('beforeunload', handleBeforeUnload);
+  //   window.addEventListener('unload', handleUnload);
+  //
+  //   return () => {
+  //     document.removeEventListener('visibilitychange', handleVisibilityChange);
+  //     window.removeEventListener('beforeunload', handleBeforeUnload);
+  //     window.removeEventListener('unload', handleUnload);
+  //   };
+  // }, [isRefreshing]);
 
   useEffect(() => {
     if (selectedTrialGroupFromState) {
