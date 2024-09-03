@@ -152,7 +152,8 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
         trialRetCount: (cur.trialStatus === TrialStatusEnum[TrialStatusEnum.PENDING]) ? '' : cur.trialRetCount,
         matchedDate: cur.matchedDate? cur.matchedDate : '',
         trialStatus: cur.trialStatus,
-        short_title: cur.short_title
+        short_title: cur.short_title,
+        matchSentDate: cur.matchSentDate? cur.matchSentDate: ''
       }
       dataCopy.push(curCopy);
     }
@@ -187,7 +188,8 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
             <Column field="updatedAt" header="Modified on" dataType="date"></Column>
             <Column field="trialStatus" header="Match Status" sortable></Column>
             <Column field="trialRetCount" header="Match Results"></Column>
-            <Column field="matchedDate" header="Match Date" dataType="date"></Column>
+            <Column field="matchSentDate" header="Last Matched" dataType="date"></Column>
+            <Column field="matchedDate" header="Last New Result" dataType="date"></Column>
             <Column field="download" header="Download" dataType="boolean" style={{minWidth: '6rem'}}
                     body={downloadBodyTemplate}></Column>
           </DataTable>

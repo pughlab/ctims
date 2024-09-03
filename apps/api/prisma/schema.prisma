@@ -62,6 +62,7 @@ model trial {
   protocol_no            String?
   // This is trial matching status
   trial_status           trial_status?
+  matchSentDate          DateTime?
 }
 
 model trial_group {
