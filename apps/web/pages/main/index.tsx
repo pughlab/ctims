@@ -74,7 +74,7 @@ const Main = () => {
     }
 
     // -----------------------------check broser close or refresh------------------------------------
-
+    sendEventOperation('test')
 
 
     // -----------------------------check broser close or refresh------------------------------------
