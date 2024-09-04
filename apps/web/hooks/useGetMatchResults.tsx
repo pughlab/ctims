@@ -61,7 +61,7 @@ const useGetMatchResults = () => {
         if (trialWithResult) {
           const createdAtDate = new Date(trialWithResult.createdAt);
           const updatedAtDate = new Date(trialWithResult.updatedAt);
-          const matchSentDate = new Date(trialWithResult.matchSentDate);
+          const matchSentDate = trialWithResult.matchSentDate ? new Date(trialWithResult.matchSentDate) : "";
           const matchedDateFormatted = trialWithResult.matchedDate ? new Date(trialWithResult.matchedDate).toLocaleString(undefined, {
                   month: 'short',
                   day: 'numeric',

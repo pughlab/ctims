@@ -153,7 +153,7 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
         matchedDate: cur.matchedDate? cur.matchedDate : '',
         trialStatus: cur.trialStatus,
         short_title: cur.short_title,
-        matchSentDate: cur.matchSentDate? cur.matchSentDate: ''
+        matchSentDate: cur.matchSentDate
       }
       dataCopy.push(curCopy);
     }
