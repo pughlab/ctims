@@ -5,6 +5,7 @@ import {PrismaService} from "../prisma.service";
 import * as amqplib from 'amqplib';
 import {TrialStatusEnum} from "../../../../../libs/types/src/trial-status.enum";
 import { sendMail } from "../utils/mail.service";
+import { IEventMessage } from "./message.interface";
 
 @Injectable()
 export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
@@ -50,13 +51,10 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
 
   onMessageReceived = async (msg) => {
     const message = msg.content.toString();
-    const json_message = JSON.parse(message);
-    // const SUCCESS_MSG = 'Successfully ran job for trial internal ids';
-    console.log(json_message );
+    const json_message: IEventMessage = JSON.parse(message);
+
     if (json_message.run_status == 'success') {
       const trialInternalIds: string[] = json_message.trial_internal_ids;
-
-      console.log('Trial internal ids:', trialInternalIds)
 
       const result = await this.prismaService.trial.updateMany({
         where: {
@@ -74,15 +72,32 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
       const user = await this.prismaService.user.findFirst({
         where: {
           id: {
-            equals: json_message.user_id
+            equals: Number(json_message.user_id)
           }
         }
       });
-      // console.log(user);
+
       const from: string = 'ctims@uhn.ca';
       const to: string = user.email;
       const subject: string = 'Trial match run successfully';
-      const mailTemplate: string = 'Dear User, \n\n' + json_message.run_message + '\n\nYours PMCDI team';
+      const mailTemplate: string = 'Dear User, <br><br>' + json_message.run_message + '<br><br>Yours PMCDI team';
+      
+      await sendMail(from, to, subject, mailTemplate);
+    }
+    else if (json_message.run_status == 'fail') {
+      // send out email notification to user who run the match
+      const user = await this.prismaService.user.findFirst({
+        where: {
+          id: {
+            equals: Number(json_message.user_id)
+          }
+        }
+      });
+
+      const from: string = 'ctims@uhn.ca';
+      const to: string = user.email;
+      const subject: string = 'Error running trial match';
+      const mailTemplate: string = 'Dear User, <br><br>' + json_message.run_message + '<br><br>Yours PMCDI team';
       
       await sendMail(from, to, subject, mailTemplate);
     }
