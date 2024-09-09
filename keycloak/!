@@ -5,8 +5,6 @@ services:
     image: mysql:8.0.27
     ports:
       - 3366:3306
-    networks:
-      - shared-network
     restart: unless-stopped
     environment:
       MYSQL_USER: keycloak_user
@@ -14,14 +12,14 @@ services:
       MYSQL_DATABASE: keycloak_db
     volumes:
       - keycloak-and-mysql-volume:/var/lib/mysql
+    networks:
+      - host
 
   keycloak-w:
     image: quay.io/keycloak/keycloak:18.0
     command: start-dev
     ports:
       - 8080:8080
-    networks:
-      - shared-network
     restart: unless-stopped
     environment:
       KEYCLOAK_USER: admin
@@ -41,7 +39,3 @@ services:
 
 volumes:
   keycloak-and-mysql-volume:
-
-networks:
-  shared-network:
-    external: true

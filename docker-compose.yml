@@ -17,7 +17,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
     restart: on-failure
     networks:
-        - my-network
+        - shared-network
 
   backend:
     container_name: ctims-api
@@ -43,7 +43,7 @@ services:
       - "3333:3333"
     restart: on-failure
     networks:
-        - my-network
+        - shared-network
 
   database:
     container_name: ctims-db
@@ -54,7 +54,7 @@ services:
       - "3306:3306"
     restart: on-failure
     networks:
-        - my-network
+        - shared-network
 
   # https://github.com/prisma/prisma/releases/tag/2.17.0
   database_shadow:
@@ -66,8 +66,9 @@ services:
       - "3307:3306"
     restart: on-failure
     networks:
-      - my-network
+      - shared-network
 
 networks:
-    my-network:
+    shared-network:
+      external: true
 
