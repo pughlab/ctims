@@ -381,9 +381,7 @@
                 "type": "array",
                 "items": {
                   "type": "object",
-                  "required": [
-                    "arm_code"
-                  ],
+                  "required": [],
                   "properties": {
                     "arm_code": {
                       "type": "string",
