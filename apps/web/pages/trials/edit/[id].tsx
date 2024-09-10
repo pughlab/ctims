@@ -9,7 +9,7 @@ import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/struc
 import {selectedTrialGroupId, setTrialId} from "../../../store/slices/contextSlice";
 import {useDispatch} from "react-redux";
 import IdleComponent from "../../../components/IdleComponent";
-import { setCtmlModel } from '../../../store/slices/ctmlModelSlice';
+import {setCtmlModel} from '../../../store/slices/ctmlModelSlice';
 import FooterComponent from "apps/web/components/FooterComponent";
 import {transformPriorTreatmentRequirements} from "libs/ui/src/lib/components/helpers"
 import useGetTrialLock from "../../../hooks/useGetTrialLock";
@@ -26,7 +26,7 @@ const containerStyle: React.CSSProperties = {
 const EditorEditTrialPage = () => {
   const router = useRouter()
   const dispatch = useDispatch();
-  const { id } = router.query
+  const {id} = router.query
 
   dispatch(setTrialId(+id));
 
@@ -42,18 +42,11 @@ const EditorEditTrialPage = () => {
   } = useGetCtmlSchema();
 
   const {
-      error: editTrialError,
-      response: editTrialResponse,
-      loading: editTrialLoading,
-      editTrialOperation
+    error: editTrialError,
+    response: editTrialResponse,
+    loading: editTrialLoading,
+    editTrialOperation
   } = useEditTrial();
-
-  const {
-    error: getTrialLockError,
-    response: getTrialLockResponse,
-    loading: getTrialLockLoading,
-    getTrialLockOperation
-  } = useGetTrialLock()
 
   const transformPriorTreatmentRequirements = (requirements) => {
     return {
@@ -90,13 +83,6 @@ const EditorEditTrialPage = () => {
         ctml_json.prior_treatment_requirements = transformPriorDataFromArrayToObject
       }
 
-      const ctml_json = trial.ctml_jsons[0].data;
-    if(ctml_json.prior_treatment_requirements && ctml_json.prior_treatment_requirements.length>0)
-    {
-      const transformedPriorTreatmentRequirements = transformPriorTreatmentRequirements(ctml_json.prior_treatment_requirements);
-      ctml_json.prior_treatment_requirements = transformedPriorTreatmentRequirements
-    }
-      const priorTreatmentRequirementNames = ctml_json.prior_treatment_requirements?.prior_treatment_requirement && ctml_json.prior_treatment_requirements?.prior_treatment_requirement.map(item => item.prior_treatment_requirement_name) || [];
       let editTrialObject = {
         trialInformation: {
           trial_id: trial.nct_id,

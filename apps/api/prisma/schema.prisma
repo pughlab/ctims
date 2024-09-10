@@ -64,7 +64,6 @@ model trial {
   trial_status           trial_status?
   trial_lock             trial_lock[]
   matchSentDate          DateTime?
-  trial_lock             trial_lock[]
 }
 
 model trial_group {
