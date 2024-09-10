@@ -31,6 +31,7 @@ const EditorEditTrialPage = () => {
 
   const [formData, setFormData] = useState(null);
   const [lastSaved, setLastSaved] = useState<string>("Unsaved");
+  const [isEditMode, setIsEditMode] = useState(true);
 
   const {
     error: getCtmlSchemaError,
