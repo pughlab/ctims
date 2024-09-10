@@ -34,17 +34,22 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
   }
 
   async initRabbitMQ() {
-    this.conn = await amqplib.connect(`amqp://${this.rabbitmqUrl}:${this.rabbitmqPort}`);
+    try {
+      this.conn = await amqplib.connect(`amqp://${this.rabbitmqUrl}:${this.rabbitmqPort}`);
 
-    this.chReceive = await this.conn.createChannel();
-    await this.chReceive.assertQueue(this.queue);
+      this.chReceive = await this.conn.createChannel();
+      await this.chReceive.assertQueue(this.queue);
 
-    this.chReceive.consume(this.queue, (msg) => {
-      if (msg !== null) {
-        this.onMessageReceived(msg);
-        this.chReceive.ack(msg);
-      }
-    });
+      this.chReceive.consume(this.queue, (msg) => {
+        if (msg !== null) {
+          this.onMessageReceived(msg);
+          this.chReceive.ack(msg);
+        }
+      });
+    }
+    catch (e) {
+      console.log(e);
+    }
   }
 
   onMessageReceived = async (msg) => {

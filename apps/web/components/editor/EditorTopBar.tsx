@@ -181,7 +181,17 @@ const EditorTopBar = (props: EditorTopBarProps) => {
   }
 
   const onSendClick = () => {
-    setIsSendDialogVisible(true);
+    if (process.env.NEXT_PUBLIC_ENABLE_MATCHMINER_INTEGRATION == 'true') {
+      setIsSendDialogVisible(true);
+    }
+    else if (process.env.NEXT_PUBLIC_ENABLE_MATCHMINER_INTEGRATION == 'false') {
+      // let user know matchminer is not available
+      toast.current.show({
+        severity:
+          'info',
+        summary: 'This service in not installed and unavailable at this time.',
+      });
+    }
   }
 
   const handleSendCTMLOKClicked = (val: boolean) => {
