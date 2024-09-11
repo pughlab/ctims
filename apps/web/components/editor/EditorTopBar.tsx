@@ -181,10 +181,10 @@ const EditorTopBar = (props: EditorTopBarProps) => {
   }
 
   const onSendClick = () => {
-    if (process.env.NEXT_PUBLIC_ENABLE_MATCHMINER_INTEGRATION == 'true') {
+    if (process.env.NEXT_PUBLIC_ENABLE_MATCHMINER_INTEGRATION === 'true') {
       setIsSendDialogVisible(true);
     }
-    else if (process.env.NEXT_PUBLIC_ENABLE_MATCHMINER_INTEGRATION == 'false') {
+    else {
       // let user know matchminer is not available
       toast.current.show({
         severity:

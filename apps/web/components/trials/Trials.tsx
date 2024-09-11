@@ -304,10 +304,10 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
   }
 
   const sendCtmlClick = (e) => {
-    if (process.env.NEXT_PUBLIC_ENABLE_MATCHMINER_INTEGRATION == 'true') {
+    if (process.env.NEXT_PUBLIC_ENABLE_MATCHMINER_INTEGRATION === 'true') {
       setIsSendDialogVisible(true);
     }
-    else if (process.env.NEXT_PUBLIC_ENABLE_MATCHMINER_INTEGRATION == 'false') {
+    else {
       // let user know matchminer is not available
       trialsErrorToast.current.show({
         severity:
