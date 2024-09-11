@@ -53,7 +53,7 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
     const message = msg.content.toString();
     const json_message: IEventMessage = JSON.parse(message);
 
-    if (json_message.run_status == 'success') {
+    if (json_message.run_status === 'success') {
       const trialInternalIds: string[] = json_message.trial_internal_ids;
 
       const result = await this.prismaService.trial.updateMany({
@@ -84,7 +84,7 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
       
       await sendMail(from, to, subject, mailTemplate);
     }
-    else if (json_message.run_status == 'fail') {
+    else if (json_message.run_status === 'fail') {
       // send out email notification to user who run the match
       const user = await this.prismaService.user.findFirst({
         where: {
@@ -100,6 +100,9 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
       const mailTemplate: string = 'Dear User, <br><br>' + json_message.run_message + '<br><br>Yours PMCDI team';
       
       await sendMail(from, to, subject, mailTemplate);
+    }
+    else {
+      // do nothing for now
     }
   }
 }
