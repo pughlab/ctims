@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import useGetCtmlSchema from '../../../hooks/useGetCtmlSchema';
-import {signOut, useSession} from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import EditorTopBar from '../../../components/editor/EditorTopBar';
@@ -8,22 +7,14 @@ import LeftMenuEditorComponent from '../../../components/editor/LeftMenuEditorCo
 import { Ui } from '@ctims-mono-repo/ui';
 import IdleComponent from "../../../components/IdleComponent";
 import FooterComponent from 'apps/web/components/FooterComponent';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState, store} from 'apps/web/store/store';
-import process from "process";
-import {logout} from "../../api/auth/[...nextauth]";
+import {useSelector} from 'react-redux';
+import {RootState} from 'apps/web/store/store';
 
 const EditorCreateCtmlForGroup = () => {
-  const router = useRouter()
-  const { trialGroupId } = router.query
   const { error, response, loading, operation} = useGetCtmlSchema();
   const [lastSaved, setLastSaved] = useState<string>("Unsaved");
   const trialId = useSelector((state: RootState) => state.context.trialNctId);
   const [formData, setFormData] = useState(null);
-
-  const dispatch = useDispatch();
-
-  const {data} = useSession()
 
   useEffect(() => {
     operation();
@@ -74,17 +65,6 @@ const EditorCreateCtmlForGroup = () => {
     }
     setFormData(createTrialObject)
   }, [])
-
-  useEffect(() => {
-    if(!data) {
-      // no need to sign out, as server side rendering will have data = null, but client side render will have user data
-      // router.push('/');
-      // signOut({redirect: false}).then(() => {
-      //   store.dispatch(logout());
-      //   router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-      // });
-    }
-  }, [data])
 
   const containerStyle: React.CSSProperties = {
     display: 'flex',
