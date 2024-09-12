@@ -16,11 +16,11 @@ import {parse} from "yaml";
 import NewTrialIdDialog from './NewTrialIdDialog';
 import {IS_FORM_DISABLED} from "../../constants/appConstants";
 import useSendMatchminerJob from "../../hooks/useSendMatchminerJob";
-import {logout} from "../../pages/api/auth/[...nextauth]";
 import SendCTMLDialog from "./SendCTMLDialog";
 import useSendMultipleCTMLs from "../../hooks/useSendMultipleCTMLs";
 import {CtmlStatusEnum} from "../../../../libs/types/src/ctml-status.enum";
 import useGetTrialsByIDs from "../../hooks/useGetTrialsByIDs";
+import useHandleSignOut from "../../hooks/useHandleSignOut";
 
 // property selectedTrialGroup from parent component when dropdown changed
 // trials is the list of trials for the selected trial group
@@ -46,6 +46,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
     return trial.status != CtmlStatusEnum.DRAFT && trial.ctml_jsons[0].has_match;
   });
 
+  const {handleSignOut} = useHandleSignOut();
   const {
     response: sendMultipleCTMLsResponse,
     error: sendMultipleCTMLsError,
@@ -207,10 +208,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
     if(sendMultipleCTMLsError) {
       console.log('error', sendMultipleCTMLsError);
       if (sendMultipleCTMLsError.statusCode === 401) {
-        signOut({callbackUrl: '/#/login', redirect: false}).then(() => {
-          store.dispatch(logout());
-          router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-        });
+        handleSignOut()
       }
     }
   }, [sendMultipleCTMLsError, sendMultipleCTMLsResponse]);
@@ -229,10 +227,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
     if(sendMatchJobError) {
       console.log('error', sendMatchJobError);
       if (sendMatchJobError.statusCode === 401) {
-        signOut({callbackUrl: '/#/login', redirect: false}).then(() => {
-          store.dispatch(logout());
-          router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-        });
+        handleSignOut();
       }
     }
   }, [sendMatchJobError, sendMatchJobResponse]);

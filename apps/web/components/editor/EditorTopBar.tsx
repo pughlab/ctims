@@ -5,7 +5,6 @@ import { RootState, store } from "../../store/store";
 import {ValidationData} from "@rjsf/utils";
 import {useEffect, useRef, useState} from "react";
 import ExportCtmlDialog from "./ExportCtmlDialog";
-import {signOut} from "next-auth/react";
 import {Toast} from "primereact/toast";
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import useSaveTrial from "../../hooks/useSaveTrial";
@@ -13,10 +12,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import SendCtmlToMatchminerDialog from "./SendCTMLtoMatchminerDialog";
 import useSendCTML from "../../hooks/useSendCTML";
 import {setIsFormChanged, setIsFormDisabled, setIsTrialGroupAdmin} from '../../store/slices/contextSlice';
-import process from "process";
-import {logout} from "../../pages/api/auth/[...nextauth]";
 import {IS_FORM_DISABLED, SELECTED_TRIAL_GROUP_IS_ADMIN} from "../../constants/appConstants";
 import useSendMatchminerJob from "../../hooks/useSendMatchminerJob";
+import useHandleSignOut from "../../hooks/useHandleSignOut";
 
 interface EditorTopBarProps {
     isEditMode?: boolean;
@@ -31,6 +29,7 @@ const EditorTopBar = (props: EditorTopBarProps) => {
   const [isConfirmationDialogVisible, setIsConfirmationDialogVisible] = useState(false);
   const [isSendDialogVisible, setIsSendDialogVisible] = useState<boolean>(false);
   const [isOKClicked, setIsOKClicked] = useState<boolean>(false);
+  const {handleSignOut} = useHandleSignOut();
   const {
     response: saveTrialResponse,
     error: saveTrialError,
@@ -88,10 +87,7 @@ const EditorTopBar = (props: EditorTopBarProps) => {
     if(saveTrialError) {
       console.log('error', saveTrialError);
       if (saveTrialError.statusCode === 401) {
-        signOut({callbackUrl: '/#/login', redirect: false}).then(() => {
-          store.dispatch(logout());
-          router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-        });
+        handleSignOut();
       } else {
         toast.current.show({
           severity:
@@ -119,10 +115,7 @@ const EditorTopBar = (props: EditorTopBarProps) => {
     if(sendCTMLError) {
       console.log('error', sendCTMLError);
       if (sendCTMLError.statusCode === 401) {
-        signOut({callbackUrl: '/#/login', redirect: false}).then(() => {
-          store.dispatch(logout());
-          router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-        });
+        handleSignOut();
       }
     }
   }, [sendCTMLError, sendCTMLResponse]);
@@ -141,10 +134,7 @@ const EditorTopBar = (props: EditorTopBarProps) => {
     if(sendMatchJobError) {
       console.log('error', sendMatchJobError);
       if (sendMatchJobError.statusCode === 401) {
-        signOut({callbackUrl: '/#/login', redirect: false}).then(() => {
-          store.dispatch(logout());
-          router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-        });
+        handleSignOut();
       }
     }
   }, [sendMatchJobError, sendMatchJobResponse]);

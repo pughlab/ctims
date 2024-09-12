@@ -35,6 +35,18 @@ export class TrialLockController implements OnModuleInit {
     return this.trialLockService.getLockByOthers(+trialId, user);
   }
 
+  // Post to release all locks by the user
+  @Post('release-user-locks')
+  @UseGuards(KeycloakPasswordGuard)
+  @ApiBearerAuth("KeycloakPasswordGuard")
+  @ApiOperation({summary: "Release all locks by the user"})
+  @ApiCreatedResponse({description: "All locks belonging to the user are released."})
+  async releaseUserLocks(
+    @CurrentUser() user: user
+  ) {
+    await this.trialLockService.releaseUserLocks(user);
+  }
+
   @Post(':id')
   @UseGuards(KeycloakPasswordGuard)
   @ApiBearerAuth("KeycloakPasswordGuard")
@@ -59,16 +71,5 @@ export class TrialLockController implements OnModuleInit {
     await this.trialLockService.unlock(trialId, user);
   }
 
-  // Post to release all locks by the user
-  @Post('release-user-locks')
-  @UseGuards(KeycloakPasswordGuard)
-  @ApiBearerAuth("KeycloakPasswordGuard")
-  @ApiOperation({summary: "Release all locks by the user"})
-  @ApiCreatedResponse({description: "All locks belonging to the user are released."})
-  async releaseUserLocks(
-    @CurrentUser() user: user
-  ) {
-    await this.trialLockService.releaseUserLocks(user);
-  }
 }
 

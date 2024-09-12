@@ -3,19 +3,18 @@ import {Ui} from "@ctims-mono-repo/ui";
 
 import React, {useEffect, useState} from "react";
 import LeftMenuEditorComponent from "../../../components/editor/LeftMenuEditorComponent";
-import {signOut, useSession} from "next-auth/react";
+import {useSession} from "next-auth/react";
 import {useRouter} from "next/router";
 import useGetCtmlSchema from "../../../hooks/useGetCtmlSchema";
 import IdleComponent from "../../../components/IdleComponent";
 import FooterComponent from "apps/web/components/FooterComponent";
-import process from "process";
-import {store} from "../../../store/store";
-import {logout} from "../../api/auth/[...nextauth]";
+import useHandleSignOut from "../../../hooks/useHandleSignOut";
 
 
 const EditorCreateCtml = () => {
 
   const { error, response, loading, operation} = useGetCtmlSchema();
+  const {handleSignOut} = useHandleSignOut();
 
   const [lastSaved, setLastSaved] = useState<string>("Unsaved");
 
@@ -29,11 +28,7 @@ const EditorCreateCtml = () => {
 
   useEffect(() => {
     if(!data) {
-      // router.push('/');
-      signOut({redirect: false}).then(() => {
-        store.dispatch(logout());
-        router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-      });
+      handleSignOut();
     }
   }, [data])
 
