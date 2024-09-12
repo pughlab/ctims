@@ -18,6 +18,7 @@ import MatchMinerConsole from "../../components/matchminer/MatchMinerConsole";
 import {selectedTrialGroupId, setIsAccessTokenSet, setIsTrialGroupAdmin} from "../../store/slices/contextSlice";
 import {useRouter} from "next/router";
 import {SELECTED_TRIAL_GROUP_ID, SELECTED_TRIAL_GROUP_IS_ADMIN} from "../../constants/appConstants";
+import useClearTrialLocks from "../../hooks/useClearTrialLocks";
 
 const Main = () => {
 
@@ -37,6 +38,8 @@ const Main = () => {
   const isLoggedInFromState = useSelector((state: RootState) => state.context.isAccessTokenSet);
   const dispatch = useDispatch();
   const router = useRouter();
+
+  const { clearTrialLocksOperation } = useClearTrialLocks();
 
   useEffect(() => {
     // sessionData gets callback twice, 1st time is server side rendering (denoted by loading status)
@@ -91,6 +94,7 @@ const Main = () => {
   useEffect(() => {
     if (getTrialsForUsersInGroupResponse) {
       setTrials(getTrialsForUsersInGroupResponse);
+      clearTrialLocksOperation();
     }
   }, [getTrialsForUsersInGroupResponse]);
 

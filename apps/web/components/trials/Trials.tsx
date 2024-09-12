@@ -21,6 +21,7 @@ import useSendMultipleCTMLs from "../../hooks/useSendMultipleCTMLs";
 import {CtmlStatusEnum} from "../../../../libs/types/src/ctml-status.enum";
 import useGetTrialsByIDs from "../../hooks/useGetTrialsByIDs";
 import useHandleSignOut from "../../hooks/useHandleSignOut";
+import useClearTrialLocks from "../../hooks/useClearTrialLocks";
 
 // property selectedTrialGroup from parent component when dropdown changed
 // trials is the list of trials for the selected trial group
