@@ -16,12 +16,12 @@ import {parse} from "yaml";
 import NewTrialIdDialog from './NewTrialIdDialog';
 import {IS_FORM_DISABLED} from "../../constants/appConstants";
 import useSendMatchminerJob from "../../hooks/useSendMatchminerJob";
-import {logout} from "../../pages/api/auth/[...nextauth]";
 import SendCTMLDialog from "./SendCTMLDialog";
 import useSendMultipleCTMLs from "../../hooks/useSendMultipleCTMLs";
 import {CtmlStatusEnum} from "../../../../libs/types/src/ctml-status.enum";
 import useGetTrialsByIDs from "../../hooks/useGetTrialsByIDs";
-import { FaLock, FaUnlock } from 'react-icons/fa'; 
+import useHandleSignOut from "../../hooks/useHandleSignOut";
+import { FaLock, FaUnlock } from 'react-icons/fa';
 import { Tooltip } from 'primereact/tooltip';
 
 // property selectedTrialGroup from parent component when dropdown changed
@@ -317,7 +317,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
         summary: 'This service in not installed and unavailable at this time.',
       });
     }
-    
+
   }
 
   const lockStatusTemplate = (rowData) => {

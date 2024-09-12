@@ -6,9 +6,7 @@ import useRefreshToken from "../hooks/useRefreshToken";
 import useSaveTrial from "../hooks/useSaveTrial";
 import {RootState, store} from "../store/store";
 import {Toast} from "primereact/toast";
-import {signOut} from "next-auth/react";
-import process from "process";
-import {logout} from "../pages/api/auth/[...nextauth]";
+import useHandleSignOut from "../hooks/useHandleSignOut";
 
 const IdleComponent = () => {
   const { state: idleState, remaining, count } = useIdle(); // Get the idle state, remaining time, and count from the useIdle hook
@@ -16,6 +14,7 @@ const IdleComponent = () => {
   const [remainingTime, setRemainingTime] = useState(0); // Create a state variable for the remaining time
 
   const { error, response, loading, refreshTokenOperation } = useRefreshToken(); // Get the error, response, loading, and refreshTokenOperation from the useRefreshToken hook
+  const {handleSignOut} = useHandleSignOut();
 
   const toast = useRef(null);
 
@@ -48,10 +47,7 @@ const IdleComponent = () => {
   useEffect(() => {
     if (error) {
       // for when unable to fresh with expired refresh token
-      signOut({redirect: false}).then(() => {
-        store.dispatch(logout());
-        router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-      });
+      handleSignOut();
     }
   }, [error]);
 
@@ -80,18 +76,12 @@ const IdleComponent = () => {
           //router.push('/'); // Redirect to the home page
           if (!error) {
             // check if there is error, if there's error from useAxios then no need to router.push a 2nd time
-            signOut({redirect: false}).then(() => {
-              store.dispatch(logout());
-              router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-            });
+            handleSignOut();
           }
         });
       } else {
         // no trial to save, just logout
-        signOut({redirect: false}).then(() => {
-          store.dispatch(logout());
-          router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-        });
+        handleSignOut();
       }
     }
 
