@@ -60,10 +60,10 @@ export class TrialService implements OnModuleInit {
       }
     });
 
-    if (isLocked) {
-      // throw new HttpException(`Trial with ID ${id} is currently locked.`, 423);
+    if (isLocked && isLocked.locked_by !== user.id) {
+      throw new HttpException(`Trial with ID ${id} is currently locked.`, 423);
     } else {
-      // unlock all existing lock by same user
+      // update the lock
       await this.trialLockService.releaseUserLocks(user);
       // create new lock
       await this.trialLockService.create(id, user);

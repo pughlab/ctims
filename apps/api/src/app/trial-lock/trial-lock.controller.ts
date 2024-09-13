@@ -1,12 +1,11 @@
-import {Body, Controller, Get, OnModuleInit, Param, Post, Query, UseGuards} from "@nestjs/common";
+import {Controller, Get, OnModuleInit, Param, Patch, Post, UseGuards} from "@nestjs/common";
 import {ApiBearerAuth, ApiCreatedResponse, ApiNoContentResponse, ApiOperation, ApiTags} from "@nestjs/swagger";
 import {EventService} from "../event/event.service";
 import {ModuleRef} from "@nestjs/core";
 import {TrialLockService} from "./trial-lock.service";
 import {KeycloakPasswordGuard} from "../auth/KeycloakPasswordGuard";
 import {CurrentUser} from "../auth/CurrentUser";
-import {CreateTrialDto} from "../trial/dto/create-trial.dto";
-import {event_type, trial, user} from "@prisma/client";
+import {user} from "@prisma/client";
 
 @Controller('trial-lock')
 @ApiTags("Trial-lock")
@@ -54,9 +53,21 @@ export class TrialLockController implements OnModuleInit {
   @ApiCreatedResponse({description: "New trial-lock created."})
   async create(
     @CurrentUser() user: user,
-    @Body() trialId: number
+    @Param('id') trialId: number,
   ) {
-    await this.trialLockService.create(trialId, user);
+    await this.trialLockService.create(+trialId, user);
+  }
+
+  @Patch(':id/update')
+  @UseGuards(KeycloakPasswordGuard)
+  @ApiBearerAuth("KeycloakPasswordGuard")
+  @ApiOperation({summary: "Update a trial-lock"})
+  @ApiCreatedResponse({description: "Trial-lock updated."})
+  async update(
+    @CurrentUser() user: user,
+    @Param('id') trialId: number,
+  ) {
+    await this.trialLockService.update(+trialId, user);
   }
 
   @Post(':id/unlock')
@@ -66,9 +77,9 @@ export class TrialLockController implements OnModuleInit {
   @ApiCreatedResponse({description: "Trial unlocked."})
   async unlock(
     @CurrentUser() user: user,
-    @Body() trialId: number
+    @Param('id') trialId: number
   ) {
-    await this.trialLockService.unlock(trialId, user);
+    await this.trialLockService.unlock(+trialId, user);
   }
 
 }
