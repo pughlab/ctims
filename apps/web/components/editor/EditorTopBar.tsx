@@ -15,6 +15,7 @@ import {setIsFormChanged, setIsFormDisabled, setIsTrialGroupAdmin} from '../../s
 import {IS_FORM_DISABLED, SELECTED_TRIAL_GROUP_IS_ADMIN} from "../../constants/appConstants";
 import useSendMatchminerJob from "../../hooks/useSendMatchminerJob";
 import useHandleSignOut from "../../hooks/useHandleSignOut";
+import useUpdateTrialLock from "../../hooks/useUpdateTrialLock";
 
 interface EditorTopBarProps {
     isEditMode?: boolean;
@@ -51,15 +52,25 @@ const EditorTopBar = (props: EditorTopBarProps) => {
     sendMatchJobOperation
   } = useSendMatchminerJob();
 
+  const {
+    response: updateTrialLockResponse,
+    error: updateTrialLockError,
+    loading: updateTrialLockLoading,
+    updateTrialLockOperation
+  } = useUpdateTrialLock();
+
   const isGroupAdmin = useSelector((state: RootState) => state.context.isTrialGroupAdmin);
   const isFormDisabled = useSelector((state: RootState) => state.context.isFormDisabled);
   const selectedTrialInternalId = useSelector((state: RootState) => state.finalModelAndErrors.ctmlModel?.trialInformation.trial_internal_id);
+  const selectedTrialId = useSelector((state: RootState) => state.context.trialId);
 
   const dispatch = useDispatch();
 
   const router = useRouter();
 
   const toast = useRef(null);
+
+  const TRIAL_LOCK_TIMEOUT = 1000 * 60 * 4;
 
   useEffect(() => {
     const state = store.getState();
@@ -71,6 +82,18 @@ const EditorTopBar = (props: EditorTopBarProps) => {
       const isFormDisabledFromStorage = sessionStorage.getItem(IS_FORM_DISABLED) === 'TRUE';
       dispatch(setIsFormDisabled(isFormDisabledFromStorage));
     }
+
+    // ping the server to update the lock every 4 minutes
+    if (selectedTrialId) {
+      const trialId = selectedTrialId;
+      const interval = setInterval(() => {
+        updateTrialLockOperation(trialId);
+      }, TRIAL_LOCK_TIMEOUT);
+
+      // clear when unmount
+      return () => clearInterval(interval);
+    }
+
   }, []);
 
   useEffect(() => {
