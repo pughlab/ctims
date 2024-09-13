@@ -48,7 +48,7 @@ services:
         RABBITMQ_PORT: ${RABBITMQ_PORT}
     environment:
       DATABASE_URL: mysql://ctims:ctims@database_qa:3306/ctims
-      NEXT_PUBLIC_TRIAL_LOCK_PING_TIME: ${NEXT_PUBLIC_TRIAL_LOCK_PING_TIME}
+      NEXT_PUBLIC_TRIAL_LOCK_PING_TIME: ${NEXT_PUBLIC_TRIAL_LOCK_PING_TIME:-10}
     ports:
       - "3334:3333"
     restart: on-failure

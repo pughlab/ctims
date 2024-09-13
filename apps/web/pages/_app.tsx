@@ -11,6 +11,7 @@ import useRefreshToken from "../hooks/useRefreshToken";
 import process from "process";
 import RefreshTokenComponent from "../components/RefreshTokenComponent";
 import {logout} from "./api/auth/[...nextauth]";
+import {PublicEnvScript} from "next-runtime-env";
 
 function CustomApp({ Component, pageProps: { session, ...pageProps }, }: AppProps) {
   const AnyComponent = Component as any;
@@ -45,19 +46,22 @@ function CustomApp({ Component, pageProps: { session, ...pageProps }, }: AppProp
   }, [error]);
 
   return (
-    <Layout>
-      <Head>
-        <title>CTIMS</title>
-      </Head>
-      <main className="app">
-        <SessionProvider session={session}>
-        <Provider store={store}>
-          <RefreshTokenComponent/>
-          <AnyComponent {...pageProps} />
-        </Provider>
-        </SessionProvider>
-      </main>
-    </Layout>
+    <>
+      <PublicEnvScript />
+      <Layout>
+        <Head>
+          <title>CTIMS</title>
+        </Head>
+        <main className="app">
+          <SessionProvider session={session}>
+          <Provider store={store}>
+            <RefreshTokenComponent/>
+            <AnyComponent {...pageProps} />
+          </Provider>
+          </SessionProvider>
+        </main>
+      </Layout>
+    </>
   );
 }
 
