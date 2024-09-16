@@ -21,6 +21,8 @@ import SendCTMLDialog from "./SendCTMLDialog";
 import useSendMultipleCTMLs from "../../hooks/useSendMultipleCTMLs";
 import {CtmlStatusEnum} from "../../../../libs/types/src/ctml-status.enum";
 import useGetTrialsByIDs from "../../hooks/useGetTrialsByIDs";
+import { FaLock, FaUnlock } from 'react-icons/fa'; 
+import { Tooltip } from 'primereact/tooltip';
 
 // property selectedTrialGroup from parent component when dropdown changed
 // trials is the list of trials for the selected trial group
@@ -318,6 +320,22 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
     
   }
 
+  const lockStatusTemplate = (rowData) => {
+    const isLocked = rowData.lockStatus;
+    const lockedUser = rowData.lockedUser;
+    return (
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Tooltip target={`.lock-icon-${rowData.id}`} content={isLocked == "Locked" ? `${lockedUser} is currently editing the CTML.` : `Current ${lockedUser}, you can edit the CTML.`} />
+        <div className={`lock-icon lock-icon-${rowData.id}`}>
+          {isLocked == "Locked" ?
+            <FaLock style={{ color: 'red', marginRight: '8px' }} /> :
+            <FaUnlock style={{ color: 'green', marginRight: '8px' }} />
+          }
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       <Toast ref={trialsErrorToast}></Toast>
@@ -360,6 +378,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
             <Column field="ctml_status_label" header="CTML Status" sortable></Column>
             <Column field="createdAt" header="Created on" dataType="date"></Column>
             <Column field="updatedAt" header="Modified on" dataType="date"></Column>
+            <Column field="lockStatus" header="Lock Status" body={lockStatusTemplate}></Column>
           </DataTable>
         </div>
 

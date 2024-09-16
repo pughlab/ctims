@@ -160,6 +160,17 @@ export class TrialGroupService {
             select: {
               has_match: true
             }
+          },
+          trial_lock: {
+            select: {
+              locked_at: true,
+              user: {
+                select: {
+                  first_name: true,
+                  last_name: true
+                }
+              }
+            }
           }
         }
       });
