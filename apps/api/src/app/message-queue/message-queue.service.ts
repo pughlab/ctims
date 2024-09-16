@@ -84,7 +84,7 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
       
       await sendMail(from, to, subject, mailTemplate);
     }
-    else if (json_message.run_status === 'fail') {
+    else {
       // send out email notification to user who run the match
       const user = await this.prismaService.user.findFirst({
         where: {
@@ -100,9 +100,6 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
       const mailTemplate: string = 'Dear User, <br><br>' + json_message.run_message + '<br><br>Yours PMCDI team';
       
       await sendMail(from, to, subject, mailTemplate);
-    }
-    else {
-      // do nothing for now
     }
   }
 }
