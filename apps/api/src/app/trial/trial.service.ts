@@ -48,27 +48,6 @@ export class TrialService implements OnModuleInit {
   }
 
   async findOne(id: number, user: user,): Promise<trial> {
-    // check if trial is locked
-    // const isLocked = await this.prismaService.trial_lock.findFirst({
-    //   where: {
-    //     trialId: id,
-    //     user: {
-    //       id: {
-    //         not: user.id
-    //       }
-    //     }
-    //   }
-    // });
-    //
-    // if (isLocked && isLocked.locked_by !== user.id) {
-    //   throw new HttpException(`Trial with ID ${id} is currently locked.`, 423);
-    // } else {
-    //   // update the lock
-    //   await this.trialLockService.releaseUserLocks(user);
-    //   // create new lock
-    //   await this.trialLockService.create(id, user);
-    // }
-
     const result = await this.prismaService.trial.findUnique(
       {
         where: { id: id },
@@ -82,6 +61,17 @@ export class TrialService implements OnModuleInit {
       val.data = JSON.parse(val.data);
       return val;
     });
+
+    // create a lock if there is none
+    const isLocked = await this.prismaService.trial_lock.findFirst({
+      where: {
+        trialId: id,
+        }
+    });
+
+    if (!isLocked) {
+      await this.trialLockService.create(id, user);
+    }
 
     return result;
   }
