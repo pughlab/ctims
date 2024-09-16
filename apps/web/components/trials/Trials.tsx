@@ -20,6 +20,8 @@ import SendCTMLDialog from "./SendCTMLDialog";
 import useSendMultipleCTMLs from "../../hooks/useSendMultipleCTMLs";
 import {CtmlStatusEnum} from "../../../../libs/types/src/ctml-status.enum";
 import useGetTrialsByIDs from "../../hooks/useGetTrialsByIDs";
+import { FaLock, FaUnlock } from 'react-icons/fa'; 
+import { Tooltip } from 'primereact/tooltip';
 import useHandleSignOut from "../../hooks/useHandleSignOut";
 import useClearTrialLocks from "../../hooks/useClearTrialLocks";
 
@@ -303,6 +305,22 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
     setIsSendDialogVisible(true);
   }
 
+  const lockStatusTemplate = (rowData) => {
+    const isLocked = rowData.lockStatus;
+    const lockedUser = rowData.lockedUser;
+    return (
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Tooltip target={`.lock-icon-${rowData.id}`} content={isLocked == "Locked" ? `${lockedUser} is currently editing the CTML.` : `CTML can be edited.`} />
+        <div className={`lock-icon lock-icon-${rowData.id}`}>
+          {isLocked == "Locked" ?
+            <FaLock style={{ color: "black", marginRight: '8px' }} /> :
+            <FaUnlock style={{ color: 'grey', marginRight: '8px' }} />
+          }
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       <Toast ref={trialsErrorToast}></Toast>
@@ -345,6 +363,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
             <Column field="ctml_status_label" header="CTML Status" sortable></Column>
             <Column field="createdAt" header="Created on" dataType="date"></Column>
             <Column field="updatedAt" header="Modified on" dataType="date"></Column>
+            <Column field="lockStatus" header="Lock Status" body={lockStatusTemplate}></Column>
           </DataTable>
         </div>
 
