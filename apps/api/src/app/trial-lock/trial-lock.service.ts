@@ -19,7 +19,7 @@ export class TrialLockService implements OnModuleInit {
   onModuleInit(): any {
     this.eventService = this.moduleRef.get(EventService, {strict: false});
   }
-  
+
   async getLockByOthers(trialId: number, user: user) {
     const trialLock = this.prismaService.trial_lock.findFirst({
       where: {
@@ -64,6 +64,34 @@ export class TrialLockService implements OnModuleInit {
     this.eventService.createEvent({
       type: event_type.TrialLocked,
       description: "Trial locked created via Post to trial-lock/:id",
+      user,
+    });
+  }
+
+  async update(trialId: number, user: user) {
+    const lock = await this.prismaService.trial_lock.findFirst({
+      where: {
+        trialId: trialId,
+        locked_by: user.id
+      }
+    });
+
+    if (!lock) {
+      throw new NotFoundException(`Lock for trial with ID ${trialId} by user ${user.id} not found`);
+    }
+
+    await this.prismaService.trial_lock.update({
+      where: {
+        id: lock.id,
+      },
+      data: {
+        lock_expiry: new Date(new Date().getTime() + 1000 * 60 * 5), // 5min lock increment
+      }
+    });
+
+    this.eventService.createEvent({
+      type: event_type.TrialLockUpdated,
+      description: "Trial lock updated via Post to trial-lock/:id/update",
       user,
     });
   }

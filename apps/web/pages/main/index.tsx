@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {signOut, useSession} from "next-auth/react";
+import {useSession} from "next-auth/react";
 import {TabPanel, TabView} from "primereact/tabview";
 import IdleComponent from "../../components/IdleComponent";
 import TopBar from "../../components/trials/TopBar";
@@ -13,13 +13,12 @@ import {Toast} from "primereact/toast";
 import {BlockUI} from "primereact/blockui";
 import {ProgressSpinner} from "primereact/progressspinner";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState, store} from "../../store/store";
+import {RootState} from "../../store/store";
 import MatchMinerConsole from "../../components/matchminer/MatchMinerConsole";
 import {selectedTrialGroupId, setIsAccessTokenSet, setIsTrialGroupAdmin} from "../../store/slices/contextSlice";
-import {logout} from "../api/auth/[...nextauth]";
-import process from "process";
 import {useRouter} from "next/router";
 import {SELECTED_TRIAL_GROUP_ID, SELECTED_TRIAL_GROUP_IS_ADMIN} from "../../constants/appConstants";
+import useClearTrialLocks from "../../hooks/useClearTrialLocks";
 
 const Main = () => {
 
@@ -40,16 +39,16 @@ const Main = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
+  const { clearTrialLocksOperation } = useClearTrialLocks();
+
   useEffect(() => {
     // sessionData gets callback twice, 1st time is server side rendering (denoted by loading status)
     // 2nd time is client side which will be either authenticated or unauthenticated
-    if (!sessionData && sessionStatus !== 'loading') {
-      // if there's no session, should also log out
-      signOut({redirect: false}).then(() => {
-        store.dispatch(logout());
-        router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-      });
-    }
+    // if (!sessionData && sessionStatus !== 'loading') {
+    //   // if there's no session, should also log out
+    //   console.log('main/index')
+    //   handleSignOut();
+    // }
     // only set the access token first time from login
     if (sessionData && !isLoggedInFromState) {
       localStorage.setItem('ctims-accessToken', sessionData['accessToken'] as string);
@@ -95,6 +94,7 @@ const Main = () => {
   useEffect(() => {
     if (getTrialsForUsersInGroupResponse) {
       setTrials(getTrialsForUsersInGroupResponse);
+      clearTrialLocksOperation();
     }
   }, [getTrialsForUsersInGroupResponse]);
 

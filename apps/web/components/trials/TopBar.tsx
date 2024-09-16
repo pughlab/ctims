@@ -1,14 +1,12 @@
 import {Menu} from "primereact/menu";
 import {useRef} from "react";
 import styles from './TopBar.module.scss';
-import {signOut, useSession} from "next-auth/react";
-import * as process from "process";
+import {useSession} from "next-auth/react";
 import {useRouter} from "next/router";
-import {store} from "../../store/store";
-import {logout} from "../../pages/api/auth/[...nextauth]";
+import useHandleSignOut from "../../hooks/useHandleSignOut";
 
 const TopBar = () => {
-
+  const {handleSignOut} = useHandleSignOut();
   const menu = useRef(null);
   const router = useRouter();
 
@@ -19,12 +17,7 @@ const TopBar = () => {
       label: 'Sign Out',
       icon: 'pi pi-sign-out',
       command: () => {
-        // signOut({callbackUrl: '/', redirect: true}).then(() => {
-        signOut({redirect: false}).then(() => {
-          store.dispatch(logout());
-          router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL)
-        });
-
+        handleSignOut();
       }
     }
   ]

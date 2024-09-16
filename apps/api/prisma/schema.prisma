@@ -150,6 +150,7 @@ enum event_type {
   TrialExported
   TrialLocked
   TrialUnlocked
+  TrialLockUpdated
   CtmlJsonCreated
   CtmlJsonRead
   CtmlJsonReadMany

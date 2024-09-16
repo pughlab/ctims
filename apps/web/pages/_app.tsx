@@ -4,13 +4,12 @@ import Head from 'next/head';
 import Layout from "../components/Layout";
 import { Provider } from 'react-redux'
 import {store} from "../store/store";
-import {SessionProvider, signOut} from "next-auth/react";
+import {SessionProvider} from "next-auth/react";
 import {useRouter} from "next/router";
 import {useEffect} from "react";
 import useRefreshToken from "../hooks/useRefreshToken";
-import process from "process";
 import RefreshTokenComponent from "../components/RefreshTokenComponent";
-import {logout} from "./api/auth/[...nextauth]";
+import useHandleSignOut from "../hooks/useHandleSignOut";
 
 function CustomApp({ Component, pageProps: { session, ...pageProps }, }: AppProps) {
   const AnyComponent = Component as any;
@@ -18,6 +17,7 @@ function CustomApp({ Component, pageProps: { session, ...pageProps }, }: AppProp
   const router = useRouter();
 
   const { error, response, loading, refreshTokenOperation } = useRefreshToken();
+  const {handleSignOut} = useHandleSignOut();
 
   useEffect(() => {
     const handleVisibilityChange = () => {
@@ -37,10 +37,7 @@ function CustomApp({ Component, pageProps: { session, ...pageProps }, }: AppProp
   useEffect(() => {
     if (error) {
       // router.push('/');
-      signOut({redirect: false}).then(() => {
-        store.dispatch(logout());
-        router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-      });
+      handleSignOut();
     }
   }, [error]);
 
