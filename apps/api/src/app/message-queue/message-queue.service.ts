@@ -50,7 +50,6 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
   }
 
   onMessageReceived = async (msg) => {
-    console.log('Received message:', msg.content.toString());
     const message = msg.content.toString();
     const json_message: IEventMessage = JSON.parse(message);
 
