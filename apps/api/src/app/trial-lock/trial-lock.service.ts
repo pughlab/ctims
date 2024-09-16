@@ -133,23 +133,23 @@ export class TrialLockService implements OnModuleInit {
     });
   }
 
-  @Cron(CronExpression.EVERY_MINUTE)
+  @Cron(CronExpression.EVERY_5_MINUTES)
   async clearExpiredLocksCron() {
-    // await this.prismaService.trial_lock.deleteMany({
-    //   where: {
-    //     lock_expiry: {
-    //       lt: new Date()
-    //     }
-    //   }
-    // });
-    // count how many lock are expired
-    const expiredLocks = await this.prismaService.trial_lock.count({
+    const expiredLocks = await this.prismaService.trial_lock.deleteMany({
       where: {
         lock_expiry: {
           lt: new Date()
         }
       }
     });
+    // count how many lock are expired
+    // const expiredLocks = await this.prismaService.trial_lock.count({
+    //   where: {
+    //     lock_expiry: {
+    //       lt: new Date()
+    //     }
+    //   }
+    // });
     console.log('Cleared expired locks', expiredLocks, new Date().toLocaleString());
   }
 }
