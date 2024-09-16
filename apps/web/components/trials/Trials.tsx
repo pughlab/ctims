@@ -101,7 +101,15 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
       label: 'Edit',
       icon: 'pi pi-pencil',
       command: () => {
-        const isFormDisabled = (rowClicked?.user.email !== data.user.email) && !isTrialGroupAdmin;
+        let isFormDisabled = (rowClicked?.user.email !== data.user.email) && !isTrialGroupAdmin;
+        // also check if the trial is locked
+        if (rowClicked.lockStatus === 'Locked' && rowClicked.lockedUser !== data.user.name) {
+          trialsErrorToast.current.show({
+            severity: "error",
+            summary: 'CTML is locked by another user',
+          });
+          isFormDisabled = true;
+        }
         dispatch(setIsFormDisabled(isFormDisabled));
         sessionStorage.setItem(IS_FORM_DISABLED, isFormDisabled.toString().toUpperCase());
         router.push(`/trials/edit/${rowClicked.id}`);
