@@ -69,7 +69,9 @@ const useGetTrialsForUsersInGroup = () => {
           createdAt: createdAtFormatted,
           updatedAt: updatedAtFormatted,
           ctml_status_label,
-          user: trial.user
+          user: trial.user,
+          lockStatus: trial.trial_lock[0] ? "Locked" : "Unlocked",
+          lockedUser: trial.trial_lock[0] ? trial.trial_lock[0].user.first_name +" " +trial.trial_lock[0].user.last_name : "unlocked"
         }
       })
       setResponse(mapped)
