@@ -20,9 +20,8 @@ import SendCTMLDialog from "./SendCTMLDialog";
 import useSendMultipleCTMLs from "../../hooks/useSendMultipleCTMLs";
 import {CtmlStatusEnum} from "../../../../libs/types/src/ctml-status.enum";
 import useGetTrialsByIDs from "../../hooks/useGetTrialsByIDs";
-import useHandleSignOut from "../../hooks/useHandleSignOut";
-import { FaLock, FaUnlock } from 'react-icons/fa';
 import { Tooltip } from 'primereact/tooltip';
+import useHandleSignOut from "../../hooks/useHandleSignOut";
 import useClearTrialLocks from "../../hooks/useClearTrialLocks";
 
 // property selectedTrialGroup from parent component when dropdown changed
@@ -324,8 +323,8 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
         <Tooltip target={`.lock-icon-${rowData.id}`} content={isLocked == "Locked" ? `${lockedUser} is currently editing the CTML.` : `CTML can be edited.`} />
         <div className={`lock-icon lock-icon-${rowData.id}`}>
           {isLocked == "Locked" ?
-            <FaLock style={{ color: "black", marginRight: '8px' }} /> :
-            <FaUnlock style={{ color: 'grey', marginRight: '8px' }} />
+            <i className="pi pi-lock" style={{ color: "black", marginRight: '8px' }} /> :
+            <i className="pi pi-unlock" style={{ color: 'grey', marginRight: '8px' }} />
           }
         </div>
       </div>
