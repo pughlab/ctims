@@ -325,11 +325,11 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
     const lockedUser = rowData.lockedUser;
     return (
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <Tooltip target={`.lock-icon-${rowData.id}`} content={isLocked == "Locked" ? `${lockedUser} is currently editing the CTML.` : `Current ${lockedUser}, you can edit the CTML.`} />
+        <Tooltip target={`.lock-icon-${rowData.id}`} content={isLocked == "Locked" ? `${lockedUser} is currently editing the CTML.` : `CTML can be edited.`} />
         <div className={`lock-icon lock-icon-${rowData.id}`}>
           {isLocked == "Locked" ?
-            <FaLock style={{ color: 'red', marginRight: '8px' }} /> :
-            <FaUnlock style={{ color: 'green', marginRight: '8px' }} />
+            <FaLock style={{ color: "black", marginRight: '8px' }} /> :
+            <FaUnlock style={{ color: 'grey', marginRight: '8px' }} />
           }
         </div>
       </div>
