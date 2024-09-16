@@ -109,6 +109,9 @@ const Login = () => {
     showDialog();
   }
 
+  const c = process.env.NEXT_PUBLIC_TRIAL_LOCK_PING_TIME;
+  console.log('from login page: process.env.NEXT_PUBLIC_TRIAL_LOCK_PING_TIME', c)
+
   return (
     <Layout>
       <Dialog
@@ -153,6 +156,7 @@ const Login = () => {
 
       </div>
       <div className={styles.version}>CTIMS version {response}</div>
+      <div>env variable: {c}</div>
     </div>
     </Layout>
   );

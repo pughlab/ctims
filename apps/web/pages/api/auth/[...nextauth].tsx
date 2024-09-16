@@ -5,7 +5,7 @@ import {createAction} from "@reduxjs/toolkit";
 console.log('process.env.NEXTAUTH_SECRET', process.env.NEXTAUTH_SECRET)
 console.log('process.env.REACT_APP_API_URL', process.env.REACT_APP_API_URL)
 console.log('process.env.NEXTAUTH_URL', process.env.NEXTAUTH_URL)
-console.log('process.env.NEXT_PUBLIC_TRIAL_LOCK_PING_TIME', process.env.NEXT_PUBLIC_TRIAL_LOCK_PING_TIME)
+console.log('from nextauth process.env.NEXT_PUBLIC_TRIAL_LOCK_PING_TIME', process.env.NEXT_PUBLIC_TRIAL_LOCK_PING_TIME)
 
 export default NextAuth({
   // Configure one or more authentication providers
