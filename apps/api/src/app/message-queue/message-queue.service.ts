@@ -50,6 +50,7 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
   }
 
   onMessageReceived = async (msg) => {
+    console.log('Received message:', msg.content.toString());
     const message = msg.content.toString();
     const json_message: IEventMessage = JSON.parse(message);
 
@@ -81,7 +82,7 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
       const to: string = user.email;
       const subject: string = 'Trial match run successfully';
       const mailTemplate: string = 'Dear User, <br><br>' + json_message.run_message + '<br><br>Yours PMCDI team';
-      
+
       await sendMail(from, to, subject, mailTemplate);
     }
     else {
@@ -98,7 +99,7 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
       const to: string = user.email;
       const subject: string = 'Error running trial match';
       const mailTemplate: string = 'Dear User, <br><br>' + json_message.run_message + '<br><br>Yours PMCDI team';
-      
+
       await sendMail(from, to, subject, mailTemplate);
     }
   }
