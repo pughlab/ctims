@@ -49,25 +49,25 @@ export class TrialService implements OnModuleInit {
 
   async findOne(id: number, user: user,): Promise<trial> {
     // check if trial is locked
-    const isLocked = await this.prismaService.trial_lock.findFirst({
-      where: {
-        trialId: id,
-        user: {
-          id: {
-            not: user.id
-          }
-        }
-      }
-    });
-
-    if (isLocked && isLocked.locked_by !== user.id) {
-      throw new HttpException(`Trial with ID ${id} is currently locked.`, 423);
-    } else {
-      // update the lock
-      await this.trialLockService.releaseUserLocks(user);
-      // create new lock
-      await this.trialLockService.create(id, user);
-    }
+    // const isLocked = await this.prismaService.trial_lock.findFirst({
+    //   where: {
+    //     trialId: id,
+    //     user: {
+    //       id: {
+    //         not: user.id
+    //       }
+    //     }
+    //   }
+    // });
+    //
+    // if (isLocked && isLocked.locked_by !== user.id) {
+    //   throw new HttpException(`Trial with ID ${id} is currently locked.`, 423);
+    // } else {
+    //   // update the lock
+    //   await this.trialLockService.releaseUserLocks(user);
+    //   // create new lock
+    //   await this.trialLockService.create(id, user);
+    // }
 
     const result = await this.prismaService.trial.findUnique(
       {
@@ -145,7 +145,11 @@ export class TrialService implements OnModuleInit {
     });
 
     if (existing_trial) {
-      await this.checkIsTrialLocked(id, user);
+      const isLocked = await this.checkIsTrialLocked(id, user);
+
+      if (isLocked) {
+        throw new HttpException(`Trial with ID ${existing_trial.id} is currently locked.`, 423);
+      }
 
       const updatedTrial = await this.prismaService.trial.update({
         where: { id: existing_trial.id },
@@ -218,6 +222,9 @@ export class TrialService implements OnModuleInit {
       },
     });
 
+    // lock the newly created trial
+    await this.trialLockService.create(createdTrial.id, user);
+
     // Add created event
     this.eventService.createEvent({
       type: event_type.TrialCreated,
@@ -235,7 +242,12 @@ export class TrialService implements OnModuleInit {
   }
 
   async updateTrialSchemaList(id: number, updateTrialSchemasDto: UpdateTrialSchemasDto, user: user) {
-    await this.checkIsTrialLocked(id, user);
+    const isLocked = await this.checkIsTrialLocked(id, user);
+
+    if (isLocked) {
+      throw new HttpException(`Trial with ID ${id} is currently locked.`, 423);
+    }
+
     return this.prismaService.trial.update({
       where: { id },
       data: {
@@ -247,7 +259,12 @@ export class TrialService implements OnModuleInit {
   }
 
   async delete(id: number, user: user) {
-    await this.checkIsTrialLocked(id, user);
+    const isLocked = await this.checkIsTrialLocked(id, user);
+
+    if (isLocked) {
+      throw new HttpException(`Trial with ID ${id} is currently locked.`, 423);
+    }
+
     try {
       await this.prismaService.trial.delete({
         where: { id }
@@ -261,21 +278,20 @@ export class TrialService implements OnModuleInit {
     }
   }
 
+  // Determine if the trial resource is locked and can be modified
+  // Returns false if either there are no locks, or the lock is made by the same user
   async checkIsTrialLocked(trialId: number, user: user) {
     const isLocked = await this.prismaService.trial_lock.findFirst({
       where: {
         trialId: trialId,
-
       }
     });
 
     if (isLocked) {
       const isLockedBySelf = isLocked.locked_by === user.id;
-      if (!isLockedBySelf) {
-        throw new HttpException(`Trial with ID ${trialId} is currently locked.`, 423);
-      } else {
-        // update lock expiry???
-      }
+      return !isLockedBySelf;
+    } else {
+      return false;
     }
   }
 }
