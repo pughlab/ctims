@@ -4,6 +4,8 @@ import {ModuleRef} from "@nestjs/core";
 import {PrismaService} from "../prisma.service";
 import * as amqplib from 'amqplib';
 import {TrialStatusEnum} from "../../../../../libs/types/src/trial-status.enum";
+import { sendMail } from "../utils/mail.service";
+import { IEventMessage } from "./message.interface";
 
 @Injectable()
 export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
@@ -49,28 +51,56 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
 
   onMessageReceived = async (msg) => {
     const message = msg.content.toString();
-    const SUCCESS_MSG = 'Successfully ran job for trial internal ids';
-    if (message.startsWith(SUCCESS_MSG)) {
-      // grab the stuff inside square brackets
-      const matched = message.match(/\[(.*?)\]/); // Match anything between square brackets
+    const json_message: IEventMessage = JSON.parse(message);
 
-      if (matched) {
-        const trialInternalIds: string[] = JSON.parse(matched[0].replace(/'/g, '"'));
+    if (json_message.run_status === 'success') {
+      const trialInternalIds: string[] = json_message.trial_internal_ids;
 
-        console.log('Trial internal ids:', trialInternalIds)
-
-        const result = await this.prismaService.trial.updateMany({
-          where: {
-            trial_internal_id: {
-              in: trialInternalIds
-            },
-            trial_status: TrialStatusEnum.PENDING,
+      const result = await this.prismaService.trial.updateMany({
+        where: {
+          trial_internal_id: {
+            in: trialInternalIds
           },
-          data: {
-            trial_status: TrialStatusEnum.MATCHED
+          trial_status: TrialStatusEnum.PENDING,
+        },
+        data: {
+          trial_status: TrialStatusEnum.MATCHED
+        }
+      });
+
+      // send out email notification to user who run the match
+      const user = await this.prismaService.user.findFirst({
+        where: {
+          id: {
+            equals: Number(json_message.user_id)
           }
-        });
-      }
+        }
+      });
+
+      const from: string = 'ctims@uhn.ca';
+      const to: string = user.email;
+      const subject: string = 'Trial match run successfully';
+      const mailTemplate: string = 'Dear User, <br><br>' + json_message.run_message + '<br><br>Yours PMCDI team';
+      
+      await sendMail(from, to, subject, mailTemplate);
+    }
+    else {
+      // send out email notification to user who run the match
+      const user = await this.prismaService.user.findFirst({
+        where: {
+          id: {
+            equals: Number(json_message.user_id)
+          }
+        }
+      });
+
+      const from: string = 'ctims@uhn.ca';
+      const to: string = user.email;
+      const subject: string = 'Error running trial match';
+      const mailTemplate: string = 'Dear User, <br><br>' + json_message.run_message + '<br><br>Yours PMCDI team';
+      
+      await sendMail(from, to, subject, mailTemplate);
     }
   }
 }
+

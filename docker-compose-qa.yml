@@ -44,6 +44,9 @@ services:
         MATCHMINER_RECEIVE_QUEUE: ${MATCHMINER_RECEIVE_QUEUE}
         RABBITMQ_URL: ${RABBITMQ_URL}
         RABBITMQ_PORT: ${RABBITMQ_PORT}
+        MAIL_HOST: ${MAIL_HOST}
+        MAIL_USERNAME: ${MAIL_USERNAME}
+        MAIL_PASSWORD: ${MAIL_PASSWORD}
 
     environment:
       DATABASE_URL: mysql://ctims:ctims@database_qa:3306/ctims
