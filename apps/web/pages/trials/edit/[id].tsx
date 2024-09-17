@@ -46,6 +46,14 @@ const EditorEditTrialPage = () => {
     editTrialOperation
   } = useEditTrial();
 
+  const transformPriorTreatmentRequirements = (requirements) => {
+    return {
+      prior_treatment_requirement: requirements.map(requirement => ({
+        prior_treatment_requirement_name: requirement
+      }))
+    };
+  };
+
   useEffect(() => {
     if (id) {
       getCtmlSchemaOperation();
@@ -121,7 +129,6 @@ const EditorEditTrialPage = () => {
     }
   }, [editTrialResponse])
 
-  // return <div>Editing trial {id}</div>
   return (
     <>
 
