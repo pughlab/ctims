@@ -51,7 +51,7 @@ export class TrialLockService implements OnModuleInit {
     await this.prismaService.trial_lock.create({
       data: {
         locked_at: new Date(),
-        lock_expiry: new Date(new Date().getTime() + 1000 * 60 * 15), //15min lock
+        lock_expiry: new Date(new Date().getTime() + 1000 * 60 * 5), //5min lock
         trial: {
           connect: {id: trialId}
         },

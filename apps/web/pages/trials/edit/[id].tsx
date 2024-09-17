@@ -11,8 +11,6 @@ import {useDispatch} from "react-redux";
 import IdleComponent from "../../../components/IdleComponent";
 import {setCtmlModel} from '../../../store/slices/ctmlModelSlice';
 import FooterComponent from "apps/web/components/FooterComponent";
-import {transformPriorTreatmentRequirements} from "libs/ui/src/lib/components/helpers"
-import useGetTrialLock from "../../../hooks/useGetTrialLock";
 
 const containerStyle: React.CSSProperties = {
   display: 'flex',
@@ -32,7 +30,6 @@ const EditorEditTrialPage = () => {
 
   const [formData, setFormData] = useState(null);
   const [lastSaved, setLastSaved] = useState<string>("Unsaved");
-  const [isEditMode, setIsEditMode] = useState(true);
 
   const {
     error: getCtmlSchemaError,
@@ -56,16 +53,8 @@ const EditorEditTrialPage = () => {
     };
   };
 
-  const {
-    error: getTrialLockError,
-    response: getTrialLockResponse,
-    loading: getTrialLockLoading,
-    getTrialLockOperation
-  } = useGetTrialLock()
-
   useEffect(() => {
     if (id) {
-      getTrialLockOperation(id as string)
       getCtmlSchemaOperation();
       editTrialOperation(id as string)
     }
@@ -133,21 +122,10 @@ const EditorEditTrialPage = () => {
 
   }, [editTrialResponse])
 
-  useEffect(() => {
-    if (getTrialLockResponse) {
-      console.log('getTrialLockResponse', getTrialLockResponse)
-      if (getTrialLockResponse.data) {
-        setIsEditMode(false);
-      } else {
-        setIsEditMode(true);
-      }
-    }
-  }, [getTrialLockResponse])
-
   return (
     <>
 
-      <EditorTopBar isEditMode={isEditMode} title={"Edit CTML"} lastSaved={lastSaved} setLastSaved={setLastSaved}/>
+      <EditorTopBar title={"Edit CTML"} lastSaved={lastSaved} setLastSaved={setLastSaved}/>
       <IdleComponent/>
 
       <div style={containerStyle}>

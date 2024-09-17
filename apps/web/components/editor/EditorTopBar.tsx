@@ -18,7 +18,6 @@ import useHandleSignOut from "../../hooks/useHandleSignOut";
 import useUpdateTrialLock from "../../hooks/useUpdateTrialLock";
 
 interface EditorTopBarProps {
-    isEditMode?: boolean;
     title?: string;
     lastSaved: string;
     setLastSaved: any;
@@ -70,7 +69,7 @@ const EditorTopBar = (props: EditorTopBarProps) => {
 
   const toast = useRef(null);
 
-  const TRIAL_LOCK_TIMEOUT = 1000 * 60 * 4;
+  const TRIAL_LOCK_TIMEOUT = 1000 * 60 * 4; // 4 minutes
 
   useEffect(() => {
     const state = store.getState();
@@ -86,14 +85,19 @@ const EditorTopBar = (props: EditorTopBarProps) => {
     // ping the server to update the lock every 4 minutes
     if (selectedTrialId) {
       const trialId = selectedTrialId;
-      const interval = setInterval(() => {
-        updateTrialLockOperation(trialId);
-      }, TRIAL_LOCK_TIMEOUT);
+      if (!isFormDisabled) {
+        const interval = setInterval(() => {
+          console.log('start ping')
+          updateTrialLockOperation(trialId);
+        }, TRIAL_LOCK_TIMEOUT);
 
-      // clear when unmount
-      return () => clearInterval(interval);
+        // clear when unmount
+        return () => {
+          console.log('clear ping')
+          clearInterval(interval);
+        }
+      }
     }
-
   }, []);
 
   useEffect(() => {
@@ -278,7 +282,6 @@ const EditorTopBar = (props: EditorTopBarProps) => {
           <div className={styles.title}>{props.title ? props.title : "New CTML"}</div>
         </div>
         <div className={styles.lastsaved}>Last saved: {props.lastSaved}</div>
-        <div style={{marginLeft: '5px'}}> Is Editable? {props.isEditMode ? 'yes' : 'no'} </div>
         <div className={styles.menuBtnGroup}>
           {/*<Button label="Discard" className="p-button-text p-button-plain" />*/}
           <Button label={isGroupAdmin ? 'Export' : 'Validate'}
