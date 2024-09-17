@@ -11,7 +11,6 @@ import {useDispatch} from "react-redux";
 import IdleComponent from "../../../components/IdleComponent";
 import {setCtmlModel} from '../../../store/slices/ctmlModelSlice';
 import FooterComponent from "apps/web/components/FooterComponent";
-import {transformPriorTreatmentRequirements} from "libs/ui/src/lib/components/helpers"
 
 const containerStyle: React.CSSProperties = {
   display: 'flex',
@@ -45,14 +44,6 @@ const EditorEditTrialPage = () => {
     loading: editTrialLoading,
     editTrialOperation
   } = useEditTrial();
-
-  const transformPriorTreatmentRequirements = (requirements) => {
-    return {
-      prior_treatment_requirement: requirements.map(requirement => ({
-        prior_treatment_requirement_name: requirement
-      }))
-    };
-  };
 
   useEffect(() => {
     if (id) {
