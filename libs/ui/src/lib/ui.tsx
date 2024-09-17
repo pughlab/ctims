@@ -15,14 +15,12 @@ import Form from "@rjsf/core";
 import {ValidationData} from "@rjsf/utils";
 import { setIsFormChanged, setTrialId } from "../../../../apps/web/store/slices/contextSlice";
 import {RootState, store} from "../../../../apps/web/store/store";
-import {signOut} from "next-auth/react";
-import process from "process";
 import useSaveTrial from "../../../../apps/web/hooks/useSaveTrial";
 import {useRouter} from "next/router";
 import { Toast } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import {logout} from "../../../../apps/web/pages/api/auth/[...nextauth]";
 import {addVariantCategoryContainerObject} from "./components/helpers";
+import useHandleSignOut from "../../../../apps/web/hooks/useHandleSignOut";
 
 
 
@@ -49,6 +47,7 @@ export const Ui = (props: UiProps) => {
   const router = useRouter();
   const toast = useRef(null);
 
+  const {handleSignOut} = useHandleSignOut();
   const {
     response: saveTrialResponse,
     error: saveTrialError,
@@ -90,10 +89,7 @@ export const Ui = (props: UiProps) => {
       console.log('error', saveTrialError);
       // @ts-ignore
       if (saveTrialError.statusCode === 401) {
-        signOut({redirect: false}).then(() => {
-          store.dispatch(logout());
-          router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-        });
+        handleSignOut()
       }
     }
   }, [saveTrialError, saveTrialResponse]);
@@ -121,7 +117,7 @@ export const Ui = (props: UiProps) => {
       const errorDetails: ValidationData<any> = form.validate(data.formData);
       dispatch(setErrorSchema(errorDetails));
       // Check if the form change event is from the hidden uuid field
-      // if so, then we dont need to mark the formChanged flag for CTM-491 
+      // if so, then we dont need to mark the formChanged flag for CTM-491
       if (id.includes('uuid')) {
         // do nothing here
       } else {
@@ -234,8 +230,8 @@ export const Ui = (props: UiProps) => {
                       armCode={armCode}
                       formData={formData}
       />
-      <ConfirmDialog visible={isConfirmationDialogVisible} onHide={() => setIsConfirmationDialogVisible(false)} message="Are you sure you want to discard match criteria? You will not be able to recover this after it has been deleted." 
-          header="Confirmation" acceptLabel="Discard" rejectLabel="Cancel" accept={accept} reject={reject} 
+      <ConfirmDialog visible={isConfirmationDialogVisible} onHide={() => setIsConfirmationDialogVisible(false)} message="Are you sure you want to discard match criteria? You will not be able to recover this after it has been deleted."
+          header="Confirmation" acceptLabel="Discard" rejectLabel="Cancel" accept={accept} reject={reject}
       />
     </div>
   );

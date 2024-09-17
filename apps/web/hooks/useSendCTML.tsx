@@ -1,16 +1,9 @@
-import getConfig from 'next/config';
-import axios from 'axios';
-import {useEffect, useState} from 'react';
-import {useRouter} from 'next/router';
-import {signOut, useSession} from 'next-auth/react';
+import {useState} from 'react';
 import {useSelector} from "react-redux";
 import {RootState} from "../store/store";
-import process from "process";
 import useAxios from "./useAxios";
 
 const useSendCTML = () => {
-  // const {publicRuntimeConfig} = getConfig();
-  // axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
 
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
@@ -18,20 +11,7 @@ const useSendCTML = () => {
   const trialId = useSelector((state: RootState) => state.context.trialId);
   const ctmlModel = useSelector((state: RootState) => state.finalModelAndErrors.ctmlModel);
 
-  const router = useRouter();
-
-  const {data,status} = useSession()
-
   const { operation } = useAxios();
-
-  // useEffect(() => {
-  //   if(status === 'unauthenticated') {
-  //     // router.push('/');
-  //     signOut({redirect: false}).then(() => {
-  //       router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-  //     });
-  //   }
-  // }, [status])
 
   const move = () => {
     let ctmlModelCopy;

@@ -38,6 +38,7 @@
     "@nestjs/mapped-types": "^1.2.2",
     "@nestjs/passport": "^9.0.3",
     "@nestjs/platform-express": "^10.1.0",
+    "@nestjs/schedule": "^4.1.0",
     "@nestjs/swagger": "^6.3.0",
     "@nrwl/next": "15.8.1",
     "@prisma/client": "^4.5.0",

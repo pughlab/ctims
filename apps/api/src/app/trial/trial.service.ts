@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable, NotFoundException, OnModuleInit} from '@nestjs/common';
 import { CreateTrialDto } from './dto/create-trial.dto';
 import { UpdateTrialDto } from './dto/update-trial.dto';
 import {PrismaService} from "../prisma.service";
@@ -7,6 +7,7 @@ import {PrismaExceptionTools} from "../utils/prisma-exception-tools";
 import { UpdateTrialSchemasDto } from "./dto/update-trial-schemas.dto";
 import { EventService } from "../event/event.service";
 import { ModuleRef } from "@nestjs/core";
+import {TrialLockService} from "../trial-lock/trial-lock.service";
 
 @Injectable()
 export class TrialService implements OnModuleInit {
@@ -14,9 +15,11 @@ export class TrialService implements OnModuleInit {
   private eventService: EventService;
 
   constructor(
+    private readonly trialLockService: TrialLockService,
     private readonly prismaService: PrismaService,
     private readonly moduleRef: ModuleRef
-  ) { }
+  ) {
+  }
 
   onModuleInit(): any {
     this.eventService = this.moduleRef.get(EventService, { strict: false });
@@ -44,7 +47,7 @@ export class TrialService implements OnModuleInit {
     return this.prismaService.trial.findMany();
   }
 
-  async findOne(id: number): Promise<trial> {
+  async findOne(id: number, user: user,): Promise<trial> {
     const result = await this.prismaService.trial.findUnique(
       {
         where: { id: id },
@@ -58,6 +61,17 @@ export class TrialService implements OnModuleInit {
       val.data = JSON.parse(val.data);
       return val;
     });
+
+    // create a lock if there is none
+    const isLocked = await this.prismaService.trial_lock.findFirst({
+      where: {
+        trialId: id,
+        }
+    });
+
+    if (!isLocked) {
+      await this.trialLockService.create(id, user);
+    }
 
     return result;
   }
@@ -121,6 +135,12 @@ export class TrialService implements OnModuleInit {
     });
 
     if (existing_trial) {
+      const isLocked = await this.checkIsTrialLocked(id, user);
+
+      if (isLocked) {
+        throw new HttpException(`Trial with ID ${existing_trial.id} is currently locked.`, 423);
+      }
+
       const updatedTrial = await this.prismaService.trial.update({
         where: { id: existing_trial.id },
         data: {
@@ -192,6 +212,9 @@ export class TrialService implements OnModuleInit {
       },
     });
 
+    // lock the newly created trial
+    await this.trialLockService.create(createdTrial.id, user);
+
     // Add created event
     this.eventService.createEvent({
       type: event_type.TrialCreated,
@@ -208,7 +231,13 @@ export class TrialService implements OnModuleInit {
 
   }
 
-  async updateTrialSchemaList(id: number, updateTrialSchemasDto: UpdateTrialSchemasDto) {
+  async updateTrialSchemaList(id: number, updateTrialSchemasDto: UpdateTrialSchemasDto, user: user) {
+    const isLocked = await this.checkIsTrialLocked(id, user);
+
+    if (isLocked) {
+      throw new HttpException(`Trial with ID ${id} is currently locked.`, 423);
+    }
+
     return this.prismaService.trial.update({
       where: { id },
       data: {
@@ -219,7 +248,13 @@ export class TrialService implements OnModuleInit {
     })
   }
 
-  async delete(id: number) {
+  async delete(id: number, user: user) {
+    const isLocked = await this.checkIsTrialLocked(id, user);
+
+    if (isLocked) {
+      throw new HttpException(`Trial with ID ${id} is currently locked.`, 423);
+    }
+
     try {
       await this.prismaService.trial.delete({
         where: { id }
@@ -233,5 +268,20 @@ export class TrialService implements OnModuleInit {
     }
   }
 
+  // Determine if the trial resource is locked and can be modified
+  // Returns false if either there are no locks, or the lock is made by the same user
+  async checkIsTrialLocked(trialId: number, user: user) {
+    const isLocked = await this.prismaService.trial_lock.findFirst({
+      where: {
+        trialId: trialId,
+      }
+    });
 
+    if (isLocked) {
+      const isLockedBySelf = isLocked.locked_by === user.id;
+      return !isLockedBySelf;
+    } else {
+      return false;
+    }
+  }
 }

@@ -62,6 +62,7 @@ model trial {
   protocol_no            String?
   // This is trial matching status
   trial_status           trial_status?
+  trial_lock             trial_lock[]
   matchSentDate          DateTime?
 }
 
@@ -90,6 +91,7 @@ model user {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   events          event[]
+  trial_lock      trial_lock[]
 
   @@index(fields: [keycloak_id])
 }
@@ -115,6 +117,16 @@ model gene {
   hugoSymbol String
 }
 
+model trial_lock {
+  id          Int      @id @default(autoincrement())
+  trial       trial    @relation(fields: [trialId], references: [id])
+  trialId     Int
+  user        user     @relation(fields: [locked_by], references: [id])
+  locked_by   Int
+  locked_at   DateTime @default(now())
+  lock_expiry DateTime
+}
+
 enum status {
   DRAFT
   IN_REVIEW
@@ -136,6 +148,9 @@ enum event_type {
   TrialDeleted
   TrialDoesNotExist
   TrialExported
+  TrialLocked
+  TrialUnlocked
+  TrialLockUpdated
   CtmlJsonCreated
   CtmlJsonRead
   CtmlJsonReadMany

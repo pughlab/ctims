@@ -1,35 +1,14 @@
-import axios from "axios";
-import {signOut, useSession} from "next-auth/react";
-import {useEffect, useState} from "react";
-import {useRouter} from "next/router";
-import getConfig from 'next/config';
+import {useState} from "react";
 import { getCtmlStatusLabel } from "../../../libs/types/src/CtmlStatusLabels";
-import process from "process";
 import useAxios from "./useAxios";
 
 const useGetUserTrials = () => {
-  // const { publicRuntimeConfig } = getConfig();
-  // axios.defaults.baseURL = publicRuntimeConfig.REACT_APP_API_URL || "http://localhost:3333/api"
 
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const router = useRouter();
-
-  const {data, status} = useSession()
-
   const { operation } = useAxios();
-
-  // useEffect(() => {
-  //   if(status === 'unauthenticated') {
-  //     // router.push('/');
-  //     signOut({redirect: false}).then(() => {
-  //       router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-  //     });
-  //   }
-  // }, [status])
-
 
   const getAllTrialsOperation = async () => {
     const accessToken = localStorage.getItem('ctims-accessToken');

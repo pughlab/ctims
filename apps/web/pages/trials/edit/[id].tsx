@@ -9,7 +9,7 @@ import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/struc
 import {selectedTrialGroupId, setTrialId} from "../../../store/slices/contextSlice";
 import {useDispatch} from "react-redux";
 import IdleComponent from "../../../components/IdleComponent";
-import { setCtmlModel } from '../../../store/slices/ctmlModelSlice';
+import {setCtmlModel} from '../../../store/slices/ctmlModelSlice';
 import FooterComponent from "apps/web/components/FooterComponent";
 import {transformPriorTreatmentRequirements} from "libs/ui/src/lib/components/helpers"
 
@@ -25,7 +25,7 @@ const containerStyle: React.CSSProperties = {
 const EditorEditTrialPage = () => {
   const router = useRouter()
   const dispatch = useDispatch();
-  const { id } = router.query
+  const {id} = router.query
 
   dispatch(setTrialId(+id));
 
@@ -40,11 +40,19 @@ const EditorEditTrialPage = () => {
   } = useGetCtmlSchema();
 
   const {
-      error: editTrialError,
-      response: editTrialResponse,
-      loading: editTrialLoading,
-      editTrialOperation
+    error: editTrialError,
+    response: editTrialResponse,
+    loading: editTrialLoading,
+    editTrialOperation
   } = useEditTrial();
+
+  const transformPriorTreatmentRequirements = (requirements) => {
+    return {
+      prior_treatment_requirement: requirements.map(requirement => ({
+        prior_treatment_requirement_name: requirement
+      }))
+    };
+  };
 
   useEffect(() => {
     if (id) {
@@ -52,6 +60,14 @@ const EditorEditTrialPage = () => {
       editTrialOperation(id as string)
     }
   }, [id])
+
+  const transformPriorTreatmentRequirements = (requirements) => {
+    return {
+      prior_treatment_requirement: requirements.map(requirement => ({
+        prior_treatment_requirement_name: requirement
+      }))
+    };
+  };
 
   useEffect(() => {
     if (editTrialResponse) {
@@ -111,18 +127,18 @@ const EditorEditTrialPage = () => {
       }
       dispatch(setCtmlModel(editTrialObject))
     }
-
-
   }, [editTrialResponse])
 
-  // return <div>Editing trial {id}</div>
   return (
     <>
-      <EditorTopBar isEditMode={true} title={"Edit CTML"} lastSaved={lastSaved} setLastSaved={setLastSaved}/>
-      <IdleComponent />
+
+      <EditorTopBar title={"Edit CTML"} lastSaved={lastSaved} setLastSaved={setLastSaved}/>
+      <IdleComponent/>
+
       <div style={containerStyle}>
-        <LeftMenuEditorComponent />
-        {(getCtmlSchemaResponse && formData) && <Ui ctml_schema={getCtmlSchemaResponse} formData={formData} setLastSaved={setLastSaved}></Ui>}
+        <LeftMenuEditorComponent/>
+        {(getCtmlSchemaResponse && formData) &&
+          <Ui ctml_schema={getCtmlSchemaResponse} formData={formData} setLastSaved={setLastSaved}></Ui>}
       </div>
       <FooterComponent/>
     </>

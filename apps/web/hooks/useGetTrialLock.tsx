@@ -1,8 +1,8 @@
+
 import {useEffect, useState} from "react";
 import useAxios from "./useAxios";
 
-const useEditTrial = () => {
-
+const useGetTrialLock = () => {
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -15,7 +15,7 @@ const useEditTrial = () => {
     }
   }, [axiosError]);
 
-  const editTrialOperation = async (trialId: string) => {
+  const getTrialLockOperation = async (trialId: string) => {
     setLoading(true);
     const accessToken = localStorage.getItem('ctims-accessToken');
     const headers = {
@@ -23,26 +23,12 @@ const useEditTrial = () => {
     }
 
     try {
-      const trialResponse = await operation({
+      const trialLockResponse = await operation({
         method: 'get',
-        url: `/trials/${trialId}`,
+        url: `/trial-lock/${trialId}`,
         headers,
       });
-      let updatedAtDate = new Date(trialResponse.data.updatedAt)
-      let updatedAtFormatted = updatedAtDate.toLocaleString(undefined, {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric'
-      });
-      const mappedTrialResponse = {
-        ...trialResponse.data,
-        updatedAt: updatedAtFormatted
-      }
-
-      const trial: any = mappedTrialResponse;
-      setResponse(trial);
+      setResponse(trialLockResponse);
     }
     catch (error) {
       console.log('response', error.response)
@@ -57,7 +43,7 @@ const useEditTrial = () => {
     }
   }
 
-  return {response, error, loading, editTrialOperation};
+  return {response, error, loading, getTrialLockOperation};
 
 }
-export default useEditTrial;
+export default useGetTrialLock;

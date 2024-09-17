@@ -16,11 +16,13 @@ import {parse} from "yaml";
 import NewTrialIdDialog from './NewTrialIdDialog';
 import {IS_FORM_DISABLED} from "../../constants/appConstants";
 import useSendMatchminerJob from "../../hooks/useSendMatchminerJob";
-import {logout} from "../../pages/api/auth/[...nextauth]";
 import SendCTMLDialog from "./SendCTMLDialog";
 import useSendMultipleCTMLs from "../../hooks/useSendMultipleCTMLs";
 import {CtmlStatusEnum} from "../../../../libs/types/src/ctml-status.enum";
 import useGetTrialsByIDs from "../../hooks/useGetTrialsByIDs";
+import { Tooltip } from 'primereact/tooltip';
+import useHandleSignOut from "../../hooks/useHandleSignOut";
+import useClearTrialLocks from "../../hooks/useClearTrialLocks";
 
 // property selectedTrialGroup from parent component when dropdown changed
 // trials is the list of trials for the selected trial group
@@ -46,6 +48,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
     return trial.status != CtmlStatusEnum.DRAFT && trial.ctml_jsons[0].has_match;
   });
 
+  const {handleSignOut} = useHandleSignOut();
   const {
     response: sendMultipleCTMLsResponse,
     error: sendMultipleCTMLsError,
@@ -98,7 +101,15 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
       label: 'Edit',
       icon: 'pi pi-pencil',
       command: () => {
-        const isFormDisabled = (rowClicked?.user.email !== data.user.email) && !isTrialGroupAdmin;
+        let isFormDisabled = (rowClicked?.user.email !== data.user.email) && !isTrialGroupAdmin;
+        // also check if the trial is locked
+        if (rowClicked.lockStatus === 'Locked' && rowClicked.lockedUser !== data.user.name) {
+          trialsErrorToast.current.show({
+            severity: "error",
+            summary: 'CTML is locked by another user',
+          });
+          isFormDisabled = true;
+        }
         dispatch(setIsFormDisabled(isFormDisabled));
         sessionStorage.setItem(IS_FORM_DISABLED, isFormDisabled.toString().toUpperCase());
         router.push(`/trials/edit/${rowClicked.id}`);
@@ -207,10 +218,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
     if(sendMultipleCTMLsError) {
       console.log('error', sendMultipleCTMLsError);
       if (sendMultipleCTMLsError.statusCode === 401) {
-        signOut({callbackUrl: '/#/login', redirect: false}).then(() => {
-          store.dispatch(logout());
-          router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-        });
+        handleSignOut()
       }
     }
   }, [sendMultipleCTMLsError, sendMultipleCTMLsResponse]);
@@ -229,10 +237,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
     if(sendMatchJobError) {
       console.log('error', sendMatchJobError);
       if (sendMatchJobError.statusCode === 401) {
-        signOut({callbackUrl: '/#/login', redirect: false}).then(() => {
-          store.dispatch(logout());
-          router.push(process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL as string || '/');
-        });
+        handleSignOut();
       }
     }
   }, [sendMatchJobError, sendMatchJobResponse]);
@@ -315,8 +320,24 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
         summary: 'This service in not installed and unavailable at this time.',
       });
     }
-    
+
   }
+
+  const lockStatusTemplate = (rowData) => {
+    const isLocked = rowData.lockStatus;
+    const lockedUser = rowData.lockedUser;
+    return (
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Tooltip target={`.lock-icon-${rowData.id}`} content={isLocked == "Locked" ? `${lockedUser} is currently editing the CTML.` : `CTML can be edited.`} />
+        <div className={`lock-icon lock-icon-${rowData.id}`}>
+          {isLocked == "Locked" ?
+            <i className="pi pi-lock" style={{ color: "black", marginRight: '8px' }} /> :
+            <i className="pi pi-unlock" style={{ color: 'grey', marginRight: '8px' }} />
+          }
+        </div>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -360,6 +381,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
             <Column field="ctml_status_label" header="CTML Status" sortable></Column>
             <Column field="createdAt" header="Created on" dataType="date"></Column>
             <Column field="updatedAt" header="Modified on" dataType="date"></Column>
+            <Column field="lockStatus" header="Lock Status" body={lockStatusTemplate}></Column>
           </DataTable>
         </div>
 
