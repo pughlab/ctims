@@ -39,22 +39,27 @@ export class MatchminerService implements OnModuleInit, OnModuleDestroy {
     }
 
   async initRabbitMQ() {
-    this.conn = await amqplib.connect(`amqp://${this.rabbitmqUrl}:${this.rabbitmqPort}`);
+    try {
+      this.conn = await amqplib.connect(`amqp://${this.rabbitmqUrl}:${this.rabbitmqPort}`);
 
-      // this.chReceive = await this.conn.createChannel();
+        // this.chReceive = await this.conn.createChannel();
 
-      this.chSend = await this.conn.createChannel();
-      await this.chSend.assertQueue(this.queue);
+        this.chSend = await this.conn.createChannel();
+        await this.chSend.assertQueue(this.queue);
 
-      // Listener
-      // ch1.consume(queue, (msg) => {
-      //   if (msg !== null) {
-      //     console.log('Received:', msg.content.toString());
-      //     ch1.ack(msg);
-      //   } else {
-      //     console.log('Consumer cancelled by server');
-      //   }
-      // });
+        // Listener
+        // ch1.consume(queue, (msg) => {
+        //   if (msg !== null) {
+        //     console.log('Received:', msg.content.toString());
+        //     ch1.ack(msg);
+        //   } else {
+        //     console.log('Consumer cancelled by server');
+        //   }
+        // });
+      }
+      catch (e) {
+        console.log(e);
+      }
     }
 
     async createTrialMatchJobs(user: user, trialInternalIds: string[]) {

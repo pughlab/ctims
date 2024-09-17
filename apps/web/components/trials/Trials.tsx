@@ -304,7 +304,18 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
   }
 
   const sendCtmlClick = (e) => {
-    setIsSendDialogVisible(true);
+    if (process.env.NEXT_PUBLIC_ENABLE_MATCHMINER_INTEGRATION === 'true') {
+      setIsSendDialogVisible(true);
+    }
+    else {
+      // let user know matchminer is not available
+      trialsErrorToast.current.show({
+        severity:
+          'info',
+        summary: 'This service in not installed and unavailable at this time.',
+      });
+    }
+    
   }
 
   return (
