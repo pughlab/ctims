@@ -9,7 +9,7 @@ import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/struc
 import {selectedTrialGroupId, setTrialId} from "../../../store/slices/contextSlice";
 import {useDispatch} from "react-redux";
 import IdleComponent from "../../../components/IdleComponent";
-import { setCtmlModel } from '../../../store/slices/ctmlModelSlice';
+import {setCtmlModel} from '../../../store/slices/ctmlModelSlice';
 import FooterComponent from "apps/web/components/FooterComponent";
 import {transformPriorTreatmentRequirements} from "libs/ui/src/lib/components/helpers"
 
@@ -25,13 +25,12 @@ const containerStyle: React.CSSProperties = {
 const EditorEditTrialPage = () => {
   const router = useRouter()
   const dispatch = useDispatch();
-  const { id } = router.query
+  const {id} = router.query
 
   dispatch(setTrialId(+id));
 
   const [formData, setFormData] = useState(null);
   const [lastSaved, setLastSaved] = useState<string>("Unsaved");
-  const [isEditMode, setIsEditMode] = useState(true);
 
   const {
     error: getCtmlSchemaError,
@@ -41,10 +40,10 @@ const EditorEditTrialPage = () => {
   } = useGetCtmlSchema();
 
   const {
-      error: editTrialError,
-      response: editTrialResponse,
-      loading: editTrialLoading,
-      editTrialOperation
+    error: editTrialError,
+    response: editTrialResponse,
+    loading: editTrialLoading,
+    editTrialOperation
   } = useEditTrial();
 
   useEffect(() => {
@@ -125,11 +124,14 @@ const EditorEditTrialPage = () => {
   // return <div>Editing trial {id}</div>
   return (
     <>
-      <EditorTopBar isEditMode={true} title={"Edit CTML"} lastSaved={lastSaved} setLastSaved={setLastSaved}/>
-      <IdleComponent />
+
+      <EditorTopBar title={"Edit CTML"} lastSaved={lastSaved} setLastSaved={setLastSaved}/>
+      <IdleComponent/>
+
       <div style={containerStyle}>
-        <LeftMenuEditorComponent />
-        {(getCtmlSchemaResponse && formData) && <Ui ctml_schema={getCtmlSchemaResponse} formData={formData} setLastSaved={setLastSaved}></Ui>}
+        <LeftMenuEditorComponent/>
+        {(getCtmlSchemaResponse && formData) &&
+          <Ui ctml_schema={getCtmlSchemaResponse} formData={formData} setLastSaved={setLastSaved}></Ui>}
       </div>
       <FooterComponent/>
     </>

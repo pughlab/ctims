@@ -96,7 +96,7 @@ const EditorImportTrialPage = () => {
 
   return (
     <>
-      <EditorTopBar isEditMode={true} lastSaved={lastSaved} setLastSaved={setLastSaved} title={"Import CTML"}/>
+      <EditorTopBar lastSaved={lastSaved} setLastSaved={setLastSaved} title={"Import CTML"}/>
       <IdleComponent />
       <div style={containerStyle}>
         <LeftMenuEditorComponent />
