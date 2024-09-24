@@ -45,7 +45,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
   const trialsErrorToast = useRef(null);
 
   const eligibleTrials: any[] = props.trials.filter((trial: any) => {
-    if (trial.ctml_jsons && Array.isArray(trial.ctml_jsons) && trial.ctml_jsons.length() > 0) {
+    if (trial.ctml_jsons && Array.isArray(trial.ctml_jsons) && trial.ctml_jsons.length > 0) {
       return trial.status != CtmlStatusEnum.DRAFT && trial.ctml_jsons[0].has_match;
     } else {
       return false;
