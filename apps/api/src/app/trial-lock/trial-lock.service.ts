@@ -8,7 +8,10 @@ import {Cron, CronExpression} from "@nestjs/schedule";
 @Injectable()
 export class TrialLockService implements OnModuleInit {
 
+  private TRIAL_LOCK_CLEAR_TIME_MS = parseInt(process.env.NEXT_TRIAL_LOCK_CLEAR_TIME_MS) || (1000 * 60 * 5);
+
   private eventService: EventService;
+
 
   constructor(
     private readonly prismaService: PrismaService,
@@ -51,7 +54,7 @@ export class TrialLockService implements OnModuleInit {
     await this.prismaService.trial_lock.create({
       data: {
         locked_at: new Date(),
-        lock_expiry: new Date(new Date().getTime() + process.env.NEXT_TRIAL_LOCK_CLEAR_TIME_MS),
+        lock_expiry: new Date(new Date().getTime() + this.TRIAL_LOCK_CLEAR_TIME_MS),
         trial: {
           connect: {id: trialId}
         },

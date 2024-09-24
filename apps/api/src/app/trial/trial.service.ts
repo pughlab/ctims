@@ -47,7 +47,7 @@ export class TrialService implements OnModuleInit {
     return this.prismaService.trial.findMany();
   }
 
-  async findOne(id: number, user: user,): Promise<trial> {
+  async findOne(id: number, user: user): Promise<trial> {
     const result = await this.prismaService.trial.findUnique(
       {
         where: { id: id },
@@ -61,17 +61,6 @@ export class TrialService implements OnModuleInit {
       val.data = JSON.parse(val.data);
       return val;
     });
-
-    // create a lock if there is none
-    const isLocked = await this.prismaService.trial_lock.findFirst({
-      where: {
-        trialId: id,
-        }
-    });
-
-    if (!isLocked) {
-      await this.trialLockService.create(id, user);
-    }
 
     return result;
   }

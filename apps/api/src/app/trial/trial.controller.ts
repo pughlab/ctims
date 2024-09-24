@@ -30,6 +30,7 @@ import {UpdateTrialSchemasDto} from "./dto/update-trial-schemas.dto";
 import { EventService } from "../event/event.service";
 import { ModuleRef } from "@nestjs/core";
 import axios from 'axios';
+import {TrialLockService} from "../trial-lock/trial-lock.service";
 
 @Controller('trials')
 @ApiTags("Trial")
@@ -38,14 +39,16 @@ export class TrialController implements OnModuleInit{
   private MM_API_TOKEN = process.env.MM_API_TOKEN;
 
   private eventService: EventService;
+  private trialLockService: TrialLockService;
 
   constructor(
     private readonly moduleRef: ModuleRef,
-    private readonly trialService: TrialService
+    private readonly trialService: TrialService,
     ) { }
 
   onModuleInit(): any {
     this.eventService = this.moduleRef.get(EventService, { strict: false });
+    this.trialLockService = this.moduleRef.get(TrialLockService, { strict: false });
   }
 
   @Post()
@@ -154,6 +157,13 @@ export class TrialController implements OnModuleInit{
 
     if (!trial) {
       throw new NotFoundException(`Trial with ID ${id} was not found.`)
+    } else {
+      // lock the trial if it is not already locked
+      // create a lock if there is none
+      const lock = await this.trialLockService.getLockByOthers(+id, user);
+      if (!lock) {
+        await this.trialLockService.create(+id, user);
+      }
     }
     return trial
   }
