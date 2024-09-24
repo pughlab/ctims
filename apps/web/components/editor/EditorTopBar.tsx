@@ -25,6 +25,7 @@ interface EditorTopBarProps {
 
 const EditorTopBar = (props: EditorTopBarProps) => {
 
+  const TRIAL_LOCK_PING_TIME_MS = +process.env.NEXT_PUBLIC_TRIAL_LOCK_PING_TIME_MS || 240000;
   const [isDialogVisible, setIsDialogVisible] = useState<boolean>(false);
   const [isConfirmationDialogVisible, setIsConfirmationDialogVisible] = useState(false);
   const [isSendDialogVisible, setIsSendDialogVisible] = useState<boolean>(false);
@@ -52,9 +53,6 @@ const EditorTopBar = (props: EditorTopBarProps) => {
   } = useSendMatchminerJob();
 
   const {
-    response: updateTrialLockResponse,
-    error: updateTrialLockError,
-    loading: updateTrialLockLoading,
     updateTrialLockOperation
   } = useUpdateTrialLock();
 
@@ -68,8 +66,6 @@ const EditorTopBar = (props: EditorTopBarProps) => {
   const router = useRouter();
 
   const toast = useRef(null);
-
-  const TRIAL_LOCK_TIMEOUT = 1000 * 60 * 4; // 4 minutes
 
   useEffect(() => {
     const state = store.getState();
@@ -89,7 +85,7 @@ const EditorTopBar = (props: EditorTopBarProps) => {
         const interval = setInterval(() => {
           console.log('start ping')
           updateTrialLockOperation(trialId);
-        }, TRIAL_LOCK_TIMEOUT);
+        }, TRIAL_LOCK_PING_TIME_MS);
 
         // clear when unmount
         return () => {

@@ -51,7 +51,7 @@ export class TrialLockService implements OnModuleInit {
     await this.prismaService.trial_lock.create({
       data: {
         locked_at: new Date(),
-        lock_expiry: new Date(new Date().getTime() + 1000 * 60 * 5), //5min lock
+        lock_expiry: new Date(new Date().getTime() + process.env.NEXT_TRIAL_LOCK_CLEAR_TIME_MS),
         trial: {
           connect: {id: trialId}
         },
@@ -85,7 +85,7 @@ export class TrialLockService implements OnModuleInit {
         id: lock.id,
       },
       data: {
-        lock_expiry: new Date(new Date().getTime() + 1000 * 60 * 5), // 5min lock increment
+        lock_expiry: new Date(new Date().getTime() + process.env.NEXT_TRIAL_LOCK_CLEAR_TIME_MS),
       }
     });
 
