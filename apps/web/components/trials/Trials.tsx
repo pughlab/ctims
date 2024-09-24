@@ -45,7 +45,12 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
   const trialsErrorToast = useRef(null);
 
   const eligibleTrials: any[] = props.trials.filter((trial: any) => {
-    return trial.status != CtmlStatusEnum.DRAFT && trial.ctml_jsons[0].has_match;
+    if (trial.ctml_jsons.length() > 0) {
+      return trial.status != CtmlStatusEnum.DRAFT && trial.ctml_jsons[0].has_match;
+    } else {
+      return false;
+    }
+
   });
 
   const {handleSignOut} = useHandleSignOut();
