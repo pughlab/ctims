@@ -322,7 +322,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
       trialsErrorToast.current.show({
         severity:
           'info',
-        summary: 'This service in not installed and unavailable at this time.',
+        summary: 'CTIMS matching functionality is not enabled. Please contact your administrator.',
       });
     }
 
