@@ -77,24 +77,25 @@ const EditorTopBar = (props: EditorTopBarProps) => {
       const isFormDisabledFromStorage = sessionStorage.getItem(IS_FORM_DISABLED) === 'TRUE';
       dispatch(setIsFormDisabled(isFormDisabledFromStorage));
     }
+  }, []);
 
-    // ping the server to update the lock every 4 minutes
+  // on refresh, selectedTrialId from state reloads after this component is mounted, so moved this here
+  useEffect(() => {
+    // ping the server to update the lock periodically
     if (selectedTrialId) {
       const trialId = selectedTrialId;
       if (!isFormDisabled) {
         const interval = setInterval(() => {
-          console.log('start ping')
           updateTrialLockOperation(trialId);
         }, TRIAL_LOCK_PING_TIME_MS);
 
         // clear when unmount
         return () => {
-          console.log('clear ping')
           clearInterval(interval);
         }
       }
     }
-  }, []);
+  }, [selectedTrialId]);
 
   useEffect(() => {
     if (saveTrialResponse) {

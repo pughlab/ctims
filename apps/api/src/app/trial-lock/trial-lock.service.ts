@@ -26,11 +26,9 @@ export class TrialLockService implements OnModuleInit {
   async getLockByOthers(trialId: number, user: user) {
     const trialLock = this.prismaService.trial_lock.findFirst({
       where: {
-        trialId: trialId,
-        user: {
-          id: {
-            not: user.id
-          }
+        trialId,
+        locked_by: {
+          not: user.id
         }
       }
     });
@@ -44,7 +42,10 @@ export class TrialLockService implements OnModuleInit {
   async create(trialId: number, user: user) {
     const lock = await this.prismaService.trial_lock.findFirst({
       where: {
-        trialId: trialId
+        trialId,
+        locked_by: {
+          not: user.id
+        }
       }
     });
     if (lock) {
