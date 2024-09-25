@@ -136,6 +136,7 @@ enum status {
 enum trial_status {
   PENDING
   MATCHED
+  ERROR
 }
 
 enum event_type {

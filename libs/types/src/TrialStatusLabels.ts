@@ -2,7 +2,8 @@ import {TrialStatusEnum} from "./trial-status.enum";
 
 export const TrialStatusLabels: Record<TrialStatusEnum, string> = {
   [TrialStatusEnum.PENDING]: "Pending",
-  [TrialStatusEnum.MATCHED]: "Matched"
+  [TrialStatusEnum.MATCHED]: "Matched",
+  [TrialStatusEnum.ERROR]: "Error",
 };
 
 /**

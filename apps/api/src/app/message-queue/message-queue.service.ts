@@ -57,10 +57,29 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
   onMessageReceived = async (msg) => {
     const message = msg.content.toString();
     const json_message: IEventMessage = JSON.parse(message);
+    
+    const trialInternalIds: string[] = json_message.trial_internal_ids;
 
+    // get all trial ids (NCT-ID)
+    const trials = await this.prismaService.trial.findMany({
+      where: {
+        trial_internal_id: {
+          in: trialInternalIds
+        }
+      }
+    })
+    const trialIds = trials.map((t) => t.nct_id);
+
+    // get the user who run the match
+    const user = await this.prismaService.user.findFirst({
+      where: {
+        id: {
+          equals: Number(json_message.user_id)
+        }
+      }
+    });
+    
     if (json_message.run_status === 'success') {
-      const trialInternalIds: string[] = json_message.trial_internal_ids;
-
       const result = await this.prismaService.trial.updateMany({
         where: {
           trial_internal_id: {
@@ -73,36 +92,47 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
         }
       });
 
-      // send out email notification to user who run the match
-      const user = await this.prismaService.user.findFirst({
-        where: {
-          id: {
-            equals: Number(json_message.user_id)
-          }
-        }
-      });
-
-      const from: string = 'ctims@uhn.ca';
+      // send out email notification to user
+      const from: string = process.env.CTIMS_SUPPORT_EMAIL;
+      const ctims_url: string = process.env.CTIMS_URL;
       const to: string = user.email;
-      const subject: string = 'Trial match run successfully';
-      const mailTemplate: string = 'Dear User, <br><br>' + json_message.run_message + '<br><br>Yours PMCDI team';
+      const subject: string = 'CTIMS: Your trial(s) was successfully run';
+      const mailTemplate: string = 'Dear User, <br><br>' 
+        + 'Your recently run trial(s) "'
+        + trialIds.toString()
+        + '" was successfully run through The CTIMS Matcher.<br><br>' 
+        + 'To see results:<br>'
+        + '<ol><li>Sign into <a href="' + ctims_url + '">CTIMS</a>.</li><li>Select trial group.</li><li>Click the Results tab.</li></ol>'
+        + 'Please note results may take up to 10 minutes to be displayed.<br><br>'
+        + 'Regards,<br>'
+        + 'CTIMS team';
 
       await sendMail(from, to, subject, mailTemplate);
     }
     else {
-      // send out email notification to user who run the match
-      const user = await this.prismaService.user.findFirst({
+      const result = await this.prismaService.trial.updateMany({
         where: {
-          id: {
-            equals: Number(json_message.user_id)
-          }
+          trial_internal_id: {
+            in: trialInternalIds
+          },
+          trial_status: TrialStatusEnum.PENDING,
+        },
+        data: {
+          trial_status: TrialStatusEnum.ERROR
         }
       });
 
-      const from: string = 'ctims@uhn.ca';
+      // send out email notification to user
+      const from: string = process.env.CTIMS_SUPPORT_EMAIL;
       const to: string = user.email;
-      const subject: string = 'Error running trial match';
-      const mailTemplate: string = 'Dear User, <br><br>' + json_message.run_message + '<br><br>Yours PMCDI team';
+      const subject: string = 'CTIMS: Your trial(s) was unsuccessful';
+      const mailTemplate: string = 'Dear User, <br><br>' 
+        + 'Your recently run trial(s) "'
+        + trialIds.toString()
+        + '" was unsuccessful. Please try again.<br><br>'
+        + 'If you have any questions please contact your support team.<br><br>'
+        + 'Regards,<br>'
+        + 'PMCDI team';
 
       await sendMail(from, to, subject, mailTemplate);
     }

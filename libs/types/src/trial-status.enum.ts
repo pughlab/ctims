@@ -1,4 +1,5 @@
 export enum TrialStatusEnum {
   "PENDING" = "PENDING",
-  "MATCHED" = "MATCHED"
+  "MATCHED" = "MATCHED",
+  "ERROR" = "ERROR"
 }
