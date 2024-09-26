@@ -2,7 +2,7 @@ import * as nodemailer from 'nodemailer';
 
 export const sendMail = async (from: string, to: string, subject: string, html: string) => {
     const transporter = nodemailer.createTransport({
-        host: 'uhnmail.uhn.ca',
+        host: process.env.MAIL_HOST,
         port: 25,
         secure: false,
         auth: {

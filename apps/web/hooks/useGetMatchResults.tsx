@@ -32,7 +32,7 @@ const useGetMatchResults = () => {
 
       // Only return trials that are pending or matched
       const filteredTrials = trials.filter((trial: any) =>
-        trial.trial_status === TrialStatusEnum.PENDING || trial.trial_status === TrialStatusEnum.MATCHED);
+        trial.trial_status === TrialStatusEnum.PENDING || trial.trial_status === TrialStatusEnum.ERROR || trial.trial_status === TrialStatusEnum.MATCHED);
       const mapped = filteredTrials.map((filteredTrial: any) => {
         // lookup the trial with results
         const trialWithResult = trialsWithResults.data.find(trial => trial.nct_id === filteredTrial.nct_id);

@@ -48,7 +48,8 @@ services:
         MAIL_HOST: ${MAIL_HOST}
         MAIL_USERNAME: ${MAIL_USERNAME}
         MAIL_PASSWORD: ${MAIL_PASSWORD}
-
+        CTIMS_SUPPORT_EMAIL: ${CTIMS_SUPPORT_EMAIL}
+        CTIMS_URL: ${CTIMS_URL}
     environment:
       DATABASE_URL: mysql://ctims:ctims@database_qa:3306/ctims
     ports:
