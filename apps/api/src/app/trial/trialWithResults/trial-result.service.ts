@@ -37,6 +37,7 @@ export class TrialResultService implements OnModuleInit {
       where: {
         OR: [
           {trial_status: TrialStatusEnum.PENDING},
+          {trial_status: TrialStatusEnum.ERROR},
           {trial_status: TrialStatusEnum.MATCHED}
         ]
       }
@@ -72,7 +73,7 @@ export class TrialResultService implements OnModuleInit {
     const trials = await this.prismaService.trial.findMany({
       where: {
         trial_internal_id: {in: trial_internal_ids.split(',')},
-        trial_status: {in: [TrialStatusEnum.PENDING, TrialStatusEnum.MATCHED]}
+        trial_status: {in: [TrialStatusEnum.PENDING, TrialStatusEnum.ERROR, TrialStatusEnum.MATCHED]}
       }
     });
 

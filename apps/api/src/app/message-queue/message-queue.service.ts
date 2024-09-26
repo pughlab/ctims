@@ -100,7 +100,7 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
       const mailTemplate: string = 'Dear User, <br><br>' 
         + 'Your recently run trial(s) "'
         + trialIds.toString()
-        + '" was successfully run through The CTIMS Matcher.<br><br>' 
+        + '" was successfully run through the CTIMS Matcher.<br><br>' 
         + 'To see results:<br>'
         + '<ol><li>Sign into <a href="' + ctims_url + '">CTIMS</a>.</li><li>Select trial group.</li><li>Click the Results tab.</li></ol>'
         + 'Please note results may take up to 10 minutes to be displayed.<br><br>'
