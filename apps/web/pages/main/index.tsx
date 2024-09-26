@@ -73,6 +73,8 @@ const Main = () => {
       setSelectedTrialGroup({ plainRole: selectedTrialGroupFromState, isAdmin: selectedTrialGroupIsAdminFromState });
       getTrialsForUsersInGroupOperation(selectedTrialGroupFromState);
     }
+
+    clearTrialLocksOperation();
   }, [selectedTrialGroupFromState, selectedTrialGroupIsAdminFromState]);
 
   const onTrialGroupSelected = (selectedTrialGroup: {role: string, code: string}) => {
@@ -94,7 +96,6 @@ const Main = () => {
   useEffect(() => {
     if (getTrialsForUsersInGroupResponse) {
       setTrials(getTrialsForUsersInGroupResponse);
-      clearTrialLocksOperation();
     }
   }, [getTrialsForUsersInGroupResponse]);
 
