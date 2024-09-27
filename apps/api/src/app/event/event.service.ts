@@ -31,6 +31,19 @@ export class EventService {
           trialGroups: trialGroups.map(t => ({ "name": t.name, "id": t.id }))
         }
       }
+
+      // check if ctml_json record exits, ran into an error on QA where ctml_json is null
+      if (data.ctml_json) {
+        const isCtmlJsonExists = await this.prismaService.ctml_json.findUnique({
+          where: {
+            id: data.ctml_json.id
+          }
+        });
+        if (!isCtmlJsonExists) {
+          throw new Error(`ctml_json record with id ${data.ctml_json.id} does not exist for user ${data.user.id} and trial ${data.trial.id}`);
+        }
+      }
+
       return this.prismaService.event.create({
         data: {
           ...data,
