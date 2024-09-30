@@ -89,7 +89,7 @@ export class TrialLockService implements OnModuleInit {
         id: lock.id,
       },
       data: {
-        lock_expiry: new Date(new Date().getTime() + process.env.NEXT_TRIAL_LOCK_CLEAR_TIME_MS),
+        lock_expiry: new Date(new Date().getTime() + this.TRIAL_LOCK_CLEAR_TIME_MS),
       }
     });
 
