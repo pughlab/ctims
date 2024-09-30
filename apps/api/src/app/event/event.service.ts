@@ -54,7 +54,7 @@ export class EventService {
         }
       });
     } catch (e) {
-      logger.error(`Error while creating audit log with input: ${JSON.stringify(data)}`);
+      logger.error(`Error while creating audit log with input: ${JSON.stringify(data)}\n${e.stack}`);
     }
   }
 
