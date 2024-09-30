@@ -26,7 +26,6 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
 
   onModuleInit(): any {
     this.eventService = this.moduleRef.get(EventService, { strict: false });
-    this.initRabbitMQ();
   }
 
   onModuleDestroy(): any {

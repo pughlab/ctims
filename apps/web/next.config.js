@@ -13,7 +13,7 @@ const nextConfig = {
   swcMinify: false,
   publicRuntimeConfig: {
     // Will be available on both server and client
-    REACT_APP_API_URL: process.env.REACT_APP_API_URL,
+    REACT_APP_API_URL: "http://localhost:3333",
     NEXT_PUBLIC_SIGNOUT_REDIRECT_URL: process.env.NEXT_PUBLIC_SIGNOUT_REDIRECT_URL,
   },
   env: {
