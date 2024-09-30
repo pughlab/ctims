@@ -40,7 +40,15 @@ export class EventService {
           }
         });
         if (!isCtmlJsonExists) {
-          throw new Error(`ctml_json record with id ${data.ctml_json.id} does not exist for user ${data.user.id} and trial ${data.trial.id}`);
+          const trialId = data.trial ? data.trial.id : null;
+          if (trialId) {
+            throw new Error(`ctml_json record with id ${data.ctml_json.id} does not exist for user ${data.user.id} and trial ${data.trial.id}`);
+          } else {
+            const trialList = (data.metadata as any)?.input?.ctmlJson?.trial_list || [];
+            const trial_internal_ids = trialList.map((trial: any) => trial.trialInformation?.trial_internal_id).filter((id: any) => id);
+            throw new Error(`ctml_json record with id ${data.ctml_json.id} does not exist for user ${data.user.id} and trials ${trial_internal_ids.join(", ")}`);
+          }
+
         }
       }
 
