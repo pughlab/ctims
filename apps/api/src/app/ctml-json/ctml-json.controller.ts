@@ -190,7 +190,6 @@ export class CtmlJsonController implements OnModuleInit {
       type: event_type.CtmlJsonSentToMatchminer,
       description: "CTML JSON sent to Matchminer via Post to /ctml-jsons/:id/send_to_matchminer",
       user,
-      ctml_json: ctmlJson,
       metadata: {
         input: { id, ctmlJson }
       }
