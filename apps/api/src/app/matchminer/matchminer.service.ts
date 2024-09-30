@@ -131,7 +131,11 @@ export class MatchminerService implements OnModuleInit, OnModuleDestroy {
       });
       return response.data;
     } catch (error) {
-      console.log(error);
+      if (error.code === 'ECONNREFUSED') {
+        console.error('Matchminer api server is not running');
+      } else {
+        console.log(error);
+      }
       throw new Error(error);
     }
   }
