@@ -31,15 +31,15 @@ import { EventService } from "../event/event.service";
 import { ModuleRef } from "@nestjs/core";
 import axios from 'axios';
 import {TrialLockService} from "../trial-lock/trial-lock.service";
+import {MatchminerService} from "../matchminer/matchminer.service";
 
 @Controller('trials')
 @ApiTags("Trial")
 export class TrialController implements OnModuleInit{
 
-  private MM_API_TOKEN = process.env.MM_API_TOKEN;
-
   private eventService: EventService;
   private trialLockService: TrialLockService;
+  private matchminerService: MatchminerService;
 
   constructor(
     private readonly moduleRef: ModuleRef,
@@ -49,6 +49,7 @@ export class TrialController implements OnModuleInit{
   onModuleInit(): any {
     this.eventService = this.moduleRef.get(EventService, { strict: false });
     this.trialLockService = this.moduleRef.get(TrialLockService, { strict: false });
+    this.matchminerService = this.moduleRef.get(MatchminerService, { strict: false });
   }
 
   @Post()
@@ -267,15 +268,8 @@ export class TrialController implements OnModuleInit{
     const foundTrial = await this.trialService.findOne(+id, user);
 
     const p1 = this.trialService.delete(+id, user);
-    const p2 = axios.delete(`${process.env.MM_API_URL}/delete_trial_by_internal_id`,
-    {
-      headers: {'Authorization': `Bearer ${this.MM_API_TOKEN}`},
-      params: {
-        trial_internal_id: foundTrial.trial_internal_id,
-      },
-    });
+    const p2 = this.matchminerService.deleteTrial(foundTrial.trial_internal_id);
 
-    await Promise.all([p1, p2]);
-
+    return Promise.all([p1, p2]);
   }
 }

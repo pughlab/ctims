@@ -174,7 +174,11 @@ export class CtmlJsonService {
         });
       }
     } catch (error) {
-      console.log(error);
+      if (error.code === 'ECONNREFUSED') {
+        console.error('Matchminer api server is not running');
+      } else {
+        console.log(error);
+      }
       throw new Error(error);
     }
   }
