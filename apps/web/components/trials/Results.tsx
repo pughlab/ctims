@@ -92,7 +92,6 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
     {label: "HER2 Status", key: "her2_status"},
     {label: "ER Status", key: "er_status"},
     {label: "PR Status", key: "pr_status"},
-    {label: "Prior Treament Agent", key: "prior_treatment_agent"},
     {label: "Genomic Alteration", key: "genomic_alteration"},
     {label: "Hugo Symbol", key: "true_hugo_symbol"},
     {label: "Mutation Effect", key: "mutation_effect"},
@@ -103,7 +102,7 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
     {label: "CNV Call", key: "cnv_call"},
     {label: "MS Status", key: "ms_status"},
     {label: "Match Type", key: "match_type"},
-    {label: "Match Criteria", key: "query"}
+    {label: "Match Criteria", key: "query"},
     {label: "Patient Match Values", key:"patient_match_values"},
     {label: "Oncotree Primary Diagnosis Match Value", key:"oncotree_primary_diagnosis_match_value"}
   ];
@@ -170,6 +169,7 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
       cur.trialId = trialSelected.trialId;
       cur.trialName = trialSelected.short_title;
       cur.matchDate = trialSelected.matchedDate;
+      cur.query = JSON.stringify(cur.query);
     }
     return data;
   }
