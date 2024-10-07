@@ -103,6 +103,7 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
     {label: "CNV Call", key: "cnv_call"},
     {label: "MS Status", key: "ms_status"},
     {label: "Match Type", key: "match_type"},
+    {label: "Match Criteria", key: "query"}
     {label: "Patient Match Values", key:"patient_match_values"},
     {label: "Oncotree Primary Diagnosis Match Value", key:"oncotree_primary_diagnosis_match_value"}
   ];
