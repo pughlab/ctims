@@ -103,7 +103,6 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
         + '" was successfully run through the CTIMS Matcher.<br><br>' 
         + 'To see results:<br>'
         + '<ol><li>Sign into <a href="' + ctims_url + '">CTIMS</a>.</li><li>Select trial group.</li><li>Click the Results tab.</li></ol>'
-        + 'Please note results may take up to 10 minutes to be displayed.<br><br>'
         + 'Regards,<br>'
         + 'CTIMS team';
 
@@ -124,15 +123,17 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
 
       // send out email notification to user
       const from: string = process.env.CTIMS_SUPPORT_EMAIL;
+      const ctims_url: string = process.env.CTIMS_URL;
       const to: string = user.email;
-      const subject: string = 'CTIMS: Your trial(s) was unsuccessful';
+      const subject: string = 'CTIMS: An error during trial matching';
       const mailTemplate: string = 'Dear User, <br><br>' 
-        + 'Your recently run trial(s) "'
+        + 'An error occurred when sending your trial(s) "'
         + trialIds.toString()
-        + '" was unsuccessful. Please try again.<br><br>'
-        + 'If you have any questions please contact your support team.<br><br>'
+        + '" to the CTIMS Matcher. Please contact your support team to troubleshoot and then try again.<br><br>'
+        + 'To try again:<br>'
+        + '<ol><li>Sign into <a href="' + ctims_url + '">CTIMS</a>.</li><li>Select trial group.</li><li>Click the "Send CTML(s) to Matcher" button.</li><li>Select trial(s).</li><li>Click "Send".</li></ol>'
         + 'Regards,<br>'
-        + 'PMCDI team';
+        + 'CTIMS team';
 
       await sendMail(from, to, subject, mailTemplate);
     }
