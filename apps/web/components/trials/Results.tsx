@@ -92,6 +92,7 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
     {label: "HER2 Status", key: "her2_status"},
     {label: "ER Status", key: "er_status"},
     {label: "PR Status", key: "pr_status"},
+    {label: "Prior Treament Agent", key: "prior_treatment_agent"},
     {label: "Genomic Alteration", key: "genomic_alteration"},
     {label: "Hugo Symbol", key: "true_hugo_symbol"},
     {label: "Mutation Effect", key: "mutation_effect"},
