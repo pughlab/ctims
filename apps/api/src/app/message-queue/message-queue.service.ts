@@ -59,6 +59,7 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
     const json_message: IEventMessage = JSON.parse(message);
     
     const trialInternalIds: string[] = json_message.trial_internal_ids;
+    const failedTrialInternalIds: string[] = json_message.failed_trial_internal_ids;
 
     // get all trial ids (NCT-ID)
     const trials = await this.prismaService.trial.findMany({
@@ -85,7 +86,9 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
           trial_internal_id: {
             in: trialInternalIds
           },
-          trial_status: TrialStatusEnum.PENDING,
+          trial_status: {
+            in: [TrialStatusEnum.PENDING, TrialStatusEnum.ERROR]
+          },
         },
         data: {
           trial_status: TrialStatusEnum.MATCHED
@@ -96,7 +99,7 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
       const from: string = process.env.CTIMS_SUPPORT_EMAIL;
       const ctims_url: string = process.env.CTIMS_URL;
       const to: string = user.email;
-      const subject: string = 'CTIMS: Your trial(s) was successfully run';
+      const subject: string = 'CTIMS: Trial matching is complete';
       const mailTemplate: string = 'Dear User, <br><br>' 
         + 'Your recently run trial(s) "'
         + trialIds.toString()
@@ -108,13 +111,15 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
 
       await sendMail(from, to, subject, mailTemplate);
     }
-    else {
+    else if (json_message.run_status === 'fail') {
       const result = await this.prismaService.trial.updateMany({
         where: {
           trial_internal_id: {
             in: trialInternalIds
           },
-          trial_status: TrialStatusEnum.PENDING,
+          trial_status: {
+            in: [TrialStatusEnum.PENDING, TrialStatusEnum.MATCHED]
+          },
         },
         data: {
           trial_status: TrialStatusEnum.ERROR
@@ -136,6 +141,51 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
         + 'CTIMS team';
 
       await sendMail(from, to, subject, mailTemplate);
+    }
+    else if (json_message.run_status === 'partial_success') {
+      const result = await this.prismaService.trial.updateMany({
+        where: {
+          trial_internal_id: {
+            in: trialInternalIds
+          },
+          trial_status: {
+            in: [TrialStatusEnum.PENDING, TrialStatusEnum.ERROR]
+          },
+        },
+        data: {
+          trial_status: TrialStatusEnum.MATCHED
+        }
+      });
+      const result2 = await this.prismaService.trial.updateMany({
+        where: {
+          trial_internal_id: {
+            in: failedTrialInternalIds
+          },
+          trial_status: {
+            in: [TrialStatusEnum.PENDING,TrialStatusEnum.MATCHED]
+            }
+        },
+        data: {
+          trial_status: TrialStatusEnum.ERROR
+        }
+      });
+
+      // send out email notification to user
+      const from: string = process.env.CTIMS_SUPPORT_EMAIL;
+      const ctims_url: string = process.env.CTIMS_URL;
+      const to: string = user.email;
+      const subject: string = 'CTIMS: An error during trial matching';
+      const mailTemplate: string = 'Dear User, <br><br>' 
+        + 'An error occurred when sending your trial(s) "'
+        + trialIds.toString()
+        + '" to the CTIMS Matcher. Some trial match was successful while others were not. Please contact your support team to troubleshoot and then try again.<br><br>'
+        + 'To try again:<br>'
+        + '<ol><li>Sign into <a href="' + ctims_url + '">CTIMS</a>.</li><li>Select trial group.</li><li>Click the "Send CTML(s) to Matcher" button.</li><li>Select trial(s).</li><li>Click "Send".</li></ol>'
+        + 'Regards,<br>'
+        + 'CTIMS team';
+
+      await sendMail(from, to, subject, mailTemplate);
+
     }
   }
 }
