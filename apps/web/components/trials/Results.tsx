@@ -105,6 +105,7 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
     {label: "Match Type", key: "match_type"},
     {label: "Patient Match Values", key:"patient_match_values"},
     {label: "Oncotree Primary Diagnosis Match Value", key:"oncotree_primary_diagnosis_match_value"}
+    {label: "Match Criteria", key: "query"}
   ];
   // csv download link ref
 
@@ -169,6 +170,7 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
       cur.trialId = trialSelected.trialId;
       cur.trialName = trialSelected.short_title;
       cur.matchDate = trialSelected.matchedDate;
+      cur.query = JSON.stringify(cur.query);
     }
     return data;
   }
