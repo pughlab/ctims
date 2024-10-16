@@ -103,6 +103,8 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
     {label: "CNV Call", key: "cnv_call"},
     {label: "MS Status", key: "ms_status"},
     {label: "Match Type", key: "match_type"},
+    {label: "Combined Data", key:"combined_data"},
+    {label: "Oncotree Primary Diagnosis Match Only", key:"oncotree_primary_diagnosis_match_only"}
   ];
   // csv download link ref
 
