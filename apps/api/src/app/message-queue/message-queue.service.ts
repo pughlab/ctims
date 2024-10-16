@@ -4,6 +4,7 @@ import {ModuleRef} from "@nestjs/core";
 import {PrismaService} from "../prisma.service";
 import * as amqplib from 'amqplib';
 import {TrialStatusEnum} from "../../../../../libs/types/src/trial-status.enum";
+import {MatchRunStatusEnum} from "../../../../../libs/types/src/match-run-status.enum";
 import { sendMail } from "../utils/mail.service";
 import { IEventMessage } from "./message.interface";
 
@@ -56,10 +57,10 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
 
   onMessageReceived = async (msg) => {
     const message = msg.content.toString();
-    const json_message: IEventMessage = JSON.parse(message);
-    
-    const trialInternalIds: string[] = json_message.trial_internal_ids;
-    const failedTrialInternalIds: string[] = json_message.failed_trial_internal_ids;
+    const jsonMessage: IEventMessage = JSON.parse(message);
+    const matchRunStatus: MatchRunStatusEnum = jsonMessage.run_status as MatchRunStatusEnum;
+    const trialInternalIds: string[] = jsonMessage.trial_internal_ids;
+    const failedTrialInternalIds: string[] = jsonMessage.failed_trial_internal_ids;
 
     // get all trial ids (NCT-ID)
     const trials = await this.prismaService.trial.findMany({
@@ -75,20 +76,18 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
     const user = await this.prismaService.user.findFirst({
       where: {
         id: {
-          equals: Number(json_message.user_id)
+          equals: Number(jsonMessage.user_id)
         }
       }
     });
     
-    if (json_message.run_status === 'success') {
+    if (matchRunStatus === MatchRunStatusEnum.SUCCESS) {
       const result = await this.prismaService.trial.updateMany({
         where: {
           trial_internal_id: {
             in: trialInternalIds
           },
-          trial_status: {
-            in: [TrialStatusEnum.PENDING, TrialStatusEnum.ERROR]
-          },
+          trial_status: TrialStatusEnum.PENDING
         },
         data: {
           trial_status: TrialStatusEnum.MATCHED
@@ -111,15 +110,13 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
 
       await sendMail(from, to, subject, mailTemplate);
     }
-    else if (json_message.run_status === 'fail') {
+    else if (matchRunStatus === MatchRunStatusEnum.FAIL) {
       const result = await this.prismaService.trial.updateMany({
         where: {
           trial_internal_id: {
             in: trialInternalIds
           },
-          trial_status: {
-            in: [TrialStatusEnum.PENDING, TrialStatusEnum.MATCHED]
-          },
+          trial_status: TrialStatusEnum.PENDING
         },
         data: {
           trial_status: TrialStatusEnum.ERROR
@@ -142,15 +139,13 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
 
       await sendMail(from, to, subject, mailTemplate);
     }
-    else if (json_message.run_status === 'partial_success') {
+    else if (matchRunStatus === MatchRunStatusEnum.PARTIAL_SUCCESS) {
       const result = await this.prismaService.trial.updateMany({
         where: {
           trial_internal_id: {
             in: trialInternalIds
           },
-          trial_status: {
-            in: [TrialStatusEnum.PENDING, TrialStatusEnum.ERROR]
-          },
+          trial_status: TrialStatusEnum.PENDING
         },
         data: {
           trial_status: TrialStatusEnum.MATCHED
@@ -161,9 +156,7 @@ export class MessageQueueService implements OnModuleInit, OnModuleDestroy {
           trial_internal_id: {
             in: failedTrialInternalIds
           },
-          trial_status: {
-            in: [TrialStatusEnum.PENDING,TrialStatusEnum.MATCHED]
-            }
+          trial_status: TrialStatusEnum.MATCHED
         },
         data: {
           trial_status: TrialStatusEnum.ERROR
