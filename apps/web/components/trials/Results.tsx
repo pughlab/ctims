@@ -104,7 +104,7 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
     {label: "MS Status", key: "ms_status"},
     {label: "Match Type", key: "match_type"},
     {label: "Patient Match Values", key:"patient_match_values"},
-    {label: "Oncotree Primary Diagnosis Match Only", key:"oncotree_primary_diagnosis_match_only"}
+    {label: "Oncotree Primary Diagnosis Match Value", key:"oncotree_primary_diagnosis_match_value"}
   ];
   // csv download link ref
 
