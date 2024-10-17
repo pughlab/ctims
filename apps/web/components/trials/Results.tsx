@@ -105,7 +105,8 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
     {label: "Match Type", key: "match_type"},
     {label: "Patient Match Values", key:"patient_match_values"},
     {label: "Oncotree Primary Diagnosis Match Value", key:"oncotree_primary_diagnosis_match_value"},
-    {label: "Match Criteria", key: "query"}
+    {label: "Match Criteria", key: "query"},
+    {label: 'Queries Used', key: 'queries_used'}
   ];
   // csv download link ref
 
