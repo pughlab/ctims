@@ -21,6 +21,15 @@ const keycloakConfig = {
   "confidential-port": 0
 }
 
+const isKeycloakDisabled = process.env.KEYCLOAK_DISABLED === 'true';
+const envUsername = process.env.KD_USERNAME;
+const envPassword = process.env.KD_PASSWORD;
+const envUsernameAdmin = process.env.KD_USERNAME_ADMIN;
+const envPasswordAdmin = process.env.KD_PASSWORD_ADMIN;
+const envKeycloakId = process.env.KD_KEYCLOAK_ID;
+const envKeycloakIdAdmin = process.env.KD_KEYCLOAK_ID_ADMIN;
+const envTokenUser= process.env.KD_TOKEN_USER;
+const envTokenAdmin= process.env.KD_TOKEN_ADMIN;
 
 @Injectable()
 export class KeycloakPasswordStrategy extends PassportStrategy(KeycloakBearerStrategy, 'keycloak')  implements OnModuleInit {
@@ -39,6 +48,10 @@ export class KeycloakPasswordStrategy extends PassportStrategy(KeycloakBearerStr
   }
 
   async login(username: string, password: string): Promise<any> {
+    if (isKeycloakDisabled==true) {
+      return this.loginWithEnvCredentials(username, password);
+    }
+    else{
     let grant: Grant = null;
     try {
       grant = await this.keycloak.grantManager.obtainDirectly(username, password);
@@ -90,9 +103,34 @@ export class KeycloakPasswordStrategy extends PassportStrategy(KeycloakBearerStr
       accessToken: keycloakToken['token'],
       user
     };
+   }
+  }
+  private async loginWithEnvCredentials(username: string, password: string): Promise<any> {
+    if (username === envUsername && password === envPassword) {
+      let user = await this.userService.findUserBySub(envKeycloakId)
+      if(!user){
+        user = await this.userService.createUserWithoutKeycloak("notAdmin")
+      }
+      const roles= ['default']
+      user['roles'] = roles;
+      return { accessToken: envTokenUser, user };
+    }
+    else if(username === envUsernameAdmin && password === envPasswordAdmin){
+      let user = await this.userService.findUserBySub(envKeycloakIdAdmin)
+      if(!user){
+        user =  await this.userService.createUserWithoutKeycloak("admin")
+      }
+      const roles= ['default-admin']
+      user['roles'] = roles;
+      return { accessToken: envTokenAdmin, user };
+    }
   }
 
   async refreshToken(access_token: Token): Promise<any> {
+    if (isKeycloakDisabled==true) {
+        return {accessToken: access_token};
+    }
+    else{
     const decoded: any = jwt_decode(access_token as unknown as string);
 
     const user = await this.userService.findUserBySub(decoded.sub)
@@ -112,6 +150,7 @@ export class KeycloakPasswordStrategy extends PassportStrategy(KeycloakBearerStr
     const keycloakToken: KeycloakConnect.Token = freshGrant.access_token;
 
     return {accessToken: keycloakToken['token']};
+  }
   }
 
   async validate(accessToken: any, done: (err: any, user: any, info?: any) => void): Promise<void> {

@@ -36,6 +36,29 @@ export class UserService {
     return newUserFromKeycloak;
   }
 
+  async createUserWithoutKeycloak(role: string) {
+    const envUsername = (role == "admin") ? process.env.KD_USERNAME_ADMIN : process.env.KD_USERNAME;
+    const envKeycloakId = (role == "admin") ? process.env.KD_KEYCLOAK_ID_ADMIN : process.env.KD_KEYCLOAK_ID;
+    const envEmail = (role == "admin") ? process.env.KD_EMAIL_ADMIN : process.env.KD_EMAIL;
+    const envFullName = (role == "admin") ? process.env.KD_FULLNAME_ADMIN : process.env.KD_FULLNAME;
+    const Id = (role == "admin") ? 100 : 99;
+    const token = (role == "admin") ?  process.env.KD_TOKEN_ADMIN : process.env.KD_TOKEN_USER ;
+    const newUserWithoutKeycloak = await this.prismaService.user.create({
+      data: {
+        id: Id,
+        email: envEmail,
+        keycloak_id: envKeycloakId,
+        first_name: envUsername,
+        last_name: "",
+        name: envFullName,
+        username: envUsername,
+        email_verified: true,
+        refresh_token: token
+      }
+    });
+    return newUserWithoutKeycloak;
+  }
+
   findAll() {
     return `This action returns all user`;
   }
