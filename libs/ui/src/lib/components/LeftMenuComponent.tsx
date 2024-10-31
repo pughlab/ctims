@@ -483,7 +483,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
     if (selectedNode) {
 
-      let label = <b>{node.label}</b>;
+      let label = <b style={{display: 'flex', width: '120px'}}>{node.label}</b>;
 
       const style: React.CSSProperties = {
         width: '50%',

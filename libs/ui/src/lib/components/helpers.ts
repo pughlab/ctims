@@ -332,8 +332,15 @@ export const sortTreeNode = (treeNode: TreeNode, currentDepth: number = 0, doSor
           }
         } else if (a.data.type === EComponentType.ClinicalForm) {
           ret = -1;
-        } else if (a.data.type === EComponentType.GenomicForm) {
+        } else if (a.data.type === EComponentType.PriorTreatmentForm) {
           if (b.data.hasOwnProperty('type') && b.data.type === EComponentType.ClinicalForm) {
+            ret = 1;
+          } else {
+            ret = -1;
+          }
+        } else if (a.data.type === EComponentType.GenomicForm) {
+          if (b.data.hasOwnProperty('type') &&
+            (b.data.type === EComponentType.ClinicalForm || b.data.type === EComponentType.PriorTreatmentForm)) {
             ret = 1;
           } else if (!b.data.hasOwnProperty('type') || b.data.type === EComponentType.AndOROperator) {
             ret = -1;
