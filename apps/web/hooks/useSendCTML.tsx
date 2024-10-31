@@ -21,7 +21,7 @@ const useSendCTML = () => {
     delete ctmlModelCopy.age_group;
     delete ctmlModelCopy.trialInformation;
     delete ctmlModelCopy.ctml_status;
-    delete ctmlModelCopy.nickname;
+    console.log("ctmlModelCopy",ctmlModelCopy)
     return ctmlModelCopy;
   }
 
