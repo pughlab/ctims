@@ -6,6 +6,7 @@ import {PrismaService} from "../prisma.service";
 import {KeycloakPasswordStrategy} from "../auth/keycloak-password.strategy";
 import {ModuleRef} from "@nestjs/core";
 import { PrismaPromise, user } from "@prisma/client";
+import {adminStatus} from "../auth/keycloak-disabled-config";
 
 @Injectable()
 export class UserService {
@@ -37,12 +38,12 @@ export class UserService {
   }
 
   async createUserWithoutKeycloak(role: string) {
-    const envUsername = (role == "admin") ? process.env.KD_USERNAME_ADMIN : process.env.KD_USERNAME;
-    const envKeycloakId = (role == "admin") ? process.env.KD_KEYCLOAK_ID_ADMIN : process.env.KD_KEYCLOAK_ID;
-    const envEmail = (role == "admin") ? process.env.KD_EMAIL_ADMIN : process.env.KD_EMAIL;
-    const envFullName = (role == "admin") ? process.env.KD_FULLNAME_ADMIN : process.env.KD_FULLNAME;
-    const Id = (role == "admin") ? 100 : 99;
-    const token = (role == "admin") ?  process.env.KD_TOKEN_ADMIN : process.env.KD_TOKEN_USER ;
+    const envUsername = adminStatus(role) ? process.env.KD_USERNAME_ADMIN : process.env.KD_USERNAME;
+    const envKeycloakId = adminStatus(role) ? process.env.KD_KEYCLOAK_ID_ADMIN : process.env.KD_KEYCLOAK_ID;
+    const envEmail = adminStatus(role) ? process.env.KD_EMAIL_ADMIN : process.env.KD_EMAIL;
+    const envFullName = adminStatus(role) ? process.env.KD_FULLNAME_ADMIN : process.env.KD_FULLNAME;
+    const Id = adminStatus(role) ? 100 : 99;
+    const token = adminStatus(role) ?  process.env.KD_TOKEN_ADMIN : process.env.KD_TOKEN_USER ;
     const newUserWithoutKeycloak = await this.prismaService.user.create({
       data: {
         id: Id,

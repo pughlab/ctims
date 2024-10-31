@@ -50,5 +50,5 @@ function keycloak_disabled_fetch_by_KeycloakId(role: string) {
 function adminStatus(role: string){
     return (role=="admin") ? true : false;
 }
-export { keycloak_disabled_comfig, keycloak_disabled_fetch_by_KeycloakId };
+export { keycloak_disabled_comfig, keycloak_disabled_fetch_by_KeycloakId, adminStatus};
 
