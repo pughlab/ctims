@@ -111,7 +111,8 @@ export const buildRootNodes = (rootLabel: string, firstChildLabel: string): Tree
   const rootData = r[0].data;
   // @ts-ignore
   rootData[rootLabel.toLowerCase()] = [];
-  let type = firstChildLabel.toLowerCase() === 'clinical' ? EComponentType.ClinicalForm : EComponentType.GenomicForm;
+  let type = firstChildLabel.toLowerCase() === 'clinical' ? EComponentType.ClinicalForm :
+    firstChildLabel.toLowerCase() === 'genomic' ? EComponentType.GenomicForm : EComponentType.PriorTreatmentForm;
   // @ts-ignore
   r[0].children[0].data = {type};
   return r;
@@ -197,6 +198,9 @@ export const convertTreeNodeArrayToCtimsFormat = (input: any[]): any => {
       case "Genomic":
         current = { genomic: item.data.formData || {} };
         break;
+      case "Prior Treatment":
+        current = { prior_treatment: item.data.formData || {} };
+        break;
     }
     if (item.children) {
       current[Object.keys(current)[0]] = [...current[Object.keys(current)[0]], ...convertTreeNodeArrayToCtimsFormat(item.children).match];
@@ -223,6 +227,9 @@ export const convertCtimsFormatToTreeNodeArray = (output: any, isParent = true):
         break;
       case "genomic":
         current = { key: uuidv4(), label: "Genomic", data: { type: EComponentType.GenomicForm, formData: item.genomic }, icon: 'genomic-icon in-tree' };
+        break;
+      case "prior_treatment":
+        current = { key: uuidv4(), label: "Prior Treatment", data: { type: EComponentType.PriorTreatmentForm, formData: item.prior_treatment }, icon: 'prior-treatment-icon in-tree' };
         break;
     }
     if (item[Object.keys(item)[0]].length > 0) {
@@ -325,8 +332,15 @@ export const sortTreeNode = (treeNode: TreeNode, currentDepth: number = 0, doSor
           }
         } else if (a.data.type === EComponentType.ClinicalForm) {
           ret = -1;
-        } else if (a.data.type === EComponentType.GenomicForm) {
+        } else if (a.data.type === EComponentType.PriorTreatmentForm) {
           if (b.data.hasOwnProperty('type') && b.data.type === EComponentType.ClinicalForm) {
+            ret = 1;
+          } else {
+            ret = -1;
+          }
+        } else if (a.data.type === EComponentType.GenomicForm) {
+          if (b.data.hasOwnProperty('type') &&
+            (b.data.type === EComponentType.ClinicalForm || b.data.type === EComponentType.PriorTreatmentForm)) {
             ret = 1;
           } else if (!b.data.hasOwnProperty('type') || b.data.type === EComponentType.AndOROperator) {
             ret = -1;
@@ -376,11 +390,11 @@ export const sortCTMLModelMatchCriteria = (ctmlMatchCriteria: any, doSort: boole
 const traverseAndAddNodeLabel = (treeNode: TreeNode): TreeNode => {
   if (typeof treeNode !== "undefined" && treeNode.children) {
     treeNode.children = treeNode.children.map(traverseAndAddNodeLabel);
-    if (treeNode.label === 'Clinical' || treeNode.label === 'Genomic') {
+    if (treeNode.label === 'Clinical' || treeNode.label === 'Genomic' || treeNode.label === 'Prior Treatment') {
       treeNode.data.nodeLabel = getNodeLabel(treeNode);
     }
   } else {
-    if (treeNode.label === 'Clinical' || treeNode.label === 'Genomic') {
+    if (treeNode.label === 'Clinical' || treeNode.label === 'Genomic'  || treeNode.label === 'Prior Treatment') {
       treeNode.data.nodeLabel = getNodeLabel(treeNode);
     }
   }
@@ -416,6 +430,8 @@ export const getNodeLabel = (node: TreeNode): string => {
     } else if (hugo_symbol) {
       label = hugo_symbol;
     }
+  } else if (node.label === 'Prior Treatment' && node.data.formData) {
+    label = node.data.formData.prior_treatment_agent;
   }
   return label;
 }

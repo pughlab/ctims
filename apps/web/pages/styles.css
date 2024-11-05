@@ -62,6 +62,10 @@
   background-image: url("/assets/genomic-icon-16px.svg");
 }
 
+.prior-treatment-icon {
+  background-image: url("/assets/prior-treatment-icon.svg");
+}
+
 
 .and-icon {
   background-image: url("/assets/and-icon-16px.svg");

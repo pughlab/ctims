@@ -11,6 +11,7 @@ import {EmptyHelper} from "./forms/EmptyHelper";
 import {sortTreeNode} from "./helpers";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../apps/web/store/store";
+import {PriorTreatmentForm} from "./forms/PriorTreatmentForm";
 
 const RjsfForm = withTheme(PrimeTheme)
 
@@ -73,6 +74,9 @@ const MatchingMenuAndForm = (props: any) => {
       break;
     case EComponentType.GenomicForm:
       ComponentToRender = GenomicForm;
+      break;
+    case EComponentType.PriorTreatmentForm:
+      ComponentToRender = PriorTreatmentForm;
       break;
     case EComponentType.AndOROperator:
       ComponentToRender = EmptyHelper;

@@ -133,10 +133,6 @@ export const ClinicalForm = (props: IFormProps) => {
         'type': 'string',
         'title': 'PR Status',
         "$ref": "#/definitions/pr_status"
-      },
-      'agent': {
-        'type': 'string',
-        'title': 'Agent'
       }
     }
   }

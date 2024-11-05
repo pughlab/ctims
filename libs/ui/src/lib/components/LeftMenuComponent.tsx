@@ -121,7 +121,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
       }
     } else if (typeof obj === 'object' && obj !== null) {
       for (let key in obj) {
-        if ((key === 'clinical') && Object.keys(obj[key]).length === 0) {
+        if ((key === 'clinical' || key === 'prior-treatment') && Object.keys(obj[key]).length === 0) {
           return true;
         }
         // If the key is 'and' or 'or', recursively check the nested objects
@@ -320,8 +320,8 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         const newNode = {
           key,
           label: type,
-          icon: type === 'Clinical' ? 'clinical-icon in-tree' : 'genomic-icon in-tree',
-          data: {type: type === 'Clinical' ? EComponentType.ClinicalForm : EComponentType.GenomicForm},
+          icon: type === 'Clinical' ? 'clinical-icon in-tree' : type === 'Genomic'? 'genomic-icon in-tree' : 'prior-treatment-icon in-tree',
+          data: {type: type === 'Clinical' ? EComponentType.ClinicalForm : type === 'Genomic' ? EComponentType.GenomicForm : EComponentType.PriorTreatmentForm},
         }
         const payload = {[key]: true};
         dispatch(setMatchDialogErrors(payload))
@@ -345,8 +345,8 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         const newNode = {
           key,
           label: type,
-          icon: type === 'Clinical' ? 'clinical-icon in-tree' : 'genomic-icon in-tree',
-          data: {type: type === 'Clinical' ? EComponentType.ClinicalForm : EComponentType.GenomicForm},
+          icon: type === 'Clinical' ? 'clinical-icon in-tree' : type === 'Genomic' ? 'genomic-icon in-tree' : 'prior-treatment-icon in-tree',
+          data: {type: type === 'Clinical' ? EComponentType.ClinicalForm : type === 'Genomic' ? EComponentType.GenomicForm: EComponentType.PriorTreatmentForm},
         }
         const payload = {[key]: true};
         dispatch(setMatchDialogErrors(payload))
@@ -483,7 +483,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
 
     if (selectedNode) {
 
-      let label = <b>{node.label}</b>;
+      let label = <b style={{display: 'flex', width: '120px'}}>{node.label}</b>;
 
       const style: React.CSSProperties = {
         width: '50%',
@@ -557,6 +557,13 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
             },
             icon: 'genomic-icon in-menu',
           },
+          {
+            label: 'Prior Treatment',
+            command: () => {
+              addCriteriaToSameList(selectedNode.key as string, 'Prior Treatment');
+            },
+            icon: 'prior-treatment-icon in-menu',
+          }
         ],
       },
       {
@@ -655,7 +662,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     }
 
     // cannot drop into another leaf node
-    if (dropNode.label === 'Clinical' || dropNode.label === 'Genomic') {
+    if (dropNode.label === 'Clinical' || dropNode.label === 'Genomic' || dropNode.label === 'Prior Treatment') {
       return;
     }
     // if (isSortedChecked) {
