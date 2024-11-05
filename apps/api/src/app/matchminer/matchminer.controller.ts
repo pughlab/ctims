@@ -47,6 +47,21 @@ export class MatchminerController {
     return response.data;
   }
 
+  @Post('load_prior_treatment')
+  @UseGuards(KeycloakPasswordGuard)
+  @ApiOperation({ summary: "Load prior treatment file" })
+  @UseInterceptors(FileInterceptor('prior_treatment_file'))
+  async loadPriorTreatmentFile(@UploadedFile() file: any) {
+    const formData = new FormData();
+    formData.append('prior_treatment_file', file.buffer, file.originalname);
+    const response = await axios.post(`${process.env.MM_API_URL}/load_prior_treatment`, formData, {
+      headers: {...formData.getHeaders(), 'Authorization': `Bearer ${this.MM_API_TOKEN}`},
+      maxBodyLength: 25 * 1024 * 1024,
+      maxContentLength: 25 * 1024 * 1024,
+    });
+    return response.data;
+  }
+
   @Get('prioritizer_trial_matches')
   @UseGuards(ApiKeyGuard)
   @ApiBearerAuth("ApiKeyGuard")
