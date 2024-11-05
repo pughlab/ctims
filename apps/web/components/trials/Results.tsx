@@ -103,6 +103,10 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
     {label: "CNV Call", key: "cnv_call"},
     {label: "MS Status", key: "ms_status"},
     {label: "Match Type", key: "match_type"},
+    {label: "Patient Match Values", key:"patient_match_values"},
+    {label: "Oncotree Primary Diagnosis Match Value", key:"oncotree_primary_diagnosis_match_value"},
+    {label: "Match Criteria", key: "query"},
+    {label: 'Queries Used', key: 'queries_used'}
   ];
   // csv download link ref
 
@@ -167,6 +171,7 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
       cur.trialId = trialSelected.trialId;
       cur.trialName = trialSelected.short_title;
       cur.matchDate = trialSelected.matchedDate;
+      cur.query = JSON.stringify(cur.query);
     }
     return data;
   }
