@@ -62,12 +62,96 @@ export const PriorTreatmentForm = (props: IFormProps) => {
   const dispatch = useDispatch();
 
   const priorTreatmentFormSchema = {
+    'definitions': {
+      "treatment_category": {
+        "enumNames": [
+          "Medical Therapy",
+          "Surgery",
+          "Radiation Therapy"
+        ],
+        "enum": [
+          "MedicalTherapy",
+          "Surgery",
+          "RadiationTherapy"
+        ]
+      },
+    },
     "type": "object",
     "required": [],
-    "properties": {
-      "prior_treatment_agent": {
-        'type': 'string',
-        'title': 'Agent',
+    'properties': {
+      "treatmentCategoryContainerObject": {
+        'title': '',
+        'type': 'object',
+        'properties': {
+          "treatment_category": {
+            "$ref": "#/definitions/treatment_category",
+            'title': 'Treatment Category',
+            "description": "Type of treatment",
+          },
+        },
+        "dependencies": {
+          "treatment_category": {
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "treatment_category": {
+                      "const": "MedicalTherapy"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    'prior_treatment_agent': {
+                      'type': 'string',
+                      'title': 'Agent',
+                      "description": "Gene symbol as determined by https://www.genenames.org/",
+                    }
+                  },
+                  "required": []
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "treatment_category": {
+                      "const": "Surgery"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    'surgery_type': {
+                      'type': 'string',
+                      'title': 'Surgery type',
+                      "description": "Gene symbol as determined by https://www.genenames.org/",
+                    }
+                  },
+                  "required": []
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "treatment_category": {
+                      "const": "RadiationTherapy"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    'radiation_site': {
+                      'type': 'string',
+                      'title': 'Site',
+                      "description": "Gene symbol as determined by https://www.genenames.org/",
+                    }
+                  },
+                  "required": []
+                }
+              }
+            ]
+          }
+        }
       }
     }
   }
@@ -113,7 +197,7 @@ export const PriorTreatmentForm = (props: IFormProps) => {
 
   const customValidate = (formData: any, errors: any, uiSchema: any) => {
     if (typeof formData.prior_treatment_agent === 'undefined') {
-      errors.prior_treatment_agent.addError('Must have at least one field filled.');
+      //errors.prior_treatment_agent.addError('Must have at least one field filled.');
     }
     return errors;
   }
