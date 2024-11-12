@@ -77,7 +77,8 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
 
   const headers = [
     {label: "Trial Id", key: "trialId"},
-    {label: "Trial Name", key: "trialName"},
+    {label: "Nickname", key: "nickname"},
+    {label: "Short Title", key: "short_title"},
     {label: "Trial Match Date", key: "matchDate"},
     {label: "Step Number", key: "trial_step_number"},
     {label: "Arm Code", key: "code"},
