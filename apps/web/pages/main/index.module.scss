@@ -1,0 +1,21 @@
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 40px 80px;
+  gap: 20px;
+  overflow-y: scroll;
+  flex: 1;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.centerLoading {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+}

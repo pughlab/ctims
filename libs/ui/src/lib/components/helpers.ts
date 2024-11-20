@@ -1,10 +1,29 @@
 import TreeNode from "primereact/treenode";
 import {EComponentType} from "./EComponentType";
-import { v4 as uuidv4 } from 'uuid';
-import {ErrorSchema, RJSFValidationError} from "@rjsf/utils";
+import {v4 as uuidv4} from 'uuid';
+import {RJSFValidationError} from "@rjsf/utils";
+import {OperatorOptions} from "./forms/OperatorDropdown";
+import {structuredClone} from "next/dist/compiled/@edge-runtime/primitives/structured-clone";
+import {CtmlStatusEnum} from "../../../../types/src/ctml-status.enum";
 
-interface JsonObject {
-  [key: string]: any;
+
+// Must be in the following format: 'p.A1'
+// string must start with 'p.' followed by a capital letter and then a one or more digits
+export const wildcard_protein_change_validation_func = (str: string) => {
+  const regex = /^p\.[A-Z]\d+$/;
+  if (!str) {
+    return true;
+  }
+  return regex.test(str);
+}
+
+export const protein_change_validation_func = (str: string) => {
+  const regex = /^p\.(([A-Z]\d+_[A-Z]\d+)(del$|dup$)|([A-Z]\d+_[A-Z]\d+)(ins[A-Z]+\*?|ins\*\d*|delins[A-Z]+\*?|delins\*\d*|fs\*?\d*)|([A-Z]\d+[A-Z])$|([A-Z]\d+[A-Z])(fs\*?\d*)$|([A-Z]\d+)(\*)$|([A-Z]\d+)(del$|dup$)|([A-Z]\d+)(delins[A-Z]+\*?$|fs\*?(\d*))$)$/;
+
+  if (!str) {
+    return true;
+  }
+  return regex.test(str);
 }
 
 export const stringContains = (str: string, search: string) => {
@@ -145,6 +164,22 @@ export const deleteNodeFromChildrenArrayByKey = (tree: TreeNode, key: string) =>
   traverse(tree, key);
 }
 
+// given a tree node, find all the keys of its leaf nodes
+export const traverseNode = (tree: TreeNode, key: string): string[] => {
+  let result: string[] = [];
+  const traverse = (tree: TreeNode, key: string) => {
+    if (tree.children) {
+      tree.children.forEach((child) => {
+        traverse(child, key);
+      });
+    } else {
+      result.push(tree.key as string);
+    }
+  }
+  traverse(tree, key);
+  return result;
+}
+
 export const convertTreeNodeArrayToCtimsFormat = (input: any[]): any => {
   let result: any = { match: [] };
   input.forEach((item: any) => {
@@ -178,10 +213,10 @@ export const convertCtimsFormatToTreeNodeArray = (output: any, isParent = true):
     let current: any = {};
     switch (Object.keys(item)[0]) {
       case "and":
-        current = { key: parentKey, label: "And", data: { and: [] }, children: [], icon: 'and-icon' };
+        current = { key: uuidv4(), label: "And", data: { and: [] }, children: [], icon: 'and-icon' };
         break;
       case "or":
-        current = { key: parentKey, label: "Or", data: {}, children: [], icon: 'or-icon' };
+        current = { key: uuidv4(), label: "Or", data: {}, children: [], icon: 'or-icon' };
         break;
       case "clinical":
         current = { key: uuidv4(), label: "Clinical", data: { type: EComponentType.ClinicalForm, formData: item.clinical }, icon: 'clinical-icon in-tree' };
@@ -241,3 +276,277 @@ export const extractErrors = (errors: RJSFValidationError[]): string[] => {
 
   return errorStrings;
 }
+
+/**
+ * Get the current operator based on the provided root nodes and the current node.
+ * If the current node's parent has a label of "OR", it returns the OR operator, otherwise returns the AND operator.
+ * @param {TreeNode[]} rootNodes - An array of root nodes representing the tree.
+ * @param {TreeNode} currentNode - The current node for which the operator needs to be determined.
+ * @returns {OperatorOptions} The current operator (AND or OR).
+ */
+export const getCurrentOperator = (rootNodes: TreeNode[], currentNode: TreeNode) => {
+  if (currentNode && rootNodes.length > 0) {
+    // Find the parent node of the current node within the tree.
+    const parentNode = findArrayContainingKeyInsideATree(rootNodes[0], currentNode.key as string);
+    if (parentNode && parentNode.label) {
+      // Check if the parent node's label is "OR" (case-insensitive).
+      if (parentNode.label.toLowerCase() === 'or') {
+        return OperatorOptions.OR;
+      }
+    }
+  }
+  return OperatorOptions.AND;
+}
+
+// sort the children of the root nodes by node.data's type property, clinical first, genomic second, and and/or last
+// add a depth property to each node that's used at rendering time
+export const sortTreeNode = (treeNode: TreeNode, currentDepth: number = 0, doSort: boolean = true): TreeNode => {
+  // recursively calls itself and use map to sort the current level of node
+  if (typeof treeNode !== "undefined" && treeNode.children) {
+    treeNode.data.depth = currentDepth;
+
+    // recursively calls the next level to sort the next level children
+    treeNode.children = treeNode.children.map(child => sortTreeNode(child, currentDepth + 1, doSort));
+
+    // add an index to track original order
+    treeNode.children.forEach((child, index) => {
+      child.data.originalIndex = index;
+    });
+
+    if (doSort) {
+      // sort the current level
+      treeNode.children.sort((a, b) => {
+        let ret = 0;
+        if (a.data.type && a.data.type != EComponentType.AndOROperator && (a.data.type === b.data.type)) {
+          if (a.data.nodeLabel && b.data.nodeLabel) {
+            ret = a.data.nodeLabel.localeCompare(b.data.nodeLabel);
+          } else {
+            ret = a.data.originalIndex - b.data.originalIndex;
+          }
+        } else if (a.data.type === EComponentType.ClinicalForm) {
+          ret = -1;
+        } else if (a.data.type === EComponentType.GenomicForm) {
+          if (b.data.hasOwnProperty('type') && b.data.type === EComponentType.ClinicalForm) {
+            ret = 1;
+          } else if (!b.data.hasOwnProperty('type') || b.data.type === EComponentType.AndOROperator) {
+            ret = -1;
+          }
+        } else if ((a.label === 'And' && b.label === 'And') || (a.label === 'Or' && b.label === 'Or')) {
+          ret = 0;
+        } else if (a.label === 'And' && b.label === 'Or') {
+          ret = -1;
+        } else if (a.label === 'Or' && b.label === 'And') {
+          ret = 1;
+        } else {
+          if (a.data.nodeLabel && b.data.nodeLabel) {
+            ret = a.data.nodeLabel.localeCompare(b.data.nodeLabel);
+          } else {
+            ret = 0;
+          }
+        }
+        return ret;
+      });
+    }
+  } else if (typeof treeNode !== "undefined") {
+    treeNode.data.depth = currentDepth;
+  }
+
+  return treeNode;
+}
+
+export const sortCTMLModelMatchCriteria = (ctmlMatchCriteria: any, doSort: boolean = true): { match: [] } => {
+  if (!doSort) {
+    return ctmlMatchCriteria;
+  }
+  let criteriaCopy = structuredClone(ctmlMatchCriteria.match);
+
+  // convert the criteria to tree node format
+  let treeNode = convertCtimsFormatToTreeNodeArray({match: criteriaCopy});
+  // add the node label to each node so it can be sorted
+  traverseAndAddNodeLabel(treeNode[0]);
+
+  let sorted = sortTreeNode(treeNode[0], 0, doSort);
+
+  // convert the sorted tree node back to ctml format
+  const sortedCtimsFormat = convertTreeNodeArrayToCtimsFormat([sorted]);
+  return sortedCtimsFormat;
+}
+
+// traverse the tree and add the node label to each node
+const traverseAndAddNodeLabel = (treeNode: TreeNode): TreeNode => {
+  if (typeof treeNode !== "undefined" && treeNode.children) {
+    treeNode.children = treeNode.children.map(traverseAndAddNodeLabel);
+    if (treeNode.label === 'Clinical' || treeNode.label === 'Genomic') {
+      treeNode.data.nodeLabel = getNodeLabel(treeNode);
+    }
+  } else {
+    if (treeNode.label === 'Clinical' || treeNode.label === 'Genomic') {
+      treeNode.data.nodeLabel = getNodeLabel(treeNode);
+    }
+  }
+  return treeNode;
+}
+
+// figure out a label for criteria node according to CTM-394
+export const getNodeLabel = (node: TreeNode): string => {
+  let label;
+  if (node.label === 'Clinical' && node.data.formData) {
+    const { tmb, oncotree_primary_diagnosis, er_status, pr_status, her2_status, age_expression } = node.data.formData;
+    if (tmb) {
+      label = 'TMB';
+    } else if (oncotree_primary_diagnosis) {
+      label = oncotree_primary_diagnosis;
+    } else if (er_status || pr_status || her2_status) {
+      const statusLabels = [];
+      if (er_status) statusLabels.push('ER');
+      if (pr_status) statusLabels.push('PR');
+      if (her2_status) statusLabels.push('HER2');
+      label = statusLabels.join(', ');
+    } else if (age_expression) {
+      label = age_expression;
+    }
+  } else if (node.label === 'Genomic' && node.data.formData) {
+    let genomicObj = node.data.formData;
+    if (node.data.formData.variantCategoryContainerObject) {
+      genomicObj = node.data.formData.variantCategoryContainerObject;
+    }
+    const { ms_status, hugo_symbol} = genomicObj;
+    if (ms_status) {
+      label = ms_status;
+    } else if (hugo_symbol) {
+      label = hugo_symbol;
+    }
+  }
+  return label;
+}
+
+/*
+  recursively go through tree nodes, if it has the key 'variantCategoryContainerObject',
+  flatten the object so it matches the format of the CTML
+   */
+export const flattenVariantCategoryContainerObject = (nodes: TreeNode[]) => {
+  return nodes.map((node: TreeNode) => {
+    const newNode = {...node};
+    if (newNode.data && newNode.data.formData && newNode.data.formData.variantCategoryContainerObject) {
+      newNode.data.formData = newNode.data.formData.variantCategoryContainerObject;
+    }
+    if (newNode.children) {
+      newNode.children = flattenVariantCategoryContainerObject(newNode.children);
+    }
+    return newNode;
+  });
+}
+
+// same as above, but less restrictive on the input object
+export const flattenVariantCategoryContainerObjectInCtmlMatchModel = (ctmlMatchModel: any) => {
+  const cloned = structuredClone(ctmlMatchModel);
+  const flattenGenomicObject = (obj: any) => {
+    const newObj = {...obj};
+    if (newObj.genomic && newObj.genomic.variantCategoryContainerObject) {
+      newObj.genomic = { ...newObj.genomic.variantCategoryContainerObject };
+    }
+    // Recursively flatten 'and' or 'or' arrays if they exist
+    ['and', 'or'].forEach(key => {
+      if (newObj[key]) {
+        newObj[key] = newObj[key].map(flattenGenomicObject);
+      }
+    });
+    return newObj;
+  };
+
+  // Start the flattening process from the root of the CTML match model
+  return flattenGenomicObject(cloned);
+};
+
+// Third attempt at a generic flattening function
+export const flattenGenericObject = (ctmlMatchModel: any) => {
+  const cloned = structuredClone(ctmlMatchModel);
+
+  const processArray = (arr: any[]) => {
+    return arr.map(item => {
+      Object.keys(item).forEach(key => {
+        if (key === 'match' && Array.isArray(item[key])) {
+          item[key] = item[key].map(flattenVariantCategoryContainerObjectInCtmlMatchModel);
+        } else if (Array.isArray(item[key])) {
+          item[key] = processArray(item[key]);
+        }
+      });
+      return item;
+    });
+  };
+
+  if (cloned.step) {
+    cloned.step = processArray(cloned.step);
+  }
+
+  return cloned;
+}
+
+ // Recursively traverse through the match criteria and add the variantCategoryContainerObject key to the genomic object
+export const addVariantCategoryContainerObject = (matchCriteria: any[]) => {
+  return matchCriteria.map((criteria) => {
+    if (criteria.and || criteria.or) {
+      const operator = criteria.and ? 'and' : 'or';
+      const children = criteria[operator];
+      const ret: { [key in 'and' | 'or']?: any[] } = {};
+      ret[operator] = addVariantCategoryContainerObject(children);
+      return ret;
+    } else if (criteria.genomic) {
+      if (!criteria.genomic.variantCategoryContainerObject) {
+        const c: any = {
+          genomic: {
+            variantCategoryContainerObject: criteria.genomic
+          }
+        }
+        return c;
+      }
+      return criteria;
+    } else {
+      // clinical node, no need to modify
+      return criteria;
+    }
+  })
+}
+
+// function to recursively trim all CtimsInput fields, and remove the key if value is empty after trim
+export const trimFields = (obj: any) => {
+  for (let key in obj) {
+    if (typeof obj[key] === 'object' && obj[key] !== null) {
+      trimFields(obj[key]);
+    } else if (typeof obj[key] === 'string') {
+      obj[key] = obj[key].trim();
+      if (obj[key] === '') {
+        delete obj[key];
+      }
+    }
+  }
+}
+
+export const isTrialStatusEligible = (trialModel: any) => {
+  return trialModel.status != CtmlStatusEnum.DRAFT;
+}
+
+export const isTrialHaveOneMatch = (ctmlJson: any) => {
+  if (ctmlJson.treatment_list) {
+    for (let step of ctmlJson.treatment_list.step) {
+      if (step.arm) {
+        for (let arm of step.arm) {
+          if (arm.match && arm.match.length > 0) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+  return false;
+}
+
+
+export const transformPriorTreatmentRequirements = (requirements: string[]) => {
+  return {
+    prior_treatment_requirement: requirements.map((requirement: string) => ({
+      prior_treatment_requirement_name: requirement
+    }))
+  };
+};

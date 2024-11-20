@@ -1,0 +1,117 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "thischart.fullname" . }}
+  labels:
+{{ include "thischart.labels" . | indent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "thischart.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "thischart.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      volumes:
+        - name: "ctims-mysql-data"
+          hostPath:
+            path: "{{.Values.mountRoot}}/mysql/data"
+            type: DirectoryOrCreate
+        - name: "mm-mongo-data"
+          hostPath:
+            path: "{{.Values.mountRoot}}/mongo/data"
+            type: DirectoryOrCreate
+      containers:
+        - image: "{{ .Values.docker.image }}:{{ .Values.git.ref }}"
+          name: ctimsweb
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: {{ .Values.ctimsweb.port }}
+              name: ctimsweb
+          env:
+            - name: NEXTAUTH_SECRET
+              value: "dAbxJF2DRzqwGYn+BWKdj8o9ieMri4FWsmIRn77r2F8="
+            - name: REACT_APP_API_URL
+              value: "https://ctims-api.{{ .Values.domain }}/api"
+            - name: NEXTAUTH_URL
+              value: "https://ctims-web.{{ .Values.domain }}"
+            - name: NEXTAUTH_API_URL
+              value: "http://localhost:3333/api"
+            - name: NEXT_PUBLIC_SIGNOUT_REDIRECT_URL
+              value: "https://ctims-web.{{ .Values.domain }}"
+        - image: "{{ .Values.docker.apiImage }}:{{ .Values.git.ref }}"
+          name: ctimsapi
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: {{ .Values.ctimsapi.port }}
+              name: ctimsapi
+          env:
+            - name: DATABASE_URL
+              value: "mysql://ctims:ctims@localhost:3306/ctims"
+            - name: KEYCLOAK_URL
+              value: "{{ .Values.ctimsapi.keycloak.url }}"
+            - name: KEYCLOAK_REALM
+              value: "{{ .Values.ctimsapi.keycloak.realm }}"
+            - name: KEYCLOAK_CLIENT_ID
+              value: "{{ .Values.ctimsapi.keycloak.clientId }}"
+            - name: KEYCLOAK_CLIENT_UUID
+              value: "{{ .Values.ctimsapi.keycloak.clientUUID }}"
+            - name: KEYCLOAK_CLIENT_SECRET
+              value: "{{ .Values.ctimsapi.keycloak.clientSecret }}"
+            - name: KEYCLOAK_ADMIN_CLIENT_ID
+              value: "{{ .Values.ctimsapi.keycloak.adminClientId }}"
+            - name: KEYCLOAK_ADMIN_CLIENT_SECRET
+              value: "{{ .Values.ctimsapi.keycloak.adminClientSecret }}"
+            - name: KEYCLOAK_TOKEN_ENDPOINT
+              value: "{{ .Values.ctimsapi.keycloak.tokenEndpoint }}"
+            - name: PRISMA_FIELD_ENCRYPTION_KEY
+              value: "{{ .Values.ctimsapi.prismaEncryptionKey }}"
+            - name: MM_API_URL
+              value: "http://localhost:5000/api"
+        - image: "docker-registry.uhn.ca:443/matchminer-api:176fccca-19e5-4dc6-97da-a8642fa94720"
+          name: mm-api
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5000
+              name: mm-api
+          env:
+            - name: SECRETS_JSON
+              value: "secrets_json_dev.json"
+        - image: "{{ .Values.docker.dbImage }}:latest"
+          name: ctimsdb
+          ports:
+            - containerPort: {{ .Values.ctimsdb.port }}
+              name: mysql
+          volumeMounts:
+            - name: "ctims-mysql-data"
+              mountPath: "/var/lib/mysql"
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "{{ .Values.ctimsdb.password }}"
+            - name: MYSQL_DATABASE
+              value: "{{ .Values.ctimsdb.database }}"
+            - name: MYSQL_USER
+              value: "{{ .Values.ctimsdb.user }}"
+            - name: MYSQL_PASSWORD
+              value: "{{ .Values.ctimsdb.password }}"
+        - image: "docker-registry.uhn.ca:443/matchminer-db:36531099-38ee-4568-a18d-a31c7159ecdf"
+          name: mm-mongo
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 27017
+              name: mongo
+          volumeMounts:
+            - name: "mm-mongo-data"
+              mountPath: "/var/lib/mongodb"
+          env:
+            - name: MONGO_INITDB_DATABASE
+              value: "matchminer"
+      imagePullSecrets:
+        - name: regcred

@@ -1,24 +1,19 @@
 <div id="top"></div>
+  <h1 align="center">CTIMS</h1>
 
+The Clinical Trial Integrated Matching System (CTIMS) is software used for matching patients to clinical trials. The CTIMS editor is used to create CTML files in a user friendly GUI. 
+
+CTIMS uses cBioPortal to show the results of the matched patients in the patient view of cBioPortal.
+
+If you are interested in coordinating the development of new features, please contact Pugh Lab.
+
+CTIMS uses 3 docker containers for web, api and database. CTIMS integrates with Keycloak for security.
+
+Architecture:
+CTIMS uses Nx Next Nest as a monorepo. The details about the frameworks are given below.
 
 <!-- PROJECT LOGO -->
 <br />
-<div align="center">
-
-
-  <h1 align="center">Nx-Next-Nest-Template</h1>
- 
-  <p align="center">
-    <br />
-    <br />
-    <a href="https://github.com/Louis3797/nx-next-nest-template/">View Demo</a>
-    ·
-    <a href="https://github.com/Louis3797/nx-next-nest-template/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/Louis3797/nx-next-nest-template/issues">Request Feature</a>
-  </p>
-</div>
-
 
 
 <!-- TABLE OF CONTENTS -->
@@ -60,104 +55,16 @@ This is a monorepo build with Nx, in apps/ you will find a Next.js client and a 
 
 
 
-
-<!-- GETTING STARTED -->
-## Getting Started
-
-### Generate an new application
-
-Run `nx g @nrwl/react:app <name>` or `nx g @nrwl/next:app <name>` to generate a new frontend application.
-
-When using Nx, you can create multiple applications and libraries in the same workspace.
-
-### Generate a library
-
-Run `nx g @nrwl/react:lib <name>` or `nx g @nrwl/next:lib <name>` or `nx g @nrwl/nest:lib <name>` or `nx g @nrwl/workspace:lib <name>` to generate a library.
-
-Libraries are shareable across libraries and applications. They can be imported from `@nx-next-nest/<name>`.
-
-### Development server
-
-Run `nx serve <name>` for a dev server. 
-
-### Code scaffolding
-
-Run `nx g @nrwl/react:component my-component --project=<name of your app>` to generate a new component.
-
-### Build
-
-Run `nx build <name>` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-### Running unit tests
-
-Run `nx test <name>` to execute the unit tests via [Jest](https://jestjs.io).
-
-Run `nx affected:test` to execute the unit tests affected by a change.
-
-### Running end-to-end tests
-
-Run `nx e2e <name>` to execute the end-to-end tests via [Cypress](https://www.cypress.io).
-
-Run `nx affected:e2e` to execute the end-to-end tests affected by a change.
-
-### Understand your workspace
-
-Run `nx graph` to see a diagram of the dependencies of your projects.
-
-### Further help
-
-Visit the [Nx Documentation](https://nx.dev) to learn more.
-
-
-### Installation
-
-1. Clone the repo
-   ```sh
-   git clone https://github.com/Louis3797/nx-next-nest-template.git
-   ```
-   
-   Intall all Dependencies
-      ```sh
-   cd ctims-mono-repo
-   npm install
-   ```
-   Run dev
-      ```sh
-   nx serve
-   ```
-   
-
-
-
-
-<!-- USAGE EXAMPLES -->
-
-
-
-
-
-<!-- ROADMAP 
-## Roadmap-->
-
-
-
-See the [open issues](https://github.com/Louis3797/nx-next-nest-template/issues) for a full list of proposed features (and known issues).
-
-
-
 <!-- LICENSE -->
 ## License
-
-Distributed under the MIT License. See `LICENSE.txt` for more information.
-
+Apache 2.0 License
 
 
 
 
 <!-- CONTACT -->
 ## Contact
-
-Louis
+Pugh Lab, UHN.
 
 Project Link: [Nx-Next-Nest-Template](https://github.com/Louis3797/nx-next-nest-template)
 

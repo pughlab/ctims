@@ -4,10 +4,12 @@ import cn from "clsx";
 import {InputText} from "primereact/inputtext";
 import { Tooltip } from 'primereact/tooltip';
 import styles from "./CtimsInput.module.css";
+import {protein_change_validation_func, wildcard_protein_change_validation_func} from "../components/helpers";
 
 const CtimsInput = (props: WidgetProps) => {
     let {
         id,
+        name,
         placeholder,
         required,
         readonly,
@@ -25,11 +27,33 @@ const CtimsInput = (props: WidgetProps) => {
         rawErrors = [],
     } = props;
 
+    const [wildProteinError, setWildProteinError] = React.useState(false);
+    const [proteinChangeError, setProteinChangeError] = React.useState(false);
+
     useEffect(() => {
-      if (label === 'Trial ID') {
+      const currentURL = window.location.href;
+
+      if (label === 'Nickname' && currentURL.includes('/trials/create')) {
        onChange('')
       }
     }, [])
+
+  useEffect(() => {
+    if (name === 'wildcard_protein_change') {
+      if (!wildcard_protein_change_validation_func(value)) {
+        setWildProteinError(true)
+      } else {
+        setWildProteinError(false)
+      }
+    }
+    if (name === 'protein_change') {
+      if (!protein_change_validation_func(value)) {
+        setProteinChangeError(true)
+      } else {
+        setProteinChangeError(false)
+      }
+    }
+  }, [value]);
 
     const _onChange = ({
                            target: { value },
@@ -37,11 +61,14 @@ const CtimsInput = (props: WidgetProps) => {
       console.log('registry', props.registry)
       return onChange(value === "" ? options.emptyValue : value)
     };
-    const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
-        onBlur(id, value);
+    const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) => {
+      onBlur(id, value);
+    }
+
     const _onFocus = ({
                           target: { value },
                       }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
+
     const inputType = (type || schema.type) === "string" ? "text" : `${type || schema.type}`
     const labelValue = uiSchema?.["ui:title"] || schema.title || label;
 
@@ -57,7 +84,6 @@ const CtimsInput = (props: WidgetProps) => {
             {schema.description && (
               <i className={questionMarkStyle} data-pr-tooltip={schema.description} data-pr-position="top"></i>
             )}
-            {!required && ( <span className={styles['optional-label']}>Optional</span> )}
           </div>
 
             <InputText
@@ -68,7 +94,7 @@ const CtimsInput = (props: WidgetProps) => {
                 disabled={disabled}
                 readOnly={readonly}
                 // className={cn("w-full", rawErrors.length > 0 ? "p-invalid" : "")}
-                className={cn("w-full")}
+                className={cn("w-full", wildProteinError || proteinChangeError ? "p-invalid" : "")}
                 list={schema.examples ? `examples_${id}` : undefined}
                 type={inputType}
                 value={value || value === 0 ? value : ""}

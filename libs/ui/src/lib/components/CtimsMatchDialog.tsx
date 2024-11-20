@@ -6,10 +6,12 @@ import MatchingMenuAndForm from "./MatchingMenuAndForm";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState, store} from "../../../../../apps/web/store/store";
 import {resetMatchDialogErrors} from "../../../../../apps/web/store/slices/modalActionsSlice";
+import {sortCTMLModelMatchCriteria} from "./helpers";
 
 interface CtimsMatchDialogProps {
   isDialogVisible: boolean;
   onDialogHide: () => void;
+  onSaveCTMLHide: () => void;
   armCode?: string;
   formData?: any;
 }
@@ -27,6 +29,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   const dispatch = useDispatch();
 
   const matchDialogErrors = useSelector((state: RootState) => state.modalActions.matchDialogErrors);
+  const isSortEnabled = useSelector((state: RootState) => state.context.isSortEnabled);
 
   let {formData} = props;
 
@@ -76,20 +79,26 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
   }
 
   const onDialogHide = () => {
-    dispatch(resetMatchDialogErrors());
+    //dispatch(resetMatchDialogErrors());
     props.onDialogHide();
   }
 
   const saveClickCallback = () => {
     const currentState = store.getState();
     const ctmlModel = currentState.modalActions.ctmlDialogModel;
-    console.log('callback from footer', currentState.modalActions.ctmlDialogModel);
-    formData.match = ctmlModel.match;
-    onDialogHide();
+    if (ctmlModel && isSortEnabled) {
+      // sort the ctmlModel.match before saving
+      const sorted = sortCTMLModelMatchCriteria(ctmlModel, isSortEnabled);
+      formData.match = sorted.match;
+    } else {
+      formData.match = ctmlModel.match;
+    }
+
+    props.onSaveCTMLHide();
   }
 
   const setSaveBtnState = (state: boolean) => {
-    console.log('setSaveBtnState', state);
+    // console.log('setSaveBtnState', state);
     setSaveBtnDisabled(state);
   }
 
@@ -98,7 +107,7 @@ const CtimsMatchDialog = (props: CtimsMatchDialogProps) => {
             blockScroll
             footer={() => footer({saveMatchingCriteriaClicked: saveClickCallback, discardClicked: onDialogHide})}
             visible={isDialogVisible}
-            style={{width: '960px', height: '710px'}}
+            style={{width: '1160px', height: '710px'}}
             onHide={onDialogHide}>
       <div className={styles.mainContainer}>
         <CtimsDialogContext.Provider value={{setSaveBtnState}}>

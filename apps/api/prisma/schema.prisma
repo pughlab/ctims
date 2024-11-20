@@ -1,60 +1,172 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-model schema_ctml {
-  id        Int      @id @default(autoincrement())
-  version   String   @unique
-  schema    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  trials    trial[]
+model ctml_schema {
+  id         Int         @id @default(autoincrement())
+  version    Int         @unique
+  schema     String      @db.LongText
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  // Many trials to many schema_ctml records
+  trials     trial[]
+  ctml_jsons ctml_json[]
+  event      event[]
+
+  @@index(fields: [version])
 }
 
 model ctml_json {
-  id        Int      @id @default(autoincrement())
-  version   String   @unique
-  data      Json?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  trials    trial[]
+  id        Int          @id @default(autoincrement())
+  version   ctml_schema? @relation(fields: [versionId], references: [id])
+  versionId Int?
+  // The /// comment is an annotation added to the column to make it encrypted. See prisma-field-encryption package.
+  data      String?      @db.LongText /// @encrypted
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  // One trial to many ctml_json records
+  trial     trial?       @relation(fields: [trialId], references: [id])
+  trialId   Int?
+  event     event[]
+  has_match Boolean?     @default(false)
 }
 
 model trial {
   id                     Int           @id @default(autoincrement())
+  trial_internal_id      String?
   nct_id                 String
   nickname               String?
   principal_investigator String?
+  // This status refers to the CTML status
   status                 status?       @default(DRAFT)
-  ctml_schemas           schema_ctml[]
-  ctml_json              ctml_json?    @relation(fields: [ctml_jsonId], references: [id])
+  // Many trials to many ctml_schema records
+  ctml_schemas           ctml_schema[]
   createdAt              DateTime      @default(now())
   updatedAt              DateTime      @updatedAt
-  createdBy              user?         @relation("createdBy", fields: [userId], references: [id])
-  modifiedBy             user?         @relation("modifiedBy", fields: [modifiedById], references: [id])
-  userId                 Int?
+  modifiedBy             user?         @relation("ModifiedBy", fields: [modifiedById], references: [id])
   modifiedById           Int?
-  ctml_jsonId            Int?
+  user                   user?         @relation("UserTrials", fields: [userId], references: [id])
+  userId                 Int?
+  // One trial to many ctml_json records
+  ctml_jsons             ctml_json[]
+  event                  event[]
+  trial_group            trial_group?  @relation(fields: [trial_groupId], references: [id])
+  trial_groupId          Int?
+  protocol_no            String?
+  // This is trial matching status
+  trial_status           trial_status?
+  trial_lock             trial_lock[]
+  matchSentDate          DateTime?
+}
+
+model trial_group {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  trials    trial[]
+
+  @@index(fields: [name])
 }
 
 model user {
   id              Int      @id @default(autoincrement())
   email           String   @unique
-  firstName       String?
-  lastName        String?
-  created_trials  trial[]  @relation("createdBy")
-  modified_trials trial[]  @relation("modifiedBy")
+  name            String?
+  username        String?
+  first_name      String?
+  email_verified  Boolean  @default(false)
+  last_name       String?
+  refresh_token   String?  @db.LongText
+  keycloak_id     String?  @unique
+  trials          trial[]  @relation("UserTrials")
+  modified_trials trial[]  @relation("ModifiedBy")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  events          event[]
+  trial_lock      trial_lock[]
+
+  @@index(fields: [keycloak_id])
+}
+
+model event {
+  id            Int          @id @default(autoincrement())
+  timestamp     DateTime     @default(now())
+  type          event_type
+  description   String?
+  userId        Int?
+  user          user?        @relation(fields: [userId], references: [id])
+  metadata      Json?
+  trial         trial?       @relation(fields: [trialId], references: [id])
+  trialId       Int?
+  ctml_json     ctml_json?   @relation(fields: [ctml_jsonId], references: [id])
+  ctml_jsonId   Int?
+  ctml_schema   ctml_schema? @relation(fields: [ctml_schemaId], references: [id])
+  ctml_schemaId Int?
+}
+
+model gene {
+  id         Int    @id @default(autoincrement())
+  hugoSymbol String
+}
+
+model trial_lock {
+  id          Int      @id @default(autoincrement())
+  trial       trial    @relation(fields: [trialId], references: [id])
+  trialId     Int
+  user        user     @relation(fields: [locked_by], references: [id])
+  locked_by   Int
+  locked_at   DateTime @default(now())
+  lock_expiry DateTime
 }
 
 enum status {
   DRAFT
   IN_REVIEW
   COMPLETED
+}
+
+enum trial_status {
+  PENDING
+  MATCHED
+  ERROR
+}
+
+enum event_type {
+  LoginSuccessful
+  LoginFailed
+  TrialCreated
+  TrialRead
+  TrialReadMany
+  TrialUpdated
+  TrialDeleted
+  TrialDoesNotExist
+  TrialExported
+  TrialLocked
+  TrialUnlocked
+  TrialLockUpdated
+  CtmlJsonCreated
+  CtmlJsonRead
+  CtmlJsonReadMany
+  CtmlJsonUpdated
+  CtmlJsonUpdatedMany
+  CtmlJsonDeleted
+  CtmlJsonDoesNotExist
+  CtmlJsonSentToMatchminer
+  CtmlSchemaCreated
+  CtmlSchemaRead
+  CtmlSchemaReadMany
+  CtmlSchemaUpdated
+  CtmlSchemaDeleted
+  CtmlSchemaDoesNotExist
+  ResultDownloaded
+  MatchJobCreated
+  MatchMessageRecevied
 }

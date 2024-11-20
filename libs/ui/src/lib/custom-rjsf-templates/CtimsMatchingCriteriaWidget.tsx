@@ -5,7 +5,10 @@ import {Ripple} from "primereact/ripple";
 import { TabView, TabPanel } from 'primereact/tabview';
 import {useSelector} from "react-redux";
 import {stringify} from 'yaml'
-import {isObjectEmpty} from "../components/helpers";
+import {
+  flattenVariantCategoryContainerObjectInCtmlMatchModel,
+  isObjectEmpty
+} from "../components/helpers";
 import {RootState} from "../../../../../apps/web/store/store";
 import styles from './CtimsMatchingCriteriaWidget.module.scss';
 
@@ -50,6 +53,7 @@ const CtimsMatchingCriteriaWidget = (props: WidgetProps) => {
   // Will trigger re-render when the ctmlModel changes and thus will display the preview
   // The dispatch is called from ui.tsx in onDialogHideCallback
   const ctmlModel: any = useSelector((state: RootState) => state.finalModelAndErrors.ctmlModel);
+  const isFormDisabled = useSelector((state: RootState) => state.context.isFormDisabled);
 
   const btnClick = uiSchema!['onClick'];
 
@@ -72,9 +76,21 @@ const CtimsMatchingCriteriaWidget = (props: WidgetProps) => {
     border: '1px solid #E4E4E4',
     borderRadius: '4px',
   }
+  
+  let match = formContext.match;
+  if (match) {
+    const flatten = flattenVariantCategoryContainerObjectInCtmlMatchModel(match[0]);
+    match = [flatten];
+  }
 
-  const yamlString = stringify(formContext.match, null, 2);
-  const jsonString = JSON.stringify(formContext.match, null, 2);
+  const yamlString = stringify(match, null, 2);
+  const jsonString = JSON.stringify(match, null, 2);
+
+  const editMatchingCriteriaClicked = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isFormDisabled) {
+      btnClick(e, formContext, id)
+    }
+  }
 
   return (
       <div className={styles.container}>
@@ -98,7 +114,7 @@ const CtimsMatchingCriteriaWidget = (props: WidgetProps) => {
             </TabView>
           </div>
         </Panel>
-        <div className={styles['edit-matching-criteria-container']} onClick={(e) => btnClick(e, formContext, id)}>
+        <div className={styles['edit-matching-criteria-container']} onClick={editMatchingCriteriaClicked}>
           <i className="pi pi-pencil" style={circleStyle}></i>
           <div className={styles['edit-matching-criteria-title']}>Edit matching criteria</div>
           <i className="bi bi-caret-down-fill" style={caretStyle}></i>

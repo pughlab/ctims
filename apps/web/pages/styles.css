@@ -33,15 +33,15 @@
 }
 
 .caret-down-filled {
-  background-image: url("/assets/caret-down-filled.svg");
-  width: 16px;
-  height: 16px;
+  background-image: url("/assets/caret-down-filled.svg") !important;
+  width: 16px !important;
+  height: 16px !important;
 }
 
 .caret-right-filled {
-  background-image: url("/assets/caret-right-filled.svg");
-  width: 16px;
-  height: 16px;
+  background-image: url("/assets/caret-right-filled.svg") !important;
+  width: 16px !important;
+  height: 16px !important;
 }
 
 .clinical-icon {
@@ -172,6 +172,23 @@
   margin: 0 !important;
 }
 
+.p-confirm-dialog  {
+  width: 600px !important;
+}
+
+.p-dialog.p-confirm-dialog .p-confirm-dialog-message {
+  margin-left: 1.5rem;
+}
+
+.p-confirm-dialog-accept {
+  background-color: red !important;
+  border: 0 !important;
+}
+
+.p-confirm-dialog-reject {
+  color: #2E72D2 !important;
+}
+
 .p-panel .p-panel-content {
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
@@ -267,6 +284,10 @@
 
 .p-inputtext {
   height: 46px !important;
+}
+
+.p-inputtext:enabled:focus {
+  box-shadow: none !important;
 }
 
 .rjsf {
@@ -672,4 +693,31 @@ summary svg {
   #middle-content {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+
+.p-datatable-emptymessage {
+  font-style: italic;
+}
+
+.p-tabview .p-tabview-panels {
+  background: #ffffff;
+  padding: 1.25rem 1.25rem 1.25rem 0;
+  border: 0 none;
+  color: #495057;
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+.p-tabview-title {
+  font-family: 'Inter', sans-serif !important;
+  letter-spacing: 0.05rem !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  font-size: 20px !important;
+  line-height: 20px !important;
+  color: rgba(0, 0, 0, 0.87) !important;
+}
+
+.p-progress-spinner-circle {
+  stroke: #2E72D2 !important;
 }

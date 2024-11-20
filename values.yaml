@@ -1,0 +1,32 @@
+domain: qa02.technainstitute.net
+mountRoot: /mnt/k8s/ctims/qa
+ctimsEnv: null
+git:
+  ref: null
+ctimsdb:
+  port: 3306
+  password: ctims
+  user: ctims
+  database: ctims
+docker:
+    registry:
+        endpoint: null
+    image: null
+    dbImage: null
+    apiImage: null
+ctimsweb:
+  port: 80
+  slug: web
+ctimsapi:
+  port: 3000
+  slug: api
+  prismaEncryptionKey: null
+  keycloak:
+    url: null
+    realm: null
+    clientId: null
+    clientUUID: null
+    clientSecret: null
+    adminClientId: null
+    adminClientSecret: null
+    tokenEndpoint: null

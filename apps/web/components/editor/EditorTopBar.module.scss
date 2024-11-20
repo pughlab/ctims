@@ -6,8 +6,15 @@
   background: #FFFFFF;
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
   width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 1000;
 
   .logoContainer {
+  }
+
+  .lastsaved {
+    margin-left: 12px;
   }
 
   .nav {
@@ -57,7 +64,7 @@
       margin-left: auto;
 
       .saveBtn {
-        height: 36px;
+        height: 45px;
         background: #2E72D2;
 
         font-family: 'Inter', sans-serif;
