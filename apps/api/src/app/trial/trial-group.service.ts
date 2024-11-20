@@ -3,6 +3,7 @@ import axios, {AxiosResponse} from 'axios';
 import { PrismaService } from '../prisma.service';
 import { ModuleRef } from '@nestjs/core';
 import { trial } from '@prisma/client';
+import { keycloak_disabled_fetch_by_KeycloakId } from "../auth/keycloak-disabled-config";
 
 export interface TrialGroup {
   id: string;
@@ -95,6 +96,13 @@ export class TrialGroupService {
 
   async getUsersInTrialGroup(trialGroupId: string): Promise<any[]> {
 
+    const isKeycloakDisabled = process.env.KEYCLOAK_DISABLED === 'true';
+    if (isKeycloakDisabled) {
+      const user = keycloak_disabled_fetch_by_KeycloakId("notadmin");
+      const adminUser = keycloak_disabled_fetch_by_KeycloakId("admin");
+      return [user, adminUser];
+    }
+    else {
     try {
       const accessToken = await this.getToken();
       const getUsersInTrialGroupConfig = {
@@ -126,6 +134,7 @@ export class TrialGroupService {
     } catch (error) {
       this.logger.error(`Error while getting users in trial group from Keycloak: ${error}`)
       throw new HttpException('Error while getting users in trial group from Keycloak', HttpStatus.BAD_REQUEST)
+      }
     }
   }
 
