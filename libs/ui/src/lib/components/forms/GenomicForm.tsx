@@ -149,17 +149,17 @@ export const GenomicForm = (props: IFormProps) => {
       'cnv_call': {
         "enumNames": [
           " ",
-          "Heterozygous deletion",
-          "Homozygous deletion",
-          "Gain",
-          "High level amplification",
+          "Heterozygous Deletion",
+          "Homozygous Deletion",
+          "Low Amplification",
+          "High Amplification",
         ],
         "enum": [
           "",
-          "Heterozygous deletion",
-          "Homozygous deletion",
-          "Gain",
-          "High level amplification",
+          "Heterozygous Deletion",
+          "Homozygous Deletion",
+          "Low Amplification",
+          "High Amplification",
         ]
       },
       'wildtype': {
