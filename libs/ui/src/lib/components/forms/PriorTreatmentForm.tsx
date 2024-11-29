@@ -5,7 +5,7 @@ import CtimsErrorListTemplate from "../../custom-rjsf-templates/CtimsErrorListTe
 import {RegistryWidgetsType, ValidationData} from "@rjsf/utils";
 import CtimsInput from "../../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../../custom-rjsf-templates/CtimsDropdown";
-import React, {CSSProperties, useContext, useEffect, useRef} from "react";
+import React, {CSSProperties, useContext, useEffect, useRef, useState} from "react";
 import {IFormProps} from "../MatchingMenuAndForm";
 import {CtimsDialogContext, CtimsDialogContextType} from "../CtimsMatchDialog";
 import {useDispatch} from "react-redux";
@@ -55,8 +55,22 @@ export const PriorTreatmentForm = (props: IFormProps) => {
 
   const priorTreatmentFormRef = useRef<any>(null);
 
+  // tie the form data to the component, so we can manually reset the values, see onFormChange
+  const [myFormData, setMyFormData] = useState(node.data.formData);
+
+
   useEffect(() => {
     node.data.formValid = false;
+  }, [node]);
+
+  useEffect(() => {
+    node.data.formValid = false;
+    const formData = node.data.formData;
+    if (formData && !formData.hasOwnProperty('treatmentCategoryContainerObject')) {
+      setMyFormData({'treatmentCategoryContainerObject': formData});
+    } else {
+      setMyFormData(formData);
+    }
   }, [node]);
 
   const dispatch = useDispatch();
@@ -70,9 +84,23 @@ export const PriorTreatmentForm = (props: IFormProps) => {
           "Radiation Therapy"
         ],
         "enum": [
-          "MedicalTherapy",
+          "Medical Therapy",
           "Surgery",
-          "RadiationTherapy"
+          "Radiation Therapy"
+        ]
+      },
+      'medical_treatment_subtype': {
+        "enumNames": [
+          "Immunotherapy",
+          "Targeted Therapy",
+          "Hormonal Therapy",
+          "Chemotherapy",
+        ],
+        "enum": [
+          "Immunotherapy",
+          "Targeted Therapy",
+          "Hormonal Therapy",
+          "Chemotherapy",
         ]
       },
     },
@@ -85,7 +113,7 @@ export const PriorTreatmentForm = (props: IFormProps) => {
         'properties': {
           "treatment_category": {
             "$ref": "#/definitions/treatment_category",
-            'title': 'Treatment Category',
+            'title': 'Prior Treatment Type',
             "description": "Type of treatment",
           },
         },
@@ -96,16 +124,26 @@ export const PriorTreatmentForm = (props: IFormProps) => {
                 "if": {
                   "properties": {
                     "treatment_category": {
-                      "const": "MedicalTherapy"
+                      "const": "Medical Therapy"
                     }
                   }
                 },
                 "then": {
                   "properties": {
-                    'prior_treatment_agent': {
+                    'subtype': {
+                      'title': 'Medical Therapy Subtype',
+                      '$ref': '#/definitions/medical_treatment_subtype',
+                      "description": "Medical Therapy Subtype",
+                    },
+                    'agent_class': {
+                      'type': 'string',
+                      'title': 'Agent Class',
+                      "description": "Prior Treatment Agent Class",
+                    },
+                    'agent': {
                       'type': 'string',
                       'title': 'Agent',
-                      "description": "Gene symbol as determined by https://www.genenames.org/",
+                      "description": "Prior Treatment Agent",
                     }
                   },
                   "required": []
@@ -124,7 +162,7 @@ export const PriorTreatmentForm = (props: IFormProps) => {
                     'surgery_type': {
                       'type': 'string',
                       'title': 'Surgery type',
-                      "description": "Gene symbol as determined by https://www.genenames.org/",
+                      "description": "Surgery type",
                     }
                   },
                   "required": []
@@ -134,16 +172,21 @@ export const PriorTreatmentForm = (props: IFormProps) => {
                 "if": {
                   "properties": {
                     "treatment_category": {
-                      "const": "RadiationTherapy"
+                      "const": "Radiation Therapy"
                     }
                   }
                 },
                 "then": {
                   "properties": {
+                    'radiation_type': {
+                      'type': 'string',
+                      'title': 'Radiation Type',
+                      "description": "Radiation Type",
+                    },
                     'radiation_site': {
                       'type': 'string',
-                      'title': 'Site',
-                      "description": "Gene symbol as determined by https://www.genenames.org/",
+                      'title': 'Radiation Site',
+                      "description": "Radiation Site",
                     }
                   },
                   "required": []
@@ -151,7 +194,8 @@ export const PriorTreatmentForm = (props: IFormProps) => {
               }
             ]
           }
-        }
+        },
+        "required": ['treatment_category']
       }
     }
   }
@@ -163,20 +207,23 @@ export const PriorTreatmentForm = (props: IFormProps) => {
   }
 
   const onFormChange = (data: any) => {
-    const form: Form = priorTreatmentFormRef.current;
-    form?.validateForm();
-    const errorDetails: ValidationData<any> = form?.validate(data.formData);
-    if (typeof errorDetails === 'undefined' || errorDetails?.errors.length > 0) {
-      node.data.formValid = false;
-      const payload = {[nk]: true};
-      dispatch(setMatchDialogErrors(payload));
+    // reset form if variant category changed
+    const oldTreatmentCategory = myFormData?.treatmentCategoryContainerObject?.treatment_category;
+    const newTreatmentCategory = data.formData.treatmentCategoryContainerObject?.treatment_category;
+    // if oldTreatmentCategory is defined and category is now different, reset the form in with the variantCategoryContainer format
+    if ((oldTreatmentCategory && newTreatmentCategory && (oldTreatmentCategory !== newTreatmentCategory))
+      // or the if form is new so oldTreatmentCategory is undefined, and newTreatmentCategoryContainer exists
+    || (!oldTreatmentCategory && data.formData.treatmentCategoryContainerObject)) {
+      const myFormData = {
+        treatmentCategoryContainerObject: {
+          treatment_category: newTreatmentCategory
+        }
+      }
+      setMyFormData(myFormData);
+      node.data.formData = myFormData;
+      data.formData = myFormData;
     }
-    if (errorDetails?.errors.length === 0) {
-      node.data.formValid = true;
-      dispatch(deleteMatchDialogError(nk));
-      setSaveBtnState(false)
-    }
-    console.log('onFormChange errorDetails: ', errorDetails);
+    // console.log('onFormChange errorDetails: ', errorDetails);
     node.data.formData = data.formData;
     dispatch(formChange());
     console.log('onFormChange node: ', node)
@@ -196,10 +243,13 @@ export const PriorTreatmentForm = (props: IFormProps) => {
   }
 
   const customValidate = (formData: any, errors: any, uiSchema: any) => {
-    if (typeof formData.prior_treatment_agent === 'undefined') {
-      //errors.prior_treatment_agent.addError('Must have at least one field filled.');
+    let myFormData = formData;
+    let myErrors = errors;
+    if (formData.treatmentCategoryContainerObject) {
+      myFormData = formData.treatmentCategoryContainerObject;
+      myErrors = errors.treatmentCategoryContainerObject;
     }
-    return errors;
+    return myErrors;
   }
 
   return (
