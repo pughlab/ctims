@@ -91,15 +91,17 @@ export const PriorTreatmentForm = (props: IFormProps) => {
       },
       'medical_treatment_subtype': {
         "enumNames": [
+          " ",
           "Immunotherapy",
           "Targeted Therapy",
-          "Hormonal Therapy",
+          "Hormone Therapy",
           "Chemotherapy",
         ],
         "enum": [
+          "",
           "Immunotherapy",
           "Targeted Therapy",
-          "Hormonal Therapy",
+          "Hormone Therapy",
           "Chemotherapy",
         ]
       },
@@ -206,6 +208,36 @@ export const PriorTreatmentForm = (props: IFormProps) => {
     }
   }
 
+  const validateFormFromRef = (data?: any) => {
+    const form: Form = priorTreatmentFormRef.current;
+    form?.validateForm();
+    let errorDetails: ValidationData<any>;
+    if (data) {
+      errorDetails = form?.validate(data.formData);
+    } else {
+      errorDetails = form?.validate(form.state.formData);
+    }
+    // console.log('onFormChange errorDetails: ', errorDetails);
+    if (errorDetails?.errors.length > 0) {
+      errorsInFormDispatch();
+    }
+    if (errorDetails?.errors.length === 0) {
+      noErrorsInFormDispatch();
+    }
+  }
+
+  const noErrorsInFormDispatch = () => {
+    node.data.formValid = true;
+    dispatch(deleteMatchDialogError(nk));
+    setSaveBtnState(false)
+  }
+
+  const errorsInFormDispatch = () => {
+    node.data.formValid = false;
+    const payload = {[nk]: true};
+    dispatch(setMatchDialogErrors(payload));
+  }
+
   const onFormChange = (data: any) => {
     // reset form if variant category changed
     const oldTreatmentCategory = myFormData?.treatmentCategoryContainerObject?.treatment_category;
@@ -223,7 +255,12 @@ export const PriorTreatmentForm = (props: IFormProps) => {
       node.data.formData = myFormData;
       data.formData = myFormData;
     }
-    // console.log('onFormChange errorDetails: ', errorDetails);
+    const flattenedFormData = {
+      ...data,
+      // formData: data.formData.variantCategoryContainerObject, /*can't change this, otherwise form won't render*/
+      errorSchema: data.errorSchema.treatmentCategoryContainerObject,
+    }
+    validateFormFromRef(flattenedFormData);
     node.data.formData = data.formData;
     dispatch(formChange());
     console.log('onFormChange node: ', node)
@@ -249,6 +286,16 @@ export const PriorTreatmentForm = (props: IFormProps) => {
       myFormData = formData.treatmentCategoryContainerObject;
       myErrors = errors.treatmentCategoryContainerObject;
     }
+    if (typeof myFormData.treatment_category === 'undefined' &&
+        typeof myFormData.subtype === 'undefined' &&
+        typeof myFormData.agent_class === 'undefined' &&
+        typeof myFormData.agent === 'undefined' &&
+        typeof myFormData.surgery_type === 'undefined' &&
+        typeof myFormData.radiation_type === 'undefined' &&
+        typeof myFormData.radiation_site === 'undefined') {
+      myErrors.variant_category.addError('Must have at least one field filled.');
+    }
+
     return myErrors;
   }
 

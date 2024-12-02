@@ -448,10 +448,10 @@ export const getNodeLabel = (node: TreeNode): string => {
 }
 
 /*
-  recursively go through tree nodes, if it has the key 'variantCategoryContainerObject',
+  recursively go through tree nodes, if it has the key 'variantCategoryContainerObject', 'treatmentCategoryContainerObject'
   flatten the object so it matches the format of the CTML
    */
-export const flattenVariantCategoryContainerObject = (nodes: TreeNode[]) => {
+export const flattenCategoryContainerObject = (nodes: TreeNode[]) => {
   return nodes.map((node: TreeNode) => {
     const newNode = {...node};
     if (newNode.data && newNode.data.formData && newNode.data.formData.variantCategoryContainerObject) {
@@ -461,14 +461,14 @@ export const flattenVariantCategoryContainerObject = (nodes: TreeNode[]) => {
       newNode.data.formData = newNode.data.formData.treatmentCategoryContainerObject;
     }
     if (newNode.children) {
-      newNode.children = flattenVariantCategoryContainerObject(newNode.children);
+      newNode.children = flattenCategoryContainerObject(newNode.children);
     }
     return newNode;
   });
 }
   
 // same as above, but less restrictive on the input object
-export const flattenVariantCategoryContainerObjectInCtmlMatchModel = (ctmlMatchModel: any) => {
+export const flattenCategoryContainerObjectInCtmlMatchModel = (ctmlMatchModel: any) => {
   const cloned = structuredClone(ctmlMatchModel);
   const flattenGenomicObject = (obj: any) => {
     const newObj = {...obj};
@@ -500,7 +500,7 @@ export const flattenGenericObject = (ctmlMatchModel: any) => {
     return arr.map(item => {
       Object.keys(item).forEach(key => {
         if (key === 'match' && Array.isArray(item[key])) {
-          item[key] = item[key].map(flattenVariantCategoryContainerObjectInCtmlMatchModel);
+          item[key] = item[key].map(flattenCategoryContainerObjectInCtmlMatchModel);
         } else if (Array.isArray(item[key])) {
           item[key] = processArray(item[key]);
         }
@@ -517,13 +517,13 @@ export const flattenGenericObject = (ctmlMatchModel: any) => {
 }
 
 // Recursively traverse through the match criteria and add the variantCategoryContainerObject key to the genomic object
-export const addVariantCategoryContainerObject = (matchCriteria: any[]) => {
+export const addCategoryContainerObject = (matchCriteria: any[]) => {
   return matchCriteria.map((criteria) => {
     if (criteria.and || criteria.or) {
       const operator = criteria.and ? 'and' : 'or';
       const children = criteria[operator];
       const ret: { [key in 'and' | 'or']?: any[] } = {};
-      ret[operator] = addVariantCategoryContainerObject(children);
+      ret[operator] = addCategoryContainerObject(children);
       return ret;
     } else if (criteria.genomic) {
       if (!criteria.genomic.variantCategoryContainerObject) {

@@ -17,8 +17,8 @@ import {
   deleteNodeFromChildrenArrayByKey,
   findArrayContainingKeyInsideATree,
   findObjectByKeyInTree,
-  flattenVariantCategoryContainerObject,
-  flattenVariantCategoryContainerObjectInCtmlMatchModel,
+  flattenCategoryContainerObject,
+  flattenCategoryContainerObjectInCtmlMatchModel,
   getNodeLabel,
   isObjectEmpty,
   traverseNode,
@@ -92,7 +92,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
   const updateReduxViewModelAndCtmlModel = (newRootNodes: TreeNode[], state: RootState) => {
     const activeArmId: string = state.matchViewModelActions.activeArmId;
     const viewModel: IKeyToViewModel = {};
-    const flattenedNewRootNodes = flattenVariantCategoryContainerObject(newRootNodes);
+    const flattenedNewRootNodes = flattenCategoryContainerObject(newRootNodes);
     viewModel[activeArmId] = structuredClone(flattenedNewRootNodes);
     dispatch(setMatchViewModel(viewModel))
     // convert view model (rootNodes) to ctims format
@@ -193,7 +193,7 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
     const currentCtmlMatchModel: any = state.matchViewModelActions.ctmlMatchModel;
     const curMatch = currentCtmlMatchModel.match;
     if (curMatch && curMatch.length > 0) {
-      const flattenedMatch = flattenVariantCategoryContainerObjectInCtmlMatchModel(curMatch[0]);
+      const flattenedMatch = flattenCategoryContainerObjectInCtmlMatchModel(curMatch[0]);
       dispatch(setCtmlDialogModel({match: [flattenedMatch]}));
     }
 
