@@ -134,9 +134,9 @@ export class TrialService implements OnModuleInit {
         where: { id: existing_trial.id },
         data: {
           status,
-          principal_investigator,
-          nickname,
-          nct_id,
+          principal_investigator: principal_investigator === undefined? null : principal_investigator,
+          nickname: nickname === undefined? null : nickname,
+          nct_id: nct_id === undefined? null : nct_id,
           ctml_schemas: {
             connect: {
               version: ctml_schema_version
