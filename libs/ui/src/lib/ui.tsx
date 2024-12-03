@@ -19,7 +19,7 @@ import useSaveTrial from "../../../../apps/web/hooks/useSaveTrial";
 import {useRouter} from "next/router";
 import { Toast } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import {addVariantCategoryContainerObject} from "./components/helpers";
+import {addCategoryContainerObject} from "./components/helpers";
 import useHandleSignOut from "../../../../apps/web/hooks/useHandleSignOut";
 
 
@@ -100,7 +100,7 @@ export const Ui = (props: UiProps) => {
     console.log('handleSpecialClick armCode: ', formData.arm_code);
     console.log('handleSpecialClick id: ', id);
     if (Array.isArray(formData.match)) {
-      const formDataWithVariantCategoryContainerObject = addVariantCategoryContainerObject(formData.match);
+      const formDataWithVariantCategoryContainerObject = addCategoryContainerObject(formData.match);
       formData.match = formDataWithVariantCategoryContainerObject;
     }
     setArmCode(formData.arm_code)

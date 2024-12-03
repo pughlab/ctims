@@ -431,35 +431,52 @@ export const getNodeLabel = (node: TreeNode): string => {
       label = hugo_symbol;
     }
   } else if (node.label === 'Prior Treatment' && node.data.formData) {
-    label = node.data.formData.prior_treatment_agent;
+    let treatmentObj = node.data.formData;
+    if (node.data.formData.treatmentCategoryContainerObject) {
+      treatmentObj = node.data.formData.treatmentCategoryContainerObject;
+    }
+    const { agent, surgery_type, radiation_type} = treatmentObj;
+    if (agent) {
+      label = agent;
+    } else if (surgery_type) {
+      label = surgery_type;
+    } else if (radiation_type) {
+      label = radiation_type;
+    }
   }
   return label;
 }
 
 /*
-  recursively go through tree nodes, if it has the key 'variantCategoryContainerObject',
+  recursively go through tree nodes, if it has the key 'variantCategoryContainerObject', 'treatmentCategoryContainerObject'
   flatten the object so it matches the format of the CTML
    */
-export const flattenVariantCategoryContainerObject = (nodes: TreeNode[]) => {
+export const flattenCategoryContainerObject = (nodes: TreeNode[]) => {
   return nodes.map((node: TreeNode) => {
     const newNode = {...node};
     if (newNode.data && newNode.data.formData && newNode.data.formData.variantCategoryContainerObject) {
       newNode.data.formData = newNode.data.formData.variantCategoryContainerObject;
     }
+    else if (newNode.data && newNode.data.formData && newNode.data.formData.treatmentCategoryContainerObject) {
+      newNode.data.formData = newNode.data.formData.treatmentCategoryContainerObject;
+    }
     if (newNode.children) {
-      newNode.children = flattenVariantCategoryContainerObject(newNode.children);
+      newNode.children = flattenCategoryContainerObject(newNode.children);
     }
     return newNode;
   });
 }
-
+  
 // same as above, but less restrictive on the input object
-export const flattenVariantCategoryContainerObjectInCtmlMatchModel = (ctmlMatchModel: any) => {
+export const flattenCategoryContainerObjectInCtmlMatchModel = (ctmlMatchModel: any) => {
   const cloned = structuredClone(ctmlMatchModel);
   const flattenGenomicObject = (obj: any) => {
     const newObj = {...obj};
     if (newObj.genomic && newObj.genomic.variantCategoryContainerObject) {
       newObj.genomic = { ...newObj.genomic.variantCategoryContainerObject };
+    }
+    else if (newObj.prior_treatment && newObj.prior_treatment.treatmentCategoryContainerObject) {
+      newObj.prior_treatment = { ...newObj.prior_treatment.treatmentCategoryContainerObject };
     }
     // Recursively flatten 'and' or 'or' arrays if they exist
     ['and', 'or'].forEach(key => {
@@ -474,6 +491,7 @@ export const flattenVariantCategoryContainerObjectInCtmlMatchModel = (ctmlMatchM
   return flattenGenomicObject(cloned);
 };
 
+
 // Third attempt at a generic flattening function
 export const flattenGenericObject = (ctmlMatchModel: any) => {
   const cloned = structuredClone(ctmlMatchModel);
@@ -482,7 +500,7 @@ export const flattenGenericObject = (ctmlMatchModel: any) => {
     return arr.map(item => {
       Object.keys(item).forEach(key => {
         if (key === 'match' && Array.isArray(item[key])) {
-          item[key] = item[key].map(flattenVariantCategoryContainerObjectInCtmlMatchModel);
+          item[key] = item[key].map(flattenCategoryContainerObjectInCtmlMatchModel);
         } else if (Array.isArray(item[key])) {
           item[key] = processArray(item[key]);
         }
@@ -498,14 +516,14 @@ export const flattenGenericObject = (ctmlMatchModel: any) => {
   return cloned;
 }
 
- // Recursively traverse through the match criteria and add the variantCategoryContainerObject key to the genomic object
-export const addVariantCategoryContainerObject = (matchCriteria: any[]) => {
+// Recursively traverse through the match criteria and add the variantCategoryContainerObject key to the genomic object
+export const addCategoryContainerObject = (matchCriteria: any[]) => {
   return matchCriteria.map((criteria) => {
     if (criteria.and || criteria.or) {
       const operator = criteria.and ? 'and' : 'or';
       const children = criteria[operator];
       const ret: { [key in 'and' | 'or']?: any[] } = {};
-      ret[operator] = addVariantCategoryContainerObject(children);
+      ret[operator] = addCategoryContainerObject(children);
       return ret;
     } else if (criteria.genomic) {
       if (!criteria.genomic.variantCategoryContainerObject) {
@@ -517,12 +535,24 @@ export const addVariantCategoryContainerObject = (matchCriteria: any[]) => {
         return c;
       }
       return criteria;
+    } else if (criteria.prior_treatment) {
+      if (!criteria.prior_treatment.treatmentCategoryContainerObject) {
+        const c: any = {
+          prior_treatment: {
+            treatmentCategoryContainerObject: criteria.prior_treatment
+          }
+        }
+        return c;
+      }
+      return criteria;
+
     } else {
       // clinical node, no need to modify
       return criteria;
     }
   })
 }
+
 
 // function to recursively trim all CtimsInput fields, and remove the key if value is empty after trim
 export const trimFields = (obj: any) => {

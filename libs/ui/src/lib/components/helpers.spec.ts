@@ -1,4 +1,4 @@
-import {flattenVariantCategoryContainerObject, addVariantCategoryContainerObject} from './helpers';
+import {flattenCategoryContainerObject, addCategoryContainerObject} from './helpers';
 
 describe('test adding variantCategoryContainerObject to genomic criteria node for CTML and tree node ', () => {
   it('should flatten VariantCategoryContainerObject to CTML format', () => {
@@ -30,7 +30,7 @@ describe('test adding variantCategoryContainerObject to genomic criteria node fo
         "icon": "and-icon"
       }
     ]
-    const result = flattenVariantCategoryContainerObject(nodes);
+    const result = flattenCategoryContainerObject(nodes);
     expect(result).toEqual(
       [
         {
@@ -119,7 +119,7 @@ describe('test adding variantCategoryContainerObject to genomic criteria node fo
       }
     ];
 
-    const result = flattenVariantCategoryContainerObject(nodes);
+    const result = flattenCategoryContainerObject(nodes);
     expect(result).toEqual(
       [
         {
@@ -190,7 +190,7 @@ describe('test adding variantCategoryContainerObject to genomic criteria node fo
       }
     ];
 
-    const result = addVariantCategoryContainerObject(matchCriteria);
+    const result = addCategoryContainerObject(matchCriteria);
     const expected = [
       {
         "and": [
@@ -232,7 +232,7 @@ describe('test adding variantCategoryContainerObject to genomic criteria node fo
         ]
       }
     ];
-    const result = addVariantCategoryContainerObject(matchCriteria);
+    const result = addCategoryContainerObject(matchCriteria);
     const expected = [
       {
         "and": [

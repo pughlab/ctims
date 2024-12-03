@@ -6,7 +6,7 @@ import { TabView, TabPanel } from 'primereact/tabview';
 import {useSelector} from "react-redux";
 import {stringify} from 'yaml'
 import {
-  flattenVariantCategoryContainerObjectInCtmlMatchModel,
+  flattenCategoryContainerObjectInCtmlMatchModel,
   isObjectEmpty
 } from "../components/helpers";
 import {RootState} from "../../../../../apps/web/store/store";
@@ -79,7 +79,7 @@ const CtimsMatchingCriteriaWidget = (props: WidgetProps) => {
   
   let match = formContext.match;
   if (match) {
-    const flatten = flattenVariantCategoryContainerObjectInCtmlMatchModel(match[0]);
+    const flatten = flattenCategoryContainerObjectInCtmlMatchModel(match[0]);
     match = [flatten];
   }
 
