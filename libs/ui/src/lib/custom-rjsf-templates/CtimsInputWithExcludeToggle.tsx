@@ -93,7 +93,7 @@ const CtimsInputWithExcludeToggle = (props: WidgetProps) => {
         onFocus={_onFocus}
       />
       <div style={{ display: 'flex' }}>
-        <div className={styles.label}> Exclude this diagnosis from matches </div>
+        <div className={styles.label}> Exclude this criteria from matches.</div>
         <div style={{marginLeft: 'auto', marginTop: '10px'}}><IOSSwitch disabled={!value} value={value ? value.startsWith('!') : false} onChange={(checked: boolean) => {
           const newValue = checked ? '!' + value : value.replace('!', '');
           onChange(newValue);

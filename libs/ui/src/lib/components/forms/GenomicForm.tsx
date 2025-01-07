@@ -23,6 +23,9 @@ import {CtimsDialogContext, CtimsDialogContextType} from "../CtimsMatchDialog";
 import { Checkbox } from 'primereact/checkbox';
 import {wildcard_protein_change_validation_func, getCurrentOperator, protein_change_validation_func} from "../helpers";
 import AutocompleteField from "../CtimsAutoCompleteComponent";
+import CtimsInputWithExcludeToggle from '../../custom-rjsf-templates/CtimsInputWithExcludeToggle';
+import CtimsDropdownWithExcludeToggle from '../../custom-rjsf-templates/CtimsDropdownWithExcludeToggle';
+import AutocompleteFieldWithToggle from "../CtimsCombinedWidget";
 
 
 const RjsfForm = withTheme(PrimeTheme)
@@ -160,6 +163,10 @@ export const GenomicForm = (props: IFormProps) => {
           "Homozygous deletion",
           "Gain",
           "High level amplification",
+          "!Heterozygous deletion",
+          "!Homozygous deletion",
+          "!Gain",
+          "!High level amplification",
         ]
       },
       'wildtype': {
@@ -498,7 +505,16 @@ export const GenomicForm = (props: IFormProps) => {
     },
     "variantCategoryContainerObject": {
       "hugo_symbol": {
-        "ui:widget": AutocompleteField,
+        "ui:widget": AutocompleteFieldWithToggle,
+      },
+      "fusion_partner_hugo_symbol": {
+        "ui:widget": AutocompleteFieldWithToggle,
+      },
+      "protein_change": {
+        "ui:widget": CtimsInputWithExcludeToggle,
+      },
+      "cnv_call": {
+        "ui:widget": CtimsDropdownWithExcludeToggle,
       }
     }
   }
