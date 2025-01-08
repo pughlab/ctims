@@ -2,6 +2,7 @@ import {useState} from 'react';
 import {useSelector} from "react-redux";
 import {RootState} from "../store/store";
 import useAxios from "./useAxios";
+import { flattenGenericObject } from 'libs/ui/src/lib/components/helpers';
 
 const useSendCTML = () => {
 
@@ -17,7 +18,8 @@ const useSendCTML = () => {
     let ctmlModelCopy;
     const age_group = ctmlModel.age_group;
     const trialInformation = ctmlModel.trialInformation;
-    ctmlModelCopy = {'trial_list' : [{...ctmlModel, ...trialInformation, ...age_group}]};
+    const treatmentListFlatted = flattenGenericObject(ctmlModel.treatment_list);
+    ctmlModelCopy = {'trial_list' : [{...ctmlModel, ...trialInformation, ...age_group, treatment_list: treatmentListFlatted}]};
     delete ctmlModelCopy.age_group;
     delete ctmlModelCopy.trialInformation;
     delete ctmlModelCopy.ctml_status;
