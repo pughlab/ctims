@@ -109,6 +109,7 @@ export const ClinicalForm = (props: IFormProps) => {
       "age_expression": {
         'type': 'string',
         'title': 'Age',
+        "description": "Age from clinical data (Example criteria: >=18, ==50, <60)",
       },
       'oncotree_primary_diagnosis': {
         'type': 'string',
@@ -117,7 +118,7 @@ export const ClinicalForm = (props: IFormProps) => {
       'tmb': {
         'type': 'string',
         'title': 'TMB',
-        "description": "Tumor Mutational Burden/Megabase",
+        "description": "Tumor Mutational Burden measured as number of mutations per Megabase",
       },
       'her2_status': {
         "type": "string",
