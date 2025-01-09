@@ -293,7 +293,7 @@ export const PriorTreatmentForm = (props: IFormProps) => {
         typeof myFormData.surgery_type === 'undefined' &&
         typeof myFormData.radiation_type === 'undefined' &&
         typeof myFormData.radiation_site === 'undefined') {
-      myErrors.variant_category.addError('Must have at least one field filled.');
+      myErrors.treatment_category.addError('Must have at least one field filled.');
     }
 
     return myErrors;
