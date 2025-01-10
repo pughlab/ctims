@@ -42,7 +42,7 @@ main().then(() => {
 async function fetchHgncData() {
   try {
     const response = await get(
-      'https://ftp.ebi.ac.uk/pub/databases/genenames/hgnc/json/hgnc_complete_set.json'
+      'http://storage.googleapis.com/public-download-files/hgnc/json/json/hgnc_complete_set.json'
     );
     if (response.status != 200) {
       throw new Error('Failed to fetch data');
@@ -63,7 +63,7 @@ async function saveGenes(data) {
         hugoSymbol: x.symbol,
       };
     });
-    
+
     await prisma.gene.createMany({
       data: genesData,
       skipDuplicates: true,
