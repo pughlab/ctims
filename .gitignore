@@ -19,6 +19,8 @@
 *.sublime-workspace
 apps/api/.env
 apps/web/.env
+apps/api/prisma/.env
+.env
 
 # IDE - VSCode
 .vscode/*
