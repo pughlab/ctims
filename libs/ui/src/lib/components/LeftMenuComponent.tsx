@@ -472,6 +472,12 @@ const LeftMenuComponent = memo((props: ILeftMenuComponentProps) => {
         newNode.data.formData = c;
       }
     }
+    else if (newNode.label === 'Prior Treatment') {
+      if (newNode.data.formData && !newNode.data.formData.treatmentCategoryContainerObject) {
+        const c = {treatmentCategoryContainerObject: newNode.data.formData};
+        newNode.data.formData = c;
+      }
+    }
     setSelectedNode(newNode);
     setSelectedKeys(newNode.key as string)
     onTreeNodeClick(newNode.data.type, newNode);
