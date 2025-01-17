@@ -188,15 +188,15 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
                      sortField="createdOn" sortOrder={-1}
                      emptyMessage={'No match results.'}
           >
-            <Column field="trialId" header="ID"></Column>
-            <Column field="nickname" header="Nickname"></Column>
-            <Column field="principal_investigator" header="Principal Investigator"></Column>
-            <Column field="createdAt" header="Created on" dataType="date"></Column>
-            <Column field="updatedAt" header="Modified on" dataType="date"></Column>
-            <Column field="trialStatus" header="Match Status" sortable></Column>
-            <Column field="trialRetCount" header="Match Results"></Column>
-            <Column field="matchSentDate" header="Last Matched" dataType="date"></Column>
-            <Column field="matchedDate" header="Last New Result" dataType="date"></Column>
+            <Column field="trialId" header="ID" sortable></Column>
+            <Column field="nickname" header="Nickname" sortable></Column>
+            <Column field="principal_investigator" header="Principal Investigator" sortable></Column>
+            <Column field="createdAt" header="Created on" dataType="date" sortable></Column>
+            <Column field="updatedAt" header="Modified on" dataType="date" sortable></Column>
+            <Column field="trialStatus" header="Match Status" sortable ></Column>
+            <Column field="trialRetCount" header="Match Results" sortable></Column>
+            <Column field="matchSentDate" header="Last Matched" dataType="date" sortable></Column>
+            <Column field="matchedDate" header="Last New Result" dataType="date" sortable></Column>
             <Column field="download" header="Download" dataType="boolean" style={{minWidth: '6rem'}}
                     body={downloadBodyTemplate}></Column>
           </DataTable>

@@ -379,14 +379,14 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
                      sortField="createdOn" sortOrder={-1}
                      emptyMessage={!props.selectedTrialGroup ? 'Select a Trial Group to start' : 'No CTML files. Select the \'Create\' button to start.'}
           >
-            <Column field="nct_id" header="ID"></Column>
+            <Column field="nct_id" header="ID" sortable></Column>
             <Column field="id" header="" body={subMenuTemplate}></Column>
-            <Column field="nickname" header="Nickname"></Column>
-            <Column field="principal_investigator" header="Principal Investigator"></Column>
+            <Column field="nickname" header="Nickname" sortable></Column>
+            <Column field="principal_investigator" header="Principal Investigator" sortable></Column>
             <Column field="ctml_status_label" header="CTML Status" sortable></Column>
-            <Column field="createdAt" header="Created on" dataType="date"></Column>
-            <Column field="updatedAt" header="Modified on" dataType="date"></Column>
-            <Column field="lockStatus" header="Lock Status" body={lockStatusTemplate}></Column>
+            <Column field="createdAt" header="Created on" dataType="date" sortable></Column>
+            <Column field="updatedAt" header="Modified on" dataType="date" sortable></Column>
+            <Column field="lockStatus" header="Lock Status" body={lockStatusTemplate} sortable></Column>
           </DataTable>
         </div>
 
