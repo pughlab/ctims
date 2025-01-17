@@ -10,10 +10,14 @@ import { CSVLink } from "react-csv";
 import {TrialStatusEnum} from "../../../../libs/types/src/trial-status.enum";
 import { setIsLongOperation } from 'apps/web/store/slices/contextSlice';
 import { useDispatch } from 'react-redux';
+import { Paginator } from 'primereact/paginator';
 
 const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) => {
   const {data, status: sessionStatus} = useSession()
   const dispatch = useDispatch();
+
+  const [first, setFirst] = useState(0);
+  const [rows, setRows] = useState(10);
 
   useEffect(() => {
     if (!data) {
@@ -183,7 +187,7 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
         <span className={styles.titleText}>Match Results</span>
 
         <div className={styles.tableContainer}>
-          <DataTable value={results} rowHover={true}
+          <DataTable value={results.slice(first, first + rows)} rowHover={true}
                      loading={props.getTrialsForUsersInGroupLoading || getMatchResultsLoading}
                      sortField="createdOn" sortOrder={-1}
                      emptyMessage={'No match results.'}
@@ -200,6 +204,16 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
             <Column field="download" header="Download" dataType="boolean" style={{minWidth: '6rem'}}
                     body={downloadBodyTemplate}></Column>
           </DataTable>
+
+          <Paginator
+            first={first}
+            rows={rows}
+            totalRecords={results.length}
+            onPageChange={(e) => {
+              setFirst(e.first);
+              setRows(e.rows);
+            }}
+          />
         </div>
       </>}
     </>
