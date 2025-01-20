@@ -1,6 +1,6 @@
 import { WidgetProps } from '@rjsf/utils';
 import React, { useEffect, useState } from 'react';
-import styles from './CtimsInputWithExcludeToggle.module.css';
+import styles from './CtimsDropdownWithExcludeToggle.module.css';
 import { Tooltip } from 'primereact/tooltip';
 import { Dropdown } from 'primereact/dropdown';
 import cn from 'clsx';
@@ -26,7 +26,7 @@ const CtimsDropdownWithExcludeToggle = (props: WidgetProps) => {
   } = props;
 
   const [valueState, setValueState] = useState(value?.replace('!', '') || '');
-  const [isNegated, setIsNegated] = useState(value?.startsWith('!') || false);
+  const [isNegated, setIsNegated] = useState(value?.startsWith('!'));
 
   useEffect(() => {
     const currentURL = window.location.href;
@@ -46,23 +46,21 @@ const CtimsDropdownWithExcludeToggle = (props: WidgetProps) => {
   const getBackendValue = (displayValue: string, negated: boolean) =>
     negated ? `!${displayValue}` : displayValue;
 
-  const handleDropdownChange = (e: { value: any }) => {
-    const selectedValue = e.value;
-    setValueState(selectedValue);
-    const backendValue = getBackendValue(selectedValue, isNegated);
+  useEffect(() => {
+    const backendValue = getBackendValue(valueState, isNegated);
     onChange(backendValue);
+  }, [valueState, isNegated]);
+
+  const handleDropdownChange = (e: { value: any }) => {
+    setValueState(e.value);
   };
 
   const handleToggleChange = (checked: boolean) => {
     setIsNegated(checked);
-    const backendValue = getBackendValue(valueState, checked);
-    onChange(backendValue);
   };
 
   const handleBlur = () => {
     const trimmedValue = valueState?.trim?.();
-    const backendValue = getBackendValue(trimmedValue, isNegated);
-    onChange(backendValue);
     onBlur(id, trimmedValue);
   };
 

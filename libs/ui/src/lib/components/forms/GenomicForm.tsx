@@ -25,7 +25,6 @@ import {wildcard_protein_change_validation_func, getCurrentOperator, protein_cha
 import AutocompleteField from "../CtimsAutoCompleteComponent";
 import CtimsInputWithExcludeToggle from '../../custom-rjsf-templates/CtimsInputWithExcludeToggle';
 import CtimsDropdownWithExcludeToggle from '../../custom-rjsf-templates/CtimsDropdownWithExcludeToggle';
-import AutocompleteFieldWithToggle from "../CtimsCombinedWidget";
 
 
 const RjsfForm = withTheme(PrimeTheme)
@@ -505,10 +504,10 @@ export const GenomicForm = (props: IFormProps) => {
     },
     "variantCategoryContainerObject": {
       "hugo_symbol": {
-        "ui:widget": AutocompleteFieldWithToggle,
+        "ui:widget": AutocompleteField,
       },
       "fusion_partner_hugo_symbol": {
-        "ui:widget": AutocompleteFieldWithToggle,
+        "ui:widget": AutocompleteField,
       },
       "protein_change": {
         "ui:widget": CtimsInputWithExcludeToggle,
