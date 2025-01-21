@@ -249,4 +249,5 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
     </>
   )
 }
+
 export default Results;
