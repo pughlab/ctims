@@ -187,7 +187,8 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
         <span className={styles.titleText}>Match Results</span>
 
         <div className={styles.tableContainer}>
-          <DataTable value={results.slice(first, first + rows)} rowHover={true}
+          <DataTable value={results} rowHover={true} paginator rows={10}
+                     rowsPerPageOptions={[5, 10, 25, 50]}
                      loading={props.getTrialsForUsersInGroupLoading || getMatchResultsLoading}
                      sortField="createdOn" sortOrder={-1}
                      emptyMessage={'No match results.'}
@@ -204,16 +205,6 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
             <Column field="download" header="Download" dataType="boolean" style={{minWidth: '6rem'}}
                     body={downloadBodyTemplate}></Column>
           </DataTable>
-
-          <Paginator
-            first={first}
-            rows={rows}
-            totalRecords={results.length}
-            onPageChange={(e) => {
-              setFirst(e.first);
-              setRows(e.rows);
-            }}
-          />
         </div>
       </>}
     </>

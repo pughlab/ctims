@@ -376,7 +376,8 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
               onHide={clearRowClicked} />
 
         <div className={styles.tableContainer}>
-          <DataTable value={props.trials.slice(first, first + rows)} rowHover={true}
+          <DataTable value={props.trials} rowHover={true} paginator rows={10}
+                     rowsPerPageOptions={[5, 10, 25, 50]}
                      loading={props.getTrialsForUsersInGroupLoading || deleteTrialLoading}
                      onRowMouseEnter={(event) => setRowEntered(event.data)}
                      onRowMouseLeave={() => setRowEntered(null)}
@@ -393,15 +394,6 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
             <Column field="lockStatus" header="Lock Status" body={lockStatusTemplate}></Column>
           </DataTable>
 
-          <Paginator
-            first={first}
-            rows={rows}
-            totalRecords={props.trials.length}
-            onPageChange={(e) => {
-              setFirst(e.first);
-              setRows(e.rows);
-            }}
-          />
         </div>
 
       </div>
