@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {RootState, store} from '../../store/store';
 import {signOut, useSession} from 'next-auth/react';
 import React, { useEffect, useRef, useState } from 'react';
-import { DataTable, DataTableRowMouseEventParams } from 'primereact/datatable';
+import {DataTable, DataTableRowMouseEventParams, DataTableSortMeta} from 'primereact/datatable';
 import { useRouter } from 'next/router';
 import { setIsFormChanged, setIsFormDisabled, setTrialNctId} from '../../store/slices/contextSlice';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
@@ -38,6 +38,16 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
   const router = useRouter();
   const dispatch = useDispatch();
   const menu = useRef(null);
+
+  const [multiSortMeta, setMultiSortMeta] = useState<DataTableSortMeta[]>([
+    { field: 'createdAt', order: -1 }, // Default sort by "Created At" descending
+  ]);
+
+  const onSort = (event: any) => {
+    if (event.multiSortMeta) {
+      setMultiSortMeta(event.multiSortMeta); // Update multiSortMeta state
+    }
+  };
 
   const [isTrialIdDialogVisible, setIsTrialIdDialogVisible] = useState<boolean>(false);
   const [isSendDialogVisible, setIsSendDialogVisible] = useState<boolean>(false);
@@ -169,6 +179,22 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
       </div>
     );
   }
+
+  // Add these two functions here:
+  const extractDateTime = (dateStr) => {
+    // Extract date and time before "by" in the string
+    const match = dateStr.match(/(.*?)(?=\s+by\s+|$)/);
+    return match ? match[1] : dateStr;
+  };
+
+  const customDateSort = (event) => {
+    const { data, order, field } = event;
+    return [...data].sort((a, b) => {
+      const dateA = new Date(extractDateTime(a[field])).getTime();
+      const dateB = new Date(extractDateTime(b[field])).getTime();
+      return order * (dateA - dateB);
+    });
+  };
 
   const myClick = (event, rowData) => {
     menu.current.toggle(event);
@@ -375,23 +401,39 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
         <Menu model={trialMenuItems} ref={menu} popup id="popup_menu" className={styles.menu} appendTo={'self'}
               onHide={clearRowClicked} />
 
+
         <div className={styles.tableContainer}>
           <DataTable value={props.trials} rowHover={true} paginator rows={10}
                      rowsPerPageOptions={[5, 10, 25, 50]}
                      loading={props.getTrialsForUsersInGroupLoading || deleteTrialLoading}
                      onRowMouseEnter={(event) => setRowEntered(event.data)}
                      onRowMouseLeave={() => setRowEntered(null)}
-                     sortField="createdOn" sortOrder={-1}
                      emptyMessage={!props.selectedTrialGroup ? 'Select a Trial Group to start' : 'No CTML files. Select the \'Create\' button to start.'}
+                     sortMode="multiple"
+                     multiSortMeta={multiSortMeta}
+                     onSort={onSort}
+                     removableSort
           >
-            <Column field="nct_id" header="ID"></Column>
-            <Column field="id" header="" body={subMenuTemplate}></Column>
-            <Column field="nickname" header="Nickname"></Column>
-            <Column field="principal_investigator" header="Principal Investigator"></Column>
-            <Column field="ctml_status_label" header="CTML Status" sortable></Column>
-            <Column field="createdAt" header="Created on" dataType="date"></Column>
-            <Column field="updatedAt" header="Modified on" dataType="date"></Column>
-            <Column field="lockStatus" header="Lock Status" body={lockStatusTemplate}></Column>
+            <Column field="nct_id" header="ID" sortable sortField="nct_id" />
+            <Column field="id" header="" body={subMenuTemplate} />
+            <Column field="nickname" header="Nickname" sortable sortField="nickname" />
+            <Column field="principal_investigator" header="Principal Investigator" sortable sortField="principal_investigator" />
+            <Column field="ctml_status_label" header="CTML Status" sortable sortField="ctml_status_label" />
+            <Column
+              field="createdAt"
+              header="Created on"
+              sortable
+              sortField="createdAt"
+              sortFunction={customDateSort}
+            />
+            <Column
+              field="updatedAt"
+              header="Modified on"
+              sortable
+              sortField="updatedAt"
+              sortFunction={customDateSort}
+            />
+            <Column field="lockStatus" header="Lock Status" body={lockStatusTemplate} sortable sortField="lockStatus" />
           </DataTable>
 
         </div>
