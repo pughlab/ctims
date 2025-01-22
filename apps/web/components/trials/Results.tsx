@@ -4,7 +4,7 @@ import useGetMatchResults from '../../hooks/useGetMatchResults';
 import useDownloadResults from '../../hooks/useDownloadResults';
 import { classNames } from 'primereact/utils';
 import styles from './Results.module.scss';
-import { DataTable } from 'primereact/datatable';
+import {DataTable, DataTableSortMeta} from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { CSVLink } from "react-csv";
 import {TrialStatusEnum} from "../../../../libs/types/src/trial-status.enum";
@@ -75,6 +75,10 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
   // result download file name
   const [resultFileName, setResultFileName] = useState<string>('');
 
+  const [multiSortMeta, setMultiSortMeta] = useState<DataTableSortMeta[]>([
+    { field: 'createdAt', order: -1 }, // Default sort by "Created At" descending
+  ]);
+
   const headers = [
     {label: "Trial Id", key: "trialId"},
     {label: "Nickname", key: "nickname"},
@@ -113,6 +117,27 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
 
   // don't have global const state for csvLink as it can be null as component is mounted/unmounted when datatable is changed
   let csvLink: React.MutableRefObject<any> = useRef(null);
+
+  const onSort = (event: any) => {
+    if (event.multiSortMeta) {
+      setMultiSortMeta(event.multiSortMeta); // Update multiSortMeta state
+    }
+  };
+
+  const extractDateTime = (dateStr) => {
+    // Extract date and time before "by" in the string
+    const match = dateStr.match(/(.*?)(?=\s+by\s+|$)/);
+    return match ? match[1] : dateStr;
+  };
+
+  const customDateSort = (event) => {
+    const { data, order, field } = event;
+    return [...data].sort((a, b) => {
+      const dateA = new Date(extractDateTime(a[field])).getTime();
+      const dateB = new Date(extractDateTime(b[field])).getTime();
+      return order * (dateA - dateB);
+    });
+  };
 
   const downloadBodyTemplate = (rowData) => {
     // set the ref in body template so we know it's mounted
@@ -183,20 +208,35 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
         <span className={styles.titleText}>Match Results</span>
 
         <div className={styles.tableContainer}>
-          <DataTable value={results} rowHover={true}
+          <DataTable value={results} rowHover={true} paginator rows={10}
+                     rowsPerPageOptions={[5, 10, 25, 50]}
                      loading={props.getTrialsForUsersInGroupLoading || getMatchResultsLoading}
                      sortField="createdOn" sortOrder={-1}
                      emptyMessage={'No match results.'}
+                     sortMode="multiple"
+                     multiSortMeta={multiSortMeta}
+                     onSort={onSort}
+                     removableSort
           >
-            <Column field="trialId" header="ID"></Column>
-            <Column field="nickname" header="Nickname"></Column>
-            <Column field="principal_investigator" header="Principal Investigator"></Column>
-            <Column field="createdAt" header="Created on" dataType="date"></Column>
-            <Column field="updatedAt" header="Modified on" dataType="date"></Column>
-            <Column field="trialStatus" header="Match Status" sortable></Column>
-            <Column field="trialRetCount" header="Match Results"></Column>
-            <Column field="matchSentDate" header="Last Matched" dataType="date"></Column>
-            <Column field="matchedDate" header="Last New Result" dataType="date"></Column>
+            <Column field="trialId" header="ID" sortable></Column>
+            <Column field="nickname" header="Nickname" sortable></Column>
+            <Column field="principal_investigator" header="Principal Investigator" sortable></Column>
+            <Column
+              field="createdAt"
+              header="Created on"
+              sortable
+              sortFunction={customDateSort}
+            />
+            <Column
+              field="updatedAt"
+              header="Modified on"
+              sortable
+              sortFunction={customDateSort}
+            />
+            <Column field="trialStatus" header="Match Status" sortable ></Column>
+            <Column field="trialRetCount" header="Match Results" sortable></Column>
+            <Column field="matchSentDate" header="Last Matched" dataType="date" sortable></Column>
+            <Column field="matchedDate" header="Last New Result" dataType="date" sortable></Column>
             <Column field="download" header="Download" dataType="boolean" style={{minWidth: '6rem'}}
                     body={downloadBodyTemplate}></Column>
           </DataTable>
@@ -205,4 +245,5 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
     </>
   )
 }
+
 export default Results;
