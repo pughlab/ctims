@@ -25,8 +25,8 @@ const CtimsDropdownWithExcludeToggle = (props: WidgetProps) => {
     rawErrors = [],
   } = props;
 
-  let [valueState, setValueState] = useState(value?.replace('!', '') || '');
-  let [isNegated, setIsNegated] = useState(value?.startsWith('!'));
+  const [valueState, setValueState] = useState('');
+  const [isNegated, setIsNegated] = useState(false);
 
   useEffect(() => {
     const currentURL = window.location.href;
@@ -34,6 +34,13 @@ const CtimsDropdownWithExcludeToggle = (props: WidgetProps) => {
       onChange('');
     }
   }, []);
+
+  useEffect(() => {
+    if (value) {
+      setValueState(value?.replace('!', ''));
+      setIsNegated(value?.startsWith('!'));
+    }
+  }, [value]);
 
   const dropdownOptions =
     options.enumOptions
