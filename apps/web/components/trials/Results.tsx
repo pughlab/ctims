@@ -10,14 +10,10 @@ import { CSVLink } from "react-csv";
 import {TrialStatusEnum} from "../../../../libs/types/src/trial-status.enum";
 import { setIsLongOperation } from 'apps/web/store/slices/contextSlice';
 import { useDispatch } from 'react-redux';
-import { Paginator } from 'primereact/paginator';
 
 const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) => {
   const {data, status: sessionStatus} = useSession()
   const dispatch = useDispatch();
-
-  const [first, setFirst] = useState(0);
-  const [rows, setRows] = useState(10);
 
   useEffect(() => {
     if (!data) {

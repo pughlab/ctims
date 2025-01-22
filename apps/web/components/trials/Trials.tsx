@@ -23,7 +23,6 @@ import useGetTrialsByIDs from "../../hooks/useGetTrialsByIDs";
 import { Tooltip } from 'primereact/tooltip';
 import useHandleSignOut from "../../hooks/useHandleSignOut";
 import useClearTrialLocks from "../../hooks/useClearTrialLocks";
-import { Paginator } from 'primereact/paginator';
 
 // property selectedTrialGroup from parent component when dropdown changed
 // trials is the list of trials for the selected trial group
@@ -52,9 +51,6 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
   const [isTrialIdDialogVisible, setIsTrialIdDialogVisible] = useState<boolean>(false);
   const [isSendDialogVisible, setIsSendDialogVisible] = useState<boolean>(false);
   const [selectedTrialsToMatch, setSelectedTrialsToMatch] = useState([]);
-
-  const [first, setFirst] = useState(0);
-  const [rows, setRows] = useState(10);
 
   const trialsErrorToast = useRef(null);
 
