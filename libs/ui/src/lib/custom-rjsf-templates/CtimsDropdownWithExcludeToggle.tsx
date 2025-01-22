@@ -37,8 +37,8 @@ const CtimsDropdownWithExcludeToggle = (props: WidgetProps) => {
 
   useEffect(() => {
     if (value) {
-      setValueState(value?.replace('!', ''));
-      setIsNegated(value?.startsWith('!'));
+      setValueState(value.replace('!', ''));
+      setIsNegated(value.startsWith('!'));
     }
   }, [value]);
 
@@ -59,7 +59,11 @@ const CtimsDropdownWithExcludeToggle = (props: WidgetProps) => {
   }, [valueState, isNegated]);
 
   const handleDropdownChange = (e: { value: any }) => {
-    setValueState(e.value);
+    const selectedValue = e.value;
+    setValueState(selectedValue);
+    if (!selectedValue) {
+      setIsNegated(false);
+    }
   };
 
   const handleToggleChange = (checked: boolean) => {
@@ -110,7 +114,7 @@ const CtimsDropdownWithExcludeToggle = (props: WidgetProps) => {
         <div className={styles.label}>Exclude this criteria from matches.</div>
         <div style={{ marginLeft: 'auto', marginTop: '10px' }}>
           <IOSSwitch
-            disabled={!valueState}
+            disabled={!valueState} 
             value={isNegated}
             onChange={handleToggleChange}
           />
