@@ -7,24 +7,22 @@ import IOSSwitch from '../components/IOSSwitch';
 
 const AutocompleteField = ({ onChange, ...props }) => {
   const { filteredHugoSymbols, loading, searchSymbols } = useGetGenes();
-  const [selectedHugoSymbol, setSelectedHugoSymbol] = useState<string>(props.value || '');
-  const [excludeToggle, setExcludeToggle] = useState<boolean>(
-    props.value?.startsWith('!') || false
-  );
+  const [selectedHugoSymbol, setSelectedHugoSymbol] = useState<string>("");
+  const [excludeToggle, setExcludeToggle] = useState<boolean>(false);
 
 
- useEffect(() => {
-  const isExcluded = props.value?.startsWith('!');
-  setSelectedHugoSymbol(props.value ? props.value.replace('!', '') : '');
-  setExcludeToggle(isExcluded || false);
-}, [props.value]);
+  useEffect(() => {
+    const isExcluded : boolean = props.value?.startsWith('!');
+    setSelectedHugoSymbol(props.value ? props.value.replace('!', '') : '');
+    setExcludeToggle(isExcluded);
+  }, [props.value]);
 
-  const handleInputChange = (e:  {value: string}) => {
+  const handleInputChange = (e: { value: string }) => {
 
     const trimmedValue = e.value.trim();
-    trimmedValue !== "" ? 
-    (setSelectedHugoSymbol(trimmedValue), onChange(trimmedValue)): 
-    (setSelectedHugoSymbol(""), onChange(undefined));
+    trimmedValue !== "" ?
+      (setSelectedHugoSymbol(trimmedValue), onChange(trimmedValue)) :
+      (setSelectedHugoSymbol(""), onChange(undefined));
   };
 
 
@@ -73,9 +71,9 @@ const AutocompleteField = ({ onChange, ...props }) => {
         suggestions={filteredHugoSymbols}
         completeMethod={(e) => {
           const trimmedValue = e.query.trim();
-          trimmedValue === "" 
-          ? []
-          : (setSelectedHugoSymbol(trimmedValue), onChange(trimmedValue), searchSymbols(trimmedValue));
+          trimmedValue === ""
+            ? []
+            : (setSelectedHugoSymbol(trimmedValue), onChange(trimmedValue), searchSymbols(trimmedValue));
         }}
         onChange={(e) => {
           handleInputChange(e)

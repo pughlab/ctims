@@ -25,8 +25,8 @@ const CtimsDropdownWithExcludeToggle = (props: WidgetProps) => {
     rawErrors = [],
   } = props;
 
-  const [valueState, setValueState] = useState(value?.replace('!', '') || '');
-  const [isNegated, setIsNegated] = useState(value?.startsWith('!'));
+  let [valueState, setValueState] = useState(value?.replace('!', '') || '');
+  let [isNegated, setIsNegated] = useState(value?.startsWith('!'));
 
   useEffect(() => {
     const currentURL = window.location.href;
@@ -60,7 +60,7 @@ const CtimsDropdownWithExcludeToggle = (props: WidgetProps) => {
   };
 
   const handleBlur = () => {
-    const trimmedValue = valueState?.trim?.();
+    const trimmedValue = valueState.trim();
     onBlur(id, trimmedValue);
   };
 
