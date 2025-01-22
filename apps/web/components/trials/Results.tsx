@@ -208,7 +208,8 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
         <span className={styles.titleText}>Match Results</span>
 
         <div className={styles.tableContainer}>
-          <DataTable value={results} rowHover={true}
+          <DataTable value={results} rowHover={true} paginator rows={10}
+                     rowsPerPageOptions={[5, 10, 25, 50]}
                      loading={props.getTrialsForUsersInGroupLoading || getMatchResultsLoading}
                      sortField="createdOn" sortOrder={-1}
                      emptyMessage={'No match results.'}
@@ -244,4 +245,5 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
     </>
   )
 }
+
 export default Results;
