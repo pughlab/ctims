@@ -75,9 +75,8 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
   // result download file name
   const [resultFileName, setResultFileName] = useState<string>('');
 
-  const [multiSortMeta, setMultiSortMeta] = useState<DataTableSortMeta[]>([
-    { field: 'createdAt', order: -1 }, // Default sort by "Created At" descending
-  ]);
+  const defaultSort: DataTableSortMeta[] = [{ field: 'createdAt', order: -1 }];
+  const [multiSortMeta, setMultiSortMeta] = useState<DataTableSortMeta[]>(defaultSort);
 
   const headers = [
     {label: "Trial Id", key: "trialId"},
@@ -119,9 +118,7 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
   let csvLink: React.MutableRefObject<any> = useRef(null);
 
   const onSort = (event: any) => {
-    if (event.multiSortMeta) {
-      setMultiSortMeta(event.multiSortMeta); // Update multiSortMeta state
-    }
+    setMultiSortMeta(event.multiSortMeta?.length ? event.multiSortMeta : defaultSort);
   };
 
   const extractDateTime = (dateStr) => {
@@ -210,7 +207,7 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
         <div className={styles.tableContainer}>
           <DataTable value={results} rowHover={true}
                      loading={props.getTrialsForUsersInGroupLoading || getMatchResultsLoading}
-                     sortField="createdOn" sortOrder={-1}
+                     sortField="createdOn"
                      emptyMessage={'No match results.'}
                      sortMode="multiple"
                      multiSortMeta={multiSortMeta}
