@@ -12,9 +12,11 @@ const AutocompleteField = ({ onChange, ...props }) => {
 
 
   useEffect(() => {
-    const isExcluded : boolean = props.value?.startsWith('!');
-    setSelectedHugoSymbol(props.value ? props.value.replace('!', '') : '');
-    setExcludeToggle(isExcluded);
+    if (props.value) {
+      const isExcluded : boolean = props.value.startsWith('!');
+      setSelectedHugoSymbol(props.value.replace('!', ''));
+      setExcludeToggle(isExcluded);
+    }
   }, [props.value]);
 
   const handleInputChange = (e: { value: string }) => {
