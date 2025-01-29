@@ -46,6 +46,37 @@
   width: 100%;
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
   border-radius: 8px;
+  overflow: hidden; // Add this to contain the table
+
+  :global {
+    .p-datatable {
+      .p-datatable-wrapper {
+        overflow: visible; // Prevent scrollbar conflicts
+      }
+
+      table {
+        table-layout: fixed;
+        width: 100%;
+      }
+
+      .p-datatable-thead > tr > th {
+        &:nth-child(1) { width: 250px; }  // ID
+        &:nth-child(2) { width: 60px; }   // Menu
+        &:nth-child(3) { width: 200px; }  // Nickname
+        &:nth-child(4) { width: 250px; }  // Principal Investigator
+        &:nth-child(5) { width: 150px; }  // CTML Status
+        &:nth-child(6) { width: 220px; }  // Created on
+        &:nth-child(7) { width: 220px; }  // Modified on
+        &:nth-child(8) { width: 120px; }  // Lock Status
+      }
+
+      .p-datatable-tbody > tr > td {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
 }
 
 .trailsEllipseBtn {

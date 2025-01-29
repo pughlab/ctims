@@ -4,6 +4,64 @@
   width: 100%;
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
   border-radius: 8px;
+  overflow: hidden;
+
+  :global {
+    .p-datatable {
+      .p-datatable-wrapper {
+        overflow: visible;
+      }
+
+      table {
+        table-layout: fixed;
+        width: 100%;
+      }
+
+      // Match Trials table header style
+      .p-datatable-thead > tr > th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        padding: 1rem;
+        border-bottom: 1px solid #e9ecef;
+
+        // Set fixed widths
+        &:nth-child(1) { width: 250px; }  // ID
+        &:nth-child(2) { width: 150px; }  // Nickname
+        &:nth-child(3) { width: 200px; }  // Principal Investigator
+        &:nth-child(4) { width: 180px; }  // Created on
+        &:nth-child(5) { width: 180px; }  // Modified on
+        &:nth-child(6) { width: 150px; }  // Match Status
+        &:nth-child(7) { width: 120px; }  // Match Results
+        &:nth-child(8) { width: 150px; }  // Last Matched
+        &:nth-child(9) { width: 150px; }  // Last New Result
+        &:nth-child(10) { width: 100px; } // Download
+      }
+
+      // Match Trials table cell style
+      .p-datatable-tbody > tr > td {
+        padding: 1rem;
+        border-bottom: 1px solid #e9ecef;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        // Center align download column
+        &:last-child {
+          text-align: center;
+
+          .pi-download {
+            color: #2E72D2;
+            cursor: pointer;
+
+            &:hover {
+              opacity: 0.8;
+            }
+          }
+        }
+      }
+    }
+
+  }
 }
 
 .titleText {
