@@ -725,6 +725,7 @@ summary svg {
 .p-progress-spinner-circle {
   stroke: #2E72D2 !important;
 }
+
 .p-datatable {
   .p-datatable-wrapper {
     overflow: visible;
@@ -737,10 +738,10 @@ summary svg {
 
 
 .p-datatable-thead > tr > th {
-  background-color: #f8f9fa;
-  font-weight: 600;
+  /*background-color: #f8f9fa;*/
+  /*font-weight: 600;*/
   padding: 1rem;
-  border-bottom: 1px solid #e9ecef;
+  /*border-bottom: 1px solid #e9ecef;*/
 
 
 &:nth-child(1) { width: 250px; }
@@ -758,22 +759,23 @@ summary svg {
 
 .p-datatable-tbody > tr > td {
   padding: 1rem;
-  border-bottom: 1px solid #e9ecef;
+  /*border-bottom: 1px solid #e9ecef;*/
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 
 
-&:last-child {
-  text-align: center;
+/*&:last-child {*/
+/*  text-align: center;*/
 
-  .pi-download {
-    color: #2E72D2;
-    cursor: pointer;
+/*  .pi-download {*/
+/*    color: #2E72D2;*/
+/*    cursor: pointer;*/
 
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-}}}
+/*    &:hover {*/
+/*      opacity: 0.8;*/
+/*    }*/
+/*  }*/
+/*}*/
+}}
 
