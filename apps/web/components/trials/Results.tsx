@@ -75,7 +75,8 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
   // result download file name
   const [resultFileName, setResultFileName] = useState<string>('');
 
-  const DEFAULT_SORT: DataTableSortMeta[] = [{ field: 'createdAt', order: 1 }];
+
+  const DEFAULT_SORT: DataTableSortMeta[] = [{ field: 'updatedAt', order: -1 }];
   const [multiSortMeta, setMultiSortMeta] = useState<DataTableSortMeta[]>(DEFAULT_SORT);
 
   const headers = [
