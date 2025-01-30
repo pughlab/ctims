@@ -725,3 +725,28 @@ summary svg {
 .p-progress-spinner-circle {
   stroke: #2E72D2 !important;
 }
+
+.p-datatable {
+  .p-datatable-wrapper {
+    overflow: visible;
+  }
+
+  & table {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+
+  .p-datatable-thead > tr > th {
+    padding: 1rem;
+
+
+    .p-datatable-tbody > tr > td {
+      padding: 1rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
