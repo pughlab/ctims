@@ -75,9 +75,8 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
   // result download file name
   const [resultFileName, setResultFileName] = useState<string>('');
 
-  const [multiSortMeta, setMultiSortMeta] = useState<DataTableSortMeta[]>([
-    { field: 'createdAt', order: -1 }, // Default sort by "Created At" descending
-  ]);
+  const DEFAULT_SORT: DataTableSortMeta[] = [{ field: 'createdAt', order: 1 }];
+  const [multiSortMeta, setMultiSortMeta] = useState<DataTableSortMeta[]>(DEFAULT_SORT);
 
   const headers = [
     {label: "Trial Id", key: "trialId"},
@@ -120,7 +119,9 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
 
   const onSort = (event: any) => {
     if (event.multiSortMeta) {
-      setMultiSortMeta(event.multiSortMeta); // Update multiSortMeta state
+      setMultiSortMeta(event.multiSortMeta);
+    } else {
+      setMultiSortMeta(DEFAULT_SORT);
     }
   };
 
@@ -211,7 +212,7 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
           <DataTable value={results} rowHover={true} paginator rows={10}
                      rowsPerPageOptions={[5, 10, 25, 50]}
                      loading={props.getTrialsForUsersInGroupLoading || getMatchResultsLoading}
-                     sortField="createdOn" sortOrder={-1}
+                     sortField="createdOn"
                      emptyMessage={'No match results.'}
                      sortMode="multiple"
                      multiSortMeta={multiSortMeta}
