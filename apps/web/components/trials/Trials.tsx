@@ -41,8 +41,6 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
   const [multiSortMeta, setMultiSortMeta] = useState<DataTableSortMeta[]>([
     { field: 'updatedAt', order: -1 }, // Default sort by Modified on descending
   ]);
-
-
   const onSort = (event: any) => {
     if (event.multiSortMeta) {
       setMultiSortMeta(event.multiSortMeta); // Update multiSortMeta state
