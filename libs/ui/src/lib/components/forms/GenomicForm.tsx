@@ -398,7 +398,7 @@ export const GenomicForm = (props: IFormProps) => {
                       "description": "Refers to tasks or activities characteristic of gene",
                     }
                   },
-                  "required": []
+                  "required": ['hugo_symbol']
                 }
               },
               {
