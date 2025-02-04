@@ -61,10 +61,6 @@ export const PriorTreatmentForm = (props: IFormProps) => {
 
   useEffect(() => {
     node.data.formValid = false;
-  }, [node]);
-
-  useEffect(() => {
-    node.data.formValid = false;
     const formData = node.data.formData;
     if (formData && !formData.hasOwnProperty('treatmentCategoryContainerObject')) {
       setMyFormData({'treatmentCategoryContainerObject': formData});
@@ -262,6 +258,7 @@ export const PriorTreatmentForm = (props: IFormProps) => {
     }
     validateFormFromRef(flattenedFormData);
     node.data.formData = data.formData;
+    setMyFormData(flattenedFormData.formData);
     dispatch(formChange());
     console.log('onFormChange node: ', node)
   }
@@ -313,7 +310,7 @@ export const PriorTreatmentForm = (props: IFormProps) => {
         <RjsfForm ref={priorTreatmentFormRef}
                   schema={priorTreatmentFormSchema as JSONSchema7}
                   templates={formTemplates}
-                  formData={node.data.formData}
+                  formData={myFormData}
                   uiSchema={priorTreatmentFormUiSchema}
                   widgets={widgets}
                   onChange={onFormChange}
