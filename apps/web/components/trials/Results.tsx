@@ -119,7 +119,7 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
   let csvLink: React.MutableRefObject<any> = useRef(null);
 
   const onSort = (event: any) => {
-    if (event.multiSortMeta) {
+    if (event.multiSortMeta?.length) {    //multiSortMeta can be undefined, primereact datatable bug
       setMultiSortMeta(event.multiSortMeta);
     } else {
       setMultiSortMeta(DEFAULT_SORT);
