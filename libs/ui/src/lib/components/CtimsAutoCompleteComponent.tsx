@@ -3,22 +3,26 @@ import { AutoComplete } from 'primereact/autocomplete';
 import { Tooltip } from 'antd';
 import styles from "./CtimsAutoCompleteComponent.module.css";
 import useGetGenes from '../../../../../apps/web/hooks/useGetGenes';
+import IOSSwitch from '../components/IOSSwitch';
 
 const AutocompleteField = ({ onChange, ...props }) => {
   const { filteredHugoSymbols, loading, searchSymbols } = useGetGenes();
-  const [selectedHugoSymbol, setSelectedHugoSymbol] = useState([props.value]);
+  const [selectedHugoSymbol, setSelectedHugoSymbol] = useState<string>("");
+  const [excludeToggle, setExcludeToggle] = useState<boolean>(false);
 
 
- useEffect(() => {
-  setSelectedHugoSymbol([props.value]);
-}, [props.value]);
+  useEffect(() => {
+    const isExcluded : boolean = props.value?.startsWith('!');
+    setSelectedHugoSymbol(props.value ? props.value.replace('!', '') : '');
+    setExcludeToggle(isExcluded);
+  }, [props.value]);
 
-  const handleInputChange = (e:  {value: string}) => {
+  const handleInputChange = (e: { value: string }) => {
 
     const trimmedValue = e.value.trim();
-    trimmedValue !== "" ? 
-    (setSelectedHugoSymbol([trimmedValue]), onChange(trimmedValue)): 
-    (setSelectedHugoSymbol([]), onChange(undefined));
+    trimmedValue !== "" ?
+      (setSelectedHugoSymbol(trimmedValue), onChange(trimmedValue)) :
+      (setSelectedHugoSymbol(""), onChange(undefined));
   };
 
 
@@ -39,6 +43,11 @@ const AutocompleteField = ({ onChange, ...props }) => {
     color: '#495057',
   };
 
+  const handleToggleChange = (checked: boolean) => {
+    setExcludeToggle(checked);
+    const newValue = checked ? `!${selectedHugoSymbol}` : selectedHugoSymbol.replace('!', '');
+    onChange(newValue);
+  };
 
   const questionMarkStyle = `dropdown-target-icon ${styles['question-mark']} pi pi-question-circle question-mark-target `;
 
@@ -46,7 +55,7 @@ const AutocompleteField = ({ onChange, ...props }) => {
     <div className={styles.container}>
       {props.schema.title && (
         <label style={labelStyle}>
-          Hugo Symbol
+          {props.schema.title}
           <Tooltip>
             <i
               className={questionMarkStyle}
@@ -62,15 +71,25 @@ const AutocompleteField = ({ onChange, ...props }) => {
         suggestions={filteredHugoSymbols}
         completeMethod={(e) => {
           const trimmedValue = e.query.trim();
-          trimmedValue === "" 
-          ? []
-          : (setSelectedHugoSymbol([trimmedValue]), onChange(trimmedValue), searchSymbols(trimmedValue));
+          trimmedValue === ""
+            ? []
+            : (setSelectedHugoSymbol(trimmedValue), onChange(trimmedValue), searchSymbols(trimmedValue));
         }}
         onChange={(e) => {
           handleInputChange(e)
         }}
         appendTo='self'
       />
+      <div style={{ display: 'flex', marginTop: '10px', alignItems: 'center' }}>
+        <div className={styles.label}>Exclude this criteria from matches.</div>
+        <div style={{ marginLeft: 'auto' }}>
+          <IOSSwitch
+            disabled={!selectedHugoSymbol}
+            value={excludeToggle}
+            onChange={handleToggleChange}
+          />
+        </div>
+      </div>
     </div>
   );
 };
