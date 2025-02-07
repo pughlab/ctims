@@ -43,12 +43,22 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
   ]);
   const DEFAULT_SORT: DataTableSortMeta[] = [{ field: 'updatedAt', order: -1 }];
   const onSort = (event: any) => {
-    if (event.multiSortMeta?.length) {    //multiSortMeta can be undefined, primereact datatable bug
+    if (event.multiSortMeta?.length) {
       setMultiSortMeta(event.multiSortMeta);
+      sessionStorage.setItem('multiSortMeta_Trials', JSON.stringify(event.multiSortMeta));
     } else {
       setMultiSortMeta(DEFAULT_SORT);
+      sessionStorage.removeItem('multiSortMeta_Trials');
     }
   };
+
+  // Restore sorting when the component mounts
+  useEffect(() => {
+    const savedSortMeta = sessionStorage.getItem('multiSortMeta_Trials');
+    if (savedSortMeta) {
+      setMultiSortMeta(JSON.parse(savedSortMeta));
+    }
+  }, []);
 
   const [isTrialIdDialogVisible, setIsTrialIdDialogVisible] = useState<boolean>(false);
   const [isSendDialogVisible, setIsSendDialogVisible] = useState<boolean>(false);
@@ -127,6 +137,9 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
           });
           isFormDisabled = true;
         }
+        // Save the current sorting state before navigation
+        sessionStorage.setItem('multiSortMeta', JSON.stringify(multiSortMeta));
+
         dispatch(setIsFormDisabled(isFormDisabled));
         sessionStorage.setItem(IS_FORM_DISABLED, isFormDisabled.toString().toUpperCase());
         router.push(`/trials/edit/${rowClicked.id}`);

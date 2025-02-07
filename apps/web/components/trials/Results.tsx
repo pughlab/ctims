@@ -119,12 +119,22 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
   let csvLink: React.MutableRefObject<any> = useRef(null);
 
   const onSort = (event: any) => {
-    if (event.multiSortMeta?.length) {    //multiSortMeta can be undefined, primereact datatable bug
+    if (event.multiSortMeta?.length) {
       setMultiSortMeta(event.multiSortMeta);
+      sessionStorage.setItem('multiSortMeta_Results', JSON.stringify(event.multiSortMeta));
     } else {
       setMultiSortMeta(DEFAULT_SORT);
+      sessionStorage.removeItem('multiSortMeta_Results');
     }
   };
+
+  // Restore sorting when the component mounts
+  useEffect(() => {
+    const savedSortMeta = sessionStorage.getItem('multiSortMeta_Results');
+    if (savedSortMeta) {
+      setMultiSortMeta(JSON.parse(savedSortMeta));
+    }
+  }, []);
 
   const extractDateTime = (dateStr) => {
     // Extract date and time before "by" in the string
