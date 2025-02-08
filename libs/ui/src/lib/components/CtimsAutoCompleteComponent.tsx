@@ -12,7 +12,7 @@ const AutocompleteField = ({ onChange, ...props }) => {
 
   useEffect(() => {
     if (props.value) {
-      const isExcluded: boolean = props.value.startsWith('!');
+      const isExcluded: boolean = props.value.startsWith('!') || excludeToggle;
       setSelectedHugoSymbol(props.value.replace('!', ''));
       setExcludeToggle(isExcluded);
     }
@@ -25,11 +25,21 @@ const AutocompleteField = ({ onChange, ...props }) => {
   const handleInputChange = (e: { value: string }) => {
 
     const trimmedValue = e.value.trim();
-    trimmedValue !== "" ?
-      (setSelectedHugoSymbol(trimmedValue), onChange(trimmedValue)) :
-      (setSelectedHugoSymbol(""), onChange(undefined));
+    if (trimmedValue.startsWith('!') || excludeToggle) {
+      setSelectedHugoSymbol(trimmedValue.replace(/^!/, ""));
+      setExcludeToggle(true);
+      excludeToggle ? onChange(`!${trimmedValue}`) : onChange(trimmedValue);
+    } else {
+      if (trimmedValue !== "") {
+        setSelectedHugoSymbol(trimmedValue);
+        setExcludeToggle(false);
+        onChange(trimmedValue);
+      } else {
+        setSelectedHugoSymbol("");
+        onChange(undefined);
+      }
+    }
   };
-
 
   const arrayContainer = {
     // width: '640px',
@@ -78,7 +88,7 @@ const AutocompleteField = ({ onChange, ...props }) => {
           const trimmedValue = e.query.trim();
           trimmedValue === ""
             ? []
-            : (setSelectedHugoSymbol(trimmedValue), onChange(trimmedValue), searchSymbols(trimmedValue));
+            : (setSelectedHugoSymbol(trimmedValue.replace(/^!/, "")), excludeToggle ? onChange(`!${trimmedValue}`) : onChange(trimmedValue), searchSymbols(trimmedValue));
         }}
         onChange={(e) => {
           handleInputChange(e)
@@ -89,7 +99,7 @@ const AutocompleteField = ({ onChange, ...props }) => {
         <div className={styles.label}>Exclude this criteria from matches.</div>
         <div style={{ marginLeft: 'auto' }}>
           <IOSSwitch
-            disabled={!selectedHugoSymbol}
+            disabled={false}
             value={excludeToggle}
             onChange={handleToggleChange}
           />
