@@ -39,12 +39,14 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
   const menu = useRef(null);
 
   const [multiSortMeta, setMultiSortMeta] = useState<DataTableSortMeta[]>([
-    { field: 'createdAt', order: -1 }, // Default sort by "Created At" descending
+    { field: 'updatedAt', order: -1 }, // Default sort by Modified on descending
   ]);
-
+  const DEFAULT_SORT: DataTableSortMeta[] = [{ field: 'updatedAt', order: -1 }];
   const onSort = (event: any) => {
-    if (event.multiSortMeta) {
-      setMultiSortMeta(event.multiSortMeta); // Update multiSortMeta state
+    if (event.multiSortMeta?.length) {    //multiSortMeta can be undefined, primereact datatable bug
+      setMultiSortMeta(event.multiSortMeta);
+    } else {
+      setMultiSortMeta(DEFAULT_SORT);
     }
   };
 
