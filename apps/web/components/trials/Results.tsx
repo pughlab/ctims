@@ -7,6 +7,7 @@ import styles from './Results.module.scss';
 import {DataTable, DataTableSortMeta} from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { CSVLink } from "react-csv";
+import {MULTI_SORT_META_RESULTS} from "../../constants/appConstants";
 import {TrialStatusEnum} from "../../../../libs/types/src/trial-status.enum";
 import { setIsLongOperation } from 'apps/web/store/slices/contextSlice';
 import { useDispatch } from 'react-redux';
@@ -119,12 +120,22 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
   let csvLink: React.MutableRefObject<any> = useRef(null);
 
   const onSort = (event: any) => {
-    if (event.multiSortMeta?.length) {    //multiSortMeta can be undefined, primereact datatable bug
+    if (event.multiSortMeta?.length) {
       setMultiSortMeta(event.multiSortMeta);
+      sessionStorage.setItem(MULTI_SORT_META_RESULTS, JSON.stringify(event.multiSortMeta));
     } else {
       setMultiSortMeta(DEFAULT_SORT);
+      sessionStorage.removeItem(MULTI_SORT_META_RESULTS);
     }
   };
+
+  // Restore sorting when the component mounts
+  useEffect(() => {
+    const savedSortMeta = sessionStorage.getItem(MULTI_SORT_META_RESULTS);
+    if (savedSortMeta) {
+      setMultiSortMeta(JSON.parse(savedSortMeta));
+    }
+  }, []);
 
   const extractDateTime = (dateStr) => {
     // Extract date and time before "by" in the string

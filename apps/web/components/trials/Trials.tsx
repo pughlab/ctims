@@ -14,7 +14,7 @@ import { Column } from 'primereact/column';
 import {Toast} from "primereact/toast";
 import {parse} from "yaml";
 import NewTrialIdDialog from './NewTrialIdDialog';
-import {IS_FORM_DISABLED} from "../../constants/appConstants";
+import {IS_FORM_DISABLED, MULTI_SORT_META_TRIALS} from "../../constants/appConstants";
 import useSendMatchminerJob from "../../hooks/useSendMatchminerJob";
 import SendCTMLDialog from "./SendCTMLDialog";
 import useSendMultipleCTMLs from "../../hooks/useSendMultipleCTMLs";
@@ -43,12 +43,22 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
   ]);
   const DEFAULT_SORT: DataTableSortMeta[] = [{ field: 'updatedAt', order: -1 }];
   const onSort = (event: any) => {
-    if (event.multiSortMeta?.length) {    //multiSortMeta can be undefined, primereact datatable bug
+    if (event.multiSortMeta?.length) {
       setMultiSortMeta(event.multiSortMeta);
+      sessionStorage.setItem(MULTI_SORT_META_TRIALS, JSON.stringify(event.multiSortMeta));
     } else {
       setMultiSortMeta(DEFAULT_SORT);
+      sessionStorage.removeItem(MULTI_SORT_META_TRIALS);
     }
   };
+
+  // Restore sorting when the component mounts
+  useEffect(() => {
+    const savedSortMeta = sessionStorage.getItem(MULTI_SORT_META_TRIALS);
+    if (savedSortMeta) {
+      setMultiSortMeta(JSON.parse(savedSortMeta));
+    }
+  }, []);
 
   const [isTrialIdDialogVisible, setIsTrialIdDialogVisible] = useState<boolean>(false);
   const [isSendDialogVisible, setIsSendDialogVisible] = useState<boolean>(false);
@@ -127,6 +137,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
           });
           isFormDisabled = true;
         }
+
         dispatch(setIsFormDisabled(isFormDisabled));
         sessionStorage.setItem(IS_FORM_DISABLED, isFormDisabled.toString().toUpperCase());
         router.push(`/trials/edit/${rowClicked.id}`);
