@@ -24,6 +24,7 @@ import { Checkbox } from 'primereact/checkbox';
 import {wildcard_protein_change_validation_func, getCurrentOperator, protein_change_validation_func} from "../helpers";
 import AutocompleteField from "../CtimsAutoCompleteComponent";
 import CtimsDropdownWithExcludeToggle from '../../custom-rjsf-templates/CtimsDropdownWithExcludeToggle';
+import CtimsInputWithExcludeToggle from '../../custom-rjsf-templates/CtimsInputWithExcludeToggle';
 
 
 const RjsfForm = withTheme(PrimeTheme)
@@ -507,6 +508,9 @@ export const GenomicForm = (props: IFormProps) => {
       },
       "cnv_call": {
         "ui:widget": CtimsDropdownWithExcludeToggle,
+      },
+      "protein_change": {
+        "ui:widget": CtimsInputWithExcludeToggle,
       }
     }
   }
