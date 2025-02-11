@@ -14,7 +14,7 @@ import { Column } from 'primereact/column';
 import {Toast} from "primereact/toast";
 import {parse} from "yaml";
 import NewTrialIdDialog from './NewTrialIdDialog';
-import {IS_FORM_DISABLED} from "../../constants/appConstants";
+import {IS_FORM_DISABLED, MULTI_SORT_META_TRIALS} from "../../constants/appConstants";
 import useSendMatchminerJob from "../../hooks/useSendMatchminerJob";
 import SendCTMLDialog from "./SendCTMLDialog";
 import useSendMultipleCTMLs from "../../hooks/useSendMultipleCTMLs";
@@ -45,16 +45,16 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
   const onSort = (event: any) => {
     if (event.multiSortMeta?.length) {
       setMultiSortMeta(event.multiSortMeta);
-      sessionStorage.setItem('multiSortMeta_Trials', JSON.stringify(event.multiSortMeta));
+      sessionStorage.setItem('MULTI_SORT_META_TRIALS', JSON.stringify(event.multiSortMeta));
     } else {
       setMultiSortMeta(DEFAULT_SORT);
-      sessionStorage.removeItem('multiSortMeta_Trials');
+      sessionStorage.removeItem('MULTI_SORT_META_TRIALS');
     }
   };
 
   // Restore sorting when the component mounts
   useEffect(() => {
-    const savedSortMeta = sessionStorage.getItem('multiSortMeta_Trials');
+    const savedSortMeta = sessionStorage.getItem('MULTI_SORT_META_TRIALS');
     if (savedSortMeta) {
       setMultiSortMeta(JSON.parse(savedSortMeta));
     }
@@ -137,8 +137,6 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
           });
           isFormDisabled = true;
         }
-        // Save the current sorting state before navigation
-        sessionStorage.setItem('multiSortMeta', JSON.stringify(multiSortMeta));
 
         dispatch(setIsFormDisabled(isFormDisabled));
         sessionStorage.setItem(IS_FORM_DISABLED, isFormDisabled.toString().toUpperCase());
