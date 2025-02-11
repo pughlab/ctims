@@ -45,16 +45,16 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
   const onSort = (event: any) => {
     if (event.multiSortMeta?.length) {
       setMultiSortMeta(event.multiSortMeta);
-      sessionStorage.setItem('MULTI_SORT_META_TRIALS', JSON.stringify(event.multiSortMeta));
+      sessionStorage.setItem(MULTI_SORT_META_TRIALS, JSON.stringify(event.multiSortMeta));
     } else {
       setMultiSortMeta(DEFAULT_SORT);
-      sessionStorage.removeItem('MULTI_SORT_META_TRIALS');
+      sessionStorage.removeItem(MULTI_SORT_META_TRIALS);
     }
   };
 
   // Restore sorting when the component mounts
   useEffect(() => {
-    const savedSortMeta = sessionStorage.getItem('MULTI_SORT_META_TRIALS');
+    const savedSortMeta = sessionStorage.getItem(MULTI_SORT_META_TRIALS);
     if (savedSortMeta) {
       setMultiSortMeta(JSON.parse(savedSortMeta));
     }

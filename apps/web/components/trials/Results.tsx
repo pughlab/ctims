@@ -122,16 +122,16 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
   const onSort = (event: any) => {
     if (event.multiSortMeta?.length) {
       setMultiSortMeta(event.multiSortMeta);
-      sessionStorage.setItem('MULTI_SORT_META_RESULTS', JSON.stringify(event.multiSortMeta));
+      sessionStorage.setItem(MULTI_SORT_META_RESULTS, JSON.stringify(event.multiSortMeta));
     } else {
       setMultiSortMeta(DEFAULT_SORT);
-      sessionStorage.removeItem('MULTI_SORT_META_RESULTS');
+      sessionStorage.removeItem(MULTI_SORT_META_RESULTS);
     }
   };
 
   // Restore sorting when the component mounts
   useEffect(() => {
-    const savedSortMeta = sessionStorage.getItem('MULTI_SORT_META_RESULTS');
+    const savedSortMeta = sessionStorage.getItem(MULTI_SORT_META_RESULTS);
     if (savedSortMeta) {
       setMultiSortMeta(JSON.parse(savedSortMeta));
     }
