@@ -618,7 +618,7 @@ export const GenomicForm = (props: IFormProps) => {
     }
 
     if (!hugo_symblo_validation_func(myFormData.hugo_symbol)) {
-      myErrors.hugo_symbol.addError('Atleast have a single character');
+      myErrors.hugo_symbol.addError('At least have a single character');
       hugoSymbolHasError = true;
     }
 
