@@ -310,4 +310,5 @@ const EditorTopBar = (props: EditorTopBarProps) => {
     </>
   )
 }
+
 export default EditorTopBar;
