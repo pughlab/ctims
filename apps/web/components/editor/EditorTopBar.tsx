@@ -290,10 +290,13 @@ const EditorTopBar = (props: EditorTopBarProps) => {
         <div className={styles.lastsaved}>Last saved: {props.lastSaved}</div>
         <div className={styles.menuBtnGroup}>
           {/*<Button label="Discard" className="p-button-text p-button-plain" />*/}
-          <Button label="Export"
-                  onClick={onExportClick}
-                  className="p-button-text p-button-plain"
-                  disabled={!isGroupAdmin} />
+          {isGroupAdmin &&
+            <Button
+              label="Export"
+              onClick={() => setIsDialogVisible(true)}
+              className="p-button-text p-button-plain"
+            />
+          }
           <>
             {isGroupAdmin &&
               <Button disabled={isFormDisabled} label="Send CTML to Matcher" className={styles.saveBtn} onClick={onSendClick} />
