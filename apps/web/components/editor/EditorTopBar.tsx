@@ -18,9 +18,9 @@ import useHandleSignOut from "../../hooks/useHandleSignOut";
 import useUpdateTrialLock from "../../hooks/useUpdateTrialLock";
 
 interface EditorTopBarProps {
-    title?: string;
-    lastSaved: string;
-    setLastSaved: any;
+  title?: string;
+  lastSaved: string;
+  setLastSaved: any;
 }
 
 const EditorTopBar = (props: EditorTopBarProps) => {
@@ -264,7 +264,7 @@ const EditorTopBar = (props: EditorTopBarProps) => {
     <>
       <Toast ref={toast} position="top-center" />
       <ConfirmDialog visible={isConfirmationDialogVisible} onHide={() => setIsConfirmationDialogVisible(false)} message="Are you sure you want to leave this page? Unsaved inputs will be lost."
-          header="Confirmation" acceptLabel="Discard" rejectLabel="Cancel" accept={accept} reject={reject}
+                     header="Confirmation" acceptLabel="Discard" rejectLabel="Cancel" accept={accept} reject={reject}
       />
       <ExportCtmlDialog
         isDialogVisible={isDialogVisible}
@@ -280,7 +280,6 @@ const EditorTopBar = (props: EditorTopBarProps) => {
         <div className={styles.logoContainer}>
           <img src={'/assets/ctims-logo.svg'} alt={'logo'} className={styles.logo}/>
         </div>
-        <div className={styles.lastsaved}>Last saved: {props.lastSaved}</div>
         <div className={styles.nav}>
           <div className={styles.btnTitleContainer}>
             <div className={styles.backBtn} onClick={(e) => backClick(e)}>
