@@ -280,6 +280,7 @@ const EditorTopBar = (props: EditorTopBarProps) => {
         <div className={styles.logoContainer}>
           <img src={'/assets/ctims-logo.svg'} alt={'logo'} className={styles.logo}/>
         </div>
+        <div className={styles.lastsaved}>Last saved: {props.lastSaved}</div>
         <div className={styles.nav}>
           <div className={styles.btnTitleContainer}>
             <div className={styles.backBtn} onClick={(e) => backClick(e)}>
@@ -288,22 +289,22 @@ const EditorTopBar = (props: EditorTopBarProps) => {
             <div className={styles.title}>{props.title ? props.title : "New CTML"}</div>
           </div>
           <div className={styles.lastsaved}>Last saved: {props.lastSaved}</div>
-        <div className={styles.menuBtnGroup}>
-          {/*<Button label="Discard" className="p-button-text p-button-plain" />*/}
-          {isGroupAdmin &&
-            <Button
-              label="Export"
-              onClick={onExportClick}
-              className="p-button-text p-button-plain"
-            />
-          }
-          <>
+          <div className={styles.menuBtnGroup}>
+            {/*<Button label="Discard" className="p-button-text p-button-plain" />*/}
             {isGroupAdmin &&
-              <Button disabled={isFormDisabled} label="Send CTML to Matcher" className={styles.saveBtn} onClick={onSendClick} />
+              <Button
+                label="Export"
+                onClick={onExportClick}
+                className="p-button-text p-button-plain"
+              />
             }
-          </>
-          <Button disabled={isFormDisabled} label="Save" className={styles.saveBtn} onClick={onSaveClick} />
-        </div>
+            <>
+              {isGroupAdmin &&
+                <Button disabled={isFormDisabled} label="Send CTML to Matcher" className={styles.saveBtn} onClick={onSendClick} />
+              }
+            </>
+            <Button disabled={isFormDisabled} label="Save" className={styles.saveBtn} onClick={onSaveClick} />
+          </div>
 
         </div>
       </div>
