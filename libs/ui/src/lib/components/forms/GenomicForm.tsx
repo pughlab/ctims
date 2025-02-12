@@ -21,7 +21,7 @@ import CtimsInput from "../../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../../custom-rjsf-templates/CtimsDropdown";
 import {CtimsDialogContext, CtimsDialogContextType} from "../CtimsMatchDialog";
 import { Checkbox } from 'primereact/checkbox';
-import {wildcard_protein_change_validation_func, getCurrentOperator, protein_change_validation_func} from "../helpers";
+import {wildcard_protein_change_validation_func, getCurrentOperator, protein_change_validation_func, hugo_symblo_validation_func} from "../helpers";
 import AutocompleteField from "../CtimsAutoCompleteComponent";
 import CtimsDropdownWithExcludeToggle from '../../custom-rjsf-templates/CtimsDropdownWithExcludeToggle';
 import CtimsInputWithExcludeToggle from '../../custom-rjsf-templates/CtimsInputWithExcludeToggle';
@@ -617,6 +617,7 @@ export const GenomicForm = (props: IFormProps) => {
     // reset protein change and wildcard protein change error first
     let proteinChangeHasError = false;
     let wildCardProteinChangeHasError = false;
+    let hugoSymbolHasError = false;
 
     if (!wildcard_protein_change_validation_func(myFormData.wildcard_protein_change)
       && !myFormData.protein_change) {
@@ -627,6 +628,12 @@ export const GenomicForm = (props: IFormProps) => {
       myErrors.protein_change.addError('Must start with p.');
       proteinChangeHasError = true;
     }
+
+    if (!hugo_symblo_validation_func(myFormData.hugo_symbol)) {
+      myErrors.hugo_symbol.addError('At least have a single character');
+      hugoSymbolHasError = true;
+    }
+
     if (myFormData.protein_change && myFormData.wildcard_protein_change) {
       myErrors.protein_change.addError('Cannot have both protein change and wildcard protein change filled.');
       myErrors.wildcard_protein_change.addError('Cannot have both protein change and wildcard protein change filled.');
@@ -651,9 +658,13 @@ export const GenomicForm = (props: IFormProps) => {
     if (errors.length > 0) {
       const proteinChangeError = errors.find(error => error.property === '.protein_change');
       const wildcardProteinChangeError = errors.find(error => error.property === '.wildcard_protein_change');
+      const hugoSymbolError = errors.find(error => error.property === '.hugo_symbol');
       if (proteinChangeError && wildcardProteinChangeError && proteinChangeError.message === wildcardProteinChangeError.message) {
         addInvalidClassToElement('root_variantCategoryContainerObject_protein_change');
         addInvalidClassToElement('root_variantCategoryContainerObject_wildcard_protein_change');
+      }
+      if (hugoSymbolError) {
+        addInvalidClassToElement('root_variantCategoryContainerObject_hugo_symbol');
       }
     }
   }

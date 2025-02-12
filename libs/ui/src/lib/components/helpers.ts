@@ -26,6 +26,17 @@ export const protein_change_validation_func = (str: string) => {
   return regex.test(str);
 }
 
+export const hugo_symblo_validation_func = (str: string) => {
+  // Validates that the string starts with an optional '!' followed by a letter (A-Z or a-z).
+  // Allows any characters (including special characters) after the first letter.
+  const regex = /^(!?[A-Za-z].*)$/;
+
+  if (!str) {
+    return true;
+  }
+  return regex.test(str);
+}
+
 export const stringContains = (str: string, search: string) => {
   return str.toLowerCase().indexOf(search.toLowerCase()) !== -1;
 }
