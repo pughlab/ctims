@@ -1,14 +1,6 @@
-.question-mark {
-    margin-left: 8px;
-    margin-top: 8px;
-    margin-bottom: 7px;
-    cursor: pointer;
-    color: rgba(0, 0, 0, 0.6);
-}
-
 .container {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .label-container {
@@ -31,5 +23,13 @@
   margin-bottom: 7px;
   margin-top: 7px;
   margin-left: auto;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.question-mark {
+  margin-left: 8px;
+  margin-top: 8px;
+  margin-bottom: 7px;
+  cursor: pointer;
   color: rgba(0, 0, 0, 0.6);
 }
