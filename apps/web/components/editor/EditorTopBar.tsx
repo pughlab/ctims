@@ -2,7 +2,6 @@ import styles from './EditorTopBar.module.scss';
 import {useRouter} from "next/router";
 import {Button} from 'primereact/button';
 import { RootState, store } from "../../store/store";
-import {ValidationData} from "@rjsf/utils";
 import {useEffect, useRef, useState} from "react";
 import ExportCtmlDialog from "./ExportCtmlDialog";
 import {Toast} from "primereact/toast";
@@ -214,12 +213,6 @@ const EditorTopBar = (props: EditorTopBarProps) => {
     }
   }
 
-  const getValidationErrors = () => {
-    const state = store.getState();
-    const formErrors: ValidationData<any> = state.finalModelAndErrors.errorSchema;
-    return formErrors;
-  }
-
   const onSaveClick = () => {
 
     const state = store.getState();
@@ -264,7 +257,7 @@ const EditorTopBar = (props: EditorTopBarProps) => {
     <>
       <Toast ref={toast} position="top-center" />
       <ConfirmDialog visible={isConfirmationDialogVisible} onHide={() => setIsConfirmationDialogVisible(false)} message="Are you sure you want to leave this page? Unsaved inputs will be lost."
-          header="Confirmation" acceptLabel="Discard" rejectLabel="Cancel" accept={accept} reject={reject}
+                     header="Confirmation" acceptLabel="Discard" rejectLabel="Cancel" accept={accept} reject={reject}
       />
       <ExportCtmlDialog
         isDialogVisible={isDialogVisible}
@@ -276,39 +269,38 @@ const EditorTopBar = (props: EditorTopBarProps) => {
         sendCtmlClicked={onSendClick}
         onCTMLDialogHide={() => setIsSendDialogVisible(false)}
         onIsOKClicked={handleSendCTMLOKClicked}/>
-    <div className={styles.topBar}>
-      <div className={styles.logoContainer}>
-        <img src={'/assets/ctims-logo.svg'} alt={'logo'} className={styles.logo}/>
-      </div>
-      <div className={styles.nav}>
-        <div className={styles.btnTitleContainer}>
-          <div className={styles.backBtn} onClick={(e) => backClick(e)}>
-            <i className="pi pi-arrow-left"></i>
+      <div className={styles.topBar}>
+        <div className={styles.logoContainer}>
+          <img src={'/assets/ctims-logo.svg'} alt={'logo'} className={styles.logo}/>
+        </div>
+        <div className={styles.nav}>
+          <div className={styles.btnTitleContainer}>
+            <div className={styles.backBtn} onClick={(e) => backClick(e)}>
+              <i className="pi pi-arrow-left"></i>
+            </div>
+            <div className={styles.title}>{props.title ? props.title : "New CTML"}</div>
           </div>
-          <div className={styles.title}>{props.title ? props.title : "New CTML"}</div>
-        </div>
-        <div className={styles.lastsaved}>Last saved: {props.lastSaved}</div>
-        <div className={styles.menuBtnGroup}>
-          {/*<Button label="Discard" className="p-button-text p-button-plain" />*/}
-          {isGroupAdmin &&
-            <Button
-              label="Export"
-              onClick={() => setIsDialogVisible(true)}
-              className="p-button-text p-button-plain"
-            />
-          }
-          <>
+          <div className={styles.lastsaved}>Last saved: {props.lastSaved}</div>
+          <div className={styles.menuBtnGroup}>
+            {/*<Button label="Discard" className="p-button-text p-button-plain" />*/}
             {isGroupAdmin &&
-              <Button disabled={isFormDisabled} label="Send CTML to Matcher" className={styles.saveBtn} onClick={onSendClick} />
+              <Button
+                label="Export"
+                onClick={onExportClick}
+                className="p-button-text p-button-plain"
+              />
             }
-          </>
-          <Button disabled={isFormDisabled} label="Save" className={styles.saveBtn} onClick={onSaveClick} />
-        </div>
+            <>
+              {isGroupAdmin &&
+                <Button disabled={isFormDisabled} label="Send CTML to Matcher" className={styles.saveBtn} onClick={onSendClick} />
+              }
+            </>
+            <Button disabled={isFormDisabled} label="Save" className={styles.saveBtn} onClick={onSaveClick} />
+          </div>
 
+        </div>
       </div>
-    </div>
     </>
   )
 }
-
 export default EditorTopBar;
