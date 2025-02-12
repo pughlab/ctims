@@ -290,6 +290,7 @@ const EditorTopBar = (props: EditorTopBarProps) => {
           <div className={styles.lastsaved}>Last saved: {props.lastSaved}</div>
           <div className={styles.menuBtnGroup}>
             {/*<Button label="Discard" className="p-button-text p-button-plain" />*/}
+
             {isGroupAdmin &&
               <Button
                 label="Export"
