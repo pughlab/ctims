@@ -2,6 +2,7 @@ import styles from './EditorTopBar.module.scss';
 import {useRouter} from "next/router";
 import {Button} from 'primereact/button';
 import { RootState, store } from "../../store/store";
+import {ValidationData} from "@rjsf/utils";
 import {useEffect, useRef, useState} from "react";
 import ExportCtmlDialog from "./ExportCtmlDialog";
 import {Toast} from "primereact/toast";
@@ -211,6 +212,12 @@ const EditorTopBar = (props: EditorTopBarProps) => {
     if (val) {
       sendCTMLOperation();
     }
+  }
+
+  const getValidationErrors = () => {
+    const state = store.getState();
+    const formErrors: ValidationData<any> = state.finalModelAndErrors.errorSchema;
+    return formErrors;
   }
 
   const onSaveClick = () => {
