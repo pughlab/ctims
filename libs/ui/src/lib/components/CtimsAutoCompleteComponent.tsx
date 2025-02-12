@@ -4,21 +4,31 @@ import { Tooltip } from 'antd';
 import styles from "./CtimsAutoCompleteComponent.module.css";
 import useGetGenes from '../../../../../apps/web/hooks/useGetGenes';
 import IOSSwitch from '../components/IOSSwitch';
+import { hugo_symblo_validation_func } from "../components/helpers";
+import cn from "clsx";
 
 const AutocompleteField = ({ onChange, ...props }) => {
   const { filteredHugoSymbols, loading, searchSymbols } = useGetGenes();
   const [selectedHugoSymbol, setSelectedHugoSymbol] = useState<string>(props.value ? props.value.replace('!', '') : '');
   const [excludeToggle, setExcludeToggle] = useState<boolean>(props.value ? props.value.startsWith('!') : false);
+  const [hugoSymbolError, setHugoSymbolError] = React.useState(false);
 
   useEffect(() => {
     if (props.value) {
-      const isExcluded: boolean = props.value.startsWith('!') || excludeToggle;
+      const isExcluded: boolean = props.value.startsWith('!');
       setSelectedHugoSymbol(props.value.replace('!', ''));
       setExcludeToggle(isExcluded);
     }
     else {
       setSelectedHugoSymbol('');
       setExcludeToggle(false);
+    }
+    if (props.name === 'hugo_symbol') {
+      if (!hugo_symblo_validation_func(props.value)) {
+        setHugoSymbolError(true)
+      } else {
+        setHugoSymbolError(false)
+      }
     }
   }, [props.value]);
 
@@ -93,6 +103,7 @@ const AutocompleteField = ({ onChange, ...props }) => {
         onChange={(e) => {
           handleInputChange(e)
         }}
+        className={cn("w-full", hugoSymbolError ? "p-invalid" : "")}
         appendTo='self'
       />
       <div style={{ display: 'flex', marginTop: '10px', alignItems: 'center' }}>

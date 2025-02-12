@@ -26,6 +26,15 @@ export const protein_change_validation_func = (str: string) => {
   return regex.test(str);
 }
 
+export const hugo_symblo_validation_func = (str: string) => {
+  const regex = /^(!?[A-Za-z].*)$/;
+
+  if (!str) {
+    return true;
+  }
+  return regex.test(str);
+}
+
 export const stringContains = (str: string, search: string) => {
   return str.toLowerCase().indexOf(search.toLowerCase()) !== -1;
 }
