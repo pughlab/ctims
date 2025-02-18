@@ -449,5 +449,4 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
     </>
   )
 }
-
 export default Trials
