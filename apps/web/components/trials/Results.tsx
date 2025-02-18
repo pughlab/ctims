@@ -49,6 +49,10 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
   useEffect(() => {
     if (getMatchResultsResponse) {
       const processedData = postProcess(getMatchResultsResponse);
+
+      // Sort by 'updatedAt' in descending order BEFORE rendering
+      processedData.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+
       setResults(processedData);
     }
   }, [getMatchResultsResponse])
@@ -138,6 +142,10 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
   }, []);
 
   const extractDateTime = (dateStr) => {
+    if (!dateStr || typeof dateStr !== 'string') {
+      return ''; // Return an empty string to prevent crashes
+    }
+
     // Extract date and time before "by" in the string
     const match = dateStr.match(/(.*?)(?=\s+by\s+|$)/);
     return match ? match[1] : dateStr;
@@ -224,12 +232,13 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
           <DataTable value={results} rowHover={true} paginator rows={10}
                      rowsPerPageOptions={[5, 10, 25, 50]}
                      loading={props.getTrialsForUsersInGroupLoading || getMatchResultsLoading}
-                     sortField="createdOn"
                      emptyMessage={'No match results.'}
                      sortMode="multiple"
                      multiSortMeta={multiSortMeta}
                      onSort={onSort}
                      removableSort
+                     sortField="updatedAt"  // Force 'Modified on' column to sort
+                     defaultSortOrder={-1}  // Enforce descending order
           >
             <Column field="trialId" header="ID" sortable></Column>
             <Column field="nickname" header="Nickname" sortable></Column>
