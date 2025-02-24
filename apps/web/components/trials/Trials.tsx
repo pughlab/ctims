@@ -39,7 +39,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
   const menu = useRef(null);
 
   const [multiSortMeta, setMultiSortMeta] = useState<DataTableSortMeta[]>([
-    { field: 'updatedAt', order: -1 }, // Default sort by Modified on descending
+    { field: '_rawUpdatedAt', order: -1 }, // Default sort by Modified on descending
   ]);
   const DEFAULT_SORT: DataTableSortMeta[] = [{ field: 'updatedAt', order: -1 }];
   const onSort = (event: any) => {
@@ -429,18 +429,16 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
             <Column field="principal_investigator" header="Principal Investigator" sortable sortField="principal_investigator" />
             <Column field="ctml_status_label" header="CTML Status" sortable sortField="ctml_status_label" />
             <Column
-              field="createdAt"
+              field="_rawCreatedAt"
               header="Created on"
               sortable
-              sortField="createdAt"
-              sortFunction={customDateSort}
+              body={(rowData) => rowData.createdAt}  // Show formatted version
             />
             <Column
-              field="updatedAt"
+              field="_rawUpdatedAt"  // Use raw date for sorting
               header="Modified on"
               sortable
-              sortField="updatedAt"
-              sortFunction={customDateSort}
+              body={(rowData) => rowData.updatedAt}  // Show formatted version
             />
             <Column field="lockStatus" header="Lock Status" body={lockStatusTemplate} sortable sortField="lockStatus" />
           </DataTable>

@@ -17,16 +17,25 @@ const useGetTrialsForUsersInGroup = () => {
       'Authorization': 'Bearer ' + accessToken,
     }
     try {
-
       const userTrials = await operation({
         method: 'get',
         url: `/trial-group/${groupId}`,
         headers
       });
 
-      const mapped = userTrials.data.map((trial) => {
+      // Sort the trials by updatedAt before mapping
+      const sortedTrials = [...userTrials.data].sort((a, b) =>
+        new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+      );
+
+      const mapped = sortedTrials.map((trial) => {
         let createdAtDate = new Date(trial.createdAt)
         let updatedAtDate = new Date(trial.updatedAt)
+
+        // Store raw dates for sorting
+        const rawUpdatedAt = trial.updatedAt;
+        const rawCreatedAt = trial.createdAt;
+
         let createdAtFormatted = createdAtDate.toLocaleString(undefined, {
           month: 'short',
           day: 'numeric',
@@ -48,6 +57,8 @@ const useGetTrialsForUsersInGroup = () => {
           ...trial,
           createdAt: createdAtFormatted,
           updatedAt: updatedAtFormatted,
+          _rawUpdatedAt: rawUpdatedAt,  // Keep raw date for sorting
+          _rawCreatedAt: rawCreatedAt,  // Keep raw date for sorting
           ctml_status_label,
           user: trial.user,
           lockStatus: trial.trial_lock[0] ? "Locked" : "Unlocked",
