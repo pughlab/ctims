@@ -4,7 +4,7 @@
   "ssl-required": "external",
   "resource": "ctims",
   "credentials": {
-    "secret": "yEV5YAWsE7XbhBEwUDHLRqXrR5jMhEwm"
+    "secret": "{keycloak_secret}"
   },
   "confidential-port": 0
 }
