@@ -38,9 +38,8 @@ const AutocompleteField = ({ onChange, ...props }) => {
     //The below check make sures there are no multiple ! in the input string.
     if(trimmedValue.startsWith('!') && props.value?.startsWith('!')){
       setSelectedHugoSymbol(trimmedValue.replace(/^!/, ""));
-      return;
     }
-    if (trimmedValue.startsWith('!') || excludeToggle) {
+    else if (trimmedValue.startsWith('!') || excludeToggle) {
       setSelectedHugoSymbol(trimmedValue.replace(/^!/, ""));
       setExcludeToggle(true);
       excludeToggle ? onChange(`!${trimmedValue}`) : onChange(trimmedValue);
