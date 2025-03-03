@@ -23,12 +23,10 @@ const AutocompleteField = ({ onChange, ...props }) => {
       setSelectedHugoSymbol('');
       setExcludeToggle(false);
     }
-    if (props.name === 'hugo_symbol') {
-      if (!hugo_symblo_validation_func(props.value)) {
-        setHugoSymbolError(true)
-      } else {
-        setHugoSymbolError(false)
-      }
+    if (!hugo_symblo_validation_func(props.value)) {
+      setHugoSymbolError(true)
+    } else {
+      setHugoSymbolError(false)
     }
   }, [props.value]);
 
