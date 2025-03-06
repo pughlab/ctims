@@ -1,0 +1,152 @@
+version: "3.8"
+name: ctims-demo  # The project name goes here
+
+services:
+  frontend:
+    container_name: ctims-web
+    image: harbor.uhn.ca/pmcdi/ctims-demo-frontend:latest  # Try 
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+        REACT_APP_API_URL: ${REACT_APP_API_URL}
+        NEXTAUTH_URL: ${NEXTAUTH_URL}
+        NEXTAUTH_API_URL: ${NEXTAUTH_API_URL}
+        NEXT_PUBLIC_ENABLE_MATCHMINER_INTEGRATION: ${NEXT_PUBLIC_ENABLE_MATCHMINER_INTEGRATION}
+        NEXT_PUBLIC_TRIAL_LOCK_PING_TIME_MS: ${NEXT_PUBLIC_TRIAL_LOCK_PING_TIME_MS}
+        NEXT_TRIAL_LOCK_CLEAR_TIME_MS: ${NEXT_TRIAL_LOCK_CLEAR_TIME_MS}
+    ports:
+      - "3001:3000"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    restart: on-failure
+    networks:
+        - ctims-demo-network
+
+  backend:
+    container_name: ctims-api
+    build:
+      context: ./
+      dockerfile: ./apps/api/Dockerfile
+    environment:
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+      KEYCLOAK_URL: ${KEYCLOAK_URL}
+      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
+      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
+      KEYCLOAK_ADMIN_CLIENT_ID: ${KEYCLOAK_ADMIN_CLIENT_ID}
+      KEYCLOAK_ADMIN_CLIENT_SECRET: ${KEYCLOAK_ADMIN_CLIENT_SECRET}
+      KEYCLOAK_TOKEN_ENDPOINT: ${KEYCLOAK_TOKEN_ENDPOINT}
+      KEYCLOAK_CLIENT_UUID: ${KEYCLOAK_CLIENT_UUID}
+      KEYCLOAK_DISABLED: ${KEYCLOAK_DISABLED}
+      KD_TRIALGROUP: ${KD_TRIALGROUP}
+      KD_TRIALGROUP_ADMIN: ${KD_TRIALGROUP_ADMIN}
+      KD_USERNAME: ${KD_USERNAME}
+      KD_PASSWORD: ${KD_PASSWORD}
+      KD_USERNAME_ADMIN: ${KD_USERNAME_ADMIN}
+      KD_PASSWORD_ADMIN: ${KD_PASSWORD_ADMIN}
+      KD_EMAIL: ${KD_EMAIL}
+      KD_EMAIL_ADMIN: ${KD_EMAIL_ADMIN}
+      KD_FULLNAME: ${KD_FULLNAME}
+      KD_FULLNAME_ADMIN: ${KD_FULLNAME_ADMIN}
+      KD_KEYCLOAK_ID: ${KD_KEYCLOAK_ID}
+      KD_KEYCLOAK_ID_ADMIN: ${KD_KEYCLOAK_ID_ADMIN}
+      KD_TOKEN_ADMIN: ${KD_TOKEN_ADMIN}
+      KD_TOKEN_USER: ${KD_TOKEN_USER}
+      PRISMA_FIELD_ENCRYPTION_KEY: ${PRISMA_FIELD_ENCRYPTION_KEY}
+      MM_API_URL: ${MM_API_URL}
+      CTIMS_ENV: ${CTIMS_ENV}
+      MM_API_TOKEN: ${MM_API_TOKEN}
+      DATABASE_URL: mysql://ctims:ctims@database:3306/ctims
+      CTIMS_API_VERSION: ${CTIMS_API_VERSION}
+      CTIMS_API_KEY: ${CTIMS_API_KEY}
+      MATCHMINER_SEND_QUEUE: ${MATCHMINER_SEND_QUEUE}
+      MATCHMINER_RECEIVE_QUEUE: ${MATCHMINER_RECEIVE_QUEUE}
+      RABBITMQ_URL: ${RABBITMQ_URL}
+      RABBITMQ_PORT: ${RABBITMQ_PORT}
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      NEXT_PUBLIC_TRIAL_LOCK_PING_TIME_MS: ${NEXT_PUBLIC_TRIAL_LOCK_PING_TIME_MS}
+      NEXT_TRIAL_LOCK_CLEAR_TIME_MS: ${NEXT_TRIAL_LOCK_CLEAR_TIME_MS}
+      CTIMS_SUPPORT_EMAIL: ${CTIMS_SUPPORT_EMAIL}
+      CTIMS_URL: ${CTIMS_URL}
+    ports:
+      - "3334:3333"
+    depends_on:
+      - database # Ensure database is up before backend
+    restart: on-failure
+    networks:
+        - ctims-demo-network
+
+  database:
+    container_name: ctims-db
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    ports:
+      - "3307:3306"
+    restart: on-failure
+    networks:
+        - ctims-demo-network
+
+  # # https://github.com/prisma/prisma/releases/tag/2.17.0
+  # database_shadow:
+  #   container_name: ctims-db-shadow
+  #   build:
+  #     context: ./database
+  #     dockerfile: Dockerfile-shadow
+  #   ports:
+  #     - "3307:3306"
+  #   restart: on-failure
+  #   networks:
+  #     - my-network
+
+
+  mm-api:
+    container_name: mm-api
+    restart: "no"
+    build:
+      context: ../../matchminer/matchminer-api
+      dockerfile: Dockerfile-dev
+      args:
+        MM_API_TOKEN: ${MM_API_TOKEN}
+    command: python pymm_run.py serve
+    volumes:
+      - ../../matchminer/matchminer-api:/matchminerAPI
+    ports:
+      - "5001:5000"
+    environment:
+      - SECRETS_JSON=./secrets_json_dev.json
+    depends_on:
+      - mm-mongo-db # Ensure database is up before backend
+    networks:
+      - ctims-demo-network
+
+  mm-mongo-db:
+    container_name: mm-mongo-db
+    image: mongo:3.6.10
+    restart: on-failure
+    ports:
+      - "27018:27017"
+    networks:
+      - ctims-demo-network
+    volumes:
+      - mm-mongo-db:/data/db
+
+  rabbitmq:
+    container_name: mm-rabbitmq
+    image: rabbitmq:3-management
+    restart: on-failure
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    networks:
+      - ctims-demo-network
+
+volumes:
+  mm-mongo-db:
+
+networks:
+    ctims-demo-network:
+

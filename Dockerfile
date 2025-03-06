@@ -36,6 +36,9 @@ RUN npx nx build web
 
 ## 2nd build deploy
 FROM node:20-alpine3.17 AS deploy
+
+RUN apk add --no-cache python3 make g++
+
 WORKDIR /var/www/html
 COPY --from=build /app/dist/apps/web .
 
