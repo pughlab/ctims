@@ -506,6 +506,9 @@ export const GenomicForm = (props: IFormProps) => {
       "hugo_symbol": {
         "ui:widget": AutocompleteField,
       },
+      "fusion_partner_hugo_symbol": {
+        "ui:widget": AutocompleteField,
+      },
       "cnv_call": {
         "ui:widget": CtimsDropdownWithExcludeToggle,
       },
@@ -618,6 +621,7 @@ export const GenomicForm = (props: IFormProps) => {
     let proteinChangeHasError = false;
     let wildCardProteinChangeHasError = false;
     let hugoSymbolHasError = false;
+    let fusionPartnerHugoSymbolHasError = false;
 
     if (!wildcard_protein_change_validation_func(myFormData.wildcard_protein_change)
       && !myFormData.protein_change) {
@@ -632,6 +636,11 @@ export const GenomicForm = (props: IFormProps) => {
     if (!hugo_symblo_validation_func(myFormData.hugo_symbol)) {
       myErrors.hugo_symbol.addError('At least have a single character');
       hugoSymbolHasError = true;
+    }
+
+    if (!hugo_symblo_validation_func(myFormData.fusion_partner_hugo_symbol)) {
+      myErrors.fusion_partner_hugo_symbol.addError('Fusion Partner Hugo Symbol must have a single character');
+      fusionPartnerHugoSymbolHasError = true;
     }
 
     if (myFormData.protein_change && myFormData.wildcard_protein_change) {
@@ -659,12 +668,16 @@ export const GenomicForm = (props: IFormProps) => {
       const proteinChangeError = errors.find(error => error.property === '.protein_change');
       const wildcardProteinChangeError = errors.find(error => error.property === '.wildcard_protein_change');
       const hugoSymbolError = errors.find(error => error.property === '.hugo_symbol');
+      const fusionPartnerHugoSymbolError = errors.find(error => error.property === '.fusion_partner_hugo_symbol');
       if (proteinChangeError && wildcardProteinChangeError && proteinChangeError.message === wildcardProteinChangeError.message) {
         addInvalidClassToElement('root_variantCategoryContainerObject_protein_change');
         addInvalidClassToElement('root_variantCategoryContainerObject_wildcard_protein_change');
       }
       if (hugoSymbolError) {
         addInvalidClassToElement('root_variantCategoryContainerObject_hugo_symbol');
+      }
+      if (fusionPartnerHugoSymbolError) {
+        addInvalidClassToElement('root_variantCategoryContainerObject_fusion_partner_hugo_symbol');
       }
     }
   }

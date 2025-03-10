@@ -23,19 +23,21 @@ const AutocompleteField = ({ onChange, ...props }) => {
       setSelectedHugoSymbol('');
       setExcludeToggle(false);
     }
-    if (props.name === 'hugo_symbol') {
-      if (!hugo_symblo_validation_func(props.value)) {
-        setHugoSymbolError(true)
-      } else {
-        setHugoSymbolError(false)
-      }
+    if (!hugo_symblo_validation_func(props.value)) {
+      setHugoSymbolError(true)
+    } else {
+      setHugoSymbolError(false)
     }
   }, [props.value]);
 
   const handleInputChange = (e: { value: string }) => {
 
     const trimmedValue = e.value.trim();
-    if (trimmedValue.startsWith('!') || excludeToggle) {
+    //The below check make sures there are no multiple ! in the input string.
+    if(trimmedValue.startsWith('!') && props.value?.startsWith('!')){
+      setSelectedHugoSymbol(trimmedValue.replace(/^!/, ""));
+    }
+    else if (trimmedValue.startsWith('!') || excludeToggle) {
       setSelectedHugoSymbol(trimmedValue.replace(/^!/, ""));
       setExcludeToggle(true);
       excludeToggle ? onChange(`!${trimmedValue}`) : onChange(trimmedValue);
@@ -92,13 +94,13 @@ const AutocompleteField = ({ onChange, ...props }) => {
       )}
       <AutoComplete
         inputStyle={arrayContainer}
-        value={selectedHugoSymbol}
+        value={selectedHugoSymbol ? selectedHugoSymbol.replace(/^!/, ""): ""}
         suggestions={filteredHugoSymbols}
         completeMethod={(e) => {
           const trimmedValue = e.query.trim();
           trimmedValue === ""
             ? []
-            : (setSelectedHugoSymbol(trimmedValue.replace(/^!/, "")), excludeToggle ? onChange(`!${trimmedValue}`) : onChange(trimmedValue), searchSymbols(trimmedValue));
+            : (searchSymbols(trimmedValue));
         }}
         onChange={(e) => {
           handleInputChange(e)
@@ -110,7 +112,7 @@ const AutocompleteField = ({ onChange, ...props }) => {
         <div className={styles.label}>Exclude this criteria from matches.</div>
         <div style={{ marginLeft: 'auto' }}>
           <IOSSwitch
-            disabled={false}
+            disabled={!props.value}
             value={excludeToggle}
             onChange={handleToggleChange}
           />
