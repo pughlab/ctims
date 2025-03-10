@@ -647,6 +647,9 @@ export const GenomicForm = (props: IFormProps) => {
         addInvalidClassToElement('root_variantCategoryContainerObject_protein_change');
         addInvalidClassToElement('root_variantCategoryContainerObject_wildcard_protein_change');
       }
+      if (proteinChangeError) {
+        addInvalidClassToElement('root_variantCategoryContainerObject_protein_change');
+      }
     }
   }
 

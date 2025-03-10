@@ -27,7 +27,8 @@ const CtimsInputWithExcludeToggle = (props: WidgetProps) => {
     rawErrors = [],
   } = props;
 
-  const [valueState, setValueState] = useState(value);
+  const [valueState, setValueState] = useState(value ? value.replace(/^!/, '') : '');
+  const [excludeToggle, setExcludeToggle] = useState(value ? value.startsWith('!') : false);
 
   useEffect(() => {
     const currentURL = window.location.href;
@@ -37,25 +38,39 @@ const CtimsInputWithExcludeToggle = (props: WidgetProps) => {
     }
   }, [])
 
-  // useEffect(() => {
-  //   console.log('value', value)
-  // }, [value])
+  useEffect(() => {
+    if (value) {
+      setValueState(value.replace(/^!/, ''));
+      setExcludeToggle(value.startsWith('!'));
+    } else {
+      setValueState('');
+      setExcludeToggle(false);
+    }
+  }, [value]);
 
-
-  const _onChange = ({
-                       target: { value },
-                     }: React.ChangeEvent<HTMLInputElement>) => {
-    // console.log('value', value)
-    setValueState(value)
-    // return onChange(value === "" ? options.emptyValue : value)
-    return onChange(value === "" ? options.emptyValue : value)
+  const handleToggleChange = (checked: boolean) => {
+    setExcludeToggle(checked);
+    const newValue = checked ? `!${valueState}` : valueState;
+    onChange(newValue === '' ? options.emptyValue : newValue);
   };
-  const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) => {
-    value = value.trim();
-    onChange(value === "" ? options.emptyValue : value);
-    onBlur(id, value);
-  }
 
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>,
+    isBlur: boolean = false
+  ) => {
+    const newValue = event.target.value.trim();
+    if (newValue.startsWith('!') && value?.startsWith('!')) {
+      setValueState(newValue.replace(/^!/, ''));
+    } else {
+      setValueState(newValue);
+      const actualValue = excludeToggle ? `!${newValue}` : newValue;
+      onChange(actualValue === '' ? options.emptyValue : actualValue);
+      if (isBlur) {
+        onBlur(id, actualValue);
+      }
+    }
+  };
+  
   const _onFocus = ({
                       target: { value },
                     }: React.FocusEvent<HTMLInputElement>) => onFocus(id, value);
@@ -87,17 +102,19 @@ const CtimsInputWithExcludeToggle = (props: WidgetProps) => {
         className={cn("w-full")}
         list={schema.examples ? `examples_${id}` : undefined}
         type={inputType}
-        value={value || value === 0 ? value.replace('!', '') : ""}
-        onChange={_onChange}
-        onBlur={_onBlur}
+        value={valueState}
+        onChange={(event) => handleChange(event)}
+        onBlur={(event) => handleChange(event, true)}
         onFocus={_onFocus}
       />
       <div style={{ display: 'flex' }}>
         <div className={styles.label}> Exclude this diagnosis from matches </div>
-        <div style={{marginLeft: 'auto', marginTop: '10px'}}><IOSSwitch disabled={!value} value={value ? value.startsWith('!') : false} onChange={(checked: boolean) => {
-          const newValue = checked ? '!' + value : value.replace('!', '');
-          onChange(newValue);
-        }} /></div>
+        <div style={{ marginLeft: 'auto', marginTop: '10px' }}><IOSSwitch
+          disabled={!props.value}
+          value={excludeToggle}
+          onChange={handleToggleChange}
+        />
+        </div>
       </div>
     </div>
   );
