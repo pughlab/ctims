@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 // Add CORS headers
 const corsHeaders = {
-  'Access-Control-Allow-Origin': 'http://localhost:3001', // Your SolidJS app's domain
+  'Access-Control-Allow-Origin': 'http://localhost:3001', // Your parent app's domain
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
   'Access-Control-Allow-Credentials': 'true', // Important for cookies
