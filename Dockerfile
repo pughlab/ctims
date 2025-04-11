@@ -42,9 +42,6 @@ COPY --from=build /app/dist/apps/web .
 RUN rm -rf /var/www/html/.next/cache
 RUN sh -c 'echo "[]" > /var/www/html/.next/server/next-font-manifest.json'
 
-ENV NEXTAUTH_SECRET=dAbxJF2DRzqwGYn+BWKdj8o9ieMri4FWsmIRn77r2F8=
-ENV REACT_APP_API_URL=http://backend:3333/api
-ENV NEXTAUTH_URL=http://localhost:3000
 
 RUN yarn install --production
 
