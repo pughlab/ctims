@@ -10,6 +10,9 @@ services:
         REACT_APP_API_URL: ${REACT_APP_API_URL}
         NEXTAUTH_URL: ${NEXTAUTH_URL}
         NEXTAUTH_API_URL: ${NEXTAUTH_API_URL}
+        NEXT_PUBLIC_SIGNOUT_REDIRECT_URL: ${NEXT_PUBLIC_SIGNOUT_REDIRECT_URL}
+        NEXT_PUBLIC_ENABLE_MATCHMINER_INTEGRATION: ${NEXT_PUBLIC_ENABLE_MATCHMINER_INTEGRATION}
+        NEXT_PUBLIC_TRIAL_LOCK_PING_TIME_MS: ${NEXT_PUBLIC_TRIAL_LOCK_PING_TIME_MS}
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
@@ -17,7 +20,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
     restart: on-failure
     networks:
-        - my-network
+        - ctims-network
 
   backend:
     container_name: ctims-api
@@ -35,15 +38,29 @@ services:
         KEYCLOAK_CLIENT_UUID: ${KEYCLOAK_CLIENT_UUID}
         PRISMA_FIELD_ENCRYPTION_KEY: ${PRISMA_FIELD_ENCRYPTION_KEY}
         MM_API_URL: ${MM_API_URL}
-        CTIMS_ENV: ${CTIMS_ENV}
         MM_API_TOKEN: ${MM_API_TOKEN}
+        CTIMS_ENV: ${CTIMS_ENV}
+        CTIMS_URL: ${CTIMS_URL}
+        CTIMS_API_VERSION: ${CTIMS_API_VERSION}
+        CTIMS_API_KEY: ${CTIMS_API_KEY}
+        MATCHMINER_SEND_QUEUE: ${MATCHMINER_SEND_QUEUE}
+        MATCHMINER_RECEIVE_QUEUE: ${MATCHMINER_RECEIVE_QUEUE}
+        RABBITMQ_URL: ${RABBITMQ_URL}
+        RABBITMQ_PORT: ${RABBITMQ_PORT}
+        MAIL_HOST: ${MAIL_HOST}
+        MAIL_USERNAME: ${MAIL_USERNAME}
+        MAIL_PASSWORD: ${MAIL_PASSWORD}
+        CTIMS_SUPPORT_EMAIL: ${CTIMS_SUPPORT_EMAIL}
+        NEXT_PUBLIC_TRIAL_LOCK_PING_TIME_MS: ${NEXT_PUBLIC_TRIAL_LOCK_PING_TIME_MS}
+        NEXT_TRIAL_LOCK_CLEAR_TIME_MS: ${NEXT_TRIAL_LOCK_CLEAR_TIME_MS}
+
     environment:
       DATABASE_URL: mysql://ctims:ctims@database:3306/ctims
     ports:
       - "3333:3333"
     restart: on-failure
     networks:
-        - my-network
+        - ctims-network
 
   database:
     container_name: ctims-db
@@ -54,7 +71,7 @@ services:
       - "3306:3306"
     restart: on-failure
     networks:
-        - my-network
+        - ctims-network
 
   # https://github.com/prisma/prisma/releases/tag/2.17.0
   database_shadow:
@@ -66,8 +83,8 @@ services:
       - "3307:3306"
     restart: on-failure
     networks:
-      - my-network
+      - ctims-network
 
 networks:
-    my-network:
+    ctims-network:
 
