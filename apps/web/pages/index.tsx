@@ -31,11 +31,9 @@ export function Index() {
         localStorage.setItem('ctims-accessToken', extendedSession.accessToken);
         dispatch(setIsAccessTokenSet(true));
       }
-      
-      // Only redirect to main page if not in iframe
-      if (!isIframe) {
-        router.push('/main');
-      }
+
+      router.push('/main');
+
     }
   }, [session, router, isIframe]);
 
