@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { encode } from 'next-auth/jwt';
 
 // Add CORS headers
 const corsHeaders = {
@@ -32,7 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const api_url = process.env.NEXTAUTH_API_URL || 'http://localhost:3333/api';
 
-    // Make the authentication request directly to your API
+    // Make the authentication request to your API
     const response = await fetch(`${api_url}/auth/login`, {
       method: 'POST',
       headers: {
@@ -47,9 +48,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const data = await response.json();
 
     if (data.accessToken && data.user) {
+      // Create a JWT token that NextAuth can understand
+      const token = await encode({
+        token: {
+          accessToken: data.accessToken,
+          roles: data.user.roles || [],
+          name: data.user.name,
+          email: data.user.email,
+          id: data.user.id || data.user.sub || 'default-id'
+        },
+        secret: process.env.NEXTAUTH_SECRET || 'secret',
+        maxAge: 30 * 24 * 60 * 60 // 30 days
+      });
+
       // Set the session cookie
-      res.setHeader('Set-Cookie', `next-auth.session-token=${data.accessToken}; Path=/; HttpOnly; SameSite=Lax`);
-      
+      res.setHeader(
+        'Set-Cookie',
+        `next-auth.session-token=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${30 * 24 * 60 * 60}`
+      );
+
       return res.status(200).json({ 
         success: true,
         token: data.accessToken,
