@@ -91,6 +91,8 @@ services:
       - SECRETS_JSON=./secrets_json_dev.json
     networks:
       - qa-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   mm_mongo_db_qa:
     container_name: mm_mongo_db_qa
