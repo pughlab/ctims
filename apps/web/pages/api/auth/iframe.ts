@@ -3,7 +3,7 @@ import { encode } from 'next-auth/jwt';
 
 // Add CORS headers
 const corsHeaders = {
-  'Access-Control-Allow-Origin': 'http://localhost:3001', // Your parent app's domain
+  'Access-Control-Allow-Origin': 'http://localhost:3000', // Your parent app's domain
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
   'Access-Control-Allow-Credentials': 'true', // Important for cookies
@@ -67,7 +67,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         `next-auth.session-token=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${30 * 24 * 60 * 60}`
       );
 
-      return res.status(200).json({ 
+      return res.status(200).json({
         success: true,
         token: data.accessToken,
         user: data.user
@@ -79,4 +79,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.error('Iframe auth error:', error);
     return res.status(500).json({ message: 'Internal server error' });
   }
-} 
+}
