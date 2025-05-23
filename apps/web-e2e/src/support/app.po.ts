@@ -29,6 +29,8 @@ export const exportButton = () => cy.get('button[aria-label=\'Export\']')
 export const selectTrialGroupButton = () => cy.get('div[aria-label="Select a Trial Group"]')
 export const ctimsUserTrialGroupxMember = () => cy.get('li[aria-label="trialgroupx"]')
 export const ctimsUserTapestryMember = () => cy.get('li[aria-label="tapestry"]')
+export const trialGroupLists = () => cy.get('ul[role=\'listbox\'] li') //contains list of all trialgroups,
+// select one from the list
 export const trialGroupxAdmin = () => cy.get('li[aria-label="trialgroupx (Admin)"]')
 export const validateButton = () => cy.get('button[aria-label="Validate"]')
 export const validateOkButton = () => cy.get('button[aria-label="OK"] span[class="p-button-label p-c"]')
@@ -46,15 +48,15 @@ export const trialTableThreeDots = () => cy.get('tr[draggable=\'false\']>td:nth-
 
 //LeftPanel Trial Editor
 export const trialEditorLeftPanelList = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li') //8 elements
-export const leftPanelTrialInformation = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(1)')
-export const leftPanelPriorTreatmentRequirement = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(2)')
-export const leftPanelAge = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(3)')
-export const leftPanelDrugList = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(4)')
-export const leftPanelManagementGroupList = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(5)')
-export const leftPanelSiteList = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(6)')
-export const leftPanelSponsorList = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(7)')
-export const leftPanelStaffList = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(8)')
-export const leftPanelTreatmentList = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(9)')
+export const leftPanelTrialInformation = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(1)>a')
+export const leftPanelPriorTreatmentRequirement = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(2)>a')
+export const leftPanelAge = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(3)>a')
+export const leftPanelDrugList = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(4)>a')
+export const leftPanelManagementGroupList = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(5)>a')
+export const leftPanelSiteList = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(6)>a')
+export const leftPanelSponsorList = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(7)>a')
+export const leftPanelStaffList = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(8)>a')
+export const leftPanelTreatmentList = () => cy.get('.LeftMenuEditorComponent_ctims-nav__sI_UW>ul>li:nth-child(9)>a')
 
 
 
@@ -113,6 +115,7 @@ export const getPriorTreatmentRequirementMultiple = () => cy.get('[id^=root_prio
 
 //Age
 export const getAgeGroup = () => cy.get('#root_age_group_age')
+export const getAgeGroupDropDown = () => cy.get('ul[role=\'listbox\'] li')
 
 //Drug List
 export const getDrugName = () => cy.get('#root_drug_list_drug_0_drug_name')
@@ -208,6 +211,9 @@ export const getAddCriteriaGroup = () => cy.get('.MatchingMenuAndForm_addCriteri
 
 //LeftMenuComponent(span-->.p-treenode-label and button--> p-button(click on button to add criteria)
 export const getLeftMenuComponent = () => cy.get('.LeftMenuComponent_treeNodeContainer__K7jg6')
+//cy.get('.p-treenode>div>div:nth-child(1)')
+//cy.get('.LeftMenuComponent_treeNodeContainer__K7jg6')
+export const clickLeftMenuComponentSpace = () => cy.get('.p-treenode>div>div:nth-child(1)')
 
 //Truncate button
 export const getTruncateButton = () => cy.get('.p-button.p-component.LeftMenuComponent_treeMenuBtn__zRCgR.p-button-icon-only')
@@ -225,7 +231,6 @@ export const getSwitchGroupOperator = () => cy.get('.p-tieredmenu>ul>li:nth-chil
 
 //Match criteria sub children
 export const getSubGroup = () => cy.get('.LeftMenuComponent_matchingCriteriaMenuContainer__fe8dz>div:nth-child(2)>ul>li>ul>li')
-
 //Delete
 export const getDelete = () => cy.get('.p-tieredmenu>ul>li:nth-child(3)')
 
@@ -262,22 +267,22 @@ export const getClinicalDropdown = () => cy.get('.p-dropdown-panel>div>ul>li') /
 export const getHugoSymbol = () => cy.get('input[role="combobox"]')
 
 //Variant Category
-export const getVariantCategory = () => cy.get('#root_variant_category')
+export const getVariantCategory = () => cy.get('#root_variantCategoryContainerObject_variant_category')
 
 //Protein Change
-export const getProteinChange = () => cy.get('#root_protein_change')
+export const getProteinChange = () => cy.get('#root_variantCategoryContainerObject_protein_change')
 
 //Variant Classification
-export const getVariantClassification = () => cy.get('#root_variant_classification')
+export const getVariantClassification = () => cy.get('#root_variantCategoryContainerObject_variant_classification')
 
 //CNV Call
-export const getCNVCall = () => cy.get('#root_cnv_call')
+export const getCNVCall = () => cy.get('#root_variantCategoryContainerObject_cnv_call')
 
 //Fusion Partner Hugo Symbol
 export const getFusionPartnerHugoSymbol = () => cy.get('#root_fusion_partner_hugo_symbol')
 
 //True Transcript Exon
-export const getTrueTranscriptExon = () => cy.get('#root_true_transcript_exon')
+export const getTrueTranscriptExon = () => cy.get('#root_variantCategoryContainerObject_true_transcript_exon')
 
 //Wildtype
 export const getWildType = () => cy.get('#root_wildtype')
@@ -307,7 +312,7 @@ export const getMSStatus = () => cy.get('#root_ms_status')
 export const getGenomicDropDown = () => cy.get('.p-dropdown-panel>div>ul>li')
 
 //Molecular
-export const getMolecularFunction = () => cy.get('#root_molecular_function')
+export const getMolecularFunction = () => cy.get('#root_variantCategoryContainerObject_molecular_function')
 //******************* Clinical ********************************************************//
 
 //Age

@@ -104,12 +104,12 @@ import {
   validateCtmlCancelButton,
   validateCtmlOkButton,
   validateOkButton
-} from '../../../support/app.po';
-import {NCT02503722_Osimertinib} from "../../../fixtures2/NCT02503722_Osimertinib"
-import baseClass from "../../Base/baseClass.cy"
-import dateClass from "../../Base/dateClass.cy";
+} from '../../../../support/app.po';
+import {NCT02503722_Osimertinib} from "../../../../fixtures2/NCT02503722_Osimertinib"
+import baseClass from "../../../Base/baseClass.cy"
+import dateClass from "../../../Base/dateClass.cy";
 import * as yaml from 'js-yaml';
-import customCommands from "../../Base/customCommands.cy";
+import customCommands from "../../../Base/customCommands.cy";
 const exportJsonFile = 'NCT02503722_2023-05-12.json';
 const split = exportJsonFile.substring(0,11); //grab only NCT id
 const jsonFile = split.concat('_', dateClass.currentDate()).concat('.json');

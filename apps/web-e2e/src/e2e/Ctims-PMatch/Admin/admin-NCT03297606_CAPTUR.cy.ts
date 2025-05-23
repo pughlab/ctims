@@ -112,6 +112,7 @@ let exportJsonFile = 'NCT03297606_2023-05-12.json';
 let split = exportJsonFile.substring(0,11); //grab only NCT id
 let jsonFile = split.concat('_', dateClass.currentDate()).concat('.json');
 let yamlFile = split.concat('_', dateClass.currentDate()).concat('.yaml');
+let trialGroupName = 'tapestry (Admin)';
 
 describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() => {
   baseClass.adminTrialGroupx()
@@ -121,7 +122,7 @@ describe('CTIMS Trial Editor "NCT03297606_CAPTUR',{ testIsolation: false },() =>
   const ctmlYaml = `./cypress/downloads/${yamlFile}`
 
   it('should "Delete" the existing Ctml file "NCT03297606_CAPTUR" as Admin', () => {
-   cy.deleteExistingTrial('NCT03297606_CAPTUR TrialGroupx Admin role')
+   cy.deleteExistingTrial('NCT03297606_CAPTUR TrialGroupx Admin role', trialGroupName)
   })
   it('should enter the Trial Editor form with valid test data', () => {
     enterTrialEditorFormData(ctmlTestData,

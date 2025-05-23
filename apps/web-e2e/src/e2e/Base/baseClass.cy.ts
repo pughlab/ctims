@@ -1,30 +1,31 @@
 import {signInButton} from "../../support/app.po";
+import * as process from "node:process";
 
 class baseClass {
 
   beforeClass() {
     before(() => {
       cy.visit(Cypress.env('baseUrl'), {timeout: 10000})
-      cy.login('ctims_test_user', 'ctims2023')
+      cy.login(Cypress.env('USERNAME'), Cypress.env('PASSWORD'))
       // Cypress.config('experimentalSessionSupport', true)
     });
   }
   ctimsTestUser() {
     before(() => {
       cy.visit(Cypress.env('baseUrl'), {timeout: 10000})
-      cy.login('ctims_test_user', 'ctims2023')
+      cy.login(Cypress.env('USERNAME'), Cypress.env('PASSWORD'))
     });
   }
   testProd() {
     before(() => {
       cy.visit(Cypress.env('prod'), {timeout: 10000})
-      cy.login('test', 'test')
+      cy.login(Cypress.env('USERNAME'), Cypress.env('PASSWORD'))
     });
   }
   adminTrialGroupx() {
     before(() => {
       cy.visit(Cypress.env('baseUrl'), {timeout: 10000})
-      cy.login('ctims-john-doe', 'ctims2023')
+      cy.login(Cypress.env('USERNAME'), Cypress.env('PASSWORD'))
     })
     }
     afterClass() {

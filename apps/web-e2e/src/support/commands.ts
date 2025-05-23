@@ -114,7 +114,7 @@ import {
   getOncotreeExclamation,
   getClinicalTMB,
   createCTMLButton,
-  ctimsUserTapestryMember, nctIdTextBox, OkButton
+  ctimsUserTapestryMember, nctIdTextBox, OkButton, trialGroupLists, getAgeGroupDropDown, clickLeftMenuComponentSpace
 } from './app.po';
 import {NCT02503722_Osimertinib} from "../fixtures/NCT02503722_Osimertinib";
 import {NCT03297606_CAPTUR} from "../fixtures/NCT03297606_CAPTUR";
@@ -146,8 +146,8 @@ Cypress.Commands.add('trialInformation', (nctId: string,
                                           status: string) => {
   nctIdTextBox().fill(nctId)
   OkButton().click()
- // trialEditorLeftPanelList().eq(0).should('contain','Trial Information').click()
- // getTrialId().clear().fill(nctId);
+  // trialEditorLeftPanelList().eq(0).should('contain','Trial Information').click()
+  // getTrialId().clear().fill(nctId);
   getTrialNickname().fill(nickName);
   getPrincipalInvestigator().fill(principalInvestigator);
   //ctml status
@@ -177,7 +177,7 @@ Cypress.Commands.add('priorTreatmentRequirement',(priorRequirement: string) => {
 Cypress.Commands.add('priorTreatmentRequirementRepeatingGroup',(priorRequirement) => {
   getPriorTreatmentRequirementPlusIcon().click()
   cy.get('[id^="root_prior_treatment_requirements_"]').each(($el,index) => {
-   const val = $el.attr('id')
+    const val = $el.attr('id')
     cy.log('Attribute value',val)
     cy.log('index', String(index))
     cy.log('we are at ',$el)
@@ -188,24 +188,24 @@ Cypress.Commands.add('priorTreatmentRequirementRepeatingGroup',(priorRequirement
       getPriorTreatmentRequirementRegularExpression().eq(0).click().fill(priorRequirement)
       cy.log('text box1 contains',priorRequirement)
     }
-     if(val.includes('root_prior_treatment_requirements_1') ) {
+    if(val.includes('root_prior_treatment_requirements_1') ) {
       cy.wait(1000)
       getPriorTreatmentRequirementRegularExpression().eq(1).click().fill(priorRequirement)
-       cy.log('text box2 contains',priorRequirement)
+      cy.log('text box2 contains',priorRequirement)
     }
-   if(val.includes('root_prior_treatment_requirements_2') ) {
+    if(val.includes('root_prior_treatment_requirements_2') ) {
       cy.wait(1000)
       getPriorTreatmentRequirementRegularExpression().eq(2).click().fill(priorRequirement)
       cy.log('text box3 contains',priorRequirement)
-   }
-     })
+    }
+  })
 })
 
 Cypress.Commands.add('age',(ageGroup: string) => {
   trialEditorLeftPanelList().eq(2).should('contain','Age').click()
-   //getAgeGroup().fill(ageGroup);
+  //getAgeGroup().fill(ageGroup);
   getAgeGroup().click({force: true} )
-  getDefaultTrialEditorDropDown().contains(ageGroup).click({force: true} )
+  getAgeGroupDropDown().contains(ageGroup).click({force: true} )
 })
 
 Cypress.Commands.add('drugList',(drugName: string) => {
@@ -239,7 +239,7 @@ Cypress.Commands.add('managementGroupList',(managementGroupName: string, isPrima
   trialEditorLeftPanelList().eq(4).should('contain','Management Group List').click()
   getManagementGroupName().click()
   getDefaultTrialEditorDropDown().contains(managementGroupName).click({force: true})
-    //.fill(managementGroupName)
+  //.fill(managementGroupName)
   getPrimaryManagementGroup().contains(isPrimary).click({force: true})
   getPrimaryManagementGroup().should('contain',isPrimary)
 })
@@ -251,17 +251,17 @@ Cypress.Commands.add('siteList',(siteName,
   trialEditorLeftPanelList().eq(5).should('contain', 'Site List').click({force: true})
   getSiteName().click({force: true})
   getDefaultTrialEditorDropDown().contains(siteName).click({force: true})
-    //.fill(siteName)
+  //.fill(siteName)
   getSiteStatus().click({force: true})
   getDefaultTrialEditorDropDown().contains(siteStatus).click({force: true})
-    //.fill(siteStatus)
+  //.fill(siteStatus)
   getCoordinatingCenter().contains(coordinatingCenter).click({force: true})
   getCoordinatingCenter().should('contain',coordinatingCenter)
   getCancerCenterIRB().contains(cancerCenterIRB).click({force: true})
   getCancerCenterIRB().should('contain',cancerCenterIRB)
 })
 Cypress.Commands.add('fillPriorTreatmentRequirement',(input,priorTreatmentRequirement) => {
-   cy.wrap(input).fill(priorTreatmentRequirement);
+  cy.wrap(input).fill(priorTreatmentRequirement);
 })
 Cypress.Commands.add('fillDrugList',(input,drugName) => {
   cy.wrap(input).fill(drugName);
@@ -310,7 +310,7 @@ Cypress.Commands.add('staffList',(firstName,
   getDefaultTrialEditorDropDown().contains(institutionName).click({force: true} )
   getProtocolStaffRole().click({force: true} )
   getDefaultTrialEditorDropDown().contains(staffRole).click({force: true} )
-   })
+})
 
 Cypress.Commands.add('arm',(armCode,armDescription,armInternalID,armSuspended) => {
   trialEditorLeftPanelList().eq(8).should('contain','Treatment List').click({force: true} )
@@ -346,9 +346,11 @@ Cypress.Commands.add('clickParentAnd',() => {
 //All parents child
 Cypress.Commands.add('clickParentNode',(indexNum: number) => {
   getLeftMenuComponent().find('span').eq(indexNum)
-    //.should('contain','And').eq(indexNum)
-  getLeftMenuComponent().eq(indexNum).trigger('mouseover').invoke('addClass', 'p-menuitem-active').click()
-  getTruncateButton().should('be.visible').click()
+  //.should('contain','And').eq(indexNum)
+  clickLeftMenuComponentSpace().eq(indexNum).trigger('mouseover').click({force: true})
+  //getLeftMenuComponent().eq(indexNum).trigger('mouseover').invoke('addClass',
+  // '.p-treenode-content.p-treenode-selectable').click({force: true})
+  getTruncateButton().should('be.visible').click({force: true})
 })
 
 Cypress.Commands.add('clickAnd',() => {
@@ -372,8 +374,8 @@ Cypress.Commands.add('clickChildToggleArrowButton',(indexNumber) => {
 })
 
 Cypress.Commands.add('validateExportJsonAndTestData', (testDataValue) => {
-    let rawData: string[] = testDataValue
-    cy.log("Original Test Data", JSON.stringify(rawData)) //has all the array value
+  let rawData: string[] = testDataValue
+  cy.log("Original Test Data", JSON.stringify(rawData)) //has all the array value
 })
 Cypress.Commands.add('compareArrays', (actual, expected) => {
   actual.forEach((value, index) => {
@@ -439,7 +441,7 @@ Cypress.Commands.add('priorTreatmentListAttributes', (data) => {
 Cypress.Commands.add('trialInformationAttributes', (data) => {
   return Cypress.Promise.resolve(data.map(group => [
     group.nct_id,
-   // group.principal_investigator,
+    // group.principal_investigator,
     group.long_title,
     group.short_title,
     group.phase,
@@ -455,11 +457,11 @@ Cypress.Commands.add('compareTrialInformation', (exportedTrial, testDataTrial) =
   });
 });
 Cypress.Commands.add('compareMultiple', (data,testData) => {
-   data.forEach((criteria, i) => {
-            criteria.forEach((element, j) => {
-              expect(element).to.deep.equal(testData[i][j]);
-            });
-          });
+  data.forEach((criteria, i) => {
+    criteria.forEach((element, j) => {
+      expect(element).to.deep.equal(testData[i][j]);
+    });
+  });
 });
 Cypress.Commands.add('saveOnly', () => {
   trialEditorSave().click()
@@ -552,8 +554,8 @@ Cypress.Commands.add('saveEditButtonForAll', (trialGroupName, nickNameVal) => {
   selectTrialGroupButton().click();
   trialGroupName.click();
   //cy.window().scrollTo('bottom');
-  cy.wait(1000)
-  cy.get('table tr td').each(($el) => {
+  cy.wait(5000)
+  cy.get('table tr td').each(($el, index, $list) => {
     let ee = $el.text();
     if (ee.includes(nickNameVal)) {
       cy.wrap($el).prev().then(($prevEl) => {
@@ -565,12 +567,14 @@ Cypress.Commands.add('saveEditButtonForAll', (trialGroupName, nickNameVal) => {
     }
   });
 });
-Cypress.Commands.add('clickSaveEditButtonForTrialGroupAdmin', (nickNameVal) => {
+Cypress.Commands.add('clickSaveEditButtonForTrialGroupAdmin', (nickNameVal,trialGroupName) => {
   cy.saveAndBackBtn();
-  selectTrialGroupButton().click();
-  trialGroupxAdmin().click();
+  //after clicking back it is defaulted to the selected trialgroup, so comment the below line
+  //selectTrialGroupButton().click();
+  //trialGroupLists().contains(trialGroupName).click();
+  //trialGroupxAdmin().click();
   //cy.window().scrollTo('bottom');
-  cy.wait(1000)
+  cy.wait(3000)
   cy.get('table tr td').each(($el) => {
     let ee = $el.text();
     if (ee.includes(nickNameVal)) {
@@ -603,10 +607,12 @@ Cypress.Commands.add('clickSaveEditButtonForTrialGroupMember', (nickNameVal) => 
   });
 });
 
-Cypress.Commands.add('deleteExistingTrial', (trialName) => {
- // createCTMLButton().should('have.class','p-disabled')
+Cypress.Commands.add('deleteExistingTrial', (trialName,trialGroup) => {
+  // createCTMLButton().should('have.class','p-disabled')
   selectTrialGroupButton().click()
-  trialGroupxAdmin().click()
+  //select a trial group from the dropdown
+  trialGroupLists().contains(trialGroup).click()
+  // trialGroupxAdmin().click()
   let table = cy.get('table tr td')
   table.each(($el) => {
     let ee = $el.text()
@@ -633,9 +639,9 @@ Cypress.Commands.add('deleteTrialAdmin', (trialName) => {
 
     if (ee.includes(trialName)) {
       cy.wrap($el).click()
-        //.then(($prevEl) => {
-       // cy.wrap($prevEl).click();
-     // });
+      //.then(($prevEl) => {
+      // cy.wrap($prevEl).click();
+      // });
       trialTableThreeDots().click();
       trialTableDelete().click();
       trialTableDialogueDeleteBtn().click();
@@ -719,7 +725,7 @@ Cypress.Commands.add('inputArmDoseLevelMultiple', (ctmlTestData,$input, index) =
   cy.log(index);
   cy.wrap($input).find('.p-inputtext').eq(0).fill(arm.arm_code);
   cy.wrap($input).find('.p-inputtext').eq(1).fill(arm.arm_description);
-  cy.wrap($input).find('.p-inputtext').eq(2).fill(arm.arm_internal_id.toString());
+  cy.wrap($input).find('.p-inputtext').eq(3).fill(arm.arm_internal_id.toString());
   cy.wrap($input).find('.p-selectbutton').contains(arm.arm_suspended).click({force: true});
   cy.clickMultiple(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]>div>.pi-plus-circle`, doseLevels.length)
   cy.get(`[id^=array-item-list-root_treatment_list_step_0_arm_${index}_dose_level]>div>div>div>div>#panel-children`).each(($input, doseIndex) => {
@@ -746,384 +752,303 @@ Cypress.Commands.add( 'enterGenomicConditions', (orConditions) => {
   cy.clickMultipleFunction(getAddCriteriaToSameList(), orConditions.length - 1);
 
   getSubGroup()
-    .find('.p-treenode-children>li>div').each((childElement, index) => {
-    cy.log(`Number of child elements: ${childElement.length}`);
+    //find the child elements of the subgroup it can be under any
+    .find('.p-treenode-children>li>div')
+    .each((childElement, index) => {
+      if (Cypress.$(childElement).find('.genomic-icon').length === 0) {
+        cy.log('No genomic child found, stopping iteration.');
+        return false;
+      }
+      cy.wrap(childElement).click();
 
-      if (Cypress.$(childElement).length > 0) {
-        cy.wrap(childElement).click(); // click on each child element
-        const condition = orConditions[index % orConditions.length]; // get the corresponding and condition
-        cy.log(orConditions.length.toString());
-        Object.entries(condition.genomic).map(([key, value]) => {
-          switch (key) {
-            case 'hugo_symbol':
-              if (typeof value === "string") {
-                const firstThreeChars = value.substring(0, 3); // Extract first three characters
-                getHugoSymbol().clear().type(firstThreeChars);
-                cy.wait(1000);
+      const condition = orConditions[index % orConditions.length];
+      const entries = Object.entries(condition.genomic);
+      const variantCategory = condition.genomic['variant_category'];
+
+      if (typeof variantCategory === 'string') {
+        getVariantCategory().click({ force: true });
+        getGenomicDropDown().contains(variantCategory).click({ force: true });
+
+        cy.then(() => {
+          for (const [key, value] of entries) {
+            if (key === 'variant_category' || typeof value !== 'string') continue;
+
+            switch (key) {
+              case 'hugo_symbol':
+                const firstThreeChars = value.substring(0, 4); // Extract first three characters
+                getHugoSymbol().fill(firstThreeChars);
+                // cy.wait(1000);
                 //locator to select the value from auto droplist
                 cy.get('.p-autocomplete-panel>ul>li').contains(value).click({force: true})
-              }
-              break;
 
-            case 'variant_category':
-              if (typeof value === "string") {
-                getVariantCategory().click({force: true});
-                getGenomicDropDown().contains(value).click({force: true});
-              }
-              break;
+                break;
 
-            case 'protein_change':
-              if (typeof value === "string") {
+
+              case 'protein_change':
                 getProteinChange().fill(value);
-              }
-              break;
+                break;
 
-            case 'molecular_function':
-              if (typeof value === "string") {
+              case 'molecular_function':
                 getMolecularFunction().click({force: true});
                 getGenomicDropDown().contains(value).click()
+                break;
 
-              }
-              break;
-
-            case 'variant_classification':
-              if (typeof value === "string") {
+              case 'variant_classification':
                 getVariantClassification().click({force: true});
                 getGenomicDropDown().contains(value.replace(/_/g, ' ')).click();
-              }
-              break;
+                break;
 
-            case 'cnv_call':
-              if (typeof value === "string") {
+              case 'cnv_call':
                 getCNVCall().fill(value)
-              }
-              break;
+                break;
 
-            case 'fusion_partner_hugo_symbol':
-              if (typeof value === "string") {
+              case 'fusion_partner_hugo_symbol':
                 getFusionPartnerHugoSymbol().fill(value);
-              }
-              break;
+                break;
 
-            case 'true_transcript_exon':
-              if (typeof value === "string") {
+              case 'true_transcript_exon':
                 getTrueTranscriptExon().fill(value);
-              }
-              break;
+                break;
 
-            case 'wildtype':
-              if (typeof value === "string") {
+              case 'wildtype':
                 getWildType().click({force: true});
                 getGenomicDropDown().contains(value).click();
-              }
-              break;
+                break;
 
-            case 'pole_status':
-              if (typeof value === "string") {
+              case 'pole_status':
                 getPoleStatus().click({force: true});
                 getGenomicDropDown().contains(value).click();
-              }
-              break;
+                break;
 
-            case 'uva_status':
-              if (typeof value === "string") {
+              case 'uva_status':
                 getUVAStatus().click({force: true})
                 getGenomicDropDown().contains(value).click()
-              }
-              break;
+                break;
 
-            case 'tobacco_status':
-              if (typeof value === "string") {
+              case 'tobacco_status':
                 getTobaccoStatus().click({force: true})
                 getGenomicDropDown().contains(value).click()
-              }
-              break;
+                break;
 
-            case 'apobec_status':
-              if (typeof value === "string") {
+              case 'apobec_status':
                 getApobecStatus().click({force: true})
                 getGenomicDropDown().contains(value).click()
-              }
-              break;
+                break;
 
-            case 'temozolomide_status':
-              if (typeof value === "string") {
+              case 'temozolomide_status':
                 getTemozolomideStatus().click({force: true})
                 getGenomicDropDown().contains(value).click()
-              }
-              break;
+                break;
 
-            case 'mmr_status':
-              if (typeof value === "string") {
+              case 'mmr_status':
                 getMMRStatus().click({force: true})
                 getGenomicDropDown().contains(value).click()
-              }
-              break;
+                break;
 
-            case 'ms_status':
-              if (typeof value === "string") {
+              case 'ms_status':
                 getMSStatus().click({force: true})
                 getGenomicDropDown().contains(value).click()
-              }
-              break
+                break
+              default:
+                break;
+            }
           }
         });
       }
-  //  } //first if
-     else {
-        return false;
-      }
-
     });
-})
+});
 
 Cypress.Commands.add( 'enterSingleGenomicConditions', (genomicConditions) => {
   cy.clickGenomic();
- // cy.clickMultipleFunction(getAddCriteriaToSameList(), orConditions.length - 1);
+  // cy.clickMultipleFunction(getAddCriteriaToSameList(), orConditions.length - 1);
 
   getSubGroup()
   //  .each((childElement, index) => {
   //    if (Cypress.$(childElement).length > 0) {
-   //     cy.wrap(childElement).click(); // click on each child element
+  //     cy.wrap(childElement).click(); // click on each child element
   //      let condition = orConditions[index % orConditions.length]; // get the corresponding and condition
- //       cy.log(orConditions.length.toString());
-        Object.entries(genomicConditions.genomic).map(([key, value]) => {
-          switch (key) {
-            case 'hugo_symbol':
-              if (typeof value === "string") {
-                getHugoSymbol().fill(value);
-              }
-              break;
+  //       cy.log(orConditions.length.toString());
+  Object.entries(genomicConditions.genomic).map(([key, value]) => {
+    switch (key) {
+      case 'hugo_symbol':
+        if (typeof value === "string") {
+          getHugoSymbol().fill(value);
+        }
+        break;
 
-            case 'variant_category':
-              if (typeof value === "string") {
-                getVariantCategory().click();
-                getGenomicDropDown().contains(value).click();
-              }
-              break;
+      case 'variant_category':
+        if (typeof value === "string") {
+          getVariantCategory().click();
+          getGenomicDropDown().contains(value).click();
+        }
+        break;
 
-            case 'protein_change':
-              if (typeof value === "string") {
-                getProteinChange().fill(value);
-              }
-              break;
+      case 'protein_change':
+        if (typeof value === "string") {
+          getProteinChange().fill(value);
+        }
+        break;
 
-            case 'molecular_function':
-              if (typeof value === "string") {
-                getMolecularFunction().click();
-                getGenomicDropDown().contains(value).click()
+      case 'molecular_function':
+        if (typeof value === "string") {
+          getMolecularFunction().click();
+          getGenomicDropDown().contains(value).click()
 
-              }
-              break;
+        }
+        break;
 
-            case 'variant_classification':
-              if (typeof value === "string") {
-                getVariantClassification().click();
-                getGenomicDropDown().contains(value.replace(/_/g, ' ')).click();
-              }
-              break;
+      case 'variant_classification':
+        if (typeof value === "string") {
+          getVariantClassification().click();
+          getGenomicDropDown().contains(value.replace(/_/g, ' ')).click();
+        }
+        break;
 
-            case 'cnv_call':
-              if (typeof value === "string") {
-                getCNVCall().fill(value)
-              }
-              break;
+      case 'cnv_call':
+        if (typeof value === "string") {
+          getCNVCall().fill(value)
+        }
+        break;
 
-            case 'fusion_partner_hugo_symbol':
-              if (typeof value === "string") {
-                getFusionPartnerHugoSymbol().fill(value);
-              }
-              break;
+      case 'fusion_partner_hugo_symbol':
+        if (typeof value === "string") {
+          getFusionPartnerHugoSymbol().fill(value);
+        }
+        break;
 
-            case 'true_transcript_exon':
-              if (typeof value === "string") {
-                getTrueTranscriptExon().fill(value);
-              }
-              break;
+      case 'true_transcript_exon':
+        if (typeof value === "string") {
+          getTrueTranscriptExon().fill(value);
+        }
+        break;
 
-            case 'wildtype':
-              if (typeof value === "string") {
-                getWildType().click();
-                getGenomicDropDown().contains(value).click();
-              }
-              break;
+      case 'wildtype':
+        if (typeof value === "string") {
+          getWildType().click();
+          getGenomicDropDown().contains(value).click();
+        }
+        break;
 
-            case 'pole_status':
-              if (typeof value === "string") {
-                getPoleStatus().click();
-                getGenomicDropDown().contains(value).click();
-              }
-              break;
+      case 'pole_status':
+        if (typeof value === "string") {
+          getPoleStatus().click();
+          getGenomicDropDown().contains(value).click();
+        }
+        break;
 
-            case 'uva_status':
-              if (typeof value === "string") {
-                getUVAStatus().click()
-                getGenomicDropDown().contains(value).click()
-              }
-              break;
+      case 'uva_status':
+        if (typeof value === "string") {
+          getUVAStatus().click()
+          getGenomicDropDown().contains(value).click()
+        }
+        break;
 
-            case 'tobacco_status':
-              if (typeof value === "string") {
-                getTobaccoStatus().click()
-                getGenomicDropDown().contains(value).click()
-              }
-              break;
+      case 'tobacco_status':
+        if (typeof value === "string") {
+          getTobaccoStatus().click()
+          getGenomicDropDown().contains(value).click()
+        }
+        break;
 
-            case 'apobec_status':
-              if (typeof value === "string") {
-                getApobecStatus().click()
-                getGenomicDropDown().contains(value).click()
-              }
-              break;
+      case 'apobec_status':
+        if (typeof value === "string") {
+          getApobecStatus().click()
+          getGenomicDropDown().contains(value).click()
+        }
+        break;
 
-            case 'temozolomide_status':
-              if (typeof value === "string") {
-                getTemozolomideStatus().click()
-                getGenomicDropDown().contains(value).click()
-              }
-              break;
+      case 'temozolomide_status':
+        if (typeof value === "string") {
+          getTemozolomideStatus().click()
+          getGenomicDropDown().contains(value).click()
+        }
+        break;
 
-            case 'mmr_status':
-              if (typeof value === "string") {
-                getMMRStatus().click()
-                getGenomicDropDown().contains(value).click()
-              }
-              break;
+      case 'mmr_status':
+        if (typeof value === "string") {
+          getMMRStatus().click()
+          getGenomicDropDown().contains(value).click()
+        }
+        break;
 
-            case 'ms_status':
-              if (typeof value === "string") {
-                getMSStatus().click()
-                getGenomicDropDown().contains(value).click()
-              }
-              break;
+      case 'ms_status':
+        if (typeof value === "string") {
+          getMSStatus().click()
+          getGenomicDropDown().contains(value).click()
+        }
+        break;
 
-          }
-        });
+    }
+  });
 })
 Cypress.Commands.add('enterClinicalConditionsMultiple', (andConditions) => {
   cy.clickClinical()
   const clinicalLength = andConditions.length - 1;
-    cy.clickMultipleFunction(getAddCriteriaToSameList(), clinicalLength);
+  cy.clickMultipleFunction(getAddCriteriaToSameList(), clinicalLength);
 
-    cy.get('.LeftMenuComponent_matchingCriteriaMenuContainer__fe8dz>div:nth-child(2)>ul>li>ul>li:nth-child(2)').find('.p-treenode-children>li')
-      .each((childElement, index) => {
-        if (Cypress.$(childElement).length > 0) {
-          cy.wrap(childElement).click(); // click on each child element
-          let condition = andConditions[index % andConditions.length]; // get the corresponding and condition
-          Object.entries(condition.clinical).map(([key, value]) => {
-            switch (key) {
-              case 'age_numerical':
-                if (typeof value === "string") {
-                  getClinicalAge().fill(value);
+  cy.get('.LeftMenuComponent_matchingCriteriaMenuContainer__fe8dz>div:nth-child(2)>ul>li>ul>li:nth-child(2)').find('.p-treenode-children>li')
+    .each((childElement, index) => {
+      if (Cypress.$(childElement).length > 0) {
+        cy.wrap(childElement).click(); // click on each child element
+        let condition = andConditions[index % andConditions.length]; // get the corresponding and condition
+        Object.entries(condition.clinical).map(([key, value]) => {
+          switch (key) {
+            case 'age_expression':
+              if (typeof value === "string") {
+                getClinicalAge().fill(value);
+              }
+              break;
+            case 'oncotree_primary_diagnosis':
+              if (typeof value === "string") {
+                getClinicalOncotreePrimaryDiagnosis().fill(value);
+                if (value.includes('!')) {
+                  getOncotreeExclamation().click();
                 }
-                break;
-              case 'oncotree_primary_diagnosis':
-                if (typeof value === "string") {
-                  getClinicalOncotreePrimaryDiagnosis().fill(value);
-                  if (value.includes('!')) {
-                    getOncotreeExclamation().click();
-                  }
-                }
-                break;
-              case 'tmb':
-                if (typeof value === "string") {
-                  getClinicalTMB().fill(value.toString());
-                }
-                break;
-              case 'her2_status':
-                if (typeof value === "string") {
-                  let newValue = value.toLowerCase() === "true" ? "Positive" : "Negative";
-                  cy.log(newValue);
-                  getClinicalHER2Status().click({force:true}).fill(newValue);
-                }
-                break;
+              }
+              break;
+            case 'tmb':
+              if (typeof value === "string") {
+                getClinicalTMB().fill(value.toString());
+              }
+              break;
+            case 'her2_status':
+              if (typeof value === "string") {
+                let newValue = value.toLowerCase() === "true" ? "Positive" : "Negative";
+                cy.log(newValue);
+                getClinicalHER2Status().click({force:true}).fill(newValue);
+              }
+              break;
 
-              case 'er_status':
-                if (typeof value === "string") {
-                  let newValue = value.toLowerCase() === "true" ? "Positive" : "Negative";
-                  cy.log(newValue);
-                  /*   let newValue = value.replace(/True/i, "Positive")
-                     cy.log(newValue)*/
-                  getClinicalERStatus().click({force: true}).fill(newValue)
+            case 'er_status':
+              if (typeof value === "string") {
+                let newValue = value.toLowerCase() === "true" ? "Positive" : "Negative";
+                cy.log(newValue);
+                /*   let newValue = value.replace(/True/i, "Positive")
+                   cy.log(newValue)*/
+                getClinicalERStatus().click({force: true}).fill(newValue)
 
-                  //  getClinicalERStatus().fill(value);
-                }
-                break;
+                //  getClinicalERStatus().fill(value);
+              }
+              break;
 
-              case 'pr_status':
-                if (typeof value === "string") {
-                  let newValue = value.toLowerCase() === "true" ? "Positive" : "Negative";
-                  cy.log(newValue);
-                  getClinicalPRStatus().click({force: true}).fill(newValue);
-                }
-                break;
-            }
-          });
-        } /*else {
+            case 'pr_status':
+              if (typeof value === "string") {
+                let newValue = value.toLowerCase() === "true" ? "Positive" : "Negative";
+                cy.log(newValue);
+                getClinicalPRStatus().click({force: true}).fill(newValue);
+              }
+              break;
+          }
+        });
+      } /*else {
           return false;
         }*/
-      });
-  });
+    });
+});
 
 Cypress.Commands.add('enterSingleClinicalCondition', (testAndConditions) => {
-    cy.clickClinical()
-    cy.get('.LeftMenuComponent_matchingCriteriaMenuContainer__fe8dz>div:nth-child(2)>ul>li>ul>li:nth-child(2)').then(() => {
-
-      Object.entries(testAndConditions.clinical).map(([key, value]) => {
-        switch (key) {
-          case 'age_numerical':
-            if (typeof value === "string") {
-              getClinicalAge().fill(value);
-            }
-            break;
-          case 'oncotree_primary_diagnosis':
-            if (typeof value === "string") {
-              getClinicalOncotreePrimaryDiagnosis().fill(value);
-              if (value.includes('!')) {
-                getOncotreeExclamation().click();
-              }
-            }
-            break;
-          case 'tmb':
-            if (typeof value === "string") {
-              getClinicalTMB().fill(value);
-            }
-            break;
-
-          case 'her2_status':
-            if (typeof value === "string") {
-              let newValue = value.toLowerCase() === "true" ? "Positive" : "Negative";
-              cy.log(newValue);
-              getClinicalHER2Status().click({force:true}).fill(newValue);
-            }
-            break;
-
-          case 'er_status':
-            if (typeof value === "string") {
-              let newValue = value.toLowerCase() === "true" ? "Positive" : "Negative";
-              cy.log(newValue);
-           /*   let newValue = value.replace(/True/i, "Positive")
-              cy.log(newValue)*/
-              getClinicalERStatus().click({force: true}).fill(newValue)
-
-              //  getClinicalERStatus().fill(value);
-            }
-            break;
-
-          case 'pr_status':
-            if (typeof value === "string") {
-              let newValue = value.toLowerCase() === "true" ? "Positive" : "Negative";
-              cy.log(newValue);
-              getClinicalPRStatus().click({force: true}).fill(newValue);
-            }
-            break;
-        }
-      });
-    });
-  });
-Cypress.Commands.add('enterAndClinical', (testAndConditions) => {
   cy.clickClinical()
-  cy.get('.p-treenode-children > .p-treenode > .p-treenode-content')
+  cy.get('.LeftMenuComponent_matchingCriteriaMenuContainer__fe8dz>div:nth-child(2)>ul>li>ul>li:nth-child(2)').then(() => {
 
     Object.entries(testAndConditions.clinical).map(([key, value]) => {
       switch (key) {
@@ -1175,6 +1100,62 @@ Cypress.Commands.add('enterAndClinical', (testAndConditions) => {
           break;
       }
     });
+  });
+});
+Cypress.Commands.add('enterAndClinical', (testAndConditions) => {
+  cy.clickClinical()
+  cy.get('.p-treenode-children > .p-treenode > .p-treenode-content')
+
+  Object.entries(testAndConditions.clinical).map(([key, value]) => {
+    switch (key) {
+      case 'age_numerical':
+        if (typeof value === "string") {
+          getClinicalAge().fill(value);
+        }
+        break;
+      case 'oncotree_primary_diagnosis':
+        if (typeof value === "string") {
+          getClinicalOncotreePrimaryDiagnosis().fill(value);
+          if (value.includes('!')) {
+            getOncotreeExclamation().click();
+          }
+        }
+        break;
+      case 'tmb':
+        if (typeof value === "string") {
+          getClinicalTMB().fill(value);
+        }
+        break;
+
+      case 'her2_status':
+        if (typeof value === "string") {
+          let newValue = value.toLowerCase() === "true" ? "Positive" : "Negative";
+          cy.log(newValue);
+          getClinicalHER2Status().click({force:true}).fill(newValue);
+        }
+        break;
+
+      case 'er_status':
+        if (typeof value === "string") {
+          let newValue = value.toLowerCase() === "true" ? "Positive" : "Negative";
+          cy.log(newValue);
+          /*   let newValue = value.replace(/True/i, "Positive")
+             cy.log(newValue)*/
+          getClinicalERStatus().click({force: true}).fill(newValue)
+
+          //  getClinicalERStatus().fill(value);
+        }
+        break;
+
+      case 'pr_status':
+        if (typeof value === "string") {
+          let newValue = value.toLowerCase() === "true" ? "Positive" : "Negative";
+          cy.log(newValue);
+          getClinicalPRStatus().click({force: true}).fill(newValue);
+        }
+        break;
+    }
+  });
 });
 Cypress.Commands.add('clickMatchAllGenomic', () => {
   cy.clickParentNode(0)

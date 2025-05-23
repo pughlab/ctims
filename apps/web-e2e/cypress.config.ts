@@ -6,14 +6,13 @@ const {verifyDownloadTasks} = require('cy-verify-downloads')
 const {fs} = require('fs')
 const path = require('path')
 const mysql = require('mysql') //https://gist.github.com/fityanos/0a345e9e9de498b6c629f78e6b2835f5
-//const mssql = require("mssql")
+import * as dotenv from "dotenv";
+dotenv.config();
 
-const crypto = require('crypto')
 const allureWriter = require('@shelex/cypress-allure-plugin/writer');
 
 const cypressJsonConfig: EndToEndConfigOptions = {
   fileServerFolder: '.',
-  //baseUrl: 'http://localhost:4200/trials/create',
   fixturesFolder: './src/fixtures',
   includeShadowDom: true,
   experimentalStudio: true,
@@ -22,7 +21,7 @@ const cypressJsonConfig: EndToEndConfigOptions = {
   videosFolder: '../../dist/cypress/apps/web-e2e/videos',
   screenshotOnRunFailure: true,
   screenshotsFolder: '../../dist/cypress/apps/web-e2e/screenshots',
-  trashAssetsBeforeRuns: true,  //trash screenshot and video before every run
+  trashAssetsBeforeRuns: false,  //trash screenshot and video before every run
   chromeWebSecurity: false,
   supportFile: 'src/support/e2e.ts',
   downloadsFolder: 'cypress/downloads',
@@ -30,16 +29,6 @@ const cypressJsonConfig: EndToEndConfigOptions = {
   specPattern: 'src/e2e/Ctims-PMatch/**/*.cy.{js,jsx,ts,tsx}',
 
   //specPattern: 'src/e2e/CtmTest/CTM-105-NCT02503722_Osimertinib.cy.ts',
- // specPattern: 'src/e2e/CtmTest/CTM-114-NCT03297606_CAPTUR.cy.ts',
-  //specPattern: 'src/e2e/CtmTest/CTM-194-Save-Edit-Delete/CTM-194-NCT03297606_CAPTUR-Edit.cy.ts',
- // specPattern: 'src/e2e/E2ETest/E2E-Test.cy.ts',
-  //specPattern: 'src/e2e/CtmTest/CTM-204/CTM-204-NCT03114319_TNO155.cy.ts',
- // specPattern: 'src/e2e/CtmTest/User-Roles/**.cy.ts',
-  //specPattern: 'src/e2e/CtmTest/User-Roles/member-NCT02503722_Osimertinib.cy.ts',
-  //specPattern: 'src/e2e/CtmTest/User-Roles/admin-NCT03114319_TNO155.cy.ts',
-  //specPattern: 'src/e2e/CtmTest/User-Roles/admin-NCT03297606_CAPTUR.cy.ts',
-
-
 
   defaultCommandTimeout: 10000,
   pageLoadTimeout: 30000,
@@ -49,18 +38,14 @@ const cypressJsonConfig: EndToEndConfigOptions = {
    //test db
 
     function queryTestDb(query, config) {
-      // Create a new mysql connection using the provided configuration
       const connection = mysql.createConnection(config);
 
       return new Promise((resolve, reject) => {
-        // Connect to the database
         connection.connect((error) => {
           if (error) {
             reject(error);
           } else {
-            // Execute the query
             connection.query(query, (error, results) => {
-              // Close the connection
               connection.end();
 
               if (error) {
@@ -74,33 +59,19 @@ const cypressJsonConfig: EndToEndConfigOptions = {
       });
     }
 
-    on('task', {
-      queryDb: (query: string) => {
-        const config = {
-          host: 'localhost',
-          port: '3306',
-          user: 'ctims',
-          password: 'ctims',
-          database: 'ctims',
-          insecureAuth: true
-        };
-        return queryTestDb(query, config);
-      }
-    });
     allureWriter(on, config);
     return config;
   }
 
 };
 module.exports = defineConfig({
- // viewportWidth: 1200,
- // viewportHeight: 800,
+  viewportWidth: 1200,
+  viewportHeight: 800,
   "env": {
-    //"baseUrl": "http://localhost:4200/",
-  //  baseUrl: 'http://localhost:3000',
-  //  baseUrl: "https://qa-app.ctims.ca/",
-  baseUrl: 'https://ctims-web.qa02.technainstitute.net',
- //   prod: 'https://ctims.ca/',
+   baseUrl: process.env.LOCALHOST_BASE_URL, //localhost
+  // baseUrl: process.env.BASE_URL, //QA
+    USERNAME: process.env.USERNAME,
+    PASSWORD: process.env.PASSWORD,
     defaultCommandTimeout: 30000,
     allureReuseAfterSpec: true,
     allureResultsPath: "allure-results",
@@ -110,14 +81,6 @@ module.exports = defineConfig({
     experimentalSessionSupport: true,
     experimentalMemoryManagement: true,
     "numTestsKeptInMemory": 0
-
-    /*db: {
-      host: 'localhost',
-      port: '3306',
-      user: 'ctims',
-      password: 'ctims',
-      insecureAuth : true
-    }*/
   },
   e2e: {
     ...nxE2EPreset(__dirname),

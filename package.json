@@ -60,6 +60,7 @@
     "core-js": "^3.6.5",
     "cypress-fill-command": "^1.0.2",
     "dayjs": "^1.10.4",
+    "dotenv": "^16.5.0",
     "express": "^4.18.2",
     "form-data": "^4.0.0",
     "json-schema": "^0.4.0",

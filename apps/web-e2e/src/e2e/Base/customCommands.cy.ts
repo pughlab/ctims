@@ -35,9 +35,9 @@ class customCommands {
     this.isPrincipalSponsor = null;
     this.staff = null;
   }
-  enterTrialInformation(nctId, memberName, nickName, ctmlStatus, longTitle, shortTitle, phase, protocolNo, nctPurpose, status) {
+  enterTrialInformation(nctId, nickName, memberName, ctmlStatus, longTitle, shortTitle, phase, protocolNo, nctPurpose, status) {
    // trialEditorLeftPanelList().should('have.length', '9')
-    cy.trialInformation(nctId, memberName, nickName, ctmlStatus, longTitle, shortTitle, phase, protocolNo, nctPurpose, status)
+    cy.trialInformation(nctId, nickName, memberName, ctmlStatus, longTitle, shortTitle, phase, protocolNo, nctPurpose, status)
   }
 
   enterPriorTreatmentRequirements(ctmlTestData, priorTreatmentRequirements) {
@@ -54,12 +54,16 @@ class customCommands {
   }
 
   enterAgeValues(ctmlTestData, age) {
-    trialEditorLeftPanelList().eq(2).should('contain','Age').click()
-    cy.age(ctmlTestData.age)
+    trialEditorLeftPanelList().eq(2).find('a')
+      .should('contain','Age')
+      .click({force: true})
+      cy.wait(500);
+   // trialEditorLeftPanelList().eq(2).scrollIntoView();
+     cy.age(ctmlTestData.age)
   }
 
   enterDrugListValues(ctmlTestData, drugName) {
-    // trialEditorLeftPanelList().eq(3).should('contain','Drug List').click()
+     trialEditorLeftPanelList().eq(3).find('a').should('contain','Drug List').click({force: true}).scrollIntoView();
     cy.clickMultipleFunction(getDrugNamePlusIcon(), ctmlTestData.drug_list.drug.length - 1)
 
     getDrugNameTextBoxMultiple().each((input, index) => {
@@ -72,7 +76,10 @@ class customCommands {
   }
 
   enterManagementGroupList(ctmlTestData, managementGroupNameAttribute,managementGroupNameIsPrimaryAttribute ) {
-   // trialEditorLeftPanelList().eq(4).should('contain', 'Management Group List').click({force: true} )
+    trialEditorLeftPanelList().eq(4).find('a').should('contain', 'Management Group List').click({force: true} );
+    cy.wait(500);
+    trialEditorLeftPanelList().eq(4).scrollIntoView();
+
     cy.clickMultipleFunction(getPrimaryManagementGroupPlusIcon(), ctmlTestData.management_group_list.management_group.length - 1)
     getManagementGroupNameTextBoxMultiple().each(($input, index) => {
       managementGroupNameAttribute = ctmlTestData.management_group_list.management_group[index].management_group_name
@@ -83,7 +90,7 @@ class customCommands {
   }
 
   enterSiteList(ctmlTestData, site ) {
-    trialEditorLeftPanelList().eq(5).should('contain', 'Site List').click({force: true} )
+    trialEditorLeftPanelList().eq(5).find('a').should('contain', 'Site List').click({force: true} )
     cy.clickMultipleFunction(getSiteNamePlusIcon(), ctmlTestData.site_list.site.length - 1)
     getSiteNameMultiple().each(($input, index) => {
       site = ctmlTestData.site_list.site[index]
@@ -92,7 +99,7 @@ class customCommands {
     })
   }
   enterSponsorList(ctmlTestData, sponsorName,isPrincipalSponsor ) {
-    trialEditorLeftPanelList().eq(6).should('contain','Sponsor List').click({force: true} )
+    trialEditorLeftPanelList().eq(6).find('a').should('contain','Sponsor List').click({force: true} )
     cy.clickMultipleFunction(getSponsorNamePlusIcon(), ctmlTestData.sponsor_list.sponsor.length - 1)
     getSponsorNameMultiple().each(($input, index) => {
       sponsorName = ctmlTestData.sponsor_list.sponsor[index].sponsor_name
@@ -102,7 +109,7 @@ class customCommands {
     });
   }
   enterStaffList(ctmlTestData, staff ) {
-    trialEditorLeftPanelList().eq(7).should('contain','Staff List').click({force: true} )
+    trialEditorLeftPanelList().eq(7).find('a').should('contain','Staff List').click({force: true} )
     cy.clickMultipleFunction(getProtocolStaffPlusIcon(), ctmlTestData.staff_list.protocol_staff.length - 1);
     getProtocolStaffMultiple().each(($input, index) => {
    staff = ctmlTestData.staff_list.protocol_staff[index]
