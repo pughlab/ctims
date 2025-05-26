@@ -15,7 +15,7 @@ services:
         NEXT_PUBLIC_TRIAL_LOCK_PING_TIME_MS: ${NEXT_PUBLIC_TRIAL_LOCK_PING_TIME_MS}
       dockerfile: Dockerfile
     environment:
-      PARENT_URL: ${PARENT_URL}
+      NEXT_PARENT_URL: ${NEXT_PARENT_URL}
     ports:
       - "3001:3000"
     volumes:

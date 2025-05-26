@@ -4,6 +4,7 @@ import {createAction} from "@reduxjs/toolkit";
 // console.log('process.env.NEXTAUTH_SECRET', process.env.NEXTAUTH_SECRET)
 // console.log('process.env.REACT_APP_API_URL', process.env.REACT_APP_API_URL)
 // console.log('process.env.NEXTAUTH_URL', process.env.NEXTAUTH_URL)
+console.log('process.env.NEXT_PARENT_URL', process.env.NEXT_PARENT_URL)
 
 interface User extends NextAuthUser {
   accessToken: string;
