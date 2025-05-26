@@ -20,4 +20,16 @@ export class AgentController {
     };
   }
 
+
+  @Get("/agentclass")
+  async searchAgentsClass(@Query("query") query: string) {
+    try {
+      return (await this.agentService.filterAgentClass(query)).slice(0,10);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+
+      throw error;
+    };
+  }
+
 }

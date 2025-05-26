@@ -122,6 +122,11 @@ model agent {
   agent String
 }
 
+model agentclass {
+  id         Int  @unique
+  agentclass String
+}
+
 model trial_lock {
   id          Int      @id @default(autoincrement())
   trial       trial    @relation(fields: [trialId], references: [id])

@@ -137,7 +137,8 @@ export const PriorTreatmentForm = (props: IFormProps) => {
                     'agent_class': {
                       'type': 'string',
                       'title': 'Agent Class',
-                      "description": "Prior Treatment Agent Class"
+                      "description": "Prior Treatment Agent Class",
+                      "autoCompleteType": "AgentClass"
                     },
                     'agent': {
                       'type': 'string',
@@ -206,6 +207,9 @@ export const PriorTreatmentForm = (props: IFormProps) => {
     },
     "treatmentCategoryContainerObject": {
       "agent": {
+        "ui:widget": AutocompleteField,
+      },
+      "agent_class": {
         "ui:widget": AutocompleteField,
       }
     }

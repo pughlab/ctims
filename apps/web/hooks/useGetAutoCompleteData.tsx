@@ -20,6 +20,14 @@ const useGetAutoCompleteData = (autoCompleteType: any) => {
           }
           );
       }
+      else if(autoCompleteType=="AgentClass"){
+        var response = await operation(
+          {
+            method: 'get',
+            url: `agents/agentclass?query=${query}`
+          }
+          );
+      }
       else if(autoCompleteType=="Gene"){
         var response = await operation(
           {
