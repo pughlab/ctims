@@ -11,6 +11,7 @@ import {AuthModule} from "./auth/auth.module";
 import { EventModule } from "./event/event.module";
 import { MatchminerModule } from './matchminer/matchminer.module';
 import { GeneModule } from './gene/gene.module';
+import { AgentModule } from './agent/agent.module';
 import { InfoModule } from './info/info.module';
 import {MessageQueueModule} from "./message-queue/message-queue.module";
 import {TrialLockModule} from "./trial-lock/trial-lock.module";
@@ -28,6 +29,7 @@ import {ScheduleModule} from "@nestjs/schedule";
     MatchminerModule,
     EventModule,
     GeneModule,
+    AgentModule,
     InfoModule,
     MessageQueueModule,
     ScheduleModule.forRoot()

@@ -2,31 +2,31 @@ import React, { useEffect, useState } from 'react';
 import { AutoComplete } from 'primereact/autocomplete';
 import { Tooltip } from 'antd';
 import styles from "./CtimsAutoCompleteComponent.module.css";
-import useGetGenes from '../../../../../apps/web/hooks/useGetGenes';
+import useGetAutoCompleteData from '../../../../../apps/web/hooks/useGetAutoCompleteData';
 import IOSSwitch from '../components/IOSSwitch';
-import { hugo_symblo_validation_func } from "../components/helpers";
+import { auto_complete_symblo_validation_func } from "../components/helpers";
 import cn from "clsx";
 
 const AutocompleteField = ({ onChange, ...props }) => {
-  const { filteredHugoSymbols, loading, searchSymbols } = useGetGenes();
-  const [selectedHugoSymbol, setSelectedHugoSymbol] = useState<string>(props.value ? props.value.replace('!', '') : '');
+  const { filteredAutoCompleteSymbols, loading, searchAutoCompleteSymbols } = useGetAutoCompleteData(props.schema.autoCompleteType);
+  const [selectedAutoCompleteSymbol, setSelectedAutoCompleteSymbol] = useState<string>(props.value ? props.value.replace('!', '') : '');
   const [excludeToggle, setExcludeToggle] = useState<boolean>(props.value ? props.value.startsWith('!') : false);
-  const [hugoSymbolError, setHugoSymbolError] = React.useState(false);
+  const [autoCompleteSymbolError, setAutoCompleteSymbolError] = React.useState(false);
 
   useEffect(() => {
     if (props.value) {
       const isExcluded: boolean = props.value.startsWith('!');
-      setSelectedHugoSymbol(props.value.replace('!', ''));
+      setSelectedAutoCompleteSymbol(props.value.replace('!', ''));
       setExcludeToggle(isExcluded);
     }
     else {
-      setSelectedHugoSymbol('');
+      setSelectedAutoCompleteSymbol('');
       setExcludeToggle(false);
     }
-    if (!hugo_symblo_validation_func(props.value)) {
-      setHugoSymbolError(true)
+    if (!auto_complete_symblo_validation_func(props.value)) {
+      setAutoCompleteSymbolError(true)
     } else {
-      setHugoSymbolError(false)
+      setAutoCompleteSymbolError(false)
     }
   }, [props.value]);
 
@@ -35,19 +35,19 @@ const AutocompleteField = ({ onChange, ...props }) => {
     const trimmedValue = e.value.trim();
     //The below check make sures there are no multiple ! in the input string.
     if(trimmedValue.startsWith('!') && props.value?.startsWith('!')){
-      setSelectedHugoSymbol(trimmedValue.replace(/^!/, ""));
+      setSelectedAutoCompleteSymbol(trimmedValue.replace(/^!/, ""));
     }
     else if (trimmedValue.startsWith('!') || excludeToggle) {
-      setSelectedHugoSymbol(trimmedValue.replace(/^!/, ""));
+      setSelectedAutoCompleteSymbol(trimmedValue.replace(/^!/, ""));
       setExcludeToggle(true);
       excludeToggle ? onChange(`!${trimmedValue}`) : onChange(trimmedValue);
     } else {
       if (trimmedValue !== "") {
-        setSelectedHugoSymbol(trimmedValue);
+        setSelectedAutoCompleteSymbol(trimmedValue);
         setExcludeToggle(false);
         onChange(trimmedValue);
       } else {
-        setSelectedHugoSymbol("");
+        setSelectedAutoCompleteSymbol("");
         onChange(undefined);
       }
     }
@@ -72,7 +72,7 @@ const AutocompleteField = ({ onChange, ...props }) => {
 
   const handleToggleChange = (checked: boolean) => {
     setExcludeToggle(checked);
-    const newValue = checked ? `!${selectedHugoSymbol}` : selectedHugoSymbol.replace('!', '');
+    const newValue = checked ? `!${selectedAutoCompleteSymbol}` : selectedAutoCompleteSymbol.replace('!', '');
     onChange(newValue);
   };
 
@@ -94,18 +94,18 @@ const AutocompleteField = ({ onChange, ...props }) => {
       )}
       <AutoComplete
         inputStyle={arrayContainer}
-        value={selectedHugoSymbol ? selectedHugoSymbol.replace(/^!/, ""): ""}
-        suggestions={filteredHugoSymbols}
+        value={selectedAutoCompleteSymbol ? selectedAutoCompleteSymbol.replace(/^!/, ""): ""}
+        suggestions={filteredAutoCompleteSymbols}
         completeMethod={(e) => {
           const trimmedValue = e.query.trim();
           trimmedValue === ""
             ? []
-            : (searchSymbols(trimmedValue));
+            : (searchAutoCompleteSymbols(trimmedValue));
         }}
         onChange={(e) => {
           handleInputChange(e)
         }}
-        className={cn("w-full", hugoSymbolError ? "p-invalid" : "")}
+        className={cn("w-full", autoCompleteSymbolError ? "p-invalid" : "")}
         appendTo='self'
       />
       <div style={{ display: 'flex', marginTop: '10px', alignItems: 'center' }}>
