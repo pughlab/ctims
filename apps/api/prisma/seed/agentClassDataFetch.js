@@ -48,15 +48,15 @@ async function main(){
     return  new Promise((resolve, reject)=>{
         try{
             const result = [];
-            fs.createReadStream("apps/api/prisma/metadata/nciagent/NCIAgentClassNames.csv")
+            fs.createReadStream("apps/api/prisma/metadata/nciagent/nciagentclass.csv")
                 .pipe(csvParser())
                 .on("data", (data) => {
                     result.push(data);
                 })
                 .on("end", () => {
                     const newResult=result.map((data)=>{
-                        var id = Number(data.id);
-                        var agentclass = data.agentclass.replace(/\(.*?\)/g, '');
+                        var id = Number(data.ID);
+                        var agentclass = data.AgentClass.replace(/\(.*?\)/g, '');
                         return {id, agentclass}
                     });
                     resolve(newResult);
