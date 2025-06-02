@@ -19,7 +19,7 @@ async function saveAgentClass(data){
           });
     }
     catch(error){
-      console.error("Error", error)
+      console.error("Error: ", error)
       throw error;
     }
     finally {
@@ -66,7 +66,7 @@ async function main(){
                 });
         }
         catch(err){
-            console.log("Unable to fetch data because of following error:",err)
+            console.log("Unable to import agent data from CSV into the 'agent' table due to the following error: ",err)
             reject(err);
         }
     });
@@ -84,6 +84,6 @@ async function main(){
       const result = await main();
       await saveAgentClass(result);
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error: ", error);
     }
   })();
