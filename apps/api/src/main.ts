@@ -8,16 +8,35 @@ import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app/app.module';
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
+import * as bodyParser from 'body-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
-  let origin = process.env.CTIMS_ENV === 'development' ? '*' : 'https://ctims.ca';
-  app.enableCors({origin})
+  const allowedOrigins = [
+    'https://ctims.ca',
+    'https://pmatch-web.qa02.technainstitute.net'
+    ];
+  // let origin = process.env.CTIMS_ENV === 'development' ? '*' : 'https://ctims.ca';
+  // app.enableCors({origin})
+  app.enableCors({
+    origin: (origin, callback) => {
+      if (process.env.CTIMS_ENV === 'development') {
+        callback(null, true); // Allow all origins in development
+      } else if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true); // Allow if origin is in the list
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    }
+  });
   if (process.env.CTIMS_ENV === 'development') {
     setupSwagger(app);
   }
+
+  app.use(bodyParser.json({limit: '200mb'}));
+  app.use(bodyParser.urlencoded({ limit: '200mb', extended: true }));
 
   const port = process.env.PORT || 3333;
   await app.listen(port);
