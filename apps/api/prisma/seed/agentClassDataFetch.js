@@ -66,7 +66,7 @@ async function main(){
                 });
         }
         catch(err){
-            console.log("Unable to import agent class data from CSV into the 'agent class' table due to the following error: ",err)
+            console.log("Unable to import agent class data from CSV into the 'agentclass' table due to the following error: ",err)
             reject(err);
         }
     });
