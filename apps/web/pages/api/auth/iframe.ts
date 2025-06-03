@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { encode } from 'next-auth/jwt';
 
 const parentAppUrl = process.env.NEXT_PARENT_URL || 'http://localhost:3000';
+console.log('parentAppUrl', parentAppUrl);
 
 // Add CORS headers
 const corsHeaders = {
