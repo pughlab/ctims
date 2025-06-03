@@ -22,9 +22,12 @@ async function bootstrap() {
   // app.enableCors({origin})
   app.enableCors({
     origin: (origin, callback) => {
+      Logger.log(`Origin: ${origin}`);
       if (process.env.CTIMS_ENV === 'development') {
+        Logger.log('CORS enabled for development environment');
         callback(null, true); // Allow all origins in development
       } else if (!origin || allowedOrigins.includes(origin)) {
+        Logger.log(`CORS allowed for origin: ${origin}`);
         callback(null, true); // Allow if origin is in the list
       } else {
         callback(new Error('Not allowed by CORS'));
