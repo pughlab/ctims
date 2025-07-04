@@ -54,7 +54,7 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
         }
       },
       {
-        "prior_treatment_requirements": {
+        "additional_criteria_requirements": {
           "span": 24
         }
       },
@@ -180,30 +180,30 @@ const CtimsFormComponent = forwardRef((props: CtimsFormComponentProps, ref: Forw
     // "prior_treatment_requirements": {
     //   "ui:ArrayFieldTemplate": CtimsArrayFieldSingleTemplate,
     // },
-    "prior_treatment_requirements": {
+    "additional_criteria_requirements": {
       "ui:ObjectFieldTemplate": CtimsObjectFieldTemplate,
       "ui:spacing": 16,
       "ui:layout": [
         {
-          "prior_treatment_requirement": {
-            "span": 24
+          "additional_criteria_requirement": {
+            "span": 24,
           },
           "ui:order": [
-            "prior_treatment_requirement"
+            "additional_criteria_requirement"
           ]
         }
       ],
-      "prior_treatment_requirement": {
+      "additional_criteria_requirement": {
         "items": {
           "ui:ObjectFieldTemplate": CtimsItemObjectFieldTemplate,
           "ui:spacing": 16,
           "ui:layout": [
             {
-              "prior_treatment_requirement_name": {
+              "additional_criteria_requirement_name": {
                 "span": 24
               },
               "ui:order": [
-                "prior_treatment_requirement_name"
+                "additional_criteria_requirement_name"
               ]
             }
           ]
