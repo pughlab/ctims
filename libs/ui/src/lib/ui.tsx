@@ -126,8 +126,11 @@ export const Ui = (props: UiProps) => {
     }
 
     let formDataClone = structuredClone(data.formData)
-    const transformPriorDataFromObjectToArray = formDataClone.prior_treatment_requirements?.prior_treatment_requirement && formDataClone.prior_treatment_requirements?.prior_treatment_requirement.map((item: { prior_treatment_requirement_name: any; }) => item.prior_treatment_requirement_name);
-    formDataClone = {...formDataClone, prior_treatment_requirements : transformPriorDataFromObjectToArray}
+    const transformAdditionalCriteriaDataFromObjectToArray =
+      formDataClone.additional_criteria_requirements?.additional_criteria_requirements && formDataClone.additional_criteria_requirements?.additional_criteria_requirements.map((item: {
+      additional_criteria_requirement_name: any;
+    }) => item.additional_criteria_requirement_name);
+    formDataClone = {...formDataClone, additional_criteria_requirements : transformAdditionalCriteriaDataFromObjectToArray}
     dispatch(setCtmlModel(formDataClone))
   }
 

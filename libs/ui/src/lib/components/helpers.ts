@@ -477,7 +477,7 @@ export const flattenCategoryContainerObject = (nodes: TreeNode[]) => {
     return newNode;
   });
 }
-  
+
 // same as above, but less restrictive on the input object
 export const flattenCategoryContainerObjectInCtmlMatchModel = (ctmlMatchModel: any) => {
   const cloned = structuredClone(ctmlMatchModel);
@@ -602,8 +602,8 @@ export const isTrialHaveOneMatch = (ctmlJson: any) => {
 
 export const transformPriorTreatmentRequirements = (requirements: string[]) => {
   return {
-    prior_treatment_requirement: requirements.map((requirement: string) => ({
-      prior_treatment_requirement_name: requirement
+    additional_criteria_requirements: requirements.map((requirement: string) => ({
+      additional_criteria_requirement_name: requirement
     }))
   };
 };
