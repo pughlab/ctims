@@ -261,7 +261,7 @@ export const isObjectEmpty = (obj: any) => {
 export const extractErrors = (errors: RJSFValidationError[]): string[] => {
   const keyToStringDict: any = {
     trialInformation: 'Trial information',
-    prior_treatment_requirements: 'Prior treatment requirements',
+    // prior_treatment_requirements: 'Prior treatment requirements',
     drug_list: 'Drug list',
     age: 'Age',
     management_group_list: 'Management group list',
@@ -269,7 +269,8 @@ export const extractErrors = (errors: RJSFValidationError[]): string[] => {
     sponsor_list: 'Sponsor list',
     staff_list: 'Staff list',
     treatment_list: 'Treatment list',
-    age_group: 'Age group'
+    age_group: 'Age group',
+    additional_criteria_requirements: 'Additional criteria requirements',
   }
 
   const groupedObjects: { [key: string]: RJSFValidationError[] } = errors.reduce((acc: any, obj) => {
