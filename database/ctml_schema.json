@@ -440,9 +440,21 @@
                       "type": "string"
                     },
                     "arm_additional_criteria_not_captured": {
-                      "type": "string",
-                      "title": "Additional Criteria Not Captured",
-                      "description": "Additional criteria not captured in the trial arm"
+                      "type": "array",
+                      "title": "Additional Criteria Not Captured in trial arm",
+                      "description": "Additional criteria not captured in the trial arm",
+                      "items": {
+                        "type": "object",
+                        "title": "",
+                        "required": [],
+                        "properties": {
+                          "additional_criteria_requirement_name": {
+                            "type": "string",
+                            "title": "Additional Criteria Not Captured in trial arm",
+                            "description": "Additional criteria not captured in the trial arm."
+                          }
+                        }
+                      }
                     }
                   }
                 }
