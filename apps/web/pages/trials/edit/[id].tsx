@@ -11,6 +11,7 @@ import {useDispatch} from "react-redux";
 import IdleComponent from "../../../components/IdleComponent";
 import {setCtmlModel} from '../../../store/slices/ctmlModelSlice';
 import FooterComponent from "apps/web/components/FooterComponent";
+import {transformPriorTreatmentRequirements} from "../../../../../libs/ui/src/lib/components/helpers";
 
 const containerStyle: React.CSSProperties = {
   display: 'flex',
@@ -52,24 +53,24 @@ const EditorEditTrialPage = () => {
     }
   }, [id])
 
-  const transformPriorTreatmentRequirements = (requirements) => {
-    return {
-      prior_treatment_requirement: requirements.map(requirement => ({
-        prior_treatment_requirement_name: requirement
-      }))
-    };
-  };
-
   useEffect(() => {
     if (editTrialResponse) {
       setLastSaved(editTrialResponse.updatedAt);
       const trial = structuredClone(editTrialResponse)
       const ctml_json = trial.ctml_jsons[0].data;
 
+      // prior treatment requirements has been renamed to additional_criteria_requirement_names
+      // This will keep backward compatibility with the old format, and transform it to the new format
       //Checking whether the prior_treatment_requirements exist and the data is in array format
+      //If there's the old format, change to the new format
       if (ctml_json.prior_treatment_requirements && Array.isArray(ctml_json.prior_treatment_requirements)) {
         const transformPriorDataFromArrayToObject = transformPriorTreatmentRequirements(ctml_json.prior_treatment_requirements);
-        ctml_json.prior_treatment_requirements = transformPriorDataFromArrayToObject
+        ctml_json.additional_criteria_requirements = transformPriorDataFromArrayToObject
+      }
+      // Do the same for additional_criteria_requirement_names if it exists
+      if (ctml_json.additional_criteria_requirements && Array.isArray(ctml_json.additional_criteria_requirements)) {
+        const transformPriorDataFromArrayToObject = transformPriorTreatmentRequirements(ctml_json.additional_criteria_requirements);
+        ctml_json.additional_criteria_requirements = transformPriorDataFromArrayToObject
       }
 
       let editTrialObject = {
@@ -109,10 +110,10 @@ const EditorEditTrialPage = () => {
       setFormData(editTrialObject)
 
       //if prior_treatment_requirements exist in the ctml_json convert the data format from object to an array before storing the data in Store for maore details refers to Tccket CTM-482
-      const transformPriorDataFromObjectToArray = ctml_json.prior_treatment_requirements?.prior_treatment_requirement.map(item => item.prior_treatment_requirement_name);
-      if (ctml_json.prior_treatment_requirements?.prior_treatment_requirement) {
+      const transformAdditionalCriteriaDataFromObjectToArray = ctml_json.additional_criteria_requirements?.additional_criteria_requirements.map(item => item.additional_criteria_requirement_name);
+      if (ctml_json.additional_criteria_requirements?.additional_criteria_requirements) {
         let priordata = {
-          prior_treatment_requirements: transformPriorDataFromObjectToArray
+          additional_criteria_requirements: transformAdditionalCriteriaDataFromObjectToArray
         }
         editTrialObject = {...editTrialObject, ...priordata}
       }

@@ -261,7 +261,7 @@ export const isObjectEmpty = (obj: any) => {
 export const extractErrors = (errors: RJSFValidationError[]): string[] => {
   const keyToStringDict: any = {
     trialInformation: 'Trial information',
-    prior_treatment_requirements: 'Prior treatment requirements',
+    // prior_treatment_requirements: 'Prior treatment requirements',
     drug_list: 'Drug list',
     age: 'Age',
     management_group_list: 'Management group list',
@@ -269,7 +269,8 @@ export const extractErrors = (errors: RJSFValidationError[]): string[] => {
     sponsor_list: 'Sponsor list',
     staff_list: 'Staff list',
     treatment_list: 'Treatment list',
-    age_group: 'Age group'
+    age_group: 'Age group',
+    additional_criteria_requirements: 'Additional criteria requirements',
   }
 
   const groupedObjects: { [key: string]: RJSFValidationError[] } = errors.reduce((acc: any, obj) => {
@@ -477,7 +478,7 @@ export const flattenCategoryContainerObject = (nodes: TreeNode[]) => {
     return newNode;
   });
 }
-  
+
 // same as above, but less restrictive on the input object
 export const flattenCategoryContainerObjectInCtmlMatchModel = (ctmlMatchModel: any) => {
   const cloned = structuredClone(ctmlMatchModel);
@@ -602,8 +603,8 @@ export const isTrialHaveOneMatch = (ctmlJson: any) => {
 
 export const transformPriorTreatmentRequirements = (requirements: string[]) => {
   return {
-    prior_treatment_requirement: requirements.map((requirement: string) => ({
-      prior_treatment_requirement_name: requirement
+    additional_criteria_requirements: requirements.map((requirement: string) => ({
+      additional_criteria_requirement_name: requirement
     }))
   };
 };

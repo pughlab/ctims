@@ -118,27 +118,6 @@
       },
       "title": "Trial Information"
     },
-    "prior_treatment_requirements": {
-      "type": "object",
-      "properties": {
-        "prior_treatment_requirement": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "required": [],
-            "properties": {
-              "prior_treatment_requirement_name": {
-                "type": "string",
-                "title": "Prior Treatment Requirement Name",
-                "description": "A list of drug names in the trial. If there is a drug combination that are to be taken at the same time, include together. Example: Nivolumab plus Ipilimumab"
-              }
-            }
-          },
-          "title": "Prior Treatment Requirement"
-        }
-      },
-      "title": "Prior Treatment Requirements"
-    },
     "age_group": {
       "type": "object",
       "required": [],
@@ -459,6 +438,23 @@
                       "description": "hidden uuid field",
                       "title": "uuid",
                       "type": "string"
+                    },
+                    "arm_additional_criteria_not_captured": {
+                      "type": "array",
+                      "title": "Additional Criteria Not Captured in trial arm",
+                      "description": "Additional criteria not captured in the trial arm",
+                      "items": {
+                        "type": "object",
+                        "title": "",
+                        "required": [],
+                        "properties": {
+                          "additional_criteria_requirement_name": {
+                            "type": "string",
+                            "title": "Additional Criteria Not Captured in trial arm",
+                            "description": "Additional criteria not captured in the trial arm."
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -468,6 +464,28 @@
         }
       },
       "title": "Treatment List"
+    },
+    "additional_criteria_requirements": {
+      "type": "object",
+      "properties": {
+        "additional_criteria_requirements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "title": "",
+            "required": [],
+            "properties": {
+              "additional_criteria_requirement_name": {
+                "type": "string",
+                "title": "Additional Criteria Not Captured",
+                "description": "Additional criteria not captured in the trial."
+              }
+            }
+          },
+          "title": "Additional Criteria"
+        }
+      },
+      "title": "Additional Criteria Not Captured"
     }
   }
 }

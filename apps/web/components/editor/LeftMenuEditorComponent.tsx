@@ -6,7 +6,6 @@ const LeftMenuEditorComponent = () => {
   const [activeLink, setActiveLink] = useState('');
   const ids = [
     'trial-information',
-    'prior-treatment-requirements',
     'age',
     'drug-list',
     'management-group-list',
@@ -14,6 +13,7 @@ const LeftMenuEditorComponent = () => {
     'sponsor-list',
     'staff-list',
     'treatment-list',
+    'additional-criteria-not-captured',
   ];
   const activeId = useScrollspy(ids, 76);
 
@@ -27,7 +27,6 @@ const LeftMenuEditorComponent = () => {
 
   const links = [
     { to: '#trial-information', label: 'Trial Information' },
-    { to: '#prior-treatment-requirements', label: 'Prior Treatment Requirements' },
     { to: '#age', label: 'Age' },
     { to: '#drug-list', label: 'Drug List' },
     { to: '#management-group-list', label: 'Management Group List' },
@@ -35,6 +34,7 @@ const LeftMenuEditorComponent = () => {
     { to: '#sponsor-list', label: 'Sponsor List' },
     { to: '#staff-list', label: 'Staff List' },
     { to: '#treatment-list', label: 'Treatment List' },
+    { to: '#additional-criteria-not-captured', label: 'Additional Criteria Not Captured' },
   ];
 
   return (
