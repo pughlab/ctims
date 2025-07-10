@@ -19,6 +19,8 @@
 *.sublime-workspace
 apps/api/.env
 apps/web/.env
+apps/web/.next/
+apps/web/.vscode/
 apps/api/prisma/.env
 .env
 

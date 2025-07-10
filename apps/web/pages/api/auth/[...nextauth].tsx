@@ -1,34 +1,63 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions, User as NextAuthUser, JWT } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import {createAction} from "@reduxjs/toolkit";
 // console.log('process.env.NEXTAUTH_SECRET', process.env.NEXTAUTH_SECRET)
 // console.log('process.env.REACT_APP_API_URL', process.env.REACT_APP_API_URL)
 // console.log('process.env.NEXTAUTH_URL', process.env.NEXTAUTH_URL)
-export default NextAuth({
+console.log('process.env.NEXT_PARENT_URL', process.env.NEXT_PARENT_URL)
+
+interface User extends NextAuthUser {
+  accessToken: string;
+  roles: string[];
+  id: string;
+  [key: string]: any;
+}
+
+interface ExtendedJWT extends JWT {
+  accessToken?: string;
+  roles?: string[];
+}
+
+declare module "next-auth" {
+  interface Session {
+    accessToken?: string;
+    roles?: string[];
+    user?: any;
+  }
+  interface JWT {
+    accessToken?: string;
+    roles?: string[];
+  }
+}
+
+export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
   session: {
     strategy: 'jwt',
   },
   callbacks: {
-    jwt: async ({token, user, account, profile, isNewUser}) => {
-      // console.log('jwt', token, user, account, profile, isNewUser);
+    jwt: async ({token, user}) => {
       if (user) {
-        token.accessToken = user['accessToken'];
-        token.roles = user['roles'];
+        const typedUser = user as User;
+        token.accessToken = typedUser.accessToken;
+        token.roles = typedUser.roles;
       }
-      return token
+      return token;
     },
-    session: async ({session, token, user}) => {
-      // console.log('session', session, token, user);
-      session['accessToken'] = token.accessToken
-      session['roles'] = token.roles
-      return session
+    session: async ({session, token}) => {
+      const typedToken = token as JWT & {
+        accessToken?: string;
+        roles?: string[];
+      };
+      session.accessToken = typedToken.accessToken ?? '';
+      session.roles = typedToken.roles ?? [];
+      return session;
     }
   },
   providers: [CredentialsProvider({
     credentials: undefined,
 
-    authorize: async  (credentials: any) => {
+    authorize: async (credentials: Record<string, string>) => {
       const api_url = process.env.NEXTAUTH_API_URL || 'http://localhost:3333/api';
 
       try {
@@ -47,9 +76,13 @@ export default NextAuth({
         const data = await response.json();
 
         if (data.accessToken && data.user) {
-          data.user.accessToken = data.accessToken;
-          data.user['roles'] = data.user.roles;
-          return data.user
+          const user: User = {
+            ...data.user,
+            id: data.user.id || data.user.sub || 'default-id',
+            accessToken: data.accessToken,
+            roles: data.user.roles || []
+          };
+          return user;
         } else {
           throw new Error('Invalid credentials');
         }
@@ -61,6 +94,8 @@ export default NextAuth({
     }
   })],
   secret: process.env.NEXTAUTH_SECRET || 'secret',
-});
+};
+
+export default NextAuth(authOptions);
 
 export const logout = createAction('auth/logout')
