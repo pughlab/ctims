@@ -131,6 +131,12 @@ export const Ui = (props: UiProps) => {
       additional_criteria_requirement_name: any;
     }) => item.additional_criteria_requirement_name);
     formDataClone = {...formDataClone, additional_criteria_requirements : transformAdditionalCriteriaDataFromObjectToArray}
+
+    // in on form change, remove the old prior_treatment_requirements so it doesn't get saved or transformed again
+    if (formDataClone.prior_treatment_requirements) {
+      delete formDataClone.prior_treatment_requirements;
+    }
+
     dispatch(setCtmlModel(formDataClone))
   }
 
