@@ -11,6 +11,9 @@ import {MULTI_SORT_META_RESULTS} from "../../constants/appConstants";
 import {TrialStatusEnum} from "../../../../libs/types/src/trial-status.enum";
 import { setIsLongOperation } from 'apps/web/store/slices/contextSlice';
 import { useDispatch } from 'react-redux';
+import { FilterMatchMode} from 'primereact/api';
+import { InputText } from 'primereact/inputtext';
+import { Tooltip } from 'primereact/tooltip';
 
 const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) => {
   const {data, status: sessionStatus} = useSession()
@@ -80,6 +83,8 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
   // result download file name
   const [resultFileName, setResultFileName] = useState<string>('');
 
+  const [globalFilterValue, setGlobalFilterValue] = useState('');
+
 
   const DEFAULT_SORT: DataTableSortMeta[] = [{ field: 'updatedAt', order: -1 }];
   const [multiSortMeta, setMultiSortMeta] = useState<DataTableSortMeta[]>(DEFAULT_SORT);
@@ -139,6 +144,7 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
     if (savedSortMeta) {
       setMultiSortMeta(JSON.parse(savedSortMeta));
     }
+    initFilters();
   }, []);
 
   const extractDateTime = (dateStr) => {
@@ -223,6 +229,69 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
     return data;
   }
 
+
+  const clearFilter = () => {
+    initFilters();
+  };
+
+
+  const initFilters = () => {
+    setFilters({
+      global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      trialId: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      nickname: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      principal_investigator: { value: null, matchMode: FilterMatchMode.CONTAINS },
+
+    });
+    setGlobalFilterValue('');
+  };
+
+  const onGlobalFilterChange = (e) => {
+    const value = e.target.value;
+    let _filters = { ...filters };
+    _filters['global'] = { value, matchMode: FilterMatchMode.CONTAINS };
+
+    setFilters(_filters);
+    setGlobalFilterValue(value);
+  };
+
+  const [filters, setFilters] = useState({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS }, 
+    trialId: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    nickname: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    principal_investigator: { value: null, matchMode: FilterMatchMode.CONTAINS }
+  });
+
+  const questionMarkStyle = `custom-target-icon ${styles['question-mark']} pi pi-question-circle question-mark-target `;
+  const renderHeader = () => {
+    return (
+      <div className={styles.tableHeader}>
+        <div className={styles.searchWrapper}>
+          <i className={`pi pi-search ${styles.searchIcon}`} />
+          <InputText
+            className={styles.searchInput}
+            value={globalFilterValue}
+            onChange={onGlobalFilterChange}
+            placeholder="Search"
+          />
+          {globalFilterValue && (
+            <button
+              className={styles.clearButton}
+              onClick={clearFilter}
+              type="button"
+            >
+              <i className="pi pi-times" />
+            </button>
+          )}
+        </div>
+        <Tooltip target=".custom-target-icon" />
+          <i className={questionMarkStyle} data-pr-tooltip="Search in Trial ID, Nickname and Principal Investigator fields."></i>
+      </div>
+    );
+  };
+
+  const header = renderHeader();
+
   return (
     <>
       {data && <>
@@ -239,6 +308,9 @@ const Results = (props: {trials: [], getTrialsForUsersInGroupLoading: boolean}) 
                      removableSort
                      sortField="updatedAt"  // Force 'Modified on' column to sort
                      defaultSortOrder={-1}  // Enforce descending order
+                     filters={filters}
+                     globalFilterFields={['trialId', 'nickname', 'principal_investigator']}
+                     header={header}  
           >
             <Column field="trialId" header="ID" sortable></Column>
             <Column field="nickname" header="Nickname" sortable></Column>
