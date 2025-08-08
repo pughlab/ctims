@@ -23,6 +23,8 @@ import useGetTrialsByIDs from "../../hooks/useGetTrialsByIDs";
 import { Tooltip } from 'primereact/tooltip';
 import useHandleSignOut from "../../hooks/useHandleSignOut";
 import useClearTrialLocks from "../../hooks/useClearTrialLocks";
+import { FilterMatchMode} from 'primereact/api';
+import { InputText } from 'primereact/inputtext';
 
 // property selectedTrialGroup from parent component when dropdown changed
 // trials is the list of trials for the selected trial group
@@ -58,11 +60,13 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
     if (savedSortMeta) {
       setMultiSortMeta(JSON.parse(savedSortMeta));
     }
+    initFilters();
   }, []);
 
   const [isTrialIdDialogVisible, setIsTrialIdDialogVisible] = useState<boolean>(false);
   const [isSendDialogVisible, setIsSendDialogVisible] = useState<boolean>(false);
   const [selectedTrialsToMatch, setSelectedTrialsToMatch] = useState([]);
+  const [globalFilterValue, setGlobalFilterValue] = useState('');
 
   const trialsErrorToast = useRef(null);
 
@@ -383,6 +387,67 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
     );
   };
 
+  const clearFilter = () => {
+    initFilters();
+  };
+
+
+  const initFilters = () => {
+    setFilters({
+      global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      nct_id: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      nickname: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      principal_investigator: { value: null, matchMode: FilterMatchMode.CONTAINS },
+
+    });
+    setGlobalFilterValue('');
+  };
+
+  const onGlobalFilterChange = (e) => {
+    const value = e.target.value;
+    let _filters = { ...filters };
+    _filters['global'] = { value, matchMode: FilterMatchMode.CONTAINS };
+
+    setFilters(_filters);
+    setGlobalFilterValue(value);
+  };
+
+  const [filters, setFilters] = useState({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS }, 
+    nct_id: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    nickname: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    principal_investigator: { value: null, matchMode: FilterMatchMode.CONTAINS }
+  });
+
+  const questionMarkStyle = `custom-target-icon ${styles['question-mark']} pi pi-question-circle question-mark-target `;
+  const renderHeader = () => {
+    return (
+      <div className={styles.tableHeader}>
+        <div className={styles.searchWrapper}>
+          <i className={`pi pi-search ${styles.searchIcon}`} />
+          <InputText
+            className={styles.searchInput}
+            value={globalFilterValue}
+            onChange={onGlobalFilterChange}
+            placeholder="Search"
+          />
+          {globalFilterValue && (
+            <button
+              className={styles.clearButton}
+              onClick={clearFilter}
+              type="button"
+            >
+              <i className="pi pi-times" />
+            </button>
+          )}
+        </div>
+        <Tooltip target=".custom-target-icon" />
+          <i className={questionMarkStyle} data-pr-tooltip="Search in Trial ID, Nickname and Principal Investigator fields."></i>
+      </div>
+    );
+  };
+
+  const header = renderHeader();
   return (
     <>
       <Toast ref={trialsErrorToast}></Toast>
@@ -422,6 +487,9 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
                      multiSortMeta={multiSortMeta}
                      onSort={onSort}
                      removableSort
+                     filters={filters}
+                     globalFilterFields={['nct_id', 'nickname', 'principal_investigator']}
+                     header={header}        
           >
             <Column field="nct_id" header="ID" sortable sortField="nct_id" />
             <Column field="id" header="" body={subMenuTemplate} />
