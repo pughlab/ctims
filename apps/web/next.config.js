@@ -20,7 +20,6 @@ const nextConfig = {
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     NEXTAUTH_API_URL: process.env.NEXTAUTH_API_URL,
-
   },
   async headers() {
     return [
@@ -29,8 +28,8 @@ const nextConfig = {
         source: '/(.*)',
         headers: [
           {
-            key: 'X-Frame-Options',
-            value: 'SAMEORIGIN', // You can also set it to 'DENY' if you prefer
+            key: 'Content-Security-Policy',
+            value: "frame-ancestors 'self' *;",
           },
         ],
       },

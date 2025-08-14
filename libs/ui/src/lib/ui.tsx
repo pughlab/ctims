@@ -126,8 +126,17 @@ export const Ui = (props: UiProps) => {
     }
 
     let formDataClone = structuredClone(data.formData)
-    const transformPriorDataFromObjectToArray = formDataClone.prior_treatment_requirements?.prior_treatment_requirement && formDataClone.prior_treatment_requirements?.prior_treatment_requirement.map((item: { prior_treatment_requirement_name: any; }) => item.prior_treatment_requirement_name);
-    formDataClone = {...formDataClone, prior_treatment_requirements : transformPriorDataFromObjectToArray}
+    const transformAdditionalCriteriaDataFromObjectToArray =
+      formDataClone.additional_criteria_requirements?.additional_criteria_requirements && formDataClone.additional_criteria_requirements?.additional_criteria_requirements.map((item: {
+      additional_criteria_requirement_name: any;
+    }) => item.additional_criteria_requirement_name);
+    formDataClone = {...formDataClone, additional_criteria_requirements : transformAdditionalCriteriaDataFromObjectToArray}
+
+    // in on form change, remove the old prior_treatment_requirements so it doesn't get saved or transformed again
+    if (formDataClone.prior_treatment_requirements) {
+      delete formDataClone.prior_treatment_requirements;
+    }
+
     dispatch(setCtmlModel(formDataClone))
   }
 
@@ -160,12 +169,12 @@ export const Ui = (props: UiProps) => {
     dispatch(resetActiveArmId())
     let formDataClone = structuredClone(formRef.current.state.formData)
     console.log('formRef state', formRef.current.state)
-    if (formDataClone.prior_treatment_requirements) {
-      if (formDataClone.prior_treatment_requirements.prior_treatment_requirement) {
-        const transformPriorDataFromObjectToArray = formDataClone.prior_treatment_requirements.prior_treatment_requirement.map((item: { prior_treatment_requirement_name: any; }) => item.prior_treatment_requirement_name);
-        formDataClone = { ...formDataClone, prior_treatment_requirements: transformPriorDataFromObjectToArray }
-      }
-    }
+    // if (formDataClone.prior_treatment_requirements) {
+    //   if (formDataClone.prior_treatment_requirements.prior_treatment_requirement) {
+    //     const transformPriorDataFromObjectToArray = formDataClone.prior_treatment_requirements.prior_treatment_requirement.map((item: { prior_treatment_requirement_name: any; }) => item.prior_treatment_requirement_name);
+    //     formDataClone = { ...formDataClone, prior_treatment_requirements: transformPriorDataFromObjectToArray }
+    //   }
+    // }
     dispatch(setCtmlModel(formDataClone))
 
     const currentState = store.getState();

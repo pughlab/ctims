@@ -2,29 +2,40 @@ import useRefreshToken from "../hooks/useRefreshToken";
 import {useEffect, useRef, useState} from "react";
 import {useSelector} from "react-redux";
 import {RootState} from "../store/store";
+import {useSession} from "next-auth/react";
 
 /*
  A component that refreshes the access token periodically, lives at outside the main pages, and stop when user logs out
  */
 const RefreshTokenComponent = () => {
-
   const {error, response, loading, refreshTokenOperation} = useRefreshToken();
   const refreshTokenTimeout = useRef(null);
   const isLoggedInFromState = useSelector((state: RootState) => state.context.isAccessTokenSet);
-  // only run this once
+  const {data: session} = useSession();
   const [count, setCount] = useState(0);
+  const [isIframe, setIsIframe] = useState(false);
 
   const TIMEOUT = 13 * 60 * 1000;
 
   useEffect(() => {
-    if (!isLoggedInFromState) {
-      console.log('logged out, stopping timer')
+    // Check if we're in an iframe
+    setIsIframe(window !== window.parent);
+  }, []);
+
+  useEffect(() => {
+    // For iframe: check session existence
+    // For main window: check both session and Redux state
+    const shouldBeLoggedIn = isIframe ? !!session : (!!session && isLoggedInFromState);
+    
+    if (!shouldBeLoggedIn) {
+      console.log('logged out, stopping timer');
       stopRefreshTokenTimer();
       return;
     }
-    console.log('logged in now start timer')
+    
+    console.log('logged in now start timer');
     startRefreshTokenTimer();
-  }, [isLoggedInFromState]);
+  }, [isLoggedInFromState, session, isIframe]);
 
   useEffect(() => {
     if (error) {
