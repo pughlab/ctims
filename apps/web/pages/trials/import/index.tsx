@@ -39,6 +39,9 @@ const EditorImportTrialPage = () => {
       {
         transformPriorDataFromArrayToObject = transformPriorTreatmentRequirements(trial.prior_treatment_requirements);
       }
+      if (trial.additional_criteria_requirements && trial.additional_criteria_requirements.length>0) {
+        transformPriorDataFromArrayToObject = transformPriorTreatmentRequirements(trial.additional_criteria_requirements);
+      }
       let editTrialObject = {
         trialInformation: {
           trial_id: trial.trial_id,
@@ -78,7 +81,7 @@ const EditorImportTrialPage = () => {
 
       editTrialObject = {...editTrialObject, ...trial}
       let priordata = {
-        prior_treatment_requirements : transformPriorDataFromArrayToObject
+        additional_criteria_requirements : transformPriorDataFromArrayToObject
       }
       editTrialObject = {...editTrialObject, ...priordata}
       setFormData(editTrialObject);

@@ -13,7 +13,10 @@ services:
         NEXT_PUBLIC_SIGNOUT_REDIRECT_URL: ${NEXT_PUBLIC_SIGNOUT_REDIRECT_URL}
         NEXT_PUBLIC_ENABLE_MATCHMINER_INTEGRATION: ${NEXT_PUBLIC_ENABLE_MATCHMINER_INTEGRATION}
         NEXT_PUBLIC_TRIAL_LOCK_PING_TIME_MS: ${NEXT_PUBLIC_TRIAL_LOCK_PING_TIME_MS}
+        NEXT_PARENT_URL: ${NEXT_PARENT_URL}
       dockerfile: Dockerfile
+    environment:
+      NEXT_PARENT_URL: ${NEXT_PARENT_URL}
     ports:
       - "3001:3000"
     volumes:
@@ -87,8 +90,14 @@ services:
       - "5001:5000"
     environment:
       - SECRETS_JSON=./secrets_json_dev.json
+    deploy:
+      resources:
+        limits:
+          memory: 28G
     networks:
       - qa-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   mm_mongo_db_qa:
     container_name: mm_mongo_db_qa
