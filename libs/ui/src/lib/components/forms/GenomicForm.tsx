@@ -21,7 +21,7 @@ import CtimsInput from "../../custom-rjsf-templates/CtimsInput";
 import CtimsDropdown from "../../custom-rjsf-templates/CtimsDropdown";
 import {CtimsDialogContext, CtimsDialogContextType} from "../CtimsMatchDialog";
 import { Checkbox } from 'primereact/checkbox';
-import {wildcard_protein_change_validation_func, getCurrentOperator, protein_change_validation_func, hugo_symblo_validation_func} from "../helpers";
+import {wildcard_protein_change_validation_func, getCurrentOperator, protein_change_validation_func, auto_complete_symblo_validation_func} from "../helpers";
 import AutocompleteField from "../CtimsAutoCompleteComponent";
 import CtimsDropdownWithExcludeToggle from '../../custom-rjsf-templates/CtimsDropdownWithExcludeToggle';
 import CtimsInputWithExcludeToggle from '../../custom-rjsf-templates/CtimsInputWithExcludeToggle';
@@ -91,6 +91,7 @@ export const GenomicForm = (props: IFormProps) => {
     'definitions': {
       'hugo_symbol': {
         type: 'string',
+        "autoCompleteType": "Gene"
       },
       "variant_category": {
         "enumNames": [
@@ -426,6 +427,7 @@ export const GenomicForm = (props: IFormProps) => {
                       'type': 'string',
                       'title': 'Fusion Partner Hugo Symbol',
                       "description": "Curate the partner gene in a fusion",
+                      "autoCompleteType": "Gene"
                     },
                     "molecular_function": {
                       "$ref": "#/definitions/molecular_function",
@@ -633,12 +635,12 @@ export const GenomicForm = (props: IFormProps) => {
       proteinChangeHasError = true;
     }
 
-    if (!hugo_symblo_validation_func(myFormData.hugo_symbol)) {
+    if (!auto_complete_symblo_validation_func(myFormData.hugo_symbol)) {
       myErrors.hugo_symbol.addError('At least have a single character');
       hugoSymbolHasError = true;
     }
 
-    if (!hugo_symblo_validation_func(myFormData.fusion_partner_hugo_symbol)) {
+    if (!auto_complete_symblo_validation_func(myFormData.fusion_partner_hugo_symbol)) {
       myErrors.fusion_partner_hugo_symbol.addError('Fusion Partner Hugo Symbol must have a single character');
       fusionPartnerHugoSymbolHasError = true;
     }

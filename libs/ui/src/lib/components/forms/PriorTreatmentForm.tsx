@@ -20,6 +20,7 @@ import {OperatorDropdown} from "./OperatorDropdown";
 import {TitleContainer} from "./TitleContainer";
 import {JSONSchema7} from "json-schema";
 import localValidator from "@rjsf/validator-ajv8";
+import AutocompleteField from "../CtimsAutoCompleteComponent";
 
 
 const RjsfForm = withTheme(PrimeTheme)
@@ -137,11 +138,13 @@ export const PriorTreatmentForm = (props: IFormProps) => {
                       'type': 'string',
                       'title': 'Agent Class',
                       "description": "Prior Treatment Agent Class",
+                      "autoCompleteType": "AgentClass"
                     },
                     'agent': {
                       'type': 'string',
                       'title': 'Agent',
                       "description": "Prior Treatment Agent",
+                      "autoCompleteType": "AgentDrug"
                     }
                   },
                   "required": []
@@ -201,6 +204,14 @@ export const PriorTreatmentForm = (props: IFormProps) => {
     "ui:ObjectFieldTemplate": CtimsMatchDialogObjectFieldTemplate,
     "ui:submitButtonOptions": {
       "norender": true,
+    },
+    "treatmentCategoryContainerObject": {
+      "agent": {
+        "ui:widget": AutocompleteField,
+      },
+      "agent_class": {
+        "ui:widget": AutocompleteField,
+      }
     }
   }
 
