@@ -24,7 +24,9 @@
     "build-web": "nx build web --verbose --development",
     "build-all": "nx run-many --target=build --projects=api,web --parallel",
     "cypress:dev": "nx e2e web-e2e --watch",
-    "seed": "npx prisma db seed"
+    "seed": "npx prisma db seed",
+    "agent": "ts-node apps/api/prisma/seed/agentDataFetch.js",
+    "agentclass": "ts-node apps/api/prisma/seed/agentClassDataFetch.js"
   },
   "prisma": {
     "seed": "ts-node apps/api/prisma/seed/index.js"
