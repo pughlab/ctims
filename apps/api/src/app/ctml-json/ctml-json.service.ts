@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, Logger} from '@nestjs/common';
 import { CreateCtmlJsonDto } from './dto/create-ctml-json.dto';
 import { UpdateCtmlJsonDto } from './dto/update-ctml-json.dto';
 import { ctml_json, event_type, user } from "@prisma/client";
@@ -10,7 +10,7 @@ import {TrialStatusEnum} from "../../../../../libs/types/src/trial-status.enum";
 export class CtmlJsonService {
 
   private MM_API_TOKEN = process.env.MM_API_TOKEN;
-
+  private readonly logger = new Logger(CtmlJsonService.name, { timestamp: true });
 
   constructor(
     private readonly prismaService: PrismaService
@@ -30,8 +30,14 @@ export class CtmlJsonService {
   async findAll(): Promise<ctml_json[]> {
     let ctmlJsons = await this.prismaService.ctml_json.findMany();
     ctmlJsons = ctmlJsons.map(ctmlJson => {
-      ctmlJson.data = JSON.parse(ctmlJson.data as string);
-      return ctmlJson;
+      if (ctmlJson.data && typeof ctmlJson.data === 'string') {
+        ctmlJson.data = JSON.parse(ctmlJson.data as string);
+        return ctmlJson;
+      } else {
+        this.logger.warn(`ctml_json with id ${ctmlJson.id} has no data or data is not a string`);
+        return ctmlJson;
+      }
+
     })
     return ctmlJsons;
   }
@@ -40,7 +46,12 @@ export class CtmlJsonService {
     const ctmlJson = await this.prismaService.ctml_json.findUnique({
       where: { id: id }
     });
-    ctmlJson.data = JSON.parse(ctmlJson.data as string);
+    if (ctmlJson.data && typeof ctmlJson.data === 'string') {
+      ctmlJson.data = JSON.parse(ctmlJson.data as string);
+    } else {
+      this.logger.warn(`ctml_json with id ${ctmlJson.id} has no data or data is not a string`);
+    }
+
     return ctmlJson;
   }
 
@@ -51,8 +62,13 @@ export class CtmlJsonService {
       }
     });
     ctmlJsons = ctmlJsons.map(ctmlJson => {
-      ctmlJson.data = JSON.parse(ctmlJson.data as string);
+      if (ctmlJson.data && typeof ctmlJson.data === 'string') {
+        ctmlJson.data = JSON.parse(ctmlJson.data as string);
+      } else {
+        this.logger.warn(`ctml_json with id ${ctmlJson.id} has no data or data is not a string`);
+      }
       return ctmlJson;
+
     })
     return ctmlJsons;
   }
