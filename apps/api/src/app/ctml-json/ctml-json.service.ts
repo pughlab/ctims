@@ -46,10 +46,16 @@ export class CtmlJsonService {
     const ctmlJson = await this.prismaService.ctml_json.findUnique({
       where: { id: id }
     });
+    
+    if (!ctmlJson) {
+      this.logger.warn(`ctml_json with id ${id} not found (null result)`);
+      return null;
+    }
+    
     if (ctmlJson.data && typeof ctmlJson.data === 'string') {
       ctmlJson.data = JSON.parse(ctmlJson.data as string);
     } else {
-      this.logger.warn(`ctml_json with id ${ctmlJson.id} has no data or data is not a string`);
+      this.logger.warn(`ctml_json with id ${id} has no data or data is not a string`);
     }
 
     return ctmlJson;
@@ -75,12 +81,19 @@ export class CtmlJsonService {
 
   async update(updateCtmlJsonDto: UpdateCtmlJsonDto): Promise<ctml_json[]> {
     const { data, version, trialId } = updateCtmlJsonDto;
+    this.logger.log(`update called with version: ${version}, trialId: ${trialId}`);
 
     const ctml_schema_version = await this.prismaService.ctml_schema.findUnique({
       where: {
         version
       }
     })
+    
+    if (!ctml_schema_version) {
+      this.logger.error(`Schema version '${version}' not found (null result)`);
+      throw new Error(`Schema version ${version} not found`);
+    }
+    this.logger.log(`Found schema version with id: ${ctml_schema_version.id}`);
 
     const existingJsons = await this.prismaService.ctml_json.findMany({
       where: {
@@ -116,7 +129,20 @@ export class CtmlJsonService {
       });
 
       // Convert the string version of the data into an object
-      affected = affected.map(val => {
+      affected = affected.map((val, index) => {
+        this.logger.log(`Processing affected record ${index}, id: ${val?.id}`);
+        if (!val) {
+          this.logger.error(`Affected record at index ${index} is null`);
+          return val;
+        }
+        if (!val.data) {
+          this.logger.warn(`Affected record ${val.id} has null/undefined data`);
+          return val;
+        }
+        if (typeof val.data !== 'string') {
+          this.logger.warn(`Affected record ${val.id} data is not a string, type: ${typeof val.data}`);
+          return val;
+        }
         val.data = JSON.parse(val.data as string);
         return val;
       })
