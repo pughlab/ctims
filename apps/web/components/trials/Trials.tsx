@@ -413,7 +413,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
   };
 
   const [filters, setFilters] = useState({
-    global: { value: null, matchMode: FilterMatchMode.CONTAINS }, 
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
     nct_id: { value: null, matchMode: FilterMatchMode.CONTAINS },
     nickname: { value: null, matchMode: FilterMatchMode.CONTAINS },
     principal_investigator: { value: null, matchMode: FilterMatchMode.CONTAINS }
@@ -489,7 +489,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
                      removableSort
                      filters={filters}
                      globalFilterFields={['nct_id', 'nickname', 'principal_investigator']}
-                     header={header}        
+                     header={header}
           >
             <Column field="nct_id" header="ID" sortable sortField="nct_id" />
             <Column field="id" header="" body={subMenuTemplate} />
