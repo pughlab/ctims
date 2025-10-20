@@ -413,7 +413,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
   };
 
   const [filters, setFilters] = useState({
-    global: { value: null, matchMode: FilterMatchMode.CONTAINS }, 
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
     nct_id: { value: null, matchMode: FilterMatchMode.CONTAINS },
     nickname: { value: null, matchMode: FilterMatchMode.CONTAINS },
     principal_investigator: { value: null, matchMode: FilterMatchMode.CONTAINS }
@@ -422,7 +422,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
   const questionMarkStyle = `custom-target-icon ${styles['question-mark']} pi pi-question-circle question-mark-target `;
   const renderHeader = () => {
     return (
-      <div className={styles.tableHeader}>
+      <div className={styles.tableHeader} style={{ border: '1px solid red' }}>
         <div className={styles.searchWrapper}>
           <i className={`pi pi-search ${styles.searchIcon}`} />
           <InputText
@@ -447,7 +447,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
     );
   };
 
-  const header = renderHeader();
+  // const header = renderHeader();
   return (
     <>
       <Toast ref={trialsErrorToast}></Toast>
@@ -489,7 +489,7 @@ const Trials = (props: {selectedTrialGroup: { plainRole: string, isAdmin: boolea
                      removableSort
                      filters={filters}
                      globalFilterFields={['nct_id', 'nickname', 'principal_investigator']}
-                     header={header}        
+                     // header={header}
           >
             <Column field="nct_id" header="ID" sortable sortField="nct_id" />
             <Column field="id" header="" body={subMenuTemplate} />

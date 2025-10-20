@@ -70,7 +70,18 @@ services:
       context: ./database
       dockerfile: Dockerfile
     ports:
-      - "3307:3306"
+      - "3306:3306"
+    restart: on-failure
+    networks:
+      - qa-network
+
+  database_qa_backup:
+    container_name: ctims-db-qa-backup
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    ports:
+      - "3309:3306"
     restart: on-failure
     networks:
       - qa-network
@@ -101,10 +112,11 @@ services:
 
   mm_mongo_db_qa:
     container_name: mm_mongo_db_qa
+    platform: linux/amd64
     image: mongo:3.6.10
     restart: on-failure
     ports:
-      - "27020:27017"
+      - "27017:27017"
     networks:
       - qa-network
     volumes:

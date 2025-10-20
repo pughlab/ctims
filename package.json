@@ -25,7 +25,8 @@
     "build-web": "nx build web --verbose --development",
     "build-all": "nx run-many --target=build --projects=api,web --parallel",
     "cypress:dev": "nx e2e web-e2e --watch",
-    "seed": "npx prisma db seed"
+    "seed": "npx prisma db seed",
+    "prisma:reset": "prisma migrate reset --schema=./apps/api/prisma/schema.prisma"
   },
   "prisma": {
     "seed": "ts-node apps/api/prisma/seed/index.js"

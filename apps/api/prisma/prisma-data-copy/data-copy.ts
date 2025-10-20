@@ -38,12 +38,18 @@ export async function main() {
     {
       type: 'password',
       name: 'encryptionKey',
-      message: 'Enter the destination database encryption key:',
+      message: 'Enter the destination database encryption key (format: k1.aesgcm256.xxx):',
     },
   ]);
 
   if (!dbResponse.databaseUrl || !dbResponse.encryptionKey) {
     console.log('Database URL and encryption key are required. Exiting.');
+    return;
+  }
+
+  // Validate encryption key format
+  if (!dbResponse.encryptionKey.startsWith('k1.aesgcm256.')) {
+    console.error('Invalid encryption key format. Expected format: k1.aesgcm256.xxx');
     return;
   }
 
@@ -103,12 +109,14 @@ export async function main() {
         console.log(`Creating user in destination DB: ${sourceUser.email}`);
         const newDestUser = await destinationPrisma.user.create({
             data: {
-                ...sourceUser,
-                id: undefined, // let prisma handle the id
-                trials: undefined,
-                modified_trials: undefined,
-                events: undefined,
-                trial_lock: undefined,
+                email: sourceUser.email,
+                name: sourceUser.name,
+                username: sourceUser.username,
+                first_name: sourceUser.first_name,
+                email_verified: sourceUser.email_verified,
+                last_name: sourceUser.last_name,
+                refresh_token: sourceUser.refresh_token,
+                keycloak_id: sourceUser.keycloak_id,
             }
         });
         userMap.set(sourceUser.id, newDestUser.id);
@@ -129,9 +137,7 @@ export async function main() {
         console.log(`Creating trial group in destination DB: ${sourceGroup.name}`);
         const newDestGroup = await destinationPrisma.trial_group.create({
             data: {
-                ...sourceGroup,
-                id: undefined,
-                trials: undefined,
+                name: sourceGroup.name,
             }
         });
         trialGroupMap.set(sourceGroup.id, newDestGroup.id);
@@ -150,64 +156,87 @@ export async function main() {
     } else {
         const newDestSchema = await destinationPrisma.ctml_schema.create({
             data: {
-                ...sourceSchema,
-                id: undefined,
-                trials: undefined,
-                ctml_jsons: undefined,
-                event: undefined,
+                version: sourceSchema.version,
+                schema: sourceSchema.schema,
             }
         });
         schemaMap.set(sourceSchema.id, newDestSchema.id);
     }
   }
 
-  // 7. Copy trials and ctml_jsons
+  // 7. Copy trials and ctml_jsons using transaction for data integrity
+  let successCount = 0;
+  let skipCount = 0;
+  let errorCount = 0;
+
   for (const trial of trialsToCopy) {
-    if (trial.trial_internal_id) {
-      // skip trial if already exists in destination DB
-      const existingTrial = await destinationPrisma.trial.findFirst({
-        where: { trial_internal_id: trial.trial_internal_id },
-      });
+    try {
+      if (trial.trial_internal_id) {
+        // skip trial if already exists in destination DB
+        const existingTrial = await destinationPrisma.trial.findFirst({
+          where: { trial_internal_id: trial.trial_internal_id },
+        });
 
-      if (existingTrial) {
-        console.log(`Skipping trial: ${trial.nct_id} (already exists in destination)`);
-        continue;
+        if (existingTrial) {
+          console.log(`Skipping trial: ${trial.nct_id} (already exists in destination)`);
+          skipCount++;
+          continue;
+        }
       }
-    }
 
-    console.log(`Copying trial: ${trial.nct_id}`);
+      console.log(`Copying trial: ${trial.nct_id}`);
 
-    const newTrial = await destinationPrisma.trial.create({
-      data: {
-        ...trial,
-        id: undefined, // let prisma handle the id
-        trial_groupId: selectedTrialGroupId,
-        modifiedById: trial.modifiedById ? userMap.get(trial.modifiedById) : null,
-        userId: trial.userId ? userMap.get(trial.userId) : null,
-        ctml_schemas: {
-            connect: trial.ctml_schemas.map(schema => ({id: schemaMap.get(schema.id)}))
-        },
-        ctml_jsons: undefined,
-        trial_lock: undefined,
-        event: undefined,
-      },
-    });
+      // Use transaction to ensure atomicity for each trial and its related data
+      await destinationPrisma.$transaction(async (tx) => {
+        const newTrial = await tx.trial.create({
+          data: {
+            trial_internal_id: trial.trial_internal_id,
+            nct_id: trial.nct_id,
+            nickname: trial.nickname,
+            principal_investigator: trial.principal_investigator,
+            status: trial.status,
+            trial_groupId: selectedTrialGroupId,
+            modifiedById: trial.modifiedById ? userMap.get(trial.modifiedById) : null,
+            userId: trial.userId ? userMap.get(trial.userId) : null,
+            protocol_no: trial.protocol_no,
+            trial_status: trial.trial_status,
+            matchSentDate: trial.matchSentDate,
+            createdAt: trial.createdAt,
+            updatedAt: trial.updatedAt,
+            ctml_schemas: {
+              connect: trial.ctml_schemas.map(schema => ({id: schemaMap.get(schema.id)}))
+            },
+          },
+        });
 
-    for (const ctmlJson of trial.ctml_jsons) {
-      console.log(`  Copying ctml_json: ${ctmlJson.id}`);
-      await destinationPrisma.ctml_json.create({
-        data: {
-          ...ctmlJson,
-          id: undefined,
-          trialId: newTrial.id,
-          versionId: ctmlJson.versionId ? schemaMap.get(ctmlJson.versionId) : null,
-          event: undefined,
-        },
+        for (const ctmlJson of trial.ctml_jsons) {
+          console.log(`  Copying ctml_json: ${ctmlJson.id}`);
+          await tx.ctml_json.create({
+            data: {
+              trialId: newTrial.id,
+              versionId: ctmlJson.versionId ? schemaMap.get(ctmlJson.versionId) : null,
+              data: ctmlJson.data,
+              has_match: ctmlJson.has_match,
+              createdAt: ctmlJson.createdAt,
+              updatedAt: ctmlJson.updatedAt,
+            },
+          });
+        }
       });
+
+      successCount++;
+      console.log(`✓ Successfully copied trial: ${trial.nct_id}`);
+    } catch (error) {
+      errorCount++;
+      console.error(`✗ Failed to copy trial: ${trial.nct_id}`, error.message);
+      console.error(`  Error details:`, error);
     }
   }
 
-  console.log('Data copy complete.');
+  console.log('\n=== Data copy complete ===');
+  console.log(`Successfully copied: ${successCount} trials`);
+  console.log(`Skipped (already exist): ${skipCount} trials`);
+  console.log(`Failed: ${errorCount} trials`);
 
   await sourcePrisma.$disconnect();
   await destinationPrisma.$disconnect();
