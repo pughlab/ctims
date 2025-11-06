@@ -337,7 +337,8 @@ export const ctimsFormComponentSchema = {
               "staff_role":{
                 "type":"string",
                 "enum":[
-                  "Overall Principal Investigator"
+                  "Overall Principal Investigator",
+                  "Clinical Trial Coordinator"
                 ],
                 "title":"Staff Role",
                 "description":"The role of the listed staff"
