@@ -12,7 +12,6 @@ set -e  # Exit on error
 CONTAINER_NAME="ctims-db-qa-backup"
 BACKUP_DIR="ctims_backup"
 TABLES=("ctml_schema" "ctml_json" "trial" "trial_group" "user" "event")
-TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 
 # Colors for output
 RED='\033[0;31m'
@@ -184,6 +183,7 @@ backup_database() {
     check_container
     create_backup_dir
 
+    TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
     print_info "Timestamp: $TIMESTAMP"
     echo ""
 
