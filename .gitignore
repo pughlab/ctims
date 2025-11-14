@@ -44,3 +44,7 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# Backup directories
+scripts/ctims_backup/
+scripts/backups/

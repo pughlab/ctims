@@ -8,3 +8,5 @@ apps/web/.env.locald
 .git
 Dockerfile
 docker-compose-*.yml
+scripts/ctims_backup
+scripts/backups
