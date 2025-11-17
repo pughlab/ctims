@@ -9,7 +9,7 @@
 set -e  # Exit on error
 
 # Configuration
-CONTAINER_NAME="ctims-db-qa-backup"
+CONTAINER_NAME="ctims-db-qa"
 BACKUP_DIR="ctims_backup"
 TABLES=("ctml_schema" "ctml_json" "trial" "trial_group" "user" "event")
 
