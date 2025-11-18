@@ -15,8 +15,8 @@ async function bootstrap() {
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
   const allowedOrigins = [
-    'https://ctims.ca',
-    'https://pmatch-web.qa02.technainstitute.net'
+    'https://ctims.uhn.ca',
+    'https://pmatch.uhn.ca',
     ];
   // let origin = process.env.CTIMS_ENV === 'development' ? '*' : 'https://ctims.ca';
   // app.enableCors({origin})
