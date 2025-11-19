@@ -3,20 +3,40 @@ import { encode } from 'next-auth/jwt';
 
 const parentAppUrl = process.env.NEXT_PARENT_URL || 'http://localhost:3000';
 console.log('parentAppUrl', parentAppUrl);
+// Allowed origins for iframe requests
+const allowedOrigins = [
+  'https://pmatch.uhn.ca',
+  'https://ctims.uhn.ca',
+  parentAppUrl, // For development
+].filter(Boolean) as string[];
 
-// Add CORS headers
-const corsHeaders = {
-  'Access-Control-Allow-Origin': parentAppUrl, // Your parent app's domain
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  'Access-Control-Allow-Credentials': 'true', // Important for cookies
-};
+
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // Set CORS headers for all responses
-  Object.entries(corsHeaders).forEach(([key, value]) => {
-    res.setHeader(key, value);
-  });
+  // Get the origin from the request
+  const origin = req.headers.origin;
+
+  // Check if origin is allowed
+  const isAllowedOrigin = origin && allowedOrigins.includes(origin);
+
+  // Set CORS headers
+  if (isAllowedOrigin) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+  } else {
+    // In development, allow all origins
+    if (process.env.NODE_ENV === 'development') {
+      res.setHeader('Access-Control-Allow-Origin', origin || '*');
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
+    } else {
+      // In production, reject if origin not allowed
+      return res.status(403).json({ message: 'Origin not allowed' });
+    }
+  }
+
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.setHeader('Access-Control-Max-Age', '86400'); // 24 hours
 
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
