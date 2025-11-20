@@ -10,7 +10,8 @@ set -e  # Exit on error
 
 # Configuration
 CONTAINER_NAME="ctims-db-qa"
-BACKUP_DIR="ctims_backup"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BACKUP_DIR="${SCRIPT_DIR}/ctims_backup"
 TABLES=("ctml_schema" "ctml_json" "trial" "trial_group" "user" "event")
 
 # Colors for output
@@ -19,9 +20,6 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
-
-# Get script directory
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 #############################################
 # Functions
@@ -226,7 +224,7 @@ backup_database() {
     done
 
     print_success "All tables backed up successfully!"
-    print_info "Backup location: $(pwd)/$BACKUP_DIR"
+    print_info "Backup location: $BACKUP_DIR"
 }
 
 # List available backups
