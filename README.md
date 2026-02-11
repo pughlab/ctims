@@ -1,4 +1,5 @@
 <div id="top"></div>
+
   <h1 align="center">CTIMS</h1>
 
 The Clinical Trial Integrated Matching System (CTIMS) is software used for matching patients to clinical trials. The CTIMS editor is used to create CTML files in a user friendly GUI. 
