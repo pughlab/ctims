@@ -1,4 +1,4 @@
-FROM node:18.14-slim AS base
+FROM node:20.14-slim AS base
 
 RUN apt-get update && \
     apt-get install -y \
@@ -22,6 +22,8 @@ RUN yarn generate:build
 
 # using node:18 here due to prisma issue of missing openssl lib: https://github.com/prisma/prisma/issues/15598
 FROM node:18.14-slim AS production
+
+RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 ## Copy built files from the build stage
 WORKDIR /usr/src/app
