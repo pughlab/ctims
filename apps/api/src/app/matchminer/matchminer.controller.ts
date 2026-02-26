@@ -62,15 +62,6 @@ export class MatchminerController {
     return response.data;
   }
 
-  @Get('prioritizer_trial_matches')
-  @UseGuards(ApiKeyGuard)
-  @ApiBearerAuth("ApiKeyGuard")
-  @ApiOperation({ summary: "Get all trial matches for prioritizer" })
-  @ApiOkResponse({ description: "List of trial matches found." })
-  async findAll(@CurrentUser() user: user) {
-    return this.matchMinerService.getTrialMatchResults(user);
-  }
-
   @Post('trial_match_jobs')
   @UseGuards(KeycloakPasswordGuard)
   @ApiBearerAuth("KeycloakPasswordGuard")
