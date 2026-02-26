@@ -86,38 +86,6 @@ export class MatchminerService implements OnModuleInit, OnModuleDestroy {
     });
   }
 
-  async getTrialMatchResults(user: user) {
-    try {
-      const trials = await this.prismaService.trial.findMany({
-        where: {status: CtmlStatusEnum.COMPLETED, trial_status: TrialStatusEnum.MATCHED}
-      });
-      if (trials != null && trials.length > 0) {
-        const trial_internal_ids = [];
-        for (const trial of trials) {
-          trial_internal_ids.push(trial.trial_internal_id);
-        }
-        const trial_internal_id_list_str = '[' + trial_internal_ids.map(s => `"${s}"`).join(',') + ']';
-        const url = `${process.env.MM_API_URL}/prioritizer_trial_match?where={"trial_internal_id":{"$in": ${trial_internal_id_list_str}},"is_disabled":false}`
-        const matchResults = await axios.request(
-          {
-            method: 'get',
-            url: url,
-            headers: {
-              'Authorization': `Bearer ${this.MM_API_TOKEN}`
-            }
-          }
-        );
-
-        return matchResults.data._items;
-      } else {
-        return;
-      }
-    } catch (error) {
-      console.log(error);
-      throw new Error(error);
-    }
-  }
-
   async deleteTrial(trialInternalId: string) {
     try {
       const url = `${process.env.MM_API_URL}/delete_trial_by_internal_id`;
