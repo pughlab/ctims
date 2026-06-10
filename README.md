@@ -1,67 +1,36 @@
-<div id="top"></div>
-  <h1 align="center">CTIMS</h1>
+---
+description: Clinical Trials Integrated Match System (CTIMS)
+---
 
-The Clinical Trial Integrated Matching System (CTIMS) is software used for matching patients to clinical trials. The CTIMS editor is used to create CTML files in a user friendly GUI. 
+# Welcome to CTIMS
 
-CTIMS uses cBioPortal to show the results of the matched patients in the patient view of cBioPortal.
+CTIMS open source software is used for creating CTML files for representing clinical trials in a computer readable format called Clinical Trial Markup Language.&#x20;
 
-If you are interested in coordinating the development of new features, please contact Pugh Lab.
+CTIMS project is the winner of the 2022-23 Princess Margaret Grand Challenge.&#x20;
 
-CTIMS uses 3 docker containers for web, api and database. CTIMS integrates with Keycloak for security.
+## Overview
 
-Architecture:
-CTIMS uses Nx Next Nest as a monorepo. The details about the frameworks are given below.
+Nearly 25% of patients diagnosed with cancer at Princess Margaret Cancer Center are matched to clinical trials and play an important role in scientific discovery. The process to match patients to clinical trials is highly manual, enormously time consuming, and prone to error. &#x20;
 
-<!-- PROJECT LOGO -->
-<br />
+Matching patients to clinical trials is a highly manual and time consuming process – taking anywhere between 2 hours and 4 weeks to complete. This is often an iterative process and can lead to further delays.&#x20;
 
+**CTIMS aims to**:&#x20;
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li><a href="#about-the-CTIMS-project">About The CTIMS Project</a></li>
-    <li><a href="#built-with">Built With</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ol>
-</details>
+* Match eligible patients to clinical trials using automation&#x20;
+* Decrease the time and resources required to find eligible study patients​&#x20;
+* Support complex matching criteria using all aspects of a patient’s digital fingerprint ​&#x20;
+* Create a scalable and responsive system to support clinical trials​&#x20;
 
+## CTIMS Team
 
+The CTIMS team is a collaboration between member of the [Pugh Lab](https://pughlab.org/) and the [Cancer Digital Intelligence](https://pmcdi.ca/) (CDI) team.&#x20;
 
-<!-- ABOUT THE PROJECT -->
-## About The CTIMS Project
-CTIMS is a multi-institutional project in collaboration with top research instutions around the world such as 
-* Princess Margaret Cancer Center (PMCC) (University Health Network and University of Toronto)
-* Dana Farber Cancer Insitute (DFCI) (Harvard University, Boston)
-* Memorial Sloan Kettering Cancer Center (MSKCC) (Cornell University, New York)
+* **Principal Investigator:** Trevor Pugh&#x20;
+* **CDI Leadership**: Kelly Lane, Tran Truong, Benjamin Haibe-Kains&#x20;
+* **CTIMS Team**: (Jag) Prasanna K Jagannathan, Marian Tang, Sharon Narine, Benjamin Grant, Anton Sukhovatkin, Mickey Ng, Pietro Andreolis, Srimathi Jayasimman, and Adam Badzynksi &#x20;
 
-CTIMS website(https://www.ctims.ca)
-CTIMS documentation(https://pughlab.gitbook.io/ctims)
+## CONTACT US
 
+For questions, technical support, feedback, or to register your account please contact the CTIMS team at [cbioportal\_group@uhnresearch.ca](mailto:cbioportal_group@uhnresearch.ca)&#x20;
 
-## Built With
-
-This is a monorepo build with Nx, in apps/ you will find a Next.js client and a Nest.js server
-
-* [Nx](https://nx.dev).
-* [TypeScript](https://www.typescriptlang.org/)
-* [Next.js](https://nextjs.org/)
-* [React.js](https://reactjs.org/)
-* [Nest.js](https://nestjs.com/)
-
-Project Link: [Nx-Next-Nest-Template](https://github.com/Louis3797/nx-next-nest-template)
-
-<!-- LICENSE -->
-## License
-Apache 2.0 License
-
-<!-- CONTACT -->
-## Contact
-Pugh Lab, UHN. (https://www.pughlab.org)
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-
-<!-- [product-screenshot]: --> 
+##
