@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react';
 import useAxios from "./useAxios";
+import { transformCtmlForSend } from '../utils/transformCtmlForSend';
 
 const useSendMultipleCTMLs = () => {
 
@@ -17,8 +18,12 @@ const useSendMultipleCTMLs = () => {
 
   const sendMultipleCTMLsOperation = async (selectedCTMLs: string[]) => {
     setLoading(true);
-    // convert the string array of json strings into array of json objects
-    const ctmlModelCopy = selectedCTMLs.map(ctml => JSON.parse(ctml));
+    // convert the string array of json strings into array of json objects and then
+    // normalize each CTML using the same single-send transform before batch submission
+    const ctmlModelCopy = selectedCTMLs.map(ctml => {
+      const parsedCtml = typeof ctml === 'string' ? JSON.parse(ctml) : ctml;
+      return transformCtmlForSend(parsedCtml);
+    });
     try {
       const accessToken = localStorage.getItem('ctims-accessToken');
       const headers = {

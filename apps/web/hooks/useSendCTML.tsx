@@ -2,7 +2,7 @@ import {useState} from 'react';
 import {useSelector} from "react-redux";
 import {RootState} from "../store/store";
 import useAxios from "./useAxios";
-import { flattenGenericObject } from 'libs/ui/src/lib/components/helpers';
+import { transformCtmlForSend } from '../utils/transformCtmlForSend';
 
 const useSendCTML = () => {
 
@@ -15,15 +15,7 @@ const useSendCTML = () => {
   const { operation } = useAxios();
 
   const move = () => {
-    let ctmlModelCopy;
-    const age_group = ctmlModel.age_group;
-    const trialInformation = ctmlModel.trialInformation;
-    const treatmentListFlatted = flattenGenericObject(ctmlModel.treatment_list);
-    ctmlModelCopy = {'trial_list' : [{...ctmlModel, ...trialInformation, ...age_group, treatment_list: treatmentListFlatted}]};
-    delete ctmlModelCopy.age_group;
-    delete ctmlModelCopy.trialInformation;
-    delete ctmlModelCopy.ctml_status;
-    return ctmlModelCopy;
+    return transformCtmlForSend(ctmlModel);
   }
 
   const sendCTMLOperation = async () => {
